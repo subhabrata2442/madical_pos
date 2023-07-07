@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>POS</title>
+<title>POSs</title>
 <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
   @include('admin.includes.sidenav')
   <div class="content-wrapper">
     <div class="content-header">
-      <div class="container-fluid">
+      <div class="container-fluid"> 
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0"> {{ !empty($data['heading']) && $data['heading'] ? $data['heading'] : 'Dashboard' }} </h1>
