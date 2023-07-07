@@ -24,7 +24,7 @@ $is_branch 			= Session::get('is_branch');
         <li class="nav-item"> <a href="{{ route('admin.dashboard') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dashboard') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
           <p> Dashboard </p>
           </a> </li>
-        @if ($is_branch == 'Y')
+        
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.user') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.user') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
           <p>User <i class="fas fa-angle-left right"></i></p>
           </a>
@@ -77,9 +77,7 @@ $is_branch 			= Session::get('is_branch');
           </ul>
         </li>
         
-        <!--<li class="nav-item"> <a href="{{ route('admin.dashboard') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dashboard') active @endif"> <i class="nav-icon fas fa-bar-chart-o"></i>
-          <p> Report </p>
-          </a> </li>-->
+       
         
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) parent-active @endif"> <i class="fas fa-cart-plus"></i>
           <p>Purchase <i class="fas fa-angle-left right"></i></p>
@@ -88,15 +86,7 @@ $is_branch 			= Session::get('is_branch');
             <li class="nav-item"> <a href="{{ route('admin.purchase.inward_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_stock') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
               <p>Purchase Order</p>
               </a> </li>
-            <!--<li class="nav-item"> <a href="{{ route('admin.purchase.material_inward') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.material_inward') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Material Inward</p>
-              </a> </li>--> 
-            <!--<li class="nav-item"> <a href="{{ route('admin.purchase.supplier_bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.supplier_bill') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Supplier Bill</p>
-              </a> </li>--> 
-            <!--<li class="nav-item"> <a href="{{ route('admin.purchase.debitnote') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.debitnote') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Debit Note</p>
-              </a> </li>-->
+            
             <li class="nav-item"> <a href="{{ route('admin.purchase.stock.transfer') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.stock.transfer') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Stock Transfer</p>
               </a> </li>
@@ -194,7 +184,7 @@ $is_branch 			= Session::get('is_branch');
             </li>
           </ul>
         </li>
-        @endif
+        
       </ul>
     </nav>
     <!-- /.sidebar-menu --> 
