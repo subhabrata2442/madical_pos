@@ -11,7 +11,6 @@ use App\Models\SupplierContactDetails;
 use App\Models\User;
 use App\Helper\Media;
 use App\Models\Category;
-use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Abcdefg;
 use App\Models\Material;
@@ -28,6 +27,13 @@ use App\Models\BranchStockProducts;
 use App\Models\BranchStockProductSellPrice;
 use App\Models\Common;
 use App\Models\Warehouse;
+
+use App\Models\Brand;
+use App\Models\Dosage;
+use App\Models\Company;
+use App\Models\Drugstore;
+
+
 
 
 use Illuminate\Http\Request;
@@ -840,17 +846,13 @@ class ProductController extends Controller
             $data = [];
             $data['heading'] 		= 'Product Add';
             $data['breadcrumb'] 	= ['Product', 'Add'];
-            $data['supplier'] 		= Supplier::all();
-			$data['measurement'] 	= Measurement::all();
+            $data['brand'] 			= Brand::all();
+			$data['dosage'] 		= Dosage::all();
 			$data['category'] 		= Category::all();
-			$data['size'] 			= Size::all();
+			$data['company'] 		= Company::all();
 			$data['brand'] 			= Brand::all();
 			$data['subcategory'] 	= Subcategory::all();
-			$data['color'] 			= Color::all();
-			$data['material'] 		= Material::all();
-			$data['vendorCode'] 	= VendorCode::all();
-			$data['abcdefg'] 		= Abcdefg::all();
-			$data['service'] 		= Service::all();
+			$data['drugstore'] 		= Drugstore::all();
 			$data['thumb']			= asset('images/placeholder.png');
 			
 			//print_r($data);exit;
@@ -868,67 +870,29 @@ class ProductController extends Controller
 
     public function list(Request $request)
     {
-		//$product = Product::orderBy('id', 'desc')->get();
-		
-		//echo '<pre>';print_r($product[0]->image);
-		//echo asset('' . $product[0]->image);exit;
-		//$path = Storage::disk('public')->path('uploads/product/165692952618Hours-Bucharest1-superJumbo-v3.jpg');
-		//echo Storage::disk('public')->get('uploads/product/165692952618Hours-Bucharest1-superJumbo-v3.jpg');exit;
-		
-		//echo Storage::disk('public')->get('storage/uploads/product/165692952618Hours-Bucharest1-superJumbo-v3.jpg');exit;
-		
-		//echo Storage::disk('public')->get('uploads/product/165692952618Hours-Bucharest1-superJumbo-v3.jpg');exit;
-		
-		//$path = Storage::disk('public')->path('uploads/product/165692952618Hours-Bucharest1-superJumbo-v3.jpg');
-		
-		//echo '<pre>';print_r($path);exit;
-		
-		//$product = MasterProducts::orderBy('id', 'desc')->get();
-		
-		//echo '<pre>';print_r($product[0]->category->name);exit;
-		
-		//echo '<pre>';print_r($product[0]->category->name);exit;
-		//$branch_id=Session::get('branch_id');
-		//echo Common::get_product_stock($branch_id,118,6);exit;
-		
-		
         try {
             if ($request->ajax()) {
-                $product = MasterProducts::orderBy('id', 'asc')->get();
+                $product = Product::orderBy('id', 'asc')->get();
 				
 				
                 return DataTables::of($product)
-                    ->addColumn('product_name', function ($row) {
-                        return $row->product_name;
+                    ->addColumn('brand', function ($row) {
+                        return $row->brand;
                     })
-                    ->addColumn('category', function ($row) {
-                        return isset($row->category->name)?$row->category->name:'';
+                    ->addColumn('dosage_name', function ($row) {
+                        return $row->dosage_name;
                     })
-					->addColumn('subcategory', function ($row) {
-                        return isset($row->subcategory->name)?$row->subcategory->name:'';
+					->addColumn('company_name', function ($row) {
+                        return $row->company_name;
                     })
-                    ->addColumn('size', function ($row) {
-                        return isset($row->size->name)?$row->size->name:'';
-                    })
-                    ->addColumn('strength', function ($row) {
-                        return $row->strength;
-                    })
-                    ->addColumn('retailer_margin', function ($row) {
-                        return $row->retailer_margin;
-                    })
-                    ->addColumn('round_off', function ($row) {
-                        return $row->round_off;
-                    })
-					->addColumn('special_purpose_fee', function ($row) {
-                        return $row->special_purpose_fee;
+                    ->addColumn('drugstore_name', function ($row) {
+						return $row->drugstore_name;
                     })
                     ->addColumn('mrp', function ($row) {
-                        return $row->mrp;
+                        return $row->product_mrp;
                     })
                     ->addColumn('qty', function ($row) {
-						//return $row->product->id;
-                        return Common::get_product_stock($row->product->id,$row->size_id);
-						//return Common::get_product_stock(118,$row->size_id);
+						return $row->stock_qty;
                     })
                     ->make(true);
             }

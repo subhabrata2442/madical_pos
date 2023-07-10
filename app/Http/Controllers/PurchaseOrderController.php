@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\PurchaseOrderSupplier;
 use App\Helper\Media;
-use App\Models\Product;
-use App\Models\ProductSupplier;
-use App\Models\PurchaseOrder;
-use App\Models\PurchaseProduct;
-use App\Models\Supplier;
+
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -18,18 +14,26 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 Use Illuminate\Support\Facades\Response;
 
+use App\Models\Product;
+use App\Models\ProductSupplier;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseProduct;
+use App\Models\Supplier;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Dosage;
+use App\Models\Company;
+use App\Models\Drugstore;
 use App\Models\Color;
-use App\Models\Abcdefg;
+
 use App\Models\BranchStockProducts;
 use App\Models\BranchStockProductSellPrice;
-use App\Models\Material;
+
 use App\Models\Service;
 use App\Models\Size;
 use App\Models\Subcategory;
 use App\Models\VendorCode;
-use App\Models\Measurement;
+
 use App\Models\MasterProducts;
 use App\Models\ProductRelationshipSize;
 use App\Models\PurchaseInwardStock;
@@ -105,287 +109,190 @@ class PurchaseOrderController extends Controller
 			//$path = $request->file('excel')->getRealPath();
 
 			//print_r($tempPath);exit;
-			$data=[];
-
+			$excel_data=[];
 			
-			
-			//$inward_stock_data=Excel::toCollection(new PurchaseProductImport, $request->file('inward_stock_file')->store('temp'));
 			$inward_stock_data=Excel::toArray(new PurchaseProductImport, $request->file('inward_stock_file')->store('temp'));
 
+			$total_items=0;
+			$total_quantity=0;
+			$gross_total_amount=0;
+			$total_amount=0;
 			$i=0;foreach($inward_stock_data[0] as $row){
 				if($i==100){
 					break;
 				}
 
 				if($i!=0){
-					$data[]=array(
-						'id'=>$i,
-						'barcode'=>$row[0],
-						'brand'=>$row[1],
-						'dosage'=>$row[2],
-						'company'=>$row[3],
-						'package'=>$row[4],
-						'net_price'=>$row[5],
-						'price'=>$row[6],
-						'bonous'=>$row[7],
-						'rate'=>$row[8],
-						'total_quantity'=>$row[9],
-						'sell_price'=>$row[10],
-						'profit'=>$row[11],
-						'actual_profit'=>$row[12],
+					$barcode=$row[0];
+					$product_barcode='';
+					if($barcode!=''){
+						$product_barcode 	= $this->get_product_barcode($barcode);
+
+					}
+					
+					$brand_name=$row[1];
+					$dosage_name=$row[2];
+					$company_name=$row[3];
+					$drugstore_name=$row[4];
+					$product_mrp=$row[7];
+					$cost_price=$row[8];
+					$cost_rate=$row[10];
+					$selling_price=$row[12];
+					$profit_amount=$row[13];
+					$profit_percent=0;
+					$stock_qty=$row[11];
+
+					if($stock_qty!=''){
+						$total_quantity +=$stock_qty;
+					}
+					if($product_mrp!=''){
+						$gross_total_amount +=$product_mrp;
+					}
+					if($selling_price!=''){
+						$total_amount +=$selling_price;
+					}
+
+					$brand_id=0;
+					if($brand_name!=''){
+						$brand_slug 	= $this->create_slug($brand_name);
+						$brand_result	= Brand::where('name',$brand_name)->get();
+						if(count($brand_result)>0){
+							$brand_id=isset($brand_result[0]->id)?$brand_result[0]->id:0;
+						}else{
+							$insert_data=array(
+								'name'  		=> $brand_name,
+								'slug'  		=> $brand_slug,
+							);
+							$data_insert=Brand::create($insert_data);
+							$brand_id=$data_insert->id;
+						}
+					}
+
+					$dosage_id=0;
+					if($dosage_name!=''){
+						$dosage_slug 	= $this->create_slug($dosage_name);
+						$dosage_result	= Dosage::where('name',$dosage_name)->get();
+						if(count($dosage_result)>0){
+							$dosage_id=isset($dosage_result[0]->id)?$dosage_result[0]->id:0;
+						}else{
+							$insert_data=array(
+								'name'  		=> $dosage_name,
+								'slug'  		=> $dosage_slug,
+							);
+							$data_insert=Dosage::create($insert_data);
+							$dosage_id=$data_insert->id;
+						}
+					}
+
+					$company_id=0;
+					if($company_name!=''){
+						$company_slug 	= $this->create_slug($company_name);
+						$company_result	= Company::where('name',$company_name)->get();
+						if(count($company_result)>0){
+							$company_id=isset($company_result[0]->id)?$company_result[0]->id:0;
+						}else{
+							$insert_data=array(
+								'name'  		=> $company_name,
+								'slug'  		=> $company_slug,
+							);
+							$data_insert=Company::create($insert_data);
+							$company_id=$data_insert->id;
+						}
+					}
+
+					$drugstore_id=0;
+					if($drugstore_name!=''){
+						$drugstore_slug 	= $this->create_slug($drugstore_name);
+						$drugstore_result	= Drugstore::where('name',$drugstore_name)->get();
+						if(count($drugstore_result)>0){
+							$drugstore_id=isset($drugstore_result[0]->id)?$drugstore_result[0]->id:0;
+						}else{
+							$insert_data=array(
+								'name'  		=> $drugstore_name,
+								'slug'  		=> $drugstore_slug,
+							);
+							$data_insert=Drugstore::create($insert_data);
+							$drugstore_id=$data_insert->id;
+						}
+					}
+
+					$product_result=Product::where('product_barcode',$product_barcode)->get();
+
+					if(count($product_result)>0){
+						$product_id=$product_result[0]->id;
+					}else{
+						$product_slug='';
+
+						$insert_data=array(
+							'product_barcode'  		=> $product_barcode,
+							'brand'  				=> $brand_name,
+							'brand_id'  			=> $brand_id,
+							'slug'  				=> $product_slug,
+							'dosage_name'  			=> $dosage_name,
+							'dosage_id'  			=> $dosage_id,
+							'company_name'  		=> $company_name,
+							'company_id'  			=> $company_id,
+							'drugstore_name'  		=> $drugstore_name,
+							'drugstore_id'  		=> $drugstore_id,
+							'selling_price'  		=> $selling_price,
+							'profit_amount'  		=> $profit_amount,
+							'profit_percent'  		=> $profit_percent,
+							'cost_rate'  			=> $cost_rate,
+							'product_mrp'  			=> $product_mrp,
+							'cost_price'  			=> $cost_price,
+							'stock_qty'  			=> $stock_qty,
+						);
+						//echo '<pre>';print_r($insert_data);exit;
+						$data_insert=Product::create($insert_data);
+						$product_id=$data_insert->id;
+						
+					}
+
+
+					$excel_data[]=array(
+						'id'				=> $i,
+						'product_id'		=> $product_id,
+						'barcode'			=> $product_barcode,
+						'brand_name'		=> $brand_name,
+						'dosage'			=> $dosage_name,
+						'company'			=> $company_name,
+						'drugstore'			=> $drugstore_name,
+						'quantity'			=> $row[5],
+						'package'			=> $row[6],
+						'net_price'			=> $row[7],
+						'price'				=> $row[8],
+						'bonous'			=> $row[9],
+						'rate'				=> $row[10],
+						'total_quantity'	=> $row[11],
+						'sell_price'		=> $row[12],
+						'profit'			=> $row[13],
+						'profit_percent'	=> $profit_percent,
 					);
+					
+					//echo '<pre>';print_r($product_id);exit;
 				}
 			$i++;}
 
+			$return_data=[];
+
+			if(count($excel_data)>0){
 			
-
-
-
-
-
-			echo '<pre>';print_r($inward_stock_data);exit;
-
-
-
-
-			
-			
-			if($extension!='csv'){
-				return redirect()->back()->with('error', 'Something error occurs!');
+				$return_data['result']				= $excel_data;
+				$return_data['total_items']			= count($excel_data);
+				$return_data['total_quantity']		= $total_quantity;
+				$return_data['sub_total']			= number_format($gross_total_amount,2);
+				$return_data['total_amount']		= number_format($total_amount,2);
+				$return_data['success']	= 1;
+			}else{
+				$return_data['msg']		= 'Something error occurs!';
+				$return_data['success']	= 0;
 			}
-			$location = 'uploads';
-			$file->move($location, $filename);
-			$filepath = public_path($location . "/" . $filename);
+			//echo '<pre>';print_r($return_data);exit;
 			
-			$file = fopen($filepath, "r");
-			$importData_arr = array();
-			$i = 0;
-			while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
-				$num = count($filedata);
-				if ($i == 0) {
-					$i++;
-					continue;
-				}
-				for ($c = 0; $c < $num; $c++) {
-					$importData_arr[$i][] = $filedata[$c];
-				}
-				$i++;
-			} 
 			
-			//$branch_id=Session::get('branch_id');
-			//echo '<pre>';print_r($branch_id);exit;
-			
-			$j = 0;
-			$stockData=[];
-			foreach ($importData_arr as $importData) {
-				//$product_barcode		= $importData[0];
-				//$brand_code				= $importData[0];
-				$category				= $importData[0];
-				$type 					= $importData[1];
-				$brand_name 			= $importData[2];
-				$size 					= $importData[3];
-				$opening_stock 			= $importData[4];
-				
-				$product_barcode		= '';
-				
-				if($category!=''){
-					$brand_slug 	= $this->create_slug($brand_name);
-					
-					$category_title=trim($category);
-					$category_result=Category::where('name',$category_title)->where('food_type',1)->get();
-					if(count($category_result)>0){
-						$category_id=isset($category_result[0]->id)?$category_result[0]->id:0;
-					}else{
-						$feature_data=array(
-							'name'  		=> $category_title,
-							'food_type'  	=> 1,
-							'created_at'	=> date('Y-m-d')
-						);
-						$feature=Category::create($feature_data);
-						$category_id=$feature->id;
-					}
-					
-					
-					$type_result=Subcategory::where('name',$type)->where('food_type',1)->get();
-					if(count($type_result)>0){
-						$subcategory_id=isset($type_result[0]->id)?$type_result[0]->id:0;
-					}else{
-						$feature_data=array(
-							'name'  		=> $type,
-							'food_type'  	=> 1,
-							'created_at'	=> date('Y-m-d')
-						);
-						$feature=Subcategory::create($feature_data);
-						$subcategory_id=$feature->id;
-					}
-					
-					$size_id=0;
-					$size_ml=0;
-					if($size!=''){
-						$size_arr=explode(' ',$size);
-						$size_ml=isset($size_arr[0])?trim($size_arr[0]):0;
-						
-						$size_result=Size::where('ml',$size_ml)->get();
-						
-						//echo '<pre>';print_r($size_result);exit;
-						
-						if(count($size_result)>0){
-							$size_id=isset($size_result[0]->id)?$size_result[0]->id:0;
-							$size_ml=isset($size_result[0]->ml)?$size_result[0]->ml:0;
-						}else{
-							$size_arr=explode(' ',$size);
-							$feature_data=array(
-								'name'  		=> $size,
-								'ml'  			=> isset($size_arr[0])?trim($size_arr[0]):0,
-								'created_at'	=> date('Y-m-d')
-							);
-							$feature=Size::create($feature_data);
-							$size_id=$feature->id;
-						}
-					}
-					
-					if($size_id!=0){
-						$product_result=Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-						
-						//echo '<pre>';print_r($product_barcode);exit;
-						
-						if(count($product_result)>0){
-							$product_id=$product_result[0]->id;
-							
-							$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
-							$product_mrp=isset($productRelationshipSizeResult[0]->cost_rate)?$productRelationshipSizeResult[0]->cost_rate:'';
-							$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
-							
-							$barcode=isset($productRelationshipSizeResult[0]->product_barcode)?$productRelationshipSizeResult[0]->product_barcode:'';
-							$barcode2=isset($productRelationshipSizeResult[0]->barcode2)?$productRelationshipSizeResult[0]->barcode2:'';
-							$barcode3=isset($productRelationshipSizeResult[0]->barcode3)?$productRelationshipSizeResult[0]->barcode3:'';
-							
-							$product_barcode='';
-							if($barcode!=''){
-								$product_barcode=$barcode;
-							}
-							if($barcode2!=''){
-								$product_barcode=$barcode2;
-							}
-							if($barcode3!=''){
-								$product_barcode=$barcode3;
-							}
-							
-							$branch_id=Session::get('branch_id');
-							
-							$branch_product_stock_info=OpeningStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('size_id',$size_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-							
-							//$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
-							//$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
-							
-							$strength=$strength_no;
-							if($strength_no==''){
-								$strength=0;
-							}
-							
-							//echo '<pre>';print_r($product_barcode);exit;
-							
-							
-							if(count($branch_product_stock_info)>0){
-								$total_ml=0;
-								$opening_stock_qty=0;
-								if($opening_stock!=''){
-									$total_ml=$size_ml*$opening_stock;
-									$opening_stock_qty=$opening_stock;
-								}
-								
-								//echo '<pre>';print_r($total_ml);exit;
-								
-								
-								OpeningStockProducts::where('branch_id', $branch_id)->where('product_id', $product_id)->where('size_id', $size_id)->update(['total_ml' => $total_ml,'product_qty' => $opening_stock_qty,'strength' => $strength]);
-							}else{
-								$total_ml=0;
-								$opening_stock_qty=0;
-								if($opening_stock!=''){
-									$total_ml=$size_ml*$opening_stock;
-									$opening_stock_qty=$opening_stock;
-								}
-								
-								$stockData=array(
-									'branch_id'			=> $branch_id,
-									'category_id'		=> $category_id,
-									'subcategory_id'	=> $subcategory_id,
-									'product_barcode'	=> $product_barcode,
-									'product_id'		=> $product_id,
-									'size_id'			=> $size_id,
-									'size_ml'  			=> $size_ml,
-									'total_ml'  		=> $total_ml,
-									'product_qty'		=> $opening_stock_qty,
-									'product_mrp'  		=> $product_mrp,
-									'strength'			=> $strength
-								);
-								
-								//echo '<pre>';print_r($stockData);exit;
-								
-								OpeningStockProducts::create($stockData);	
-							}
-							
-							//exit;
-							
-							$branch_product_stock_info=BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('size_id',$size_id)->get();
-							if(count($branch_product_stock_info)>0){
-								$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('stock_id',$branch_product_stock_info[0]->id)->where('selling_price',$product_mrp)->where('stock_type','counter')->get();
-								
-								//echo '<pre>';print_r($product_mrp);exit;
-								$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
-								
-								if($sell_price_id!=''){
-									
-									BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type', 'counter')->update(['c_qty' => 0,'w_qty' => $opening_stock]);
-								}else{
-									$branchProductStockSellPriceData=array(
-										'stock_id'		=> $branch_product_stock_info[0]->id,
-										'w_qty'  		=> $opening_stock,
-										'c_qty'  		=> 0,
-										'selling_price'	=> $product_mrp,
-										'offer_price'  	=> 0,
-										'product_mrp'  	=> $product_mrp,
-										'stock_type'  	=> 'counter',
-										'created_at'	=> date('Y-m-d')
-									);
-									BranchStockProductSellPrice::create($branchProductStockSellPriceData);
-								}
-								//echo '<pre>';print_r($branch_product_stock_sell_price_info);exit;
-							}else{
-								$branchProductStockData=array(
-									'branch_id'			=> $branch_id,
-									'product_id'  		=> $product_id,
-									'product_barcode'  	=> $product_barcode,
-									'size_id'  			=> $size_id,
-									'created_at'		=> date('Y-m-d')
-								);
-								
-								$branchStockProducts=BranchStockProducts::create($branchProductStockData);
-								$stock_id=$branchStockProducts->id;
-								
-								$branchProductStockSellPriceData=array(
-									'stock_id'		=> $stock_id,
-									'w_qty'  		=> $opening_stock,
-									'c_qty'  		=> 0,
-									'selling_price'	=> $product_mrp,
-									'offer_price'  	=> 0,
-									'product_mrp'  	=> $product_mrp,
-									'stock_type'  	=> 'counter',
-									'created_at'	=> date('Y-m-d')
-								);
-								BranchStockProductSellPrice::create($branchProductStockSellPriceData);
-									
-							}
-							
-						}	
-					}	
-				}
-			$j++;}
-			
-			echo '<pre>';print_r($stockData);exit;
 		}
 		
-		return redirect()->back()->with('success', 'Opening Stock updated successfully');
+		echo json_encode($return_data);
 		
 	}
 
@@ -3076,5 +2983,10 @@ class PurchaseOrderController extends Controller
 	   
 	   //slug is generated
 	  	 return $string;
+	  }
+
+	public function get_product_barcode($barcode){
+		$string = str_replace(' ', '-', $barcode); // Replaces all spaces with hyphens.
+		return preg_replace('/[^A-Za-z0-9\-]/', '', $barcode); // Removes special chars.
 	  }
 }

@@ -158,11 +158,12 @@
                 <th><i class="fas fa-times"></i></th>
                 <th>Barcode</th>
                 <th>The Brand</th>
-                <th>Category</th>
                 <th>Dosage Form</th>
                 <th>Company</th>
+                <th>Drugstore name</th>
+                <th>Quantity</th>
                 <th>No per package</th>
-                <th>Net Price.</th>
+                <th>Net Price</th>
                 <th>Price</th>
                 <th>Bonous</th>
                 <th>US/IQ rate</th>
@@ -270,7 +271,7 @@
   </div>
 </div>
 <div style="display:none;">
-  <form method="post" action="{{ route('admin.purchase.product_stock_upload') }}" class="needs-validation" id="invoice_upload-form1" novalidate enctype="multipart/form-data">
+  <form method="post" action="{{ route('admin.purchase.product_stock_upload') }}" class="needs-validation" id="invoice_upload-form" novalidate enctype="multipart/form-data">
     @csrf
     <input name="inward_stock_file" id="upload_excel_input" style="display:none" type="file">
   </form>
@@ -295,7 +296,7 @@ $(document).on('click', '#upload_excel', function(e) {
 });
 
 $(document).on('change','#upload_excel_input',function(){
-	$("#invoice_upload-form1").submit()
+	$("#invoice_upload-form").submit()
 });
 </script> 
 
