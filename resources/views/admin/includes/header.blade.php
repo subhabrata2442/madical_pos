@@ -1,6 +1,6 @@
 <!-- Navbar -->
 
-<nav class="main-header navbar navbar-expand navbar-dark"> 
+<nav class="main-header navbar navbar-expand navbar-light"> 
   <!-- Left navbar links -->
   <ul class="navbar-nav">
     <li class="nav-item"> <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a> </li>
@@ -8,10 +8,14 @@
   
   <!-- Right navbar links --> 
   
-  <div class="profileDd ml-auto"> <a href="javascript:void(0)" class="toggleDropDown"><span><img src="{{ asset('' . \Auth::user()->avatar) }}"
-                    alt=""></span> {{ \Auth::user()->name }} <i class="fas fa-caret-down"></i></a>
+  <div class="profileDd ml-auto"> <a href="javascript:void(0)" class="toggleDropDown"><span><img src="{{ asset('uploads/avatar/avatar5.png') }}" alt=""></span> {{ \Auth::user()->name }} <i class="fas fa-caret-down"></i></a>
     <div class="profileDdInner displayHide">
-      <div class="pdTop"> <span><img src="{{ asset('' . \Auth::user()->avatar) }}" alt=""></span>
+      <div class="pdTop"> 
+        <span> 
+          <img src="{{ asset('uploads/avatar/avatar5.png') }}" alt="">
+        
+        {{-- <img src="{{ asset('' . \Auth::user()->avatar) }}" alt=""> --}}
+      </span>
         <h5>{{ \Auth::user()->name }}</h5>
         <h5>{{ \Auth::user()->email }}</h5>
         <!--<a href="{{ route('admin.profile') }}">View Profile</a>--> </div>

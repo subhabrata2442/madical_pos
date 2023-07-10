@@ -25,45 +25,9 @@ $is_branch 			= Session::get('is_branch');
           <p> Dashboard </p>
           </a> </li>
         
-        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.user') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.user') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
-          <p>User <i class="fas fa-angle-left right"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item"> <a href="{{ route('admin.user.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.user.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-              <p>List User</p>
-              </a> </li>
-            <li class="nav-item"> <a href="{{ route('admin.user.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.user.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Add User</p>
-              </a> </li>
-            <li class="nav-item"> <a href="{{ route('admin.user.manageRole') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.user.manageRole') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Manage Role</p>
-              </a> </li>
-          </ul>
-        </li>
-        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.customer') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.customer') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
-          <p>Customer <i class="fas fa-angle-left right"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item"> <a href="{{ route('admin.customer.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.customer.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-              <p>List Customer</p>
-              </a> </li>
-            <li class="nav-item"> <a href="{{ route('admin.customer.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.customer.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Add Customer</p>
-              </a> </li>
-          </ul>
-        </li>
-        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
-          <p>Supplier <i class="fas fa-angle-left right"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item"> <a href="{{ route('admin.supplier.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-              <p>List Supplier</p>
-              </a> </li>
-            <li class="nav-item"> <a href="{{ route('admin.supplier.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Add Supplier</p>
-              </a> </li>
-          </ul>
-        </li>
+        
+        
+       
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.product') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="fas fa fa-list"></i>
           <p>Products <i class="fas fa-angle-left right"></i></p>
           </a>
@@ -104,39 +68,7 @@ $is_branch 			= Session::get('is_branch');
               </a> </li>
           </ul>
         </li>
-        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.restaurant') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.restaurant') !== false) parent-active @endif"> <i class="fas fa-utensils nav-icon"></i>
-          <p>Restaurant <i class="fas fa-angle-left right"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.restaurant.waiter') !== false) menu-open @endif""> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.restaurant.waiter') !== false) parent-active @endif"> <i class="nav-icon fas fa-circle"></i>
-              <p> Waiter <i class="right fas fa-angle-left"></i> </p>
-              </a>
-              <ul class="nav nav-treeview" >
-                <li class="nav-item"> <a href="{{ route('admin.restaurant.waiter.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.restaurant.waiter.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                  <p>List Waiter</p>
-                  </a> </li>
-                <li class="nav-item"> <a href="{{ route('admin.restaurant.waiter.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.restaurant.waiter.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add Waiter</p>
-                  </a> </li>
-              </ul>
-            </li>
-            <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.restaurant.table') !== false) menu-open @endif""> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.restaurant.table') !== false) parent-active @endif"> <i class="nav-icon fas fa-circle"></i>
-              <p> Manage Room/Table <i class="right fas fa-angle-left"></i> </p>
-              </a>
-              <ul class="nav nav-treeview" >
-                <li class="nav-item"> <a href="{{ route('admin.restaurant.table.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.restaurant.table.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                  <p>List Room/Table</p>
-                  </a> </li>
-                <li class="nav-item"> <a href="{{ route('admin.restaurant.table.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.restaurant.table.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add Room/Table</p>
-                  </a> </li>
-              </ul>
-            </li>
-            <li class="nav-item"> <a href="{{ route('admin.restaurant.product.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.restaurant.product.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-              <p>Product List</p>
-              </a> </li>
-          </ul>
-        </li>
+       
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.report') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.report') !== false) parent-active @endif"> <i class="fas fa-flag nav-icon"></i>
           <p>Report <i class="fas fa-angle-left right"></i></p>
           </a>
@@ -173,15 +105,7 @@ $is_branch 			= Session::get('is_branch');
                   </a> </li>
               </ul>
             </li>
-            <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon fas fa-glass-cheers"></i>
-              <p> Bar <i class="right fas fa-angle-left"></i> </p>
-              </a>
-              <ul class="nav nav-treeview">
-              <li class="nav-item"> <a href="{{ route('admin.report.purchase') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.purchase') active @endif"> <i class="fas fa-shopping-bag nav-icon"></i>
-                  <p>Purchase</p>
-                  </a> </li>
-              </ul>
-            </li>
+            
           </ul>
         </li>
         
