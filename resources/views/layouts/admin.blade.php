@@ -8,6 +8,7 @@
     <title>POS</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/fabicon.ico') }}">
     <!-- Fonts -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url('assets/admin/css/app.css') }}">
     <!--<link rel="stylesheet" href="{{ url('assets/admin/css/datatables.bundle.css') }}">
