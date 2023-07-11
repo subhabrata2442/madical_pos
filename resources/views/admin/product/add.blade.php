@@ -9,7 +9,7 @@
           <x-alert />
           <div class="col-md-4">
             <div class="form-group">
-              <label for="product_name" class="form-label">Product Name</label>
+              <label for="product_name" class="form-label">Brand Name</label>
               <input type="text" class="form-control admin-input" id="product_name" name="product_name" value="{{ old('product_name') }}" required autocomplete="off">
               @error('product_name')
               <div class="error admin-error">{{ $message }}</div>
@@ -17,9 +17,9 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="product_code" class="form-label">Product Code</label>
+              <label for="product_code" class="form-label">Product Barcode</label>
               <input type="text" class="form-control admin-input" id="product_code" name="product_code"
-                                    value="{{ old('product_code') }}" required autocomplete="off">
+                                    value="{{ old('product_code') }}" required  autocomplete="off">
               @error('product_code')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
@@ -60,55 +60,7 @@
       </div>
       <div class="card"> <a href="javascript:;" class="toggleBtn">Others Options <i class="fas fa-caret-down"></i></a> </div>
       <div class="card toggleArea" style="display: none;">
-        <div class="row"> 
-          <!--<div class="col-md-4">
-            <div class="form-group">
-              <label for="days_before_product_expiry" class="form-label">Product System Barcode</label>
-              <input type="text" class="form-control admin-input" id="days_before_product_expiry" name="days_before_product_expiry" value="{{ old('days_before_product_expiry') }}"  autocomplete="off">
-              @error('days_before_product_expiry')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-          </div>-->
-          
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="uqc_id" class="form-label">UQC (Measurement)</label>
-              <select name="uqc_id" id="uqc_id" class="form-control form-inputtext">
-                <option value="">Select UQC</option>
-                
-                
-                
-                
-                @if(count($data['measurement'])>0)
-                @foreach($data['measurement'] as $mRow)
-                
-                
-                
-                
-                <option value="{{$mRow->id}}">{{$mRow->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('uqc_id')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="hsn_sac_code" class="form-label">HSN</label>
-              <input type="text" class="form-control admin-input" id="product_hsn" name="hsn_sac_code" value="{{ old('hsn_sac_code') }}" autocomplete="off">
-              @error('hsn_sac_code')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-          </div>
+        <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="product_desc" class="form-label">Product Description</label>
@@ -127,34 +79,12 @@
           </div>
         </div>
       </div>
-      <div class="add_more_size_btn"><a href="javascript:;"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+      {{-- <div class="add_more_size_btn"><a href="javascript:;"><i class="fa fa-plus" aria-hidden="true"></i></a></div> --}}
       <div class="add_more_size_section" id="add_more_size_section_row">
       
         <div class="card" id="add_more_size_row_0">
           <div class="row">
-            <div class="col-md-12" id="size-sec-0">
-              <div class="form-group">
-                <label for="size" class="form-label">Size</label>
-                <select name="size[]" id="size_0" class="form-control form-inputtext" required>
-                  <option value="">Select Size</option>
-                  
-                
-                @if(count($data['size'])>0)
-                @foreach($data['size'] as $sRow)
-                
-                
-                  <option value="{{$sRow->id}}">{{$sRow->name}}</option>
-                  
-                
-                @endforeach
-                @endif
-              
-              
-                </select>
-                @error('size')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
+           
             <div class="col-md-3">
               <div class="form-group">
                 <label for="cost_rate" class="form-label">Cost Rate</label>
@@ -252,7 +182,7 @@
         
         
       </div>
-      <div class="card">
+      {{-- <div class="card">
         <div class="row">
           <div class="suppliers-table table-responsive">
             <table class="table text-nowrap bt-none">
@@ -274,123 +204,19 @@
             </table>
           </div>
         </div>
-      </div>
+      </div> --}}
       <div class="card">
         <div class="row">
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="category" class="form-label">Category</label>
-              <select name="category" id="category" class="form-control form-inputtext">
-                <option value="">Select Category</option>
-                
-                
-                
-                
-                @if(count($data['category'])>0)
-                @foreach($data['category'] as $cRow)
-                
-                
-                
-                
-                <option value="{{$cRow->id}}">{{$cRow->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('category')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="category" data-title="Category"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <!--<div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="category" class="form-label">Size</label>
-              <select name="size" id="size" class="form-control form-inputtext">
-                <option value="">Select Size</option>
-                
-                
-                @if(count($data['size'])>0)
-                @foreach($data['size'] as $sRow)
-                
-                
-                <option value="{{$sRow->id}}">{{$sRow->name}}</option>
-                
-                
-                @endforeach
-                @endif
-              
-              
-              </select>
-              @error('size')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="size" data-title="Size"><i class="fas fa-plus"></i></a></div>
-          </div>-->
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="brand" class="form-label">Brand</label>
-              <select name="brand" id="brand" class="form-control form-inputtext">
-                <option value="">Select Brand</option>
-                
-                
-                
-                
-                @if(count($data['brand'])>0)
-                @foreach($data['brand'] as $bRow)
-                
-                
-                
-                
-                <option value="{{$bRow->id}}">{{$bRow->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('brand')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="brand" data-title="Brand"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="subcategory" class="form-label">Subcategory</label>
+              <label for="subcategory" class="form-label">Dosage Form</label>
               <select name="subcategory" id="subcategory" class="form-control form-inputtext">
-                <option value="">Select Subcategory</option>
-                
-                
-                
-                
-                @if(count($data['subcategory'])>0)
-                @foreach($data['subcategory'] as $row)
-                
-                
-                
-                
+                <option value="">Select Dosage Form</option>
+                @if(count($data['dosage'])>0)
+                @foreach($data['dosage'] as $row)
                 <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
                 @endforeach
                 @endif
-              
-              
-              
-              
               </select>
               @error('subcategory')
               <div class="error admin-error">{{ $message }}</div>
@@ -399,30 +225,14 @@
           </div>
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="color" class="form-label">Color</label>
+              <label for="color" class="form-label">Company</label>
               <select name="color" id="color" class="form-control form-inputtext">
-                <option value="">Select Color</option>
-                
-                
-                
-                
-                @if(count($data['color'])>0)
-                @foreach($data['color'] as $row)
-                
-                
-                
-                
+                <option value="">Select Company</option>
+                @if(count($data['company'])>0)
+                @foreach($data['company'] as $row)
                 <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
                 @endforeach
                 @endif
-              
-              
-              
-              
               </select>
               @error('color')
               <div class="error admin-error">{{ $message }}</div>
@@ -431,140 +241,19 @@
           </div>
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="material" class="form-label">Material</label>
+              <label for="material" class="form-label">Drugstore name</label>
               <select name="material" id="material" class="form-control form-inputtext">
-                <option value="">Select Material</option>
-                
-                
-                
-                
-                @if(count($data['material'])>0)
-                @foreach($data['material'] as $row)
-                
-                
-                
-                
+                <option value="">Select Drugstore</option>
+                @if(count($data['company'])>0)
+                @foreach($data['company'] as $row)
                 <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
                 @endforeach
                 @endif
-              
-              
-              
-              
               </select>
               @error('material')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="material" data-title="Material"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="vendor_code" class="form-label">Vendor code</label>
-              <select name="vendor_code" id="vendor_code" class="form-control form-inputtext">
-                <option value="">Select Vendor code</option>
-                
-                
-                
-                
-                @if(count($data['vendorCode'])>0)
-                @foreach($data['vendorCode'] as $row)
-                
-                
-                
-                
-                <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('vendor_code')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="vendor_code" data-title="Vendor code"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="abcdefg" class="form-label">Abcdefg</label>
-              <select name="abcdefg" id="abcdefg" class="form-control form-inputtext">
-                <option value="">Select Abcdefg</option>
-                
-                
-                
-                
-                @if(count($data['abcdefg'])>0)
-                @foreach($data['abcdefg'] as $row)
-                
-                
-                
-                
-                <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('abcdefg')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="abcdefg" data-title="Abcdefg"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="service" class="form-label">Service</label>
-              <select name="service" id="service" class="form-control form-inputtext">
-                <option value="">Select Service</option>
-                
-                
-                
-                
-                @if(count($data['service'])>0)
-                @foreach($data['service'] as $row)
-                
-                
-                
-                
-                <option value="{{$row->id}}">{{$row->name}}</option>
-                
-                
-                
-                
-                @endforeach
-                @endif
-              
-              
-              
-              
-              </select>
-              @error('service')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="service" data-title="Service"><i class="fas fa-plus"></i></a></div>
-          </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="supplier_barcode" class="form-label">Supplier Barcode</label>
-              <input type="text" class="form-control admin-input" id="supplier_barcode" name="supplier_barcode" value="{{ old('supplier_barcode') }}"  autocomplete="off">
-              @error('supplier_barcode')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <!--<div class="plusBox"><a href="javascript:;" class="plusBoxBtn"><i class="fas fa-plus"></i></a></div>--> 
           </div>
         </div>
       </div>

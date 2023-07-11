@@ -588,22 +588,23 @@ class AjaxController extends Controller {
 
 		//print_r($searchValues);exit;
 
-		$res=MasterProducts::query()->where('product_name', 'LIKE', "%{$search}%")->take(20)->get();
+		//$res=Product::query()->where('product_barcode', 'LIKE', "%{$search}%")->take(20)->get();
 		//print_r($size_result);exit;
 
-		/*$res = MasterProducts::where(function ($q) use ($searchValues) {
+		$res = Product::where(function ($q) use ($searchValues) {
 			foreach ($searchValues as $value) {
-				$q->orWhere('product_name', 'like', "%{$value}%");
+				$q->where('product_barcode', 'like', "%{$value}%")
+				->orWhere('brand', 'like', '%' . $value . '%');
 			}
-		})->take(20)->get();*/
+		})->take(20)->get();
 
 		$result=[];
 
 		foreach($res as $row){
 			$result[]=array(
 				'id'=>$row->id,
-				'product_name'=>$row->product_name,
-				'product_size'=>$row->size->name,
+				'product_barcode'=>$row->product_barcode,
+				'brand'=>$row->brand,
 			);
 		}
 
@@ -614,58 +615,29 @@ class AjaxController extends Controller {
 	}
 	public function ajaxpost_get_product_byId($request) {
 		$product_id	= $request->product_id;
-		$res = MasterProducts::find($product_id);
-
+		$res = Product::find($product_id);
+		
 		$product_result=[];
 		if(isset($res->id)){
 			if($res->id!=''){
-				$brand_slug		= $res->slug;
-				$category_id	= $res->category_id;
-				$subcategory_id	= $res->subcategory_id;
-				$size_id		= $res->size_id;
-				$size_title		= $res->size->name;
-				$bottle_case	= $res->qty;
-				$item_result 	= Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-				$product_id	 	= isset($item_result[0]->id)?$item_result[0]->id:'';
-				if($product_id!=''){
-					$item_size_result=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
-					$product_id	 		= isset($item_size_result[0]->id)?$item_size_result[0]->id:'';
-					$strength	 		= isset($item_size_result[0]->strength)?$item_size_result[0]->strength:0;
-					$retailer_margin	= isset($item_size_result[0]->retailer_margin)?$item_size_result[0]->retailer_margin:0;
-					$round_off	 		= isset($item_size_result[0]->round_off)?$item_size_result[0]->round_off:0;
-					$sp_fee	 			= isset($item_size_result[0]->special_purpose_fee)?$item_size_result[0]->special_purpose_fee:0;
-					$product_mrp	 	= isset($item_size_result[0]->product_mrp)?$item_size_result[0]->product_mrp:0;
-
-					//$size_result=Size::where('id',$size_id)->get();
-
-					//print_r($size_title);exit;
-
-					$product_result=array(
-						'product_id'		=> $product_id,
-						'product_barcode'	=> $item_result[0]->product_barcode,
-						'bottle_case'		=> $bottle_case,
-						'category'			=> $item_result[0]->category->name,
-						'category_id'		=> $category_id,
-						'sub_category'		=> $item_result[0]->subcategory->name,
-						'subcategory_id'	=> $subcategory_id,
-						'brand_name'		=> trim($item_result[0]->product_name),
-						'brand_slug'		=> $brand_slug,
-						'measure'			=> $size_title,
-						'size_id'			=> $size_id,
-						'batch_no'			=> '',
-						'strength'			=> trim($strength),
-						'retailer_margin'	=> trim($retailer_margin),
-						'round_off'			=> trim($round_off),
-						'sp_fee'			=> trim($sp_fee),
-						'qty'				=> 1,
-						'bl'				=> 0,
-						'lpl'				=> 0,
-						'case_qty'			=> 0,
-						'product_mrp'		=> trim($product_mrp),
-						'unit_cost'			=> trim($product_mrp),
-						'total_cost'		=> trim($product_mrp),
-					);
-				}
+				$product_result=array(
+					'product_id'		=> $res->id,
+					'barcode'			=> $res->product_barcode,
+					'brand_name'		=> $res->brand,
+					'dosage'			=> $res->dosage_name,
+					'company'			=> $res->company_name,
+					'drugstore'			=> $res->drugstore_name,
+					'quantity'			=> 0,
+					'package'			=> 0,
+					'net_price'			=> $res->product_mrp,
+					'price'				=> $res->cost_price,
+					'bonous'			=> 0,
+					'rate'				=> $res->cost_rate,
+					'total_quantity'	=> 0,
+					'sell_price'		=> $res->selling_price,
+					'profit'			=> $res->profit_percent,
+					'profit_percent'	=> 0,
+				);
 			}
 		}
 		$status=0;
