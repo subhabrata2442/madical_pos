@@ -150,6 +150,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/list', [SupplierController::class, 'list'])->name('list');
         Route::match(['GET', 'POST'], '/edit/{id}', [SupplierController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [SupplierController::class, 'delete'])->name('delete');
+		
 	});
 	
 	Route::prefix('product')->name('product.')->group(function () {
