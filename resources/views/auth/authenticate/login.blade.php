@@ -1,11 +1,9 @@
 @extends('layouts.front')
 @section('front-content')
-<section class="loginWrap d-flex flex-wrap" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;">
-  <div class="loginWrapLeft d-flex flex-wrap align-items-end">
-    <img src="{{ asset('assets/img/left-img.png') }}" alt="">
-  </div>
+<section class="loginWrap d-flex flex-wrap justify-content-center" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;">
+  
  
-  <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center" style="background: url({{ asset('assets/img/login-bg-right.jpg') }}) no-repeat center center;">
+  <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center">
    <x-alert />
     <div class="loginFormFild">
       <form class="" method="post" action="{{ route('auth.login') }}" autocomplete="off">
@@ -41,6 +39,9 @@
       </form>
     </div>
   </div>
+  <!-- <div class="loginWrapLeft d-flex flex-wrap align-items-end">
+    <img src="{{ asset('assets/img/left-img.png') }}" alt="">
+  </div> -->
 </section>
 
 <div class="modal fade editPassword" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
