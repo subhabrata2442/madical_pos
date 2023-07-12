@@ -58,87 +58,116 @@
 </div>
 <div>
 <div class="row">
-
-    <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-      <div class="card">
-        <div class="card-header border-0">
-            <div class="d-flex justify-content-between">
-              <h3 class="card-title">Online Store Visitors</h3>
-              <a href="javascript:void(0);">View Report</a>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="d-flex">
-              <p class="d-flex flex-column">
-                <span class="text-bold text-lg">820</span>
-                <span>Visitors Over Time</span>
-              </p>
-              <p class="ml-auto d-flex flex-column text-right">
-                <span class="text-success">
-                  <i class="fas fa-arrow-up"></i> 12.5%
-                </span>
-                <span class="text-muted">Since last week</span>
-              </p>
-            </div>
-
-            <div class="position-relative mb-4">
-              <canvas id="visitors-chart" height="200"></canvas>
-            </div>
-
-            <div class="d-flex flex-row justify-content-end">
-              <span class="mr-2">
-                <i class="fas fa-square text-primary"></i> This Week
-              </span>
-
-              <span>
-                <i class="fas fa-square text-gray"></i> Last Week
-              </span>
-            </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+      <!-- DONUT CHART -->
+      <div class="card card-danger">
+        <div class="card-header">
+          <h3 class="card-title">Donut Chart</h3>
+        </div>
+        <div class="card-body">
+          <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+          
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+      <!-- AREA CHART -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Area Chart</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart">
+            <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
           </div>
         </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+      <!-- PIE CHART -->
+      <div class="card card-danger">
+        <div class="card-header">
+          <h3 class="card-title">Pie Chart</h3>
+        </div>
+        <div class="card-body">
+          <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+      <!-- BAR CHART -->
+      <div class="card card-success">
+        <div class="card-header">
+          <h3 class="card-title">Bar Chart</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart">
+            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+      <div class="card card-success">
+        <div class="card-header">
+          <h3 class="card-title">Sales Chart</h3>
+        </div>
+        <div class="card-body">
+          <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <div class="card">
-                <div class="card-header border-0">
-                  <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Sales</h3>
-                    <a href="javascript:void(0);">View Report</a>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="d-flex">
-                    <p class="d-flex flex-column">
-                      <span class="text-bold text-lg">$18,230.00</span>
-                      <span>Sales Over Time</span>
-                    </p>
-                    <p class="ml-auto d-flex flex-column text-right">
-                      <span class="text-success">
-                        <i class="fas fa-arrow-up"></i> 33.1%
-                      </span>
-                      <span class="text-muted">Since last month</span>
-                    </p>
-                  </div>
+        <div class="card-header border-0">
+          <div class="d-flex justify-content-between">
+            <h3 class="card-title">Sales</h3>
+            <a href="javascript:void(0);">View Report</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex">
+            <p class="d-flex flex-column">
+              <span class="text-bold text-lg">$18,230.00</span>
+              <span>Sales Over Time</span>
+            </p>
+            <p class="ml-auto d-flex flex-column text-right">
+              <span class="text-success">
+                <i class="fas fa-arrow-up"></i> 33.1%
+              </span>
+              <span class="text-muted">Since last month</span>
+            </p>
+          </div>
+          <!-- /.d-flex -->
 
-                  <div class="position-relative mb-4">
-                    <canvas id="sales-chart" height="200"></canvas>
-                  </div>
+          <div class="position-relative mb-4">
+            <canvas id="sales-chart" height="200"></canvas>
+          </div>
 
-                  <div class="d-flex flex-row justify-content-end">
-                    <span class="mr-2">
-                      <i class="fas fa-square text-primary"></i> This year
-                    </span>
+          <div class="d-flex flex-row justify-content-end">
+            <span class="mr-2">
+              <i class="fas fa-square text-primary"></i> This year
+            </span>
 
-                    <span>
-                      <i class="fas fa-square text-gray"></i> Last year
-                    </span>
-                  </div>
-                </div>
-              </div>
+            <span>
+              <i class="fas fa-square text-gray"></i> Last year
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 col-12"></div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 col-12"></div>
   <div class="col-lg-6 col-md-6 col-sm-12 col-12">
       <div class="card">
                 <div class="card-header border-0">
@@ -165,7 +194,7 @@
                     <tbody>
                     <tr>
                       <td>
-                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                        
                         Some Product
                       </td>
                       <td>$13 USD</td>
@@ -184,7 +213,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                        
                         Another Product
                       </td>
                       <td>$29 USD</td>
@@ -203,7 +232,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                        
                         Amazing Product
                       </td>
                       <td>$1,230 USD</td>
@@ -222,7 +251,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                        
                         Perfect Item
                         <span class="badge bg-danger">NEW</span>
                       </td>
@@ -301,6 +330,283 @@
 @endsection
 
 @section('scripts') 
+<script src="{{ url('assets/admin/js/plugins/chart/Chart.min.js') }}"></script>
 <script type="text/javascript">
+  $(function () {
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d');
+    var areaChartData = {
+      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Electronics',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    })
+
+    //-------------
+    //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+          'Chrome',
+          'IE',
+          'FireFox',
+          'Safari',
+          'Opera',
+          'Navigator',
+      ],
+      datasets: [
+        {
+          data: [700,500,400,600,300,100],
+          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+
+     //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = donutData;
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+
+     // Sales graph chart
+  var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
+  // $('#revenue-chart').get(0).getContext('2d');
+
+  var salesGraphChartData = {
+    labels: ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4', '2013 Q1', '2013 Q2'],
+    datasets: [
+      {
+        label: 'Digital Goods',
+        fill: false,
+        borderWidth: 2,
+        lineTension: 0,
+        spanGaps: true,
+        borderColor: '#efefef',
+        pointRadius: 3,
+        pointHoverRadius: 7,
+        pointColor: '#efefef',
+        pointBackgroundColor: '#efefef',
+        data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
+      }
+    ]
+  }
+
+  var salesGraphChartOptions = {
+    maintainAspectRatio: false,
+    responsive: true,
+    legend: {
+      display: false
+    },
+    scales: {
+      xAxes: [{
+        ticks: {
+          fontColor: '#efefef'
+        },
+        gridLines: {
+          display: false,
+          color: '#efefef',
+          drawBorder: false
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          stepSize: 5000,
+          fontColor: '#efefef'
+        },
+        gridLines: {
+          display: true,
+          color: '#efefef',
+          drawBorder: false
+        }
+      }]
+    }
+  }
+
+  // This will get the first returned node in the jQuery collection.
+  // eslint-disable-next-line no-unused-vars
+  var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+    type: 'line',
+    data: salesGraphChartData,
+    options: salesGraphChartOptions
+  })
+
+
+  var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+
+  var mode = 'index'
+  var intersect = true
+  var $salesChart = $('#sales-chart')
+  // eslint-disable-next-line no-unused-vars
+  var salesChart = new Chart($salesChart, {
+    type: 'bar',
+    data: {
+      labels: ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      datasets: [
+        {
+          backgroundColor: '#007bff',
+          borderColor: '#007bff',
+          data: [1000, 2000, 3000, 2500, 2700, 2500, 3000]
+        },
+        {
+          backgroundColor: '#ced4da',
+          borderColor: '#ced4da',
+          data: [700, 1700, 2700, 2000, 1800, 1500, 2000]
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips: {
+        mode: mode,
+        intersect: intersect
+      },
+      hover: {
+        mode: mode,
+        intersect: intersect
+      },
+      legend: {
+        display: false
+      },
+      scales: {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display: true,
+            lineWidth: '4px',
+            color: 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks: $.extend({
+            beginAtZero: true,
+
+            // Include a dollar sign in the ticks
+            callback: function (value) {
+              if (value >= 1000) {
+                value /= 1000
+                value += 'k'
+              }
+
+              return '$' + value
+            }
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display: true,
+          gridLines: {
+            display: false
+          },
+          ticks: ticksStyle
+        }]
+      }
+    }
+  })
+
+
+
+
+
+
+  });
+
+  
 </script> 
 @endsection 
