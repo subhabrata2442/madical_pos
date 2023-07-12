@@ -56,12 +56,12 @@
     </div>
   </div>
 </div>
-<div>
-<div class="row">
+<div class="chartArea">
+<div class="row g-3">
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- DONUT CHART -->
-      <div class="card card-danger">
-        <div class="card-header">
+      <div class="card">
+        <div class="card-header border-0">
           <h3 class="card-title">Donut Chart</h3>
         </div>
         <div class="card-body">
@@ -74,8 +74,8 @@
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- AREA CHART -->
-      <div class="card card-primary">
-        <div class="card-header">
+      <div class="card">
+        <div class="card-header border-0">
           <h3 class="card-title">Area Chart</h3>
         </div>
         <div class="card-body">
@@ -90,8 +90,8 @@
 
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- PIE CHART -->
-      <div class="card card-danger">
-        <div class="card-header">
+      <div class="card">
+        <div class="card-header border-0">
           <h3 class="card-title">Pie Chart</h3>
         </div>
         <div class="card-body">
@@ -104,8 +104,8 @@
 
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- BAR CHART -->
-      <div class="card card-success">
-        <div class="card-header">
+      <div class="card">
+        <div class="card-header border-0">
           <h3 class="card-title">Bar Chart</h3>
         </div>
         <div class="card-body">
@@ -118,8 +118,8 @@
       <!-- /.card -->
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
-      <div class="card card-success">
-        <div class="card-header">
+      <div class="card">
+        <div class="card-header border-0">
           <h3 class="card-title">Sales Chart</h3>
         </div>
         <div class="card-body">
@@ -170,7 +170,7 @@
     </div>
   <div class="col-lg-6 col-md-6 col-sm-12 col-12">
       <div class="card">
-                <div class="card-header border-0">
+                <div class="card-header">
                   <h3 class="card-title">Products</h3>
                   <div class="card-tools">
                     <a href="#" class="btn btn-tool btn-sm">
@@ -182,7 +182,7 @@
                   </div>
                 </div>
                 <div class="card-body table-responsive p-0">
-                  <table class="table table-striped table-valign-middle">
+                  <table class="table table-valign-middle">
                     <thead>
                     <tr>
                       <th>Product</th>
@@ -474,14 +474,14 @@
       {
         label: 'Digital Goods',
         fill: false,
-        borderWidth: 2,
+        borderWidth: 1,
         lineTension: 0,
         spanGaps: true,
-        borderColor: '#efefef',
+        borderColor: '#EB008A',
         pointRadius: 3,
         pointHoverRadius: 7,
         pointColor: '#efefef',
-        pointBackgroundColor: '#efefef',
+        pointBackgroundColor: '#EB008A',
         data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
       }
     ]
@@ -496,7 +496,7 @@
     scales: {
       xAxes: [{
         ticks: {
-          fontColor: '#efefef'
+          fontColor: '#666'
         },
         gridLines: {
           display: false,
@@ -507,7 +507,7 @@
       yAxes: [{
         ticks: {
           stepSize: 5000,
-          fontColor: '#efefef'
+          fontColor: '#666'
         },
         gridLines: {
           display: true,
