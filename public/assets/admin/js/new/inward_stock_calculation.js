@@ -95,14 +95,15 @@ function final_calculation() {
     // tax_amount = (tax_amount.toFixed(decimalpoints));
     $("#no_of_items").html(no_of_items);
     $("#qty_total").html(qty_total);
-    $("#sub_total").html(sub_total.toFixed(decimalpoints));
-    $("#gross_total_amount").html(gross_total_amount.toFixed(decimalpoints));
+    $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
+    $("#gross_total_amount").html("$" + sub_total.toFixed(decimalpoints));
     // $("#sub_total").html('₹' + sub_total);
 
-    // $("#input-supplier_qty_total").val(qty_total);
-    // $("#input-supplier_gross_amount").val(gross_amount);
+    $("#input-supplier_qty_total").val(qty_total);
+    $("#input-supplier_sub_total").val(sub_total.toFixed(decimalpoints));
+    $("#input-supplier_gross_amount").val(sub_total.toFixed(decimalpoints));
+    $("#input-gross_total_amount").val(sub_total.toFixed(decimalpoints));
     // $("#input-supplier_tax_amount").val(tax_amount);
-    // $("#input-supplier_sub_total").val(sub_total);
 
     // $('#inwardStockSubmitBtmSec').hide();
     // if (qty_total > 0) {

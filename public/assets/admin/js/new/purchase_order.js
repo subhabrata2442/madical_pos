@@ -80,6 +80,7 @@ $(document).ready(function () {
             },
             success: function (json) {
                 if (json.success == 1) {
+                    $("#inwardStockSubmitBtmSec").show();
                     Swal.fire({
                         title: "Invoice Uploaded Successfully Done.",
                         showDenyButton: false,
@@ -662,6 +663,7 @@ $(document).ready(function () {
                             "<li value='" + id + "'>" + name + "</li>"
                         );
                     }
+                    $("#inwardStockSubmitBtmSec").show();
                     // binding click event to li
                     $("#product_search_result li").bind("click", function () {
                         $(".loader_section").show();
@@ -729,15 +731,15 @@ function setRow(element) {
                 var drugstore = item_detail.drugstore;
                 var quantity = item_detail.quantity;
                 var package = item_detail.package;
-                var net_price = item_detail.net_price.toFixed(2);
+                var net_price = item_detail.net_price;
 
-                var price = item_detail.price.toFixed(2);
+                var price = item_detail.price;
                 var bonous = item_detail.bonous;
                 var rate = item_detail.rate;
                 var total_quantity = item_detail.total_quantity;
-                var sell_price = item_detail.sell_price.toFixed(2);
+                var sell_price = item_detail.sell_price;
 
-                var profit = item_detail.profit.toFixed(2);
+                var profit = item_detail.profit;
                 var profit_percent = item_detail.profit_percent;
 
                 var subcategory_id = "";
@@ -1158,6 +1160,29 @@ function setSupplierRow(element) {
 }
 
 $(document).on("click", "#inwardStockSubmitBtm", function () {
+    var invoice_no = $("#invoice_no").val();
+    if (invoice_no == "") {
+        $("#invoice_no").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#invoice_no").removeClass("red_border").addClass("black_border");
+    }
+
+    if (invoice_no == "") {
+        toastr.error("Enter Invoice Number!");
+        return false;
+    }
+
+    var purchase_date = $("#purchase_date").val();
+    if (purchase_date == "") {
+        $("#purchase_date").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#purchase_date").removeClass("red_border").addClass("black_border");
+    }
+
+    if (purchase_date == "") {
+        toastr.error("Select purchase date!");
+        return false;
+    }
     var payment_method = $("#payment_method").val();
     if (payment_method == "") {
         $("#payment_method").removeClass("black_border").addClass("red_border");
@@ -1170,49 +1195,23 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
         return false;
     }
 
-    $("#ajax_loader").show();
+    //$("#ajax_loader").show();
     var product_info = [];
     var inward_stock_info = {};
     inward_stock_info["total_qty"] = $("#input-supplier_qty_total").val();
     inward_stock_info["gross_amount"] = $("#input-supplier_gross_amount").val();
-    inward_stock_info["tax_amount"] = $("#input-supplier_tax_amount").val();
     inward_stock_info["sub_total"] = $("#input-supplier_sub_total").val();
-    inward_stock_info["shipping_note"] = $(
-        "#input-supplier_shipping_note"
-    ).val();
-    inward_stock_info["additional_note"] = $(
-        "#input-supplier_additional_note"
-    ).val();
-    inward_stock_info["supplier_id"] = $("#supplier_id").val();
-    inward_stock_info["warehouse_id"] = $("#warehouse_id").val();
-    inward_stock_info["tp_no"] = $("#tp_no").val();
-    inward_stock_info["invoice_no"] = $("#input-supplier_invoice_no").val();
-    inward_stock_info["invoice_purchase_date"] = $(
-        "#input-supplier_invoice_purchase_date"
-    ).val();
-    inward_stock_info["invoice_inward_date"] = $(
-        "#input-supplier_invoice_inward_date"
-    ).val();
-    inward_stock_info["stock_inward_tax_type"] = $("#tax_type").val();
-    inward_stock_info["due_days"] = $("#inward_due_days").val();
-    inward_stock_info["due_date"] = $("#inward_due_date").val();
+
+    inward_stock_info["additional_note"] = $("#additional_note").val();
+    inward_stock_info["invoice_no"] = $("#invoice_no").val();
+    inward_stock_info["invoice_purchase_date"] = $("#purchase_date").val();
+    inward_stock_info["invoice_inward_date"] = $("#inward_date").val();
+
     inward_stock_info["payment_method"] = $("#payment_method").val();
     inward_stock_info["payment_date"] = $("#payment_date").val();
     inward_stock_info["payment_ref_no"] = $("#payment_ref_no").val();
-    inward_stock_info["invoice_stock"] = $("#input-invoice_stock").val();
-    inward_stock_info["invoice_stock_type"] = $(
-        "#input-invoice_stock_type"
-    ).val();
 
-    inward_stock_info["tcs_amt"] = $("#input-tcs_amt").val();
-    inward_stock_info["special_purpose_fee_amt"] = $(
-        "#input-special_purpose_fee_amt"
-    ).val();
-    inward_stock_info["round_off_value_amt"] = $(
-        "#input-round_off_value_amt"
-    ).val();
     inward_stock_info["total_amount"] = $("#input-gross_total_amount").val();
-    inward_stock_info["extra_cost"] = $("#input-extra_cost").val();
 
     $("#product_record_sec tr").each(function (index, e) {
         var rowcount = $(this).data("id");
@@ -1244,10 +1243,10 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
             });
     });
 
-    //console.log();
+    //console.log(product_info);
+    //return false;
 
     inward_stock_info["product_detail"] = product_info;
-
     $.ajax({
         url: prop.ajaxurl,
         type: "post",
@@ -1258,17 +1257,21 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
         },
         dataType: "json",
         success: function (response) {
-            Swal.fire({
-                title: "Stock Inward is successfully done.",
-                showDenyButton: false,
-                showCancelButton: false,
-                allowOutsideClick: false,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.reload();
-                } else if (result.isDenied) {
-                }
-            });
+            if (response.status == 0) {
+                toastr.error(response.msg);
+            } else {
+                Swal.fire({
+                    title: "Stock Inward is successfully done.",
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    } else if (result.isDenied) {
+                    }
+                });
+            }
         },
     });
 });

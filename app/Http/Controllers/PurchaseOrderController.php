@@ -118,7 +118,7 @@ class PurchaseOrderController extends Controller
 			$gross_total_amount=0;
 			$total_amount=0;
 			$i=0;foreach($inward_stock_data[0] as $row){
-				if($i==100){
+				if($i==50){
 					break;
 				}
 
@@ -228,8 +228,12 @@ class PurchaseOrderController extends Controller
 						}
 					}
 
-					$product_result=Product::where('product_barcode',$product_barcode)->get();
-
+					if($drugstore_id!=0){
+						$product_result=Product::where('product_barcode',$product_barcode)->where('drugstore_id',$drugstore_id)->get();
+					}else{
+						$product_result=Product::where('product_barcode',$product_barcode)->get();
+					}
+					
 					if(count($product_result)>0){
 						$product_id=$product_result[0]->id;
 					}else{
@@ -253,7 +257,7 @@ class PurchaseOrderController extends Controller
 							'default_qty'			=> 1,
 							'total_qty'				=> $total_qty,
 							'no_package'			=> $no_package,
-							'netProfit'  			=> $netProfit,
+							'net_price'  			=> $netProfit,
 							'selling_price'  		=> $selling_price,
 							'profit_amount'  		=> $profit_amount,
 							'profit_percent'  		=> $profit_percent,
@@ -2283,30 +2287,17 @@ class PurchaseOrderController extends Controller
             $id = base64_decode($id);
 			$inward_stock_result 	= PurchaseInwardStock::where('id',$id)->first();
 			$inward_stock_products 	= InwardStockProducts::where('inward_stock_id',$id)->get();
-			$branch_id = Session::get('branch_id');
-			
-			$invoice_stock_type=isset($inward_stock_result->invoice_stock_type)?$inward_stock_result->invoice_stock_type:'warehouse';
-			
 			//echo '<pre>';print_r($inward_stock_products);exit;
 			
 			if(count($inward_stock_products) > 0){
-				
 				foreach($inward_stock_products as $product){
-					$branch_stock_product = BranchStockProducts::where('product_id',$product->product_id)->where('size_id',$product->size_id)->where('branch_id',$branch_id)->first();
+					$branch_stock_product = BranchStockProducts::where('product_id',$product->product_id)->where('branch_id',$product->branch_id)->first();
 					$stock_id=isset($branch_stock_product->id)?$branch_stock_product->id:'';
+					//echo '<pre>';print_r($branch_stock_product);exit;
 					if($stock_id!=''){
-						$branch_stock_product_sell_price = BranchStockProductSellPrice::where('stock_id',$branch_stock_product->id)->first();
-						
-						if($branch_stock_product_sell_price){
-							if($invoice_stock_type=='warehouse'){
-								$branch_stock_product_sell_price->w_qty = $branch_stock_product_sell_price->w_qty - $product->product_qty;
-							}else{
-								$branch_stock_product_sell_price->c_qty = $branch_stock_product_sell_price->c_qty - $product->product_qty;
-							}
-							
-							$branch_stock_product_sell_price->updated_at = Carbon::now();
-							$branch_stock_product_sell_price->save();
-						}		
+						$branch_stock_product->t_qty = $branch_stock_product->t_qty - $product->total_qty;
+						$branch_stock_product->updated_at = Carbon::now();
+						$branch_stock_product->save();
 					}	
 				}
 			}

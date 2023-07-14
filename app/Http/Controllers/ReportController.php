@@ -40,17 +40,11 @@ use App\Models\Warehouse;
 use App\Models\Common;
 
 use App\Models\DailyStockTransferHistory;
-
-
-
-
-
-
-
 use Carbon\Carbon;
 Use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 Use Illuminate\Support\Str;
+use Auth;
 
 
 
@@ -2200,13 +2194,12 @@ class ReportController extends Controller
 
      //purchase report added by palash
      public function purchase(Request $request){
-		 $branch_id	= Session::get('branch_id');
-		 //$purchase 	= PurchaseInwardStock::where('company_id',$branch_id)->orderBy('id', 'desc')->get();
-		 //print_r($purchase);exit;
+		 $branch_id=Auth::user()->id;
+		 //$purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
+		 //echo '<pre>';print_r($purchase);exit;
         try {
             if ($request->ajax()) {
-				
-                $purchase 	= PurchaseInwardStock::where('company_id',$branch_id)->orderBy('id', 'desc')->get();
+                $purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
                 return DataTables::of($purchase)
                     ->addColumn('invoice_no', function ($row) {
                        return '<a class="td-anchor" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">' . $row->invoice_no . '</a>';
@@ -2215,14 +2208,8 @@ class ReportController extends Controller
                     ->addColumn('inward_date', function ($row) {
                         return date('d-m-Y', strtotime($row->inward_date));
                     })
-                    ->addColumn('tp_no', function ($row) {
-                        return $row->tp_no;
-                    })
                     ->addColumn('purchase_date', function ($row) {
                         return date('d-m-Y', strtotime($row->purchase_date));
-                    })
-                    ->addColumn('supplier_id', function ($row) {
-                        return $row->supplier->company_name;
                     })
                     ->addColumn('total_qty', function ($row) {
                         return $row->total_qty;
@@ -2230,12 +2217,8 @@ class ReportController extends Controller
                     ->addColumn('sub_total', function ($row) {
                         return number_format($row->sub_total,2);
                     })
-
                     ->addColumn('action', function ($row) {
-                        /*$dropdown = '<a class="dropdown-item" href="'.route('admin.purchase.inward_stock.update', [base64_encode($row->id)]) .'">Edit</a>
-                        <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';*/
-						
-						$dropdown = '
+						$dropdown = '<a class="dropdown-item" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">View</a>
                         <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';
 
                         $btn = '<div class="dropdown">
@@ -2247,7 +2230,6 @@ class ReportController extends Controller
                                     </div>
                                 </div>
                                 ';
-
                         return $btn;
                     })
                    
@@ -2268,7 +2250,7 @@ class ReportController extends Controller
 		 $branch_id	= Session::get('branch_id');
         try {
             if ($request->ajax()) {
-				$purchase = PurchaseInwardStock::where('invoice_stock','counter')->where('company_id',$branch_id)->orderBy('id', 'desc')->get();
+				$purchase = PurchaseInwardStock::where('invoice_stock','counter')->where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
                 return DataTables::of($purchase)
                     ->addColumn('invoice_no', function ($row) {
                        return '<a class="td-anchor" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">' . $row->invoice_no . '</a>';
@@ -2297,7 +2279,7 @@ class ReportController extends Controller
                         /*$dropdown = '<a class="dropdown-item" href="'.route('admin.purchase.inward_stock.update', [base64_encode($row->id)]) .'">Edit</a>
                         <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';*/
 						
-						$dropdown = '
+						$dropdown = '<a class="dropdown-item" href="#" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">View</a>
                         <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';
 
                         $btn = '<div class="dropdown">
@@ -2331,87 +2313,65 @@ class ReportController extends Controller
 	 
 	 
 	 public function stockProductList(Request $request,$inward_stock_id){
-        
+
+		//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
+		//echo '<pre>';print_r($purchase[0]->product->brand);exit;
+		
         try {
             if ($request->ajax()) {
                 //echo base64_decode($inward_stock_id);die;
                 $purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->orderBy('id', 'desc')->get();
                 return DataTables::of($purchase)
-
                     ->addColumn('barcode', function ($row) {
                         return $row->product->product_barcode;
-                    })
-                    ->addColumn('case_qty', function ($row) {
-                        return $row->case_qty;
-                    })
-                    ->addColumn('bottle_case', function ($row) {
-                        return $row->bottle_case;
-                    })
-                    ->addColumn('loose_qty', function ($row) {
-                        return $row->loose_qty;
                     })
                     ->addColumn('product_qty', function ($row) {
                         return $row->product_qty;
                     })
-                    ->addColumn('free_qty', function ($row) {
-                        return $row->free_qty;
-                    })
-                    /* ->addColumn('created_at', function ($row) {
-                        return date('d-m-Y', strtotime($row->created_at));
-                    }) */
-                    ->addColumn('category', function ($row) {
-                        return $row->product->category->name;
-                    })
-                    ->addColumn('sub_category', function ($row) {
-                        return $row->product->subcategory->name;
+					->addColumn('no_package', function ($row) {
+                        return $row->no_package;
                     })
                     ->addColumn('brand', function ($row) {
-                        return $row->product->brand->name;
+                        return $row->brand;
                     })
-                    ->addColumn('batch_no', function ($row) {
-                        return $row->batch_no;
+                    ->addColumn('dosage', function ($row) {
+                        return $row->dosage;
                     })
-                    ->addColumn('measure', function ($row) {
-                        return $row->size->name;
+                    ->addColumn('company', function ($row) {
+                        return $row->company;
                     })
-                    ->addColumn('strength', function ($row) {
-                        return $row->strength;
+                    ->addColumn('drugstore', function ($row) {
+                        return $row->drugstore;
                     })
-                    ->addColumn('bl', function ($row) {
-                        return $row->bl;
-                    })
-                    ->addColumn('lpl', function ($row) {
-                        return $row->lpl;
-                    })
-                    ->addColumn('unit_cost', function ($row) {
-                        return '';
-                    })
-                    ->addColumn('retailer_margin', function ($row) {
-                        return $row->retailer_margin;
-                    })
-                    ->addColumn('round_off', function ($row) {
-                        return $row->round_off;
-                    })
-                    ->addColumn('sp_fee', function ($row) {
-                        return $row->sp_fee;
-                    })
-                    ->addColumn('offer_price', function ($row) {
-                        return $row->offer_price;
+                    ->addColumn('net_price', function ($row) {
+                        return $row->net_price;
                     })
                     ->addColumn('product_mrp', function ($row) {
                         return $row->product_mrp;
                     })
-                    ->addColumn('total_cost', function ($row) {
-                        return number_format($row->total_cost,2) ;
+                    ->addColumn('cost_rate', function ($row) {
+                        return $row->cost_rate;
+                    })
+                    ->addColumn('bonous', function ($row) {
+                        return $row->bonous;
+                    })
+                    ->addColumn('selling_price', function ($row) {
+                        return $row->selling_price;
+                    })
+                    ->addColumn('profit_amount', function ($row) {
+                        return $row->profit_amount;
+                    })
+					->addColumn('profit_percent', function ($row) {
+                        return $row->profit_percent;
                     })
                     ->rawColumns([])
                     ->make(true);
             }
+			
             $data = [];
             $data['heading'] = 'Stock Product List';
             $data['breadcrumb'] = ['Stock', 'Product', 'List'];
             $data['inward_stock_id'] = $inward_stock_id;
-			//echo  $inward_stock_id;die;
             return view('admin.report.stock_product_list', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -2810,8 +2770,8 @@ class ReportController extends Controller
     }
     public function getProductByKeyup(Request $request){
         $search = $request->search;
-        $result = Product::select('id','product_barcode','product_name')
-                            ->where('product_name', 'LIKE', "%{$search}%")
+        $result = Product::select('id','product_barcode','brand')
+                            ->where('brand', 'LIKE', "%{$search}%")
                             ->orWhere('product_barcode', 'LIKE', "%{$search}%")
                             ->take(20)->get();
         $return_data['result']	= $result;
@@ -2823,32 +2783,29 @@ class ReportController extends Controller
         try{
             $data = [];
             $queryStockProduct = BranchStockProducts::query();
-            $queryStockProduct->where('stock_type','counter');
-			
+
 			if(!is_null($request['product_barcode'])) {
                 $queryStockProduct->where('product_barcode',$request['product_barcode']);
+            }
+			if(!is_null($request['brand'])) {
+                $queryStockProduct->whereHas('product',function($q) use ($request){
+                    return $q->where('brand','LIKE','%'.$request['brand'].'%');
+                });
+            }
+			if(!is_null($request['drugstore'])) {
+                $queryStockProduct->whereHas('product',function($q) use ($request){
+                    return $q->where('drugstore_name','LIKE','%'.$request['drugstore'].'%');
+                });
             }
             if(!is_null($request['product_id'])) {
                 $queryStockProduct->where('product_id',$request['product_id']);
             }
-            if(!is_null($request['brand'])) {
-                $queryStockProduct->whereHas('product',function($q) use ($request){
-                    return $q->where('brand_id',$request['brand']);
-                });
-            }
-            if(!is_null($request['category'])) {
-                $queryStockProduct->whereHas('product',function($q) use ($request){
-                    return $q->where('category_id',$request['category']);
-                });
-            }
-            if(!is_null($request['sub_category'])) {
-                $queryStockProduct->whereHas('product',function($q) use ($request){
-                    return $q->where('subcategory_id',$request['sub_category']);
-                });
-            }
-            if(!is_null($request['size'])) {
-				$queryStockProduct->where('size_id',$request['size']);    
-            }
+			
+            // if(!is_null($request['category'])) {
+            //     $queryStockProduct->whereHas('product',function($q) use ($request){
+            //         return $q->where('category_id',$request['category']);
+            //     });
+            // }
             $allStockProduct = $queryStockProduct->with('stockProduct')->get();
 			
 			//echo '<pre>';print_r($allStockProduct);exit;
@@ -2861,20 +2818,11 @@ class ReportController extends Controller
             $data['products']   = $stockProducts;
             $allStockProductArr = $allStockProduct->toArray();
 			
-			//echo '<pre>';print_r($data);exit;
-			
-			
-            //echo "<pre>";print_r(array_sum($allStockProductArr['stock_product'],'c_qty'));die();
-            //echo "<pre>";print_r($allStockProductArr[0]['stock_product']);die;
-            //echo "<pre>";print_r($allStockProductArr[0]['stock_product']);die;
-            //dd($all_product);
-            //$data['total_invoice']  = count(array_unique(array_column($all_product->toArray(), 'inward_stock_id')));
             $data['total_qty']  	= 0;
             $data['total_cost'] 	= 0;
             $data['categories'] 	= Category::all();
-            $data['sizes']      	= Size::all();
             $data['sub_categories']	= Subcategory::all();
-            $data['brands']      	= Brand::all();
+            //$data['brands']      	= Brand::all();
             return view('admin.report.inventory', compact('data'));
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());

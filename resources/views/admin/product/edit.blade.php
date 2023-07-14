@@ -137,7 +137,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="net_price_0" class="form-label">Net Price</label>
-                <input type="text" class="form-control admin-input notallowinput" id="net_price_0" name="net_price[]" value="{{ $data['products']->netProfit }}"  autocomplete="off">
+                <input type="text" class="form-control admin-input notallowinput" id="net_price_0" name="net_price[]" value="{{ $data['products']->net_price }}"  autocomplete="off">
                 @error('net_price')
                 <div class="error admin-error">{{ $message }}</div>
                 @enderror </div>

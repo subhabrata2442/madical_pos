@@ -8,15 +8,12 @@
       <div class="table-responsive dataTable-design">
         <table id="purchase_list" class="table table-bordered">
           <thead>
-			<th>Action</th>
             <th>Invoice No.</th>
-            <th>TP Pass.</th>
             <th>Inward date</th>
             <th>Purchase date</th>
-            <th>Supplier Name</th>
             <th>Total Qty</th>
             <th>Total Cost</th>
-            
+			<th>Action</th>
            </thead>
           <tbody>
           </tbody>
@@ -35,20 +32,11 @@ $(function() {
 		processing: true,
 		serverSide: true,
 		searchDelay: 350,
-		ajax: "{{ route('admin.report.counter.counter_purchase') }}",
+		ajax: "{{ route('admin.report.purchase') }}",
 		columns: [
-			{
-				data: 'action',
-				name: 'action',
-                orderable: false, searchable: false
-			},
 			{
 				data: 'invoice_no',
 				name: 'invoice_no'
-			},	
-			{
-				data: 'tp_no',
-				name: 'tp_no'
 			},	
 			{
 				data: 'inward_date',
@@ -59,10 +47,6 @@ $(function() {
 				name: 'purchase_date',
 			},
 			{
-				data: 'supplier_id',
-				name: 'supplier_id'
-			},
-			{
 				data: 'total_qty',
 				name: 'total_qty'
 			},
@@ -70,8 +54,11 @@ $(function() {
 				data: 'sub_total',
 				name: 'sub_total'
 			},
-			
-			
+			{
+				data: 'action',
+				name: 'action',
+                orderable: false, searchable: false
+			},
 		]
 	});
 
@@ -88,8 +75,7 @@ $(document).on('click', '#delete_inward_stock', function() {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-
-                    window.location = url;
+					window.location = url;
                 }
             })
         });

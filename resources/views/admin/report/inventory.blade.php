@@ -46,12 +46,6 @@
       <div class="col-auto">
         <h4>Stock Inventory</h4>
       </div>
-      <!--<div class="col d-flex invoiceAmout justify-content-center">
-        <ul class="d-flex">
-          <li>Total Qty : <span>{{$data['total_qty']}}</span></li>
-          <li>Total Amount : <span>{{number_format($data['total_cost'],2)}}</span></li>
-        </ul>
-      </div>-->
       <div class="col-auto"> <a href="javascript:;" class="searchDropBtn">Advance Search <i class="fas fa-chevron-circle-down"></i></a> </div>
     </div>
   </div>
@@ -63,9 +57,17 @@
         <div class="form-group">
           <label for="customer_last_name" class="form-label">Product Name</label>
           <div class="position-relative">
-            <input type="text" class="form-control" id="search_product" name="product" value="{{request()->input('product')}}" autocomplete="off">
+            <input type="text" class="form-control" id="search_product" name="brand" value="{{request()->input('brand')}}" autocomplete="off">
           </div>
           <input type="hidden" id="product_id" name="product_id" value="{{request()->input('product_id')}}">
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="drugstore" class="form-label">Drugstore name</label>
+          <div class="position-relative">
+            <input type="text" class="form-control" id="drugstore" name="drugstore" value="{{request()->input('drugstore')}}" autocomplete="off">
+          </div>
         </div>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 col-12">
@@ -77,81 +79,19 @@
         </div>
       </div>
       
-      <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+      {{-- <div class="col-lg-2 col-md-2 col-sm-12 col-12">
         <div class="form-group">
           <label for="" class="form-label">Select Category</label>
           <select class="form-control custom-select form-control-select" id="" name="category">
             <option value="">Select Category</option>
-            
-          
-          
 						@forelse ($data['categories'] as $category)
-							
-          
-          
             <option value="{{$category->id}}" {{request()->input('category') == $category->id ? 'selected' : ''}}>{{$category->name}}</option>
-            
-          
-          
 						@empty
-							
 						@endforelse
-					
-        
-        
           </select>
         </div>
-      </div>
-      <div class="col-lg-2 col-md-2 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="" class="form-label">Select Subcategory</label>
-          <select class="form-control custom-select form-control-select" id="" name="sub_category">
-            <option value="">Select Subcategory</option>
-            
-          
-          
-						@forelse ($data['sub_categories'] as $sub_category)
-							
-          
-          
-            <option value="{{$sub_category->id}}" {{request()->input('sub_category') == $sub_category->id ? 'selected' : ''}}>{{$sub_category->name}}</option>
-            
-          
-          
-						@empty
-							
-						@endforelse
-					
-        
-        
-          </select>
-        </div>
-      </div>
-      <div class="col-lg-2 col-md-2 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="" class="form-label">Select Size</label>
-          <select class="form-control custom-select form-control-select" id="" name="size">
-            <option value="">Select Size</option>
-            
-          
-          
-						@forelse ($data['sizes'] as $size)
-							
-          
-          
-            <option value="{{$size->id}}" {{request()->input('size') == $size->id ? 'selected' : ''}}>{{$size->name}}</option>
-            
-          
-          
-						@empty
-							
-						@endforelse
-					
-        
-        
-          </select>
-        </div>
-      </div>
+      </div> --}}
+      
       
       <div class="col-12">
         <ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
@@ -159,19 +99,6 @@
           <li>
             <button class="saveBtn-2" type="submit">Search <i class="fas fa-arrow-circle-right"></i></button>
           </li>
-          {{--
-          <li class="d-flex align-items-center">
-            <div>
-              <select class="form-control custom-select form-control-select" id="report_type">
-                <option value=""> Select Report Type</option>
-                <option value="item_wise_sales_report"> Item Wise sales report</option>
-              </select>
-            </div>
-            <div>
-              <button type="button" id="download_report" class="srcBtnWrapGo"><i class="fas fa-download"></i></button>
-            </div>
-          </li>
-          --}}
         </ul>
       </div>
     </div>
@@ -184,15 +111,17 @@
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
-          <th scope="col">Barcode</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Size</th>
-            <th scope="col">Category</th>
-            <th scope="col">Sub Category</th>
-            <th scope="col">Warehouse Qty</th>
-            <th scope="col">Counter Qty</th>
-            <th scope="col">MRP/Piece</th>
-              </thead>
+            <th scope="col">Barcode</th>
+            <th scope="col">The Brand</th>
+            <th scope="col">Dosage Form</th>
+            <th scope="col">Company</th>
+            <th scope="col">Drugstore name</th>
+            <th scope="col">Total Quantity</th>
+            <th scope="col">Net Price</th>
+            <th scope="col">Price</th>
+            <th scope="col">US/IQ rate</th>
+            <th scope="col">Sell Price</th>
+          </thead>
           <tbody>
           
           @forelse ($data['products'] as $Stock_product)
@@ -203,13 +132,15 @@
           @endphp
           <tr>
             <td>{{@$Stock_product->product_barcode}}</td>
-            <td>{{@$Stock_product->product->product_name}}</td>
-            <td>{{@$Stock_product->size->name}}</td>
-            <td>{{@$Stock_product->product->category->name}}</td>
-            <td>{{@$Stock_product->product->subcategory->name}}</td>
-            <td>{{$w_qty}}</td>
-            <td><input type="number" class="qty_update" value="{{$c_qty}}" data-stock_id="{{@$Stock_product->id}}" data-branch_id="{{@$Stock_product->branch_id}}" data-product_id="{{@$Stock_product->product_id}}" data-size_id="{{@$Stock_product->size_id}}" /></td>
-            <td>{{$product_mrp}}</td>
+            <td>{{@$Stock_product->product->brand}}</td>
+            <td>{{@$Stock_product->product->dosage_name}}</td>
+            <td>{{@$Stock_product->product->company_name}}</td>
+            <td>{{@$Stock_product->product->drugstore_name}}</td>
+            <td>{{@$Stock_product->t_qty}}</td>
+            <td>{{@$Stock_product->product->net_price}}</td>
+            <td>{{@$Stock_product->product->product_mrp}}</td>
+            <td>{{@$Stock_product->product->product_mrp}}</td>
+            <td>{{@$Stock_product->product->selling_price}}</td>
           </tr>
           @empty
           <tr >
