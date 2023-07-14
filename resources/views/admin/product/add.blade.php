@@ -261,7 +261,7 @@
       <form id="productfeaturesform">
         <input type="hidden" id="product_features_type" autocomplete="off">
         <div class="modal-body">
-          <div class="input-group input-group-default floating-label">
+          <div class="input-group-default">
             <label class="form-label dnamic_feature_name"> </label>
             <input class="form-control form-inputtext" autocomplete="off" name="product_feature_data_value" id="product_feature_data_value" maxlength="100" type="text" placeholder=" ">
           </div>
