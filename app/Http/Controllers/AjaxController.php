@@ -18,6 +18,12 @@ use App\Models\Supplier;
 use App\Models\Warehouse;
 use App\Models\StockTransferHistory;
 
+use App\Models\Company;
+use App\Models\Dosage;
+use App\Models\Drugstore;
+
+
+
 use App\Models\Counter;
 use App\Models\StockTransferCounterHistory;
 use App\Models\CounterWiseStock;
@@ -1615,10 +1621,20 @@ class AjaxController extends Controller {
 		}	
 	}
 
+	public function ajaxpost_check_product_barcode($request) {
+		$product_barcode	= trim($request->product_barcode);
 
-
-
-
+		$count=Product::where('product_barcode',$product_barcode)->count();
+		
+		if($count>0){
+			$return_data['msg']		= 'This barcode already exists!';
+			$return_data['status']	= 0;
+		}else{
+			$return_data['status']	= 1;
+		}
+		echo json_encode($return_data);
+	}
+	
 	public function ajaxpost_set_feature_option($request) {
 		$product_type	= $request->product_type;
 		$feature_title	= $request->feature_title;
@@ -1647,17 +1663,17 @@ class AjaxController extends Controller {
 
 			}
 		}
-		else if($product_type=='size'){
-			$count=Size::where('name',$feature_title)->count();
+		else if($product_type=='dosage'){
+			$count=Dosage::where('name',$feature_title)->count();
 			if($count>0){
-				$return_data['msg']		= 'This size already exists!';
+				$return_data['msg']		= 'This Dosage already exists!';
 				$return_data['status']	= 0;
 			}else{
 				$feature_data=array(
 					'name'  		=> $feature_title,
 					'created_at'	=> date('Y-m-d')
 				);
-				$feature=Size::create($feature_data);
+				$feature=Dosage::create($feature_data);
 				$feature_id=$feature->id;
 
 				$return_data['val']		= $feature_id;
@@ -1667,17 +1683,17 @@ class AjaxController extends Controller {
 
 			}
 		}
-		else if($product_type=='brand'){
-			$count=Brand::where('name',$feature_title)->count();
+		else if($product_type=='company'){
+			$count=Company::where('name',$feature_title)->count();
 			if($count>0){
-				$return_data['msg']		= 'This brand already exists!';
+				$return_data['msg']		= 'This Company already exists!';
 				$return_data['status']	= 0;
 			}else{
 				$feature_data=array(
 					'name'  		=> $feature_title,
 					'created_at'	=> date('Y-m-d')
 				);
-				$feature=Brand::create($feature_data);
+				$feature=Company::create($feature_data);
 				$feature_id=$feature->id;
 
 				$return_data['val']		= $feature_id;
@@ -1687,17 +1703,17 @@ class AjaxController extends Controller {
 
 			}
 		}
-		else if($product_type=='subcategory'){
-			$count=Subcategory::where('name',$feature_title)->count();
+		else if($product_type=='drugstore'){
+			$count=Drugstore::where('name',$feature_title)->count();
 			if($count>0){
-				$return_data['msg']		= 'This subcategory already exists!';
+				$return_data['msg']		= 'This Drugstore already exists!';
 				$return_data['status']	= 0;
 			}else{
 				$feature_data=array(
 					'name'  		=> $feature_title,
 					'created_at'	=> date('Y-m-d')
 				);
-				$feature=Subcategory::create($feature_data);
+				$feature=Drugstore::create($feature_data);
 				$feature_id=$feature->id;
 
 				$return_data['val']		= $feature_id;
@@ -1707,113 +1723,8 @@ class AjaxController extends Controller {
 
 			}
 		}
-		else if($product_type=='color'){
-			$count=Color::where('name',$feature_title)->count();
-			if($count>0){
-				$return_data['msg']		= 'This color already exists!';
-				$return_data['status']	= 0;
-			}else{
-				$feature_data=array(
-					'name'  		=> $feature_title,
-					'created_at'	=> date('Y-m-d')
-				);
-				$feature=Color::create($feature_data);
-				$feature_id=$feature->id;
-
-				$return_data['val']		= $feature_id;
-				$return_data['title']	= $feature_title;
-				$return_data['msg']		= 'Successfully added';
-				$return_data['status']	= 1;
-
-			}
-		}
-		else if($product_type=='material'){
-			$count=Material::where('name',$feature_title)->count();
-			if($count>0){
-				$return_data['msg']		= 'This Material already exists!';
-				$return_data['status']	= 0;
-			}else{
-				$feature_data=array(
-					'name'  		=> $feature_title,
-					'created_at'	=> date('Y-m-d')
-				);
-				$feature=Material::create($feature_data);
-				$feature_id=$feature->id;
-
-				$return_data['val']		= $feature_id;
-				$return_data['title']	= $feature_title;
-				$return_data['msg']		= 'Successfully added';
-				$return_data['status']	= 1;
-
-			}
-		}
-		else if($product_type=='abcdefg'){
-			$count=Abcdefg::where('name',$feature_title)->count();
-			if($count>0){
-				$return_data['msg']		= 'This abcdefg already exists!';
-				$return_data['status']	= 0;
-			}else{
-				$feature_data=array(
-					'name'  		=> $feature_title,
-					'created_at'	=> date('Y-m-d')
-				);
-				$feature=Abcdefg::create($feature_data);
-				$feature_id=$feature->id;
-
-				$return_data['val']		= $feature_id;
-				$return_data['title']	= $feature_title;
-				$return_data['msg']		= 'Successfully added';
-				$return_data['status']	= 1;
-
-			}
-		}
-		else if($product_type=='service'){
-			$count=Service::where('name',$feature_title)->count();
-			if($count>0){
-				$return_data['msg']		= 'This service already exists!';
-				$return_data['status']	= 0;
-			}else{
-				$feature_data=array(
-					'name'  		=> $feature_title,
-					'created_at'	=> date('Y-m-d')
-				);
-				$feature=Service::create($feature_data);
-				$feature_id=$feature->id;
-
-				$return_data['val']		= $feature_id;
-				$return_data['title']	= $feature_title;
-				$return_data['msg']		= 'Successfully added';
-				$return_data['status']	= 1;
-
-			}
-		}
-		else if($product_type=='vendor_code'){
-			$count=VendorCode::where('name',$feature_title)->count();
-			if($count>0){
-				$return_data['msg']		= 'This vendor code already exists!';
-				$return_data['status']	= 0;
-			}else{
-				$feature_data=array(
-					'name'  		=> $feature_title,
-					'created_at'	=> date('Y-m-d')
-				);
-				$feature=VendorCode::create($feature_data);
-				$feature_id=$feature->id;
-
-				$return_data['val']		= $feature_id;
-				$return_data['title']	= $feature_title;
-				$return_data['msg']		= 'Successfully added';
-				$return_data['status']	= 1;
-
-			}
-		}
-
 		//print_r($return_data);exit;
 		echo json_encode($return_data);
-
-
-
-
 	}
 
 }

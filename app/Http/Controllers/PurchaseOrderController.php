@@ -127,21 +127,33 @@ class PurchaseOrderController extends Controller
 					$product_barcode='';
 					if($barcode!=''){
 						$product_barcode 	= $this->get_product_barcode($barcode);
-
 					}
 					
-					$brand_name=$row[1];
-					$dosage_name=$row[2];
-					$company_name=$row[3];
-					$drugstore_name=$row[4];
-					$product_mrp=$row[7];
-					$cost_price=$row[8];
-					$cost_rate=$row[10];
-					$selling_price=$row[12];
-					$profit_amount=$row[13];
-					$profit_percent=0;
-					$stock_qty=$row[11];
+					$brand_name		= $row[1];
+					$dosage_name	= $row[2];
+					$company_name	= $row[3];
+					$drugstore_name	= $row[4];
+					$default_qty	= $row[5];
+					$no_package		= $row[6];
+					$netProfit		= $row[7];
+					$product_mrp	= $row[8];
+					$cost_price		= $row[8];
+					$cost_rate		= $row[10];
+					$bonous			= $row[9];
+					$selling_price	= $row[12];
+					$profit_amount	= $row[13];
+					$profit_percent	= 0;
+					$stock_qty		= $row[11];
+					$total_qty		= $row[11];
+					
 
+					if($profit_amount!='' && $netProfit!=''){
+						if($profit_amount>0 && $netProfit>0){
+							$profit_percent=($profit_amount/$netProfit)*100;
+							$profit_percent=number_format((float)$profit_percent, 2, '.', '');
+						}
+					}
+					
 					if($stock_qty!=''){
 						$total_quantity +=$stock_qty;
 					}
@@ -221,9 +233,13 @@ class PurchaseOrderController extends Controller
 					if(count($product_result)>0){
 						$product_id=$product_result[0]->id;
 					}else{
-						$product_slug='';
+						$product_slug=$this->create_slug($brand_name.'-'.$product_barcode);
+
+						$n=Product::count();
+						$uqc_id=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
 
 						$insert_data=array(
+							'uqc_id'  				=> $uqc_id,
 							'product_barcode'  		=> $product_barcode,
 							'brand'  				=> $brand_name,
 							'brand_id'  			=> $brand_id,
@@ -234,12 +250,17 @@ class PurchaseOrderController extends Controller
 							'company_id'  			=> $company_id,
 							'drugstore_name'  		=> $drugstore_name,
 							'drugstore_id'  		=> $drugstore_id,
+							'default_qty'			=> 1,
+							'total_qty'				=> $total_qty,
+							'no_package'			=> $no_package,
+							'netProfit'  			=> $netProfit,
 							'selling_price'  		=> $selling_price,
 							'profit_amount'  		=> $profit_amount,
 							'profit_percent'  		=> $profit_percent,
 							'cost_rate'  			=> $cost_rate,
 							'product_mrp'  			=> $product_mrp,
 							'cost_price'  			=> $cost_price,
+							'bonous'				=> $bonous,
 							'stock_qty'  			=> $stock_qty,
 						);
 						//echo '<pre>';print_r($insert_data);exit;
@@ -269,9 +290,11 @@ class PurchaseOrderController extends Controller
 						'profit_percent'	=> $profit_percent,
 					);
 					
-					//echo '<pre>';print_r($product_id);exit;
+					//echo '<pre>';print_r($excel_data);exit;
 				}
 			$i++;}
+
+			//echo '<pre>';print_r($excel_data);exit;
 
 			$return_data=[];
 
