@@ -17,10 +17,10 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="product_code" class="form-label">Product Barcode</label>
-              <input type="text" class="form-control admin-input" id="product_code" name="product_code"
-                                    value="{{ old('product_code') }}" required  autocomplete="off">
-              @error('product_code')
+              <label for="product_barcode" class="form-label">Product Barcode</label>
+              <input type="text" class="form-control admin-input" id="product_barcode" name="product_barcode"
+                                    value="{{ old('product_barcode') }}" required  autocomplete="off">
+              @error('product_barcode')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
@@ -84,58 +84,67 @@
       
         <div class="card" id="add_more_size_row_0">
           <div class="row">
-           
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="cost_rate" class="form-label">Cost Rate</label>
-                <input type="text" class="form-control admin-input cost_rate" id="cost_rate_0" name="cost_rate[]" value="" required autocomplete="off">
+                <label for="product_mrp" class="form-label">Product Price</label>
+                <input type="text" class="form-control admin-input number product_mrp onclickselect" id="product_mrp_0" name="product_mrp[]" value="0"  autocomplete="off" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="cost_rate" class="form-label">US/IQ Rate</label>
+                <input type="text" class="form-control admin-input cost_rate onclickselect" id="cost_rate_0" name="cost_rate[]" value="0" required autocomplete="off">
                 @error('cost_rate')
                 <div class="error admin-error">{{ $message }}</div>
                 @enderror </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="cost_gst_percent" class="form-label">Cost GST %</label>
-                <input type="text" class="form-control admin-input cost_gst_percent" id="cost_gst_percent_0" name="cost_gst_percent[]" value="0" required autocomplete="off">
-                @error('cost_gst_percent')
+                <label for="selling_price_0" class="form-label">Selling Price</label>
+                <input type="text" class="form-control admin-input selling_price onclickselect" id="selling_price_0" name="selling_price[]" value="0"  autocomplete="off">
+                @error('selling_price')
+                <div class="error admin-error">{{ $message }}</div>
+                @enderror
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="product_quantity_0" class="form-label">Quantity</label>
+                <input type="text" class="form-control admin-input product_quantity onclickselect" id="product_quantity_0" name="product_quantity[]" value="1" required autocomplete="off">
+                @error('product_quantity')
                 <div class="error admin-error">{{ $message }}</div>
                 @enderror </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="cost_gst_amount" class="form-label">Cost GST &#8377; </label>
-                <input type="text" class="form-control admin-input notallowinput" id="cost_gst_amount_0" name="cost_gst_amount[]" value="0" autocomplete="off">
-                @error('cost_gst_amount')
+                <label for="noper_package_0" class="form-label">No per package</label>
+                <input type="text" class="form-control admin-input noper_package onclickselect" id="noper_package_0" name="noper_package[]" value="1" required autocomplete="off">
+                @error('noper_package')
                 <div class="error admin-error">{{ $message }}</div>
                 @enderror </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="cost_price" class="form-label">Cost Price</label>
-                <input type="text" class="form-control admin-input notallowinput" id="cost_price_0" name="cost_price[]" value="0"  autocomplete="off">
-                @error('cost_price')
+                <label for="bonous_0" class="form-label">Bonous</label>
+                <input type="text" class="form-control admin-input bonous onclickselect" id="bonous_0" name="bonous[]" value="0" required autocomplete="off">
+                @error('bonous')
+                <div class="error admin-error">{{ $message }}</div>
+                @enderror </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="net_price_0" class="form-label">Net Price</label>
+                <input type="text" class="form-control admin-input notallowinput" id="net_price_0" name="net_price[]" value="0"  autocomplete="off">
+                @error('net_price')
                 <div class="error admin-error">{{ $message }}</div>
                 @enderror </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="extra_charge" class="form-label">Extra Charge</label>
-                <input type="text" class="form-control admin-input extra_charge" id="extra_charge_0" name="extra_charge[]" value="0"  autocomplete="off">
-                @error('extra_charge')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="profit_percent" class="form-label">Profit %</label>
-                <input type="text" class="form-control admin-input profit_percent" id="profit_percent_0" name="profit_percent[]" value="0"  autocomplete="off">
-                @error('profit_percent')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="profit_amount" class="form-label">Profit &#8377; </label>
+                <label for="profit_amount_0" class="form-label">Profit &#8377; </label>
                 <input type="text" class="form-control admin-input notallowinput" id="profit_amount_0" name="profit_amount[]" value="0"  autocomplete="off">
                 @error('profit_amount')
                 <div class="error admin-error">{{ $message }}</div>
@@ -143,39 +152,11 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="selling_price" class="form-label">Selling Rate</label>
-                <input type="text" class="form-control admin-input notallowinput" id="selling_price_0" name="selling_price[]" value="0"  autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="sell_gst_percent" class="form-label">Sell GST %</label>
-                <input type="text" class="form-control admin-input sell_gst_percent" id="sell_gst_percent_0" name="sell_gst_percent[]" value="0"  autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="sell_gst_amount" class="form-label">Sell GST &#8377; </label>
-                <input type="text" class="form-control admin-input notallowinput" id="sell_gst_amount_0" name="sell_gst_amount[]" value="0"  autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="offer_price" class="form-label">Offer Price</label>
-                <input type="text" class="form-control admin-input number offer_price" id="offer_price_0" name="offer_price[]" value="0"  autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="product_mrp" class="form-label">Product MRP <a href="javascript:;" data-toggle="tooltip" class="pa-0 ma-0  bold" style="font-size:20px;" data-placement="top" title="Profit is calculated on Offer Price, and not on MRP.  If you do not have Offer Price then you can keep Offer Price same as MRP." data-content="" ><i class="fa fa-eye cursor"></i></a></label>
-                <input type="text" class="form-control admin-input number" id="product_mrp_0" name="product_mrp[]" value="0"  autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="wholesale_price" class="form-label">Wholesale Price</label>
-                <input type="text" class="form-control admin-input number" id="wholesale_price_0" name="wholesale_price[]" value="0"  autocomplete="off">
-              </div>
+                <label for="profit_percent" class="form-label">Profit %</label>
+                <input type="text" class="form-control admin-input notallowinput" id="profit_percent_0" name="profit_percent[]" value="0"  autocomplete="off">
+                @error('profit_percent')
+                <div class="error admin-error">{{ $message }}</div>
+                @enderror </div>
             </div>
           </div>
         </div>
@@ -209,8 +190,8 @@
         <div class="row">
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="subcategory" class="form-label">Dosage Form</label>
-              <select name="subcategory" id="subcategory" class="form-control form-inputtext">
+              <label for="dosage" class="form-label">Dosage Form</label>
+              <select name="dosage" id="dosage" class="form-control form-inputtext">
                 <option value="">Select Dosage Form</option>
                 @if(count($data['dosage'])>0)
                 @foreach($data['dosage'] as $row)
@@ -218,15 +199,15 @@
                 @endforeach
                 @endif
               </select>
-              @error('subcategory')
+              @error('dosage')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="subcategory" data-title="Subcategory"><i class="fas fa-plus"></i></a></div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="dosage" data-title="Dosage Form"><i class="fas fa-plus"></i></a></div>
           </div>
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="color" class="form-label">Company</label>
-              <select name="color" id="color" class="form-control form-inputtext">
+              <label for="company" class="form-label">Company</label>
+              <select name="company" id="company" class="form-control form-inputtext">
                 <option value="">Select Company</option>
                 @if(count($data['company'])>0)
                 @foreach($data['company'] as $row)
@@ -234,26 +215,26 @@
                 @endforeach
                 @endif
               </select>
-              @error('color')
+              @error('company')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="color" data-title="Color"><i class="fas fa-plus"></i></a></div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="company" data-title="Company"><i class="fas fa-plus"></i></a></div>
           </div>
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="material" class="form-label">Drugstore name</label>
-              <select name="material" id="material" class="form-control form-inputtext">
+              <label for="drugstore" class="form-label">Drugstore name</label>
+              <select name="drugstore" id="drugstore" class="form-control form-inputtext">
                 <option value="">Select Drugstore</option>
-                @if(count($data['company'])>0)
-                @foreach($data['company'] as $row)
+                @if(count($data['drugstore'])>0)
+                @foreach($data['drugstore'] as $row)
                 <option value="{{$row->id}}">{{$row->name}}</option>
                 @endforeach
                 @endif
               </select>
-              @error('material')
+              @error('drugstore')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="material" data-title="Material"><i class="fas fa-plus"></i></a></div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="drugstore" data-title="Drugstore"><i class="fas fa-plus"></i></a></div>
           </div>
         </div>
       </div>
@@ -274,7 +255,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title dnamic_feature_title"></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <button type="button" class="close modal_close_btn" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
       <div class="container"></div>
       <form id="productfeaturesform">
@@ -285,7 +266,7 @@
             <input class="form-control form-inputtext" autocomplete="off" name="product_feature_data_value" id="product_feature_data_value" maxlength="100" type="text" placeholder=" ">
           </div>
           <span id="sizeerr" style="color: red;font-size: 15px"></span> </div>
-        <div class="modal-footer"><a href="javascript:;" data-dismiss="modal" class="btn">Close</a>
+        <div class="modal-footer"><a href="javascript:;" data-dismiss="modal" class="btn modal_close_btn">Close</a>
           <button type="button" id="productfeaturessave" class="btn btn-primary">Save</button>
         </div>
       </form>

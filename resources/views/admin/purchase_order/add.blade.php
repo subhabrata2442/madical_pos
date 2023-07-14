@@ -17,8 +17,6 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-12">
           <div class="supplierWrap">
             <div class="invArea">
-              
-              
               <ul class="d-flex flex-wrap align-items-center">
                 <li class="invAreaInf">Invoice Number</li>
                 <li class="invAreaVal">
@@ -66,8 +64,6 @@
                 <li class="invAreaVal">
                   <select class="form-control custom-select form-control-select" id="payment_method" name="payment_method" required="required">
                     <option value="">Select payment method</option>
-                    <option value="bevco_wallet">Bevco Wallet</option>
-                    <option value="ocr">Credit/Debit Card</option>
                     <option value="cheque">Cheque</option>
                     <option value="net_banking">Net Banking</option>
                     <option value="cash">Cash</option>
@@ -101,17 +97,17 @@
 
 <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate enctype="multipart/form-data">
  
- 
-  <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
+  {{-- <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
   <input type="hidden" name="invoice_purchase_date" id="input-supplier_invoice_purchase_date" />
-  <input type="hidden" name="invoice_inward_date" id="input-supplier_invoice_inward_date" />
+  <input type="hidden" name="invoice_inward_date" id="input-supplier_invoice_inward_date" /> --}}
   <input type="hidden" name="qty_total" id="input-supplier_qty_total" />
-  <input type="hidden" name="gross_amount" id="input-supplier_gross_amount" />
-  <input type="hidden" name="tax_amount" id="input-supplier_tax_amount" />
   <input type="hidden" name="sub_total" id="input-supplier_sub_total" />
-  <input type="hidden" name="shipping_note" id="input-supplier_shipping_note" />
-  <input type="hidden" name="additional_note" id="input-supplier_additional_note" />
+  <input type="hidden" name="gross_amount" id="input-supplier_gross_amount" />
   <input type="hidden" name="gross_total_amount" id="input-gross_total_amount" />
+  {{-- <input type="hidden" name="tax_amount" id="input-supplier_tax_amount" /> --}}
+  {{-- <input type="hidden" name="shipping_note" id="input-supplier_shipping_note" />
+  <input type="hidden" name="additional_note" id="input-supplier_additional_note" /> --}}
+  
 
   <div class="col-12 mb-3">
     <div class="commonBox purcheseDetails vTop">

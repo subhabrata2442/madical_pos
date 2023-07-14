@@ -118,7 +118,7 @@ class PurchaseOrderController extends Controller
 			$gross_total_amount=0;
 			$total_amount=0;
 			$i=0;foreach($inward_stock_data[0] as $row){
-				if($i==100){
+				if($i==50){
 					break;
 				}
 
@@ -127,21 +127,33 @@ class PurchaseOrderController extends Controller
 					$product_barcode='';
 					if($barcode!=''){
 						$product_barcode 	= $this->get_product_barcode($barcode);
-
 					}
 					
-					$brand_name=$row[1];
-					$dosage_name=$row[2];
-					$company_name=$row[3];
-					$drugstore_name=$row[4];
-					$product_mrp=$row[7];
-					$cost_price=$row[8];
-					$cost_rate=$row[10];
-					$selling_price=$row[12];
-					$profit_amount=$row[13];
-					$profit_percent=0;
-					$stock_qty=$row[11];
+					$brand_name		= $row[1];
+					$dosage_name	= $row[2];
+					$company_name	= $row[3];
+					$drugstore_name	= $row[4];
+					$default_qty	= $row[5];
+					$no_package		= $row[6];
+					$netProfit		= $row[7];
+					$product_mrp	= $row[8];
+					$cost_price		= $row[8];
+					$cost_rate		= $row[10];
+					$bonous			= $row[9];
+					$selling_price	= $row[12];
+					$profit_amount	= $row[13];
+					$profit_percent	= 0;
+					$stock_qty		= $row[11];
+					$total_qty		= $row[11];
+					
 
+					if($profit_amount!='' && $netProfit!=''){
+						if($profit_amount>0 && $netProfit>0){
+							$profit_percent=($profit_amount/$netProfit)*100;
+							$profit_percent=number_format((float)$profit_percent, 2, '.', '');
+						}
+					}
+					
 					if($stock_qty!=''){
 						$total_quantity +=$stock_qty;
 					}
@@ -216,14 +228,22 @@ class PurchaseOrderController extends Controller
 						}
 					}
 
-					$product_result=Product::where('product_barcode',$product_barcode)->get();
-
+					if($drugstore_id!=0){
+						$product_result=Product::where('product_barcode',$product_barcode)->where('drugstore_id',$drugstore_id)->get();
+					}else{
+						$product_result=Product::where('product_barcode',$product_barcode)->get();
+					}
+					
 					if(count($product_result)>0){
 						$product_id=$product_result[0]->id;
 					}else{
-						$product_slug='';
+						$product_slug=$this->create_slug($brand_name.'-'.$product_barcode);
+
+						$n=Product::count();
+						$uqc_id=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
 
 						$insert_data=array(
+							'uqc_id'  				=> $uqc_id,
 							'product_barcode'  		=> $product_barcode,
 							'brand'  				=> $brand_name,
 							'brand_id'  			=> $brand_id,
@@ -234,12 +254,17 @@ class PurchaseOrderController extends Controller
 							'company_id'  			=> $company_id,
 							'drugstore_name'  		=> $drugstore_name,
 							'drugstore_id'  		=> $drugstore_id,
+							'default_qty'			=> 1,
+							'total_qty'				=> $total_qty,
+							'no_package'			=> $no_package,
+							'net_price'  			=> $netProfit,
 							'selling_price'  		=> $selling_price,
 							'profit_amount'  		=> $profit_amount,
 							'profit_percent'  		=> $profit_percent,
 							'cost_rate'  			=> $cost_rate,
 							'product_mrp'  			=> $product_mrp,
 							'cost_price'  			=> $cost_price,
+							'bonous'				=> $bonous,
 							'stock_qty'  			=> $stock_qty,
 						);
 						//echo '<pre>';print_r($insert_data);exit;
@@ -269,9 +294,11 @@ class PurchaseOrderController extends Controller
 						'profit_percent'	=> $profit_percent,
 					);
 					
-					//echo '<pre>';print_r($product_id);exit;
+					//echo '<pre>';print_r($excel_data);exit;
 				}
 			$i++;}
+
+			//echo '<pre>';print_r($excel_data);exit;
 
 			$return_data=[];
 
@@ -2260,30 +2287,17 @@ class PurchaseOrderController extends Controller
             $id = base64_decode($id);
 			$inward_stock_result 	= PurchaseInwardStock::where('id',$id)->first();
 			$inward_stock_products 	= InwardStockProducts::where('inward_stock_id',$id)->get();
-			$branch_id = Session::get('branch_id');
-			
-			$invoice_stock_type=isset($inward_stock_result->invoice_stock_type)?$inward_stock_result->invoice_stock_type:'warehouse';
-			
 			//echo '<pre>';print_r($inward_stock_products);exit;
 			
 			if(count($inward_stock_products) > 0){
-				
 				foreach($inward_stock_products as $product){
-					$branch_stock_product = BranchStockProducts::where('product_id',$product->product_id)->where('size_id',$product->size_id)->where('branch_id',$branch_id)->first();
+					$branch_stock_product = BranchStockProducts::where('product_id',$product->product_id)->where('branch_id',$product->branch_id)->first();
 					$stock_id=isset($branch_stock_product->id)?$branch_stock_product->id:'';
+					//echo '<pre>';print_r($branch_stock_product);exit;
 					if($stock_id!=''){
-						$branch_stock_product_sell_price = BranchStockProductSellPrice::where('stock_id',$branch_stock_product->id)->first();
-						
-						if($branch_stock_product_sell_price){
-							if($invoice_stock_type=='warehouse'){
-								$branch_stock_product_sell_price->w_qty = $branch_stock_product_sell_price->w_qty - $product->product_qty;
-							}else{
-								$branch_stock_product_sell_price->c_qty = $branch_stock_product_sell_price->c_qty - $product->product_qty;
-							}
-							
-							$branch_stock_product_sell_price->updated_at = Carbon::now();
-							$branch_stock_product_sell_price->save();
-						}		
+						$branch_stock_product->t_qty = $branch_stock_product->t_qty - $product->total_qty;
+						$branch_stock_product->updated_at = Carbon::now();
+						$branch_stock_product->save();
 					}	
 				}
 			}

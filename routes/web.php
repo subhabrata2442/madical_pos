@@ -167,19 +167,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/sales', [ReportController::class, 'sales'])->name('sales');
 		Route::prefix('invoice')->name('invoice.')->group(function () {
 			Route::match(['GET'], '/report', [ReportController::class, 'invoice_report'])->name('invoice_report');
-			
 			Route::match(['GET'], '/test_report', [ReportController::class, 'test_report'])->name('test_report');
-			
-			
 		});
-		
 		Route::prefix('counter')->name('counter.')->group(function () {
 			Route::match(['GET'], '/purchase', [ReportController::class, 'counterPurchase'])->name('counter_purchase');
 		});
-		
-		
-		
-        
         Route::match(['GET'], '/sales/sales-product', [ReportController::class, 'salesProduct'])->name('sales.product');
         Route::match(['GET'], '/sales-product/download', [ReportController::class, 'salesProductDownload'])->name('sales.product.download');
         

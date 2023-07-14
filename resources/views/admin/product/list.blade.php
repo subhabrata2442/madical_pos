@@ -19,12 +19,14 @@
       <div class="table-responsive dataTable-design">
         <table id="product_list" class="table table-bordered">
           <thead>
+			<th>Barcode</th>
             <th>Brand Name</th>
             <th>Dosage Form</th>
             <th>Company Name</th>
             <th>Drugstore Name</th>
             <th>MRP</th>
             <th>Stock QTY</th>
+			<th>Action</th>
            </thead>
           <tbody>
           </tbody>
@@ -56,8 +58,13 @@ $(function() {
 		processing: true,
 		serverSide: true,
 		searchDelay: 350,
+		ordering: false,
 		ajax: "{{ route('admin.product.list') }}",
 		columns: [
+			{
+				data: 'product_barcode',
+				name: 'product_barcode'
+			},	
 			{
 				data: 'brand',
 				name: 'brand'
@@ -81,7 +88,13 @@ $(function() {
 			{
 				data: 'qty',
 				name: 'qty'
-			}
+			},
+			{
+				data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+             },
 		]
 	});
 
