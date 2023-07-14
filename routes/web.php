@@ -232,7 +232,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             Route::match(['GET', 'POST'], '/list', [WaiterController::class, 'list'])->name('list');
             Route::match(['GET', 'POST'], '/edit/{id}', [WaiterController::class, 'edit'])->name('edit');
             Route::match(['GET', 'POST'], '/delete/{id}', [WaiterController::class, 'delete'])->name('delete');
+
         });
+		
         Route::prefix('table')->name('table.')->group(function () {
             Route::match(['GET', 'POST'], '/add', [ManageTableController::class, 'add'])->name('add');
             Route::match(['GET', 'POST'], '/list', [ManageTableController::class, 'list'])->name('list');
@@ -258,7 +260,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 
 // Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']);
 Route::post('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']);

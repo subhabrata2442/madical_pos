@@ -10,7 +10,6 @@ $is_branch 			= Session::get('is_branch');
 @endphp 
 
 <!-- Main Sidebar Container -->
-
 <aside class="main-sidebar sidebar-dark-primary elevation-4"> 
   <!-- Brand Logo --> 
   <a href="{{ route('admin.dashboard') }}" class="brand-link d-flex align-items-center"> <img src="{{ asset('assets/img/fire-logo.png') }}" alt="Logo" class="brand-image img-circle"> <span class="brand-text font-weight-light"> <img class="img-block logo-dark" src="{{ asset('assets/img/text-logo.png') }}" alt=""> </span> </a> 
