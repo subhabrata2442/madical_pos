@@ -5,6 +5,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\EmbloyeesController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AjaxController;
@@ -153,7 +155,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		
 	});
 	
-	Route::prefix('product')->name('product.')->group(function () {
+	Route::prefix('product')->name('product.')->middleware('checkPermission:1')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [ProductController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/product_upload', [ProductController::class, 'product_upload'])->name('product_upload');
 		Route::match(['GET', 'POST'], '/bar_product_price_upload', [ProductController::class, 'bar_product_price_upload'])->name('bar_product_price_upload');
@@ -162,8 +164,27 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/edit/{id}', [ProductController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [ProductController::class, 'delete'])->name('delete');
 	});
-	
-	Route::prefix('report')->name('report.')->group(function () {
+
+	Route::prefix('purchase')->name('purchase.')->middleware('checkPermission:2')->group(function () {
+		Route::match(['GET', 'POST'], '/invoice_upload', [PurchaseOrderController::class, 'invoice_upload'])->name('invoice_upload');
+		
+		Route::match(['GET', 'POST'], '/inward_stock', [PurchaseOrderController::class, 'create_order'])->name('inward_stock');
+        Route::match(['GET', 'POST'], '/material_inward', [PurchaseOrderController::class, 'material_inward'])->name('material_inward');
+		Route::match(['GET', 'POST'], '/supplier_bill', [PurchaseOrderController::class, 'supplier_bill'])->name('supplier_bill');
+        Route::match(['GET', 'POST'], '/debitnote', [PurchaseOrderController::class, 'debitnote'])->name('debitnote');
+
+        Route::match(['GET', 'POST'], '/update-inward-stock/{id}', [PurchaseOrderController::class, 'updateInwardStock'])->name('inward_stock.update');
+        Route::match(['GET', 'POST'], '/update-inward-stock/delete/{id}', [PurchaseOrderController::class, 'deleteInwardStock'])->name('inward-stock.delete');
+        Route::match(['GET'], '/ajax-get', [PurchaseOrderController::class, 'ajaxPurchaseById'])->name('list.ajax');
+
+        Route::match(['GET', 'POST'], '/stock-transfer', [PurchaseOrderController::class, 'stockTranfer'])->name('stock.transfer');
+		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
+		
+		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
+        
+	});
+
+	Route::prefix('report')->name('report.')->middleware('checkPermission:3')->group(function () {
 		Route::match(['GET'], '/sales', [ReportController::class, 'sales'])->name('sales');
 		Route::prefix('invoice')->name('invoice.')->group(function () {
 			Route::match(['GET'], '/report', [ReportController::class, 'invoice_report'])->name('invoice_report');
@@ -206,24 +227,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         //Route::match(['GET', 'POST'], '/edit/{id}', [ProductController::class, 'edit'])->name('edit');
         //Route::match(['GET', 'POST'], '/delete/{id}', [ProductController::class, 'delete'])->name('delete');
 	});
-	
-	Route::prefix('purchase')->name('purchase.')->middleware('checkPermission:6')->group(function () {
-		Route::match(['GET', 'POST'], '/invoice_upload', [PurchaseOrderController::class, 'invoice_upload'])->name('invoice_upload');
-		
-		Route::match(['GET', 'POST'], '/inward_stock', [PurchaseOrderController::class, 'create_order'])->name('inward_stock');
-        Route::match(['GET', 'POST'], '/material_inward', [PurchaseOrderController::class, 'material_inward'])->name('material_inward');
-		Route::match(['GET', 'POST'], '/supplier_bill', [PurchaseOrderController::class, 'supplier_bill'])->name('supplier_bill');
-        Route::match(['GET', 'POST'], '/debitnote', [PurchaseOrderController::class, 'debitnote'])->name('debitnote');
 
-        Route::match(['GET', 'POST'], '/update-inward-stock/{id}', [PurchaseOrderController::class, 'updateInwardStock'])->name('inward_stock.update');
-        Route::match(['GET', 'POST'], '/update-inward-stock/delete/{id}', [PurchaseOrderController::class, 'deleteInwardStock'])->name('inward-stock.delete');
-        Route::match(['GET'], '/ajax-get', [PurchaseOrderController::class, 'ajaxPurchaseById'])->name('list.ajax');
+	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [StoreController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/list', [StoreController::class, 'list'])->name('list');
+        Route::match(['GET', 'POST'], '/edit/{id}', [StoreController::class, 'edit'])->name('edit');
+        Route::match(['GET', 'POST'], '/delete/{id}', [StoreController::class, 'delete'])->name('delete');
+		Route::match(['GET'], '/users/change-status/{id}/{status}', [StoreController::class, 'change_status'])->name('changeStatus');
+	});
 
-        Route::match(['GET', 'POST'], '/stock-transfer', [PurchaseOrderController::class, 'stockTranfer'])->name('stock.transfer');
-		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
-		
-		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
-        
+	Route::prefix('embloyees')->name('embloyees.')->middleware('checkPermission:6')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [EmbloyeesController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/list', [EmbloyeesController::class, 'list'])->name('list');
+        Route::match(['GET', 'POST'], '/edit/{id}', [EmbloyeesController::class, 'edit'])->name('edit');
+        Route::match(['GET', 'POST'], '/delete/{id}', [EmbloyeesController::class, 'delete'])->name('delete');
+		Route::match(['GET'], '/users/change-status/{id}/{status}', [EmbloyeesController::class, 'change_status'])->name('changeStatus');
 	});
 	
     Route::prefix('restaurant')->name('restaurant.')->group(function () {
