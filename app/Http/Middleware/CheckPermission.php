@@ -26,19 +26,22 @@ class CheckPermission
             return redirect()->route('auth.login');
 			
         $user = Auth::user();
+
+		$is_store	= 'N';
+		$admin_type	= Session::get('admin_type');
+		if($admin_type!=1){
+			$is_store	= 'Y';
+		}
 		
-		$is_branch	= Session::get('is_branch');
-		$branch_id	= Session::get('branch_id');
-		
-		if($is_branch=='N'){
+		if($is_store=='Y'){
 			$user_id	= $user->id;
 			$role_id	= $user->role;
 			
 			$current_page_permision_id=isset($roles[0])?$roles[0]:'0';
+			$role_wise_permission_result = RoleWisePermission::where('branch_id',$user_id)->where('permission_id',$current_page_permision_id)->get();
 			
 			//echo '<pre>';print_r($current_page_permision_id);exit;
 			
-			$role_wise_permission_result = RoleWisePermission::where('role_id',$role_id)->where('branch_id',$branch_id)->where('permission_id',$current_page_permision_id)->get();
 			if(count($role_wise_permission_result)>0){
 				return $next($request);
 			}else{

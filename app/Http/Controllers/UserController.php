@@ -20,9 +20,6 @@ class UserController extends Controller
 {
     public function list(Request $request)
     {
-		//echo route('admin.users.list');exit;
-		//echo route('admin.user.list');exit;
-		//http://127.0.0.1:8000/admin/users/manage-role/NQ=="
         try {
 
             if ($request->ajax()) {
