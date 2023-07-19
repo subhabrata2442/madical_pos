@@ -49,4 +49,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role');
     }
+
+    public function get_store_info(){
+		return $this->hasOne(StoreDetails::class,'store_id', 'id');
+	}
 }

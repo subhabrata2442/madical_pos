@@ -51,6 +51,175 @@ use Auth;
 class ReportController extends Controller
 {
 	
+	public function purchase(Request $request){
+		$branch_id=Auth::user()->id;
+		//$purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
+		//echo '<pre>';print_r($purchase);exit;
+	   try {
+		   if ($request->ajax()) {
+			   $purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
+			   return DataTables::of($purchase)
+				   ->addColumn('invoice_no', function ($row) {
+					  return '<a class="td-anchor" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">' . $row->invoice_no . '</a>';
+				  
+				   })
+				   ->addColumn('inward_date', function ($row) {
+					   return date('d-m-Y', strtotime($row->inward_date));
+				   })
+				   ->addColumn('purchase_date', function ($row) {
+					   return date('d-m-Y', strtotime($row->purchase_date));
+				   })
+				   ->addColumn('total_qty', function ($row) {
+					   return $row->total_qty;
+				   })
+				   ->addColumn('sub_total', function ($row) {
+					   return number_format($row->sub_total,2);
+				   })
+				   ->addColumn('action', function ($row) {
+					   $dropdown = '<a class="dropdown-item" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">View</a>
+					   <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';
+
+					   $btn = '<div class="dropdown">
+								   <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+									   <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+								   </div>
+								   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+									   ' . $dropdown . '
+								   </div>
+							   </div>
+							   ';
+					   return $btn;
+				   })
+				  
+				   ->rawColumns(['invoice_no','action'])
+				   ->make(true);
+		   }
+		   $data = [];
+		   $data['heading'] = 'Purchase Order List';
+		   $data['breadcrumb'] = ['Stock', 'Purchase Order', 'List'];
+		   
+		   return view('admin.report.purchase', compact('data'));
+	   } catch (\Exception $e) {
+		   return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+	   }
+   }
+
+   	public function stockProductList(Request $request,$inward_stock_id){
+
+	//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
+	//echo '<pre>';print_r($purchase[0]->product->brand);exit;
+	
+	try {
+		if ($request->ajax()) {
+			//echo base64_decode($inward_stock_id);die;
+			$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->orderBy('id', 'desc')->get();
+			return DataTables::of($purchase)
+				->addColumn('barcode', function ($row) {
+					return $row->product->product_barcode;
+				})
+				->addColumn('product_qty', function ($row) {
+					return $row->product_qty;
+				})
+				->addColumn('no_package', function ($row) {
+					return $row->no_package;
+				})
+				->addColumn('brand', function ($row) {
+					return $row->brand;
+				})
+				->addColumn('dosage', function ($row) {
+					return $row->dosage;
+				})
+				->addColumn('company', function ($row) {
+					return $row->company;
+				})
+				->addColumn('drugstore', function ($row) {
+					return $row->drugstore;
+				})
+				->addColumn('net_price', function ($row) {
+					return $row->net_price;
+				})
+				->addColumn('product_mrp', function ($row) {
+					return $row->product_mrp;
+				})
+				->addColumn('cost_rate', function ($row) {
+					return $row->cost_rate;
+				})
+				->addColumn('bonous', function ($row) {
+					return $row->bonous;
+				})
+				->addColumn('selling_price', function ($row) {
+					return $row->selling_price;
+				})
+				->addColumn('profit_amount', function ($row) {
+					return $row->profit_amount;
+				})
+				->addColumn('profit_percent', function ($row) {
+					return $row->profit_percent;
+				})
+				->rawColumns([])
+				->make(true);
+		}
+		
+		$data = [];
+		$data['heading'] = 'Stock Product List';
+		$data['breadcrumb'] = ['Stock', 'Product', 'List'];
+		$data['inward_stock_id'] = $inward_stock_id;
+		return view('admin.report.stock_product_list', compact('data'));
+	} catch (\Exception $e) {
+		return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+	}
+}
+	public function inventory(Request $request){
+		try{
+			$data = [];
+			$queryStockProduct = BranchStockProducts::query();
+
+			if(!is_null($request['product_barcode'])) {
+				$queryStockProduct->where('product_barcode',$request['product_barcode']);
+			}
+			if(!is_null($request['brand'])) {
+				$queryStockProduct->whereHas('product',function($q) use ($request){
+					return $q->where('brand','LIKE','%'.$request['brand'].'%');
+				});
+			}
+			if(!is_null($request['drugstore'])) {
+				$queryStockProduct->whereHas('product',function($q) use ($request){
+					return $q->where('drugstore_name','LIKE','%'.$request['drugstore'].'%');
+				});
+			}
+			if(!is_null($request['product_id'])) {
+				$queryStockProduct->where('product_id',$request['product_id']);
+			}
+			
+			// if(!is_null($request['category'])) {
+			//     $queryStockProduct->whereHas('product',function($q) use ($request){
+			//         return $q->where('category_id',$request['category']);
+			//     });
+			// }
+			$allStockProduct = $queryStockProduct->with('stockProduct')->get();
+			
+			//echo '<pre>';print_r($allStockProduct);exit;
+			
+			
+			
+			$stockProducts 		= $queryStockProduct->paginate(10);
+			$data['heading']    = 'Sales List';
+			$data['breadcrumb'] = ['Sales', '', 'List'];
+			$data['products']   = $stockProducts;
+			$allStockProductArr = $allStockProduct->toArray();
+			
+			$data['total_qty']  	= 0;
+			$data['total_cost'] 	= 0;
+			$data['categories'] 	= Category::all();
+			$data['sub_categories']	= Subcategory::all();
+			//$data['brands']      	= Brand::all();
+			return view('admin.report.inventory', compact('data'));
+		}catch (\Exception $e) {
+			return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+		}
+	}
+
+	
 	
 	
 	/*Stock Transfer Report Pdf*/
@@ -2193,58 +2362,7 @@ class ReportController extends Controller
     }
 
      //purchase report added by palash
-     public function purchase(Request $request){
-		 $branch_id=Auth::user()->id;
-		 //$purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
-		 //echo '<pre>';print_r($purchase);exit;
-        try {
-            if ($request->ajax()) {
-                $purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
-                return DataTables::of($purchase)
-                    ->addColumn('invoice_no', function ($row) {
-                       return '<a class="td-anchor" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">' . $row->invoice_no . '</a>';
-                   
-                    })
-                    ->addColumn('inward_date', function ($row) {
-                        return date('d-m-Y', strtotime($row->inward_date));
-                    })
-                    ->addColumn('purchase_date', function ($row) {
-                        return date('d-m-Y', strtotime($row->purchase_date));
-                    })
-                    ->addColumn('total_qty', function ($row) {
-                        return $row->total_qty;
-                    })
-                    ->addColumn('sub_total', function ($row) {
-                        return number_format($row->sub_total,2);
-                    })
-                    ->addColumn('action', function ($row) {
-						$dropdown = '<a class="dropdown-item" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">View</a>
-                        <a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="' . route('admin.purchase.inward-stock.delete', [base64_encode($row->id)]) . '">Delete</a>';
-
-                        $btn = '<div class="dropdown">
-                                    <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        ' . $dropdown . '
-                                    </div>
-                                </div>
-                                ';
-                        return $btn;
-                    })
-                   
-                    ->rawColumns(['invoice_no','action'])
-                    ->make(true);
-            }
-            $data = [];
-            $data['heading'] = 'Purchase Order List';
-            $data['breadcrumb'] = ['Stock', 'Purchase Order', 'List'];
-			
-            return view('admin.report.purchase', compact('data'));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
-        }
-    }
+    
 	
 	 public function counterPurchase(Request $request){
 		 $branch_id	= Session::get('branch_id');
@@ -2312,71 +2430,7 @@ class ReportController extends Controller
 	 
 	 
 	 
-	 public function stockProductList(Request $request,$inward_stock_id){
-
-		//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
-		//echo '<pre>';print_r($purchase[0]->product->brand);exit;
-		
-        try {
-            if ($request->ajax()) {
-                //echo base64_decode($inward_stock_id);die;
-                $purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->orderBy('id', 'desc')->get();
-                return DataTables::of($purchase)
-                    ->addColumn('barcode', function ($row) {
-                        return $row->product->product_barcode;
-                    })
-                    ->addColumn('product_qty', function ($row) {
-                        return $row->product_qty;
-                    })
-					->addColumn('no_package', function ($row) {
-                        return $row->no_package;
-                    })
-                    ->addColumn('brand', function ($row) {
-                        return $row->brand;
-                    })
-                    ->addColumn('dosage', function ($row) {
-                        return $row->dosage;
-                    })
-                    ->addColumn('company', function ($row) {
-                        return $row->company;
-                    })
-                    ->addColumn('drugstore', function ($row) {
-                        return $row->drugstore;
-                    })
-                    ->addColumn('net_price', function ($row) {
-                        return $row->net_price;
-                    })
-                    ->addColumn('product_mrp', function ($row) {
-                        return $row->product_mrp;
-                    })
-                    ->addColumn('cost_rate', function ($row) {
-                        return $row->cost_rate;
-                    })
-                    ->addColumn('bonous', function ($row) {
-                        return $row->bonous;
-                    })
-                    ->addColumn('selling_price', function ($row) {
-                        return $row->selling_price;
-                    })
-                    ->addColumn('profit_amount', function ($row) {
-                        return $row->profit_amount;
-                    })
-					->addColumn('profit_percent', function ($row) {
-                        return $row->profit_percent;
-                    })
-                    ->rawColumns([])
-                    ->make(true);
-            }
-			
-            $data = [];
-            $data['heading'] = 'Stock Product List';
-            $data['breadcrumb'] = ['Stock', 'Product', 'List'];
-            $data['inward_stock_id'] = $inward_stock_id;
-            return view('admin.report.stock_product_list', compact('data'));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
-        }
-    }
+	 
 
     public function invoicePdf(){
         
@@ -2779,55 +2833,7 @@ class ReportController extends Controller
 		echo json_encode($return_data);	
     }
 
-    public function inventory(Request $request){
-        try{
-            $data = [];
-            $queryStockProduct = BranchStockProducts::query();
-
-			if(!is_null($request['product_barcode'])) {
-                $queryStockProduct->where('product_barcode',$request['product_barcode']);
-            }
-			if(!is_null($request['brand'])) {
-                $queryStockProduct->whereHas('product',function($q) use ($request){
-                    return $q->where('brand','LIKE','%'.$request['brand'].'%');
-                });
-            }
-			if(!is_null($request['drugstore'])) {
-                $queryStockProduct->whereHas('product',function($q) use ($request){
-                    return $q->where('drugstore_name','LIKE','%'.$request['drugstore'].'%');
-                });
-            }
-            if(!is_null($request['product_id'])) {
-                $queryStockProduct->where('product_id',$request['product_id']);
-            }
-			
-            // if(!is_null($request['category'])) {
-            //     $queryStockProduct->whereHas('product',function($q) use ($request){
-            //         return $q->where('category_id',$request['category']);
-            //     });
-            // }
-            $allStockProduct = $queryStockProduct->with('stockProduct')->get();
-			
-			//echo '<pre>';print_r($allStockProduct);exit;
-			
-			
-			
-            $stockProducts 		= $queryStockProduct->paginate(10);
-            $data['heading']    = 'Sales List';
-            $data['breadcrumb'] = ['Sales', '', 'List'];
-            $data['products']   = $stockProducts;
-            $allStockProductArr = $allStockProduct->toArray();
-			
-            $data['total_qty']  	= 0;
-            $data['total_cost'] 	= 0;
-            $data['categories'] 	= Category::all();
-            $data['sub_categories']	= Subcategory::all();
-            //$data['brands']      	= Brand::all();
-            return view('admin.report.inventory', compact('data'));
-        }catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
-        }
-    }
+    
 
     public function monthWiseReportPdf(Request $request){
         $branch_id		= Session::get('branch_id');

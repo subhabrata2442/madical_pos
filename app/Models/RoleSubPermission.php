@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class SupplierContactDetails extends Model
+class RoleSubPermission extends Model
 {
     use HasFactory;
-   //use SoftDeletes;
+    //use SoftDeletes;
 	
-	protected $table = 'supplier_contact_details';
+	protected $table = 'role_sub_permission';
 	protected $guarded	= [];
 
 }

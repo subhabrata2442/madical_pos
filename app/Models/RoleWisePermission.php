@@ -13,4 +13,8 @@ class RoleWisePermission extends Model
 	protected $table = 'role_wise_permission';
 	protected $guarded	= [];
 
+    public function get_slug(){
+        return $this->hasOne(RoleSubPermission::class,'id', 'sub_permission_id'); 
+    }
+
 }
