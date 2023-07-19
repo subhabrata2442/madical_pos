@@ -12,7 +12,7 @@ foreach($data['roleWisePermission'] as $row){
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <form method="post" action="{{ route('admin.store.edit', [base64_encode($data['store']->id)]) }}" class="needs-validation" id="user-form" novalidate enctype="multipart/form-data">
+      <form method="post" action="{{ route('admin.embloyees.edit', [base64_encode($data['store']->id)]) }}" class="needs-validation" id="user-form" novalidate enctype="multipart/form-data">
         @csrf
         <div class="row">
           <x-alert />
@@ -29,6 +29,14 @@ foreach($data['roleWisePermission'] as $row){
               <label for="Email" class="form-label">Email</label>
               <input type="text" class="form-control admin-input" id="Email" name="email" value="{{ old('email', $data['store']->email) }}" required autocomplete="off">
               @error('email')
+              <div class="error">{{ $message }}</div>
+              @enderror </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="address" class="form-label">Address</label>
+              <input type="text" class="form-control admin-input" id="address" name="address" value="{{ old('phone', $data['store']->get_store_info->address) }}" required autocomplete="off">
+              @error('address')
               <div class="error">{{ $message }}</div>
               @enderror </div>
           </div>

@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PurchaseOrder;
-use App\Models\Supplier;
-use App\Models\SupplierCompanyMobile;
-use App\Models\SupplierBank;
-use App\Models\SupplierGst;
-use App\Models\SupplierContactDetails;
+use App\Models\StoreDetails;
 use App\Models\RolePermission;
 use App\Models\RoleWisePermission;
 use App\Models\User;
@@ -27,7 +23,7 @@ class EmbloyeesController extends Controller
 			//echo '<pre>';print_r($users);exit;
 
             if ($request->ajax()) {
-                $users = User::with('get_role')->where('role',2)->where('parent_id',$parent_id)->orderBy('id', 'desc')->get();
+                $users = User::with('get_role')->where('parent_id',$parent_id)->orderBy('id', 'desc')->get();
                 return DataTables::of($users) 
                     ->addColumn('name', function ($row) {
                         return $row->name;
@@ -50,12 +46,12 @@ class EmbloyeesController extends Controller
                     })
                     ->addColumn('action', function ($row) {
 						// <a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.store.delete', [base64_encode($row->id)]) . '">Delete</a>
-                        $dropdown = '<a class="dropdown-item" href="' . route('admin.store.edit', [base64_encode($row->id)]) . '">Edit</a>
+                        $dropdown = '<a class="dropdown-item" href="' . route('admin.embloyees.edit', [base64_encode($row->id)]) . '">Edit</a>
                         ';
                         if ($row->status == 1) {
-                            $dropdown .= '<a class="dropdown-item" id="change_status" href="#" data-status="0"  data-url="' . route('admin.store.changeStatus', [base64_encode($row->id), 0]) . '">Block</a>';
+                            $dropdown .= '<a class="dropdown-item" id="change_status" href="#" data-status="0"  data-url="' . route('admin.embloyees.changeStatus', [base64_encode($row->id), 0]) . '">Block</a>';
                         } else {
-                            $dropdown .= '<a class="dropdown-item" id="change_status" href="#" data-status="1" data-url="' . route('admin.store.changeStatus', [base64_encode($row->id), 1]) . '">Unblock</a>';
+                            $dropdown .= '<a class="dropdown-item" id="change_status" href="#" data-status="1" data-url="' . route('admin.embloyees.changeStatus', [base64_encode($row->id), 1]) . '">Unblock</a>';
                         }
                         $btn = '<div class="dropdown">
                                     <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -98,11 +94,13 @@ class EmbloyeesController extends Controller
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
 
+                $parent_id=Auth::user()->id;
 				$store_data=array(
 					'name'  		=> $request->full_name,
 					'email'  		=> $request->email,
 					'phone'			=> $request->phone,
 					'password'		=>  Hash::make($request->password),
+                    'parent_id'     => $parent_id,
 					'role'   		=> 2,
 					'status'		=> 1,
 				);
@@ -110,6 +108,16 @@ class EmbloyeesController extends Controller
 				
 				$store=User::create($store_data);
 				$store_id=$store->id;
+
+                $store_details_data=array(
+					'store_id'  		=> $store_id,
+					'contact_email'  	=> $request->email,
+					'address'			=> $request->address,
+					'contact_mobile'    => $request->phone,
+                    'whatsapp_no'       => $request->phone,
+				);
+                
+                StoreDetails::create($store_details_data);
 
 				if(isset($request->roll)){
 					if(count($request->roll)>0){	
@@ -175,9 +183,17 @@ class EmbloyeesController extends Controller
 			if($request->password!=''){
 				$array['password']=Hash::make($request->password_confirm);
 			}
-
 			User::find($store_id)->update($array);
 
+            $store_details_data=array(
+                'contact_email'  	=> $request->email,
+                'address'			=> $request->address,
+                'contact_mobile'    => $request->phone,
+                'whatsapp_no'       => $request->phone,
+            );
+
+            StoreDetails::where('store_id',$store_id)->update($store_details_data);
+            
 			if(isset($request->roll)){
 				if(count($request->roll)>0){
 					RoleWisePermission::where('branch_id',$store_id)->delete();
@@ -202,7 +218,7 @@ class EmbloyeesController extends Controller
 			$data['role']= RolePermission::where('status',1)->orderBy('id', 'asc')->get();
 			$data['roleWisePermission']= RoleWisePermission::where('branch_id',$store_id)->orderBy('id', 'asc')->get();
 
-			//echo '<pre>';print_r($data['roleWisePermission']);exit;
+			//echo '<pre>';print_r($data['store']->get_store_info->address);exit;
 						
             return view('admin.embloyees.edit', compact('data'));
         } catch (\Exception $e) {
@@ -213,11 +229,11 @@ class EmbloyeesController extends Controller
     {
         try {
             $id = base64_decode($id);
-            Supplier::find($id)->delete();
-			SupplierCompanyMobile::where('supplier_id',$id)->delete();
-			SupplierBank::where('supplier_id',$id)->delete();
-			SupplierGst::where('supplier_id',$id)->delete();
-			SupplierContactDetails::where('supplier_id',$id)->delete();
+            // Supplier::find($id)->delete();
+			// SupplierCompanyMobile::where('supplier_id',$id)->delete();
+			// SupplierBank::where('supplier_id',$id)->delete();
+			// SupplierGst::where('supplier_id',$id)->delete();
+			// SupplierContactDetails::where('supplier_id',$id)->delete();
 			
             return redirect()->back()->with('success', 'Supplier deleted successfully');
         } catch (\Exception $e) {

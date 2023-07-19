@@ -32,10 +32,21 @@ class CheckPermission
 		if($admin_type!=1){
 			$is_store	= 'Y';
 		}
+
+		$segments = request()->segments();
+		$slug=reset($segments).'-'.$segments[1].'-'.$segments[2];
+		//echo $slug;exit;
+
+		//echo '<pre>';print_r($first);exit;
 		
 		if($is_store=='Y'){
 			$user_id	= $user->id;
 			$role_id	= $user->role;
+
+			
+
+
+		
 			
 			$current_page_permision_id=isset($roles[0])?$roles[0]:'0';
 			$role_wise_permission_result = RoleWisePermission::where('branch_id',$user_id)->where('permission_id',$current_page_permision_id)->get();

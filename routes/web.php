@@ -197,7 +197,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET'], '/sales-product/download', [ReportController::class, 'salesProductDownload'])->name('sales.product.download');
         
 		Route::match(['GET'], '/purchase', [ReportController::class, 'purchase'])->name('purchase');
-        Route::match(['GET'], '/stock-product/list/{slug}', [ReportController::class, 'stockProductList'])->name('stock_product.list');
+        Route::match(['GET'], '/stock-product-list/{slug}', [ReportController::class, 'stockProductList'])->name('stock_product.list');
 		Route::match(['GET'], '/inventory', [ReportController::class, 'inventory'])->name('inventory');
 		Route::match(['GET'], '/reminders', [ReportController::class, 'reminders'])->name('reminders');
 

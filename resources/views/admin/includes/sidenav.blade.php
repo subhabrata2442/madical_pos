@@ -4,10 +4,10 @@ $adminRoll 		= Session::get('admin_type');
 
 
 $permission=array();
-$roleWisePermissionResult		= App\Models\RoleWisePermission::where('branch_id',$adminId)->orderBy('id', 'asc')->get();
+$roleWisePermissionResult		= App\Models\UserRolePermission::where('user_id',$adminId)->orderBy('id', 'asc')->get();
 
 foreach($roleWisePermissionResult as $row){
-	$permission[]=$row->permission_id;
+	$permission[]=$row->role_id;
 }
 
 //echo '<pre>';print_r($permission);exit;
