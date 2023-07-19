@@ -79,7 +79,7 @@ $selected_permission=array();
                     <td bgcolor="#f3f3f3" class="leftAlign" style="text-transform:uppercase;">
                       <b class="redcolor">{{$value['title']}}</b>
                       <input type="checkbox" onclick="pagesCheck({{$count}})" name="roll_ids[{{$count}}]"
-                        id="ModuleName_{{$count}}" value="{{$value['roll_id']}}">
+                        id="ModuleName_{{$count}}" value="{{$value['roll_id']}}" <?php if($value['is_checked']=='Y'){ echo 'checked';} ?>>
                     </td>
                     <td bgcolor="#f3f3f3" class="center titleover mouseover{{$count}}">View</td>
                     <td bgcolor="#f3f3f3" class="center titleover mouseover{{$count}}">Add</td>

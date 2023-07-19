@@ -4,13 +4,27 @@ $adminRoll 		= Session::get('admin_type');
 
 
 $permission=array();
-$roleWisePermissionResult		= App\Models\UserRolePermission::where('user_id',$adminId)->orderBy('id', 'asc')->get();
+$rolePermissionResult		= App\Models\UserRolePermission::where('user_id',$adminId)->orderBy('id', 'asc')->get();
 
-foreach($roleWisePermissionResult as $row){
+foreach($rolePermissionResult as $row){
 	$permission[]=$row->role_id;
 }
+$page_permission=array();
 
-//echo '<pre>';print_r($permission);exit;
+if($adminId!=1){
+  $roleWisePermissionResult		= App\Models\RoleWisePermission::where('branch_id',$adminId)->orderBy('id', 'asc')->get();
+  foreach($roleWisePermissionResult as $row){
+    $page_permission[]=$row->get_slug->slug;
+  }
+}else{
+  $roleWisePermissionResult		= App\Models\RoleSubPermission::get();
+  foreach($roleWisePermissionResult as $row){
+    $page_permission[]=$row->slug;
+  }
+
+}
+
+//echo '<pre>';print_r($page_permission);exit;
 
 
 @endphp 
@@ -55,12 +69,16 @@ foreach($roleWisePermissionResult as $row){
               <p>Manage Embloyees <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('admin-embloyees-list', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.embloyees.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.embloyees.list') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>List Embloyees</p>
                   </a> </li>
+                  @endif
+                @if(in_array('admin-embloyees-add', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.embloyees.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.embloyees.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Add Embloyees</p>
                   </a> </li>
+                  @endif
               </ul>
             </li>
           @endif
@@ -73,12 +91,16 @@ foreach($roleWisePermissionResult as $row){
               <p>Products <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('admin-product-list', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.product.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.product.list') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>List Products</p>
                   </a> </li>
+                @endif
+                @if(in_array('admin-product-add', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.product.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.product.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Add Products</p>
                   </a> </li>
+                @endif
               </ul>
             </li>
           @endif
@@ -91,9 +113,11 @@ foreach($roleWisePermissionResult as $row){
               <p>Purchase <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('admin-purchase-inward_stock', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.purchase.inward_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_stock') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Purchase Order</p>
                   </a> </li>
+                @endif
               </ul>
             </li>
           @endif
@@ -105,20 +129,22 @@ foreach($roleWisePermissionResult as $row){
               <p>Report <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('admin-report-purchase', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.report.purchase') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.purchase') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Purchase</p>
                   </a> </li>
+                @endif
+                @if(in_array('admin-report-inventory', $page_permission))
                   <li class="nav-item"> <a href="{{ route('admin.report.inventory') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.inventory') active @endif"> 
                     <i class="fas fa-warehouse nav-icon"></i>
                     <p>Inventory</p>
                     </a> 
                   </li>
+                @endif
               </ul>
             </li>
           @endif
         @endif
-
-        
       </ul>
     </nav>
     <!-- /.sidebar-menu --> 
