@@ -8,6 +8,15 @@
     border: 1px solid #e50b0b;
 }
 </style>
+
+@php
+$adminId 			= Session::get('adminId');
+$adminRoll 		= Session::get('admin_type');
+@endphp
+
+
+
+
 <div class="row">
 <form method="post" action="" class="needs-validation" id="supplier-inward_stock-form" novalidate enctype="multipart/form-data">
   <div class="col-12 mb-3">
@@ -35,7 +44,23 @@
                   <input type="date" name="inward_date" id="inward_date" class=" form-control input-1" required="required">
                 </li>
               </ul>
-              
+
+              @if($adminRoll==1)
+              <ul class="d-flex flex-wrap align-items-center">
+                <li class="invAreaInf">Store</li>
+                <li class="invAreaVal">
+                  <select class="form-control custom-select form-control-select" id="store_id" name="store_id" required="required">
+                    <option value="">Select Store</option>
+                    @foreach($data['store'] as $store)
+                    <option value="{{$store->id}}">{{$store->name}}</option>
+                    @endforeach
+                  
+                  </select>
+                </li>
+              </ul>
+              @else
+              <input type="hidden" id="store_id" name="store_id" value="{{$adminId}}">
+              @endif
             </div>
           </div>
         </div>
@@ -284,9 +309,7 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
 <script src="{{ url('assets/admin/js/cHVyY2hhc2VfaW53YXJkX3N0b2Nr.js') }}"></script>
 <script>
-
   
-
 $(document).on('click', '#upload_excel', function(e) {
 	$('#upload_excel_input').click();
 });

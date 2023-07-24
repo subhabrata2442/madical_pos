@@ -23,9 +23,6 @@
  var decimalpoints = '2';
 </script>
     <script src="{{ url('assets/admin/js/app.js') }}"></script>
-<!--    <script src="{{ url('assets/admin/js/datatables.bundle.js') }}"></script>
-    <script src="{{ url('assets/admin/js/vendors.bundle.js') }}"></script>
-    <script src="{{ url('assets/admin/js/scripts.bundle.js') }}"></script>-->
 </head>
 
 <body class="hold-transition dark_mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">

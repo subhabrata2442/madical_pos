@@ -48,11 +48,16 @@ class CheckPermission
 				return redirect()->route('auth.login');
 			}
 
+			//echo 'ddd';exit;
+
 			$role_wise_permission_result = RoleSubPermission::where('slug',$slug)->first();
+
+			//echo '<pre>';print_r($role_wise_permission_result);exit;
+			
 			$current_page_permision_id		= isset($role_wise_permission_result->role_id)?$role_wise_permission_result->role_id:'0';
 			$current_page_permision_type_id	= isset($role_wise_permission_result->type_id)?$role_wise_permission_result->type_id:'0';
 
-			
+			//echo '<pre>';print_r($roles);exit;
 			
 			$current_page_roll_id=isset($roles[0])?$roles[0]:'0';
 			$role_wise_permission_result = RoleWisePermission::where('branch_id',$user_id)->where('role_id',$current_page_roll_id)->where('permission_id',$current_page_permision_id)->where('type_id',$current_page_permision_type_id)->get();

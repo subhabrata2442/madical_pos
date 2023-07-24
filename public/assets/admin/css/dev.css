@@ -2536,3 +2536,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4cd6d6', end
 		font-size: 16px;
 	}
 }
+
+.modal-body-sub-head1{
+	flex:0 0 50%;
+	max-width: 50%;
+}
+
+.error {
+    color: #e74c3c;
+}
+.has-error {
+    border: 1px solid #e74c3c;
+}

@@ -10,10 +10,11 @@ use DataTables;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use PDF;
+use Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 Use Illuminate\Support\Facades\Response;
-
+use App\Models\User;
 use App\Models\Product;
 use App\Models\ProductSupplier;
 use App\Models\PurchaseOrder;
@@ -28,6 +29,7 @@ use App\Models\Color;
 
 use App\Models\BranchStockProducts;
 use App\Models\BranchStockProductSellPrice;
+use App\Models\BranchStockRequest;
 
 use App\Models\Service;
 use App\Models\Size;
@@ -80,16 +82,18 @@ class PurchaseOrderController extends Controller
 		
         DB::beginTransaction();
         try {
+			$branch_id=Auth::user()->id;
             $data = [];
-			$spplier_code='bevco-17';
-			
             $data['heading'] 		= 'Purchase Order';
             $data['breadcrumb'] 	= ['Purchase Order', 'Add'];
-            $data['supplier'] 		= Supplier::where('sup_code',$spplier_code)->first();
             $data['product'] 		= Product::all();
-			
-			//echo '<pre>';print_r($data['supplier']->company_name);exit;
-			
+
+			$data['store']			= [];
+			if($branch_id==1){
+				$data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}
+
+			//echo '<pre>';print_r($data['store']);exit;
 			
             return view('admin.purchase_order.add', compact('data'));
         } catch (\Exception $e) {
@@ -2359,177 +2363,96 @@ class PurchaseOrderController extends Controller
 	}
 	//Stock Tranfer
 	public function stockTranfer(Request $request){
-		//echo 'ff';exit;
-		//$this->daily_stock_transfer_sell_history();exit;
-		//dd($request->all());\
-		/*$branch_id		= Session::get('branch_id');
-		
-		
-		$stock_product = BranchStockProducts::with('stockProduct')->whereHas('stockProduct', function($q){
-			$q->where('w_qty','!=','0');
-		})->where('branch_id',$branch_id)->where('stock_type','counter')->get();;
-		
-		echo '<pre>';print_r($stock_product);exit;*/
-		
-		
-		
 		try{
 			if ($request->isMethod('post')) {
-				$prev_w_qty		= $request->prev_w_qty;
-				$prev_c_qty		= $request->prev_c_qty;
-				$new_w_qty		= $request->w_qty;
-				$new_c_qty		= $request->c_qty;
+
+				//print_r($_POST);exit;
+
+				$return_data=[];
+				
+				$store_id		= $request->store_id;
+				$req_store_id	= $request->req_store_id;
 				$stock_id		= $request->stock_id;
-				$price_id		= $request->price_id;
-				$transfer_to	= $request->transfer_to;
-				$counter_id		= $request->counter_id;
-				
-				$branch_id=Session::get('branch_id');
-				
-				$branchStockProductResult=BranchStockProducts::where('id',$stock_id)->first();
-				$size_ml=isset($branchStockProductResult->size->ml)?$branchStockProductResult->size->ml:0;
-				
-				$product_id=isset($branchStockProductResult->product_id)?$branchStockProductResult->product_id:0;
-				$size_id=isset($branchStockProductResult->size_id)?$branchStockProductResult->size_id:0;
-				
-				$category_id=isset($branchStockProductResult->product->category_id)?$branchStockProductResult->product->category_id:0;
-				$subcategory_id=isset($branchStockProductResult->product->subcategory_id)?$branchStockProductResult->product->subcategory_id:0;
-				
-				
-				
-				
-				
-				
-				$total_c_qty=0;
-				if($prev_c_qty>0){
-					$total_c_qty +=$prev_c_qty;
-				}
-				
-				$trans_c_qty=0;
-				
-				if(count($new_c_qty)>0){
-					for($i=0;count($new_c_qty)>$i;$i++){
-						$c_qty=isset($new_c_qty[$i])?$new_c_qty[$i]:'';
-						if($c_qty!=''){
-							$total_c_qty +=$c_qty;
-							$trans_c_qty +=$c_qty;
-						}
-					}
-				}
-				
-				BranchStockProductSellPrice::where('id', $price_id)->where('stock_id', $stock_id)->where('stock_type', 'counter')->update(['w_qty' => $new_w_qty,'c_qty' => $total_c_qty]);
-				
-				$branch_id=Session::get('branch_id');
-				
-				$invoice_no='';
-				$n=StockTransferHistory::where('branch_id',$branch_id)->count();
-				$invoice_no .=date('d');
-				$invoice_no .='/'.date('Y');
-				$invoice_no .='/'.str_pad($n + 1, 4, 0, STR_PAD_LEFT);
-				$invoice_no .='|'.date('d/m/Y');
-				
-				$total_ml=$size_ml*$trans_c_qty;
-				
-				$stocktransferData=array(
-					'invoice_no'	=> $invoice_no,
-					'stock_id'		=> $stock_id,
-					'branch_id'		=> $branch_id,
-					'price_id'  	=> $price_id,
-					'prev_w_qty'  	=> $prev_w_qty,
-					'category_id'	=> $category_id,
-					'subcategory_id'=> $subcategory_id,
-					'product_id'  	=> $product_id,
-					'size_id'  		=> $size_id,
-					'prev_c_qty'	=> $prev_c_qty,
-					'new_w_qty'  	=> $new_w_qty,
-					'new_c_qty'  	=> $total_c_qty,
-					'transfer_to'  	=> $transfer_to,
-					'c_qty'  		=> $trans_c_qty,
-					'total_ml'  	=> $total_ml,
+				$prev_t_qty		= $request->prev_t_qty;
+				$r_qty			= $request->t_qty;
+
+				$branchStockResult	=	BranchStockProducts::where('id', $stock_id)->get();
+
+				if(count($branchStockResult)>0){
+					$product_id			= $branchStockResult[0]->product_id;
+					$product_barcode	= $branchStockResult[0]->product_barcode;
+
+					$branchStockRequestData=array(
+						'stock_id'			=> $stock_id,
+						'product_id'		=> $product_id,
+						'product_barcode'	=> $product_barcode,
+						'r_qty'  			=> $r_qty,
+						'from_store_id'  	=> $store_id,
+						'to_store_id'		=> $req_store_id,
+						'status'			=> 1,
+					);
+
+					//print_r($branchStockRequestData);exit;
 					
-					
-				);
-				
-				//print_r($stocktransferData);exit;
-				
-				$stockTransferHistory=StockTransferHistory::create($stocktransferData);
-				$stock_transfer_id	= $stockTransferHistory->id;
-				
-				//$stock_transfer_id=1;
-				
-				
-				
-				if(count($counter_id)>0){
-					for($i=0;count($counter_id)>$i;$i++){
-						$c_qty=isset($new_c_qty[$i])?$new_c_qty[$i]:'';
-						if($c_qty!=''){
-							$stocktransferData=array(
-								'stock_transfer_id'	=> $stock_transfer_id,
-								'counter_id'  		=> $counter_id[$i],
-								'qty'  				=> $c_qty,
-							);
-							StockTransferCounterHistory::create($stocktransferData);
-							
-							
-							$branch_product_counter_stock_info=CounterWiseStock::where('stock_id',$stock_id)->where('counter_id',$counter_id[$i])->where('stock_type','counter')->get();
-							$product_counter_id=isset($branch_product_counter_stock_info[0]->id)?$branch_product_counter_stock_info[0]->id:'';
-							
-							$counter_c_qty=$c_qty;
-							$total_ml=$size_ml*$counter_c_qty;
-							
-							
-							if($product_counter_id!=''){
-								$product_total_ml=0;
-								$product_total_ml +=isset($branch_product_counter_stock_info[0]->total_ml)?$branch_product_counter_stock_info[0]->total_ml:0;
-								$product_total_ml +=$total_ml;
-								
-								$product_total_qty=0;
-								$product_total_qty +=isset($branch_product_counter_stock_info[0]->c_qty)?$branch_product_counter_stock_info[0]->c_qty:0;
-								$product_total_qty +=$counter_c_qty;
-								CounterWiseStock::where('id', $product_counter_id)->update(['c_qty' => $product_total_qty,'total_ml' => $product_total_ml]);
-							}else{
-								$counterWiseStockData=array(
-									'stock_id'		=> $stock_id,
-									'counter_id'  	=> $counter_id[$i],
-									'c_qty'  		=> $counter_c_qty,
-									'total_ml'		=> $total_ml,
-									'stock_type'  	=> 'counter'
-								);
-								CounterWiseStock::create($counterWiseStockData);
-							}
-						}
-					}
+					BranchStockRequest::create($branchStockRequestData);
+
+					$return_data['status']	= 1;
+					echo json_encode($return_data);exit;
 				}
-				
-				$this->daily_stock_transfer_sell_history();
-				
-				$return_data['status']	= 1;
+				$return_data['status']	= 0;
 				echo json_encode($return_data);exit;
 			}
 			
+			$store_id		= Session::get('store_id');
+			$admin_type		= Session::get('admin_type');
 			
-			
-			$branch_id		= Session::get('branch_id');
-			//echo $branch_id;die;
 			//$stock_product = BranchStockProducts::where('branch_id',$branch_id)->where('stock_type','counter');
 			
-			$stock_product = BranchStockProducts::with('stockProduct')->whereHas('stockProduct', function($q){
-				$q->where('w_qty','!=','0');
-			})->where('branch_id',$branch_id)->where('stock_type','counter');
-			
-			if(!empty($request->get('product_id'))){
-				$stock_product->where('product_id', $request->get('product_id'));
+			// $stock_product = BranchStockProducts::with('stockProduct')->whereHas('stockProduct', function($q){
+			// 	$q->where('w_qty','!=','0');
+			// })->where('branch_id',$branch_id);
+
+			$stock_product=[];
+
+			if($admin_type==1){
+				if($request->get('store_id')!=''){
+					//echo 'ddd';exit;
+					$stock_product = BranchStockProducts::where('branch_id',$request->get('store_id'));
+					if(!empty($request->get('product_id'))){
+						$stock_product->where('product_id', $request->get('product_id'));
+					}
+					$stock_product=$stock_product->paginate(20);
+
+					//echo '<pre>';print_r($stock_product);exit;
+					
+				}
+			}else{
+				//echo 'ss';exit;
+				$stock_product = BranchStockProducts::where('branch_id',$store_id);
+					if(!empty($request->get('product_id'))){
+						$stock_product->where('product_id', $request->get('product_id'));
+					}
+					$stock_product=$stock_product->paginate(20);
+					//echo '<pre>';print_r($stock_product);exit;
 			}
-				
-			$stock_product=$stock_product->paginate(20);
+
+			//echo '<pre>';print_r($stock_product);exit;
+			
 			$data = [];
 			$data['heading'] 		= 'Stock Tranfer';
             $data['breadcrumb'] 	= ['Stock Tranfer', 'List'];
 			$data['stock_product'] 	= $stock_product;
+
+			$data['store']			= [];
+			if($admin_type==1){
+				$data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}else{
+				
+				$data['store'] 		= User::where('id','!=',$store_id)->where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}
+
+			//echo '<pre>';print_r($data['store']);exit;
 			
-			$data['counter'] = Counter::where('branch_id',$branch_id)->get();
-			
-			//dd($data);
 			return view('admin.stock_transfer.list', compact('data'));				
 		} catch (\Exception $e) {
 			echo $e;die;

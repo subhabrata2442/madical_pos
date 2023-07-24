@@ -51,8 +51,6 @@ class ProductController extends Controller
             if ($request->ajax()) {
                 $product = Product::orderBy('id', 'desc')->get();
 				
-				
-				
                 return DataTables::of($product)
 					->addColumn('product_barcode', function ($row) {
 						return $row->product_barcode;
