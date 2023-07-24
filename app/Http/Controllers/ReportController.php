@@ -53,11 +53,18 @@ class ReportController extends Controller
 	
 	public function purchase(Request $request){
 		$branch_id=Auth::user()->id;
+		$user_role=Auth::user()->role;
 		//$purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
 		//echo '<pre>';print_r($purchase);exit;
 	   try {
 		   if ($request->ajax()) {
-			   $purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
+				if($user_role==1){
+					$purchase 	= PurchaseInwardStock::orderBy('id', 'desc')->get();
+				}else{
+					$purchase 	= PurchaseInwardStock::where('supplier_id',$branch_id)->orderBy('id', 'desc')->get();
+				}
+			   
+
 			   return DataTables::of($purchase)
 				   ->addColumn('invoice_no', function ($row) {
 					  return '<a class="td-anchor" href="'.route('admin.report.stock_product.list', [base64_encode($row->id)]) .'" target="_blank">' . $row->invoice_no . '</a>';
@@ -170,10 +177,17 @@ class ReportController extends Controller
 	}
 }
 	public function inventory(Request $request){
+		$branch_id=Auth::user()->id;
+		
+		// $queryStockProduct = BranchStockProducts::query();
+		// $allStockProduct = $queryStockProduct->where('branch_id',$branch_id)->with('stockProduct')->get();
+		//echo '<pre>';print_r($allStockProduct);exit;
+		
 		try{
 			$data = [];
 			$queryStockProduct = BranchStockProducts::query();
-
+			$allStockProduct = $queryStockProduct->where('branch_id',$branch_id);
+			
 			if(!is_null($request['product_barcode'])) {
 				$queryStockProduct->where('product_barcode',$request['product_barcode']);
 			}

@@ -1183,6 +1183,19 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
         toastr.error("Select purchase date!");
         return false;
     }
+
+    var store_id = $("#store_id").val();
+    if (store_id == "") {
+        $("#store_id").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#store_id").removeClass("red_border").addClass("black_border");
+    }
+
+    if (store_id == "") {
+        toastr.error("Select store!");
+        return false;
+    }
+
     var payment_method = $("#payment_method").val();
     if (payment_method == "") {
         $("#payment_method").removeClass("black_border").addClass("red_border");
@@ -1212,6 +1225,8 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
     inward_stock_info["payment_ref_no"] = $("#payment_ref_no").val();
 
     inward_stock_info["total_amount"] = $("#input-gross_total_amount").val();
+
+    inward_stock_info["store_id"] = $("#store_id").val();
 
     $("#product_record_sec tr").each(function (index, e) {
         var rowcount = $(this).data("id");

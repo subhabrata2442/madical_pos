@@ -56,6 +56,12 @@ class Authenticate extends Controller
 					$userEmail 	= $user->email;
 					$userName 	= $user->name;
                     
+                    $store_id 	= $user->id;
+                    if($userType==3){
+                        $store_id 	= $user->parent_id;
+                    }
+
+                    Session::put('store_id', $store_id);
 					Session::put('adminId', $userId);
 					Session::put('admin_type', $userType);
 					Session::put('admin_email', $userEmail);

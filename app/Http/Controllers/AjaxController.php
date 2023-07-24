@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Media;
+use App\Models\User;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Color;
@@ -44,7 +45,7 @@ use App\Models\TableBookingHistory;
 use App\Models\BarProductSizePrice;
 use App\Models\Customer;
 
-use App\Models\DailyProductPurchaseHistory;
+use App\Models\BranchStockRequest;
 
 use Illuminate\Http\Request;
 use DataTables;
@@ -61,336 +62,47 @@ class AjaxController extends Controller {
 		$action = $request->action;
 		$this->{'ajaxpost_' . $action}($request);
 	}
-	/*BAR POS*/
-	public function ajaxpost_get_table($request) {
-		$floor_id	= $request->floor_id;
 
-		$table_result	= FloorWiseTable::where('floor_id',$floor_id)->where('status',1)->orderBy('id', 'DESC')->get();
-
-		$result=[];
-		foreach($table_result as $key=>$row){
-			$waiter_id		= '';
-			$waiter_name	= '';
-			$items_qty		= '';
-			$total_amount	= '';
-			$booking_date	= '';
-			$booking_time	= '';
-			$customer_id	= '';
-			$customer_name	= '';
-			$customer_phone	= '';
-			if($row->booking_status==2){
-				$table_info	= TableBookingHistory::where('floor_id',$floor_id)->where('table_id',$row->id)->orderBy('id', 'DESC')->first();
-
-				$waiter_id		= isset($table_info->waiter_id)?$table_info->waiter_id:'';
-				$waiter_name	= isset($table_info->waiter->name)?$table_info->waiter->name:'';
-				$items_qty		= isset($table_info->items_qty)?$table_info->items_qty:'';
-				$total_amount	= isset($table_info->total_amount)?$table_info->total_amount:'';
-				$booking_date	= isset($table_info->booking_date)?$table_info->booking_date:'';
-				$booking_time	= isset($table_info->booking_time)?$table_info->booking_time:'';
-				$customer_id	= isset($table_info->customer_id)?$table_info->customer_id:'';
-				$customer_name	= isset($table_info->customer_name)?$table_info->customer_name:'';
-				$customer_phone	= isset($table_info->customer_phone)?$table_info->customer_phone:'';
-			}
-			$result[]=array(
-				'floor_id'			=> $row->floor_id,
-				'table_id'			=> $row->id,
-				'table_name'		=> $row->table_name,
-				'status'			=> $row->booking_status,
-				'waiter_id'			=> $waiter_id,
-				'waiter_name'		=> $waiter_name,
-				'items_qty'			=> $items_qty,
-				'total_amount'		=> $total_amount,
-				'booking_date'		=> $booking_date,
-				'booking_time'		=> $booking_time,
-				'customer_id'		=> $customer_id,
-				'customer_name'		=> $customer_name,
-				'customer_phone'	=> $customer_phone,
-			);
-		}
-
-		$return_data['result']	= $result;
-		$return_data['status']	= 1;
-
-		echo json_encode($return_data);
-	}
-
-	public function ajaxpost_get_table_availability($request) {
-		$floor_id	= $request->floor_id;
-		$tbl_id		= $request->tbl_id;
-
-		$table_result	= FloorWiseTable::where('floor_id',$floor_id)->where('id',$tbl_id)->where('status',1)->orderBy('id', 'DESC')->first();
-		$booking_status	= isset($table_result->booking_status)?$table_result->booking_status:'';
-
-		if($booking_status!=''){
-			$return_data['table_name']	= $table_result->table_name;
-			if($booking_status==2){
-				$table_info	= TableBookingHistory::where('floor_id',$floor_id)->where('table_id',$tbl_id)->orderBy('id', 'DESC')->first();
-				$booking_url='admin/pos/bar_dine_in_table_booking/create_order/'.base64_encode($table_info->id);
-				$return_data['booking_url']	= $booking_url;
-			}
-		}
-
-		$return_data['status']	= $booking_status;
-		echo json_encode($return_data);
-
-	}
-
-	public function ajaxpost_set_table_booking($request) {
-		$floor_id	= $request->floor_id;
-		$tbl_id		= $request->tbl_id;
-		$waiter_id	= $request->waiter_id;
-
-		$customer_name	= $request->customer_name;
-		$customer_phone	= $request->customer_phone;
-
-		$customer_id=0;
-		if($customer_phone!=''){
-			$customer_result=Customer::where('customer_mobile',$customer_phone)->first();
-			$customer_id	= isset($customer_result->id)?$customer_result->id:'';
-			if($customer_id==''){
-				$customerData = Customer::create([
-				'customer_mobile' 		=> $customer_phone
-			]);
-			$customer_id=$customerData->id;
-			}
-		}
-
-		$table_result	= FloorWiseTable::where('floor_id',$floor_id)->where('id',$tbl_id)->where('status',1)->orderBy('id', 'DESC')->first();
-		$booking_status	= isset($table_result->booking_status)?$table_result->booking_status:'';
-
-
-		$booking_url='';
-		if($booking_status!=''){
-			if($booking_status==1){
-				$branch_id=Session::get('branch_id');
-				$n=TableBookingHistory::where('branch_id',$branch_id)->count();
-				$order_no=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
-				$tableBooking = TableBookingHistory::create([
-					'bill_no'		=> $order_no,
-					'branch_id'		=> $branch_id,
-					'floor_id' 		=> $floor_id,
-					'table_id' 		=> $tbl_id,
-					'waiter_id'		=> $waiter_id,
-					'customer_id'	=> $customer_id,
-					'customer_name'	=> $customer_name,
-					'customer_phone'=> $customer_phone,
-					'booking_date' 	=> date('Y-m-d'),
-					'booking_time' 	=> date('H:i:s')
-				]);
-
-				$tableBookingId=$tableBooking->id;
-				$booking_url='admin/pos/bar_dine_in_table_booking/create_order/'.base64_encode($tableBookingId);
-				FloorWiseTable::where('floor_id',$floor_id)->where('id',$tbl_id)->update(['booking_status' => 2]);
-			}
-		}
-
-		$return_data['booking_url']	= $booking_url;
-		echo json_encode($return_data);
-	}
-
-	public function ajaxpost_get_food_type_wise_category($request) {
-		$food_type	= $request->food_type;
-
-		$food_type_id=1;
-		if($food_type=='food'){
-			$food_type_id=2;
-		}
-
-		$subcategory_result	= Subcategory::where('food_type',$food_type_id)->where('status',1)->orderBy('name', 'ASC')->get();
+	public function ajaxpost_requested_stock($request) {
+		$stock_id	= trim($request->stock_id);
+		$store_id	= trim($request->store_id);
 		
-		//print_r($subcategory_result);exit;
+		
+		//$BranchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('from_store_id',$store_id)
+
+		$branchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('from_store_id',$store_id)->groupBy('to_store_id')->selectRaw('sum(r_qty) as t_qty, to_store_id, product_id')->get();
+
+		//print_r($branchStockRequestResult);exit;
 
 		$result=[];
-		foreach($subcategory_result as $key=>$row){
-			$product_count=Product::select('*')->leftJoin('branch_stock_products', 'products.id', '=', 'branch_stock_products.product_id')->where('branch_stock_products.stock_type','bar')->where('products.subcategory_id',$row->id)->count();
+		foreach($branchStockRequestResult as $row){
+			$result[]=array(
+				'to_store_id'	=> $row->to_store_id,
+				't_qty'			=> $row->t_qty,
+				'product_id'	=> $row->product_id,
+				'store_name'	=> $row->user->name,
 
-			if($product_count>0){
-				$result[]=array(
-					'subcategory_id'	=> $row->id,
-					'name'				=> $row->name
-				);
-			}
-		}
-
-		$return_data['result']	= $result;
-		$return_data['status']	= 1;
-
-		echo json_encode($return_data);
-	}
-
-	public function ajaxpost_get_category_wise_food_items($request) {
-		$subcategory_id	= $request->cat_id;
-		$food_type		= $request->food_type;
-		$branch_id		= Session::get('branch_id');
-
-		$food_type_id=1;
-		if($food_type=='food'){
-			$food_type_id=2;
-		}
-
-		$result=[];
-
-		if($subcategory_id!=''){
-			$item_result = Product::where('subcategory_id',$subcategory_id)->get();
-			if(count($item_result)>0){
-				foreach($item_result as $row){
-					$category_id	= $row->category_id;
-					$product_id		= $row->id;
-
-					$branch_stock_product_result	= BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('stock_type','bar')->get();
-
-					//print_r($branch_stock_product_result);exit;
-
-
-					$branch_stock_product_id		= isset($branch_stock_product_result[0]->id)?$branch_stock_product_result[0]->id:'';
-					$product_size_id				= isset($branch_stock_product_result[0]->size_id)?$branch_stock_product_result[0]->size_id:'';
-
-					if($branch_stock_product_id!=''){
-						$result[]=array(
-							'product_id'		=> $row->id,
-							'product_barcode'	=> $row->product_barcode,
-							'product_name'		=> $row->product_name,
-							'size_id'			=> $product_size_id,
-							'product_slug'		=> $row->slug,
-						);
-					}
-				}
-			}
-		}
-
-		$return_data['result']	= $result;
-		$return_data['status']	= 1;
-
-		echo json_encode($return_data);
-	}
-	
-	public function ajaxpost_get_bar_product_mlPrice($request) {
-		$product_id	= $request->product_id;
-		$food_type	= $request->food_type;
-		$branch_id	= Session::get('branch_id');
-
-		$item_result=BarProductSizePrice::where('product_id', $product_id)->get();
-
-		$product_result=[];
-		foreach($item_result as $row){
-			$product_result[]=array(
-				'product_id'				=> $product_id,
-				'product_price_id'			=> isset($row->id)?$row->id:0,
-				'size'						=> isset($row->size->name)?$row->size->name:'',
-				'item_prices'				=> isset($row->product_mrp)?$row->product_mrp:0
 			);
 		}
 
-		$return_data['product_result']	= $product_result;
+		$return_data['status']	= 1;
+		$return_data['result']	= $result;
+
+		//print_r($result);exit;
 		echo json_encode($return_data);
+		exit;
 	}
 
-	public function ajaxpost_get_bar_product_byId($request) {
-		$product_id	= $request->product_id;
-		$food_type	= $request->food_type;
-		$branch_id	= Session::get('branch_id');
-
-
-
-		$food_type_id=1;
-		if($food_type=='food'){
-			$food_type_id=2;
-		}
-		$product_result=[];
-		if($product_id!=''){
-			$item_result = Product::where('id',$product_id)->get();
-			
-			//print_r($item_result);exit;
-			
-			
-			if(count($item_result)>0){
-				if($food_type_id==2){
-					$branch_stock_product_result	= BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->first();
-					$branch_stock_product_id		= isset($branch_stock_product_result->id)?$branch_stock_product_result->id:'';
-					$size_title						= isset($branch_stock_product_result->size->name)?$branch_stock_product_result->size->name:'';
-
-					//print_r($branch_stock_size);exit;
-
-
-					if($branch_stock_product_id!=''){
-						$branch_product_stock_sell_price_info	= BranchStockProductSellPrice::where('stock_id',$branch_stock_product_id)->where('stock_type','bar')->get();
-						if(count($branch_product_stock_sell_price_info)>0){
-							$item_prices=[];
-							foreach($branch_product_stock_sell_price_info as $row){
-								$item_prices[]=array(
-									'price_id'		=> $row->id,
-									'selling_price'	=> $row->selling_price,
-									'offer_price'	=> $row->offer_price,
-									'product_mrp'	=> $row->product_mrp,
-									'w_qty'			=> $row->w_qty,
-									'c_qty'			=> $row->c_qty
-								);
-							}
-
-							$product_result=array(
-								'product_id'				=> $product_id,
-								'branch_stock_product_id'	=> $branch_stock_product_id,
-								'size_price_id'				=> 0,
-								'product_barcode'			=> $item_result[0]->product_barcode,
-								'brand_name'				=> trim($item_result[0]->product_name),
-								'size'						=> $size_title,
-								'item_prices'				=> $item_prices
-							);
-						}
-					}
-				}else{
-					$branch_stock_product_result	= BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('stock_type','bar')->first();
-					
-					$branch_stock_product_id		= isset($branch_stock_product_result->id)?$branch_stock_product_result->id:'';
-
-					$size_id			= $request->size_id;
-					$item_size_result	= BarProductSizePrice::where('id', $size_id)->first();
-					
-					$item_size_ml		= isset($item_size_result->size->ml)?$item_size_result->size->ml:'';
-					$size_title			= isset($item_size_result->size->name)?$item_size_result->size->name:'';
-
-					$item_total_ml=0;
-
-					if($branch_stock_product_id!=''){
-						$branch_product_stock_sell_price_info	= BranchStockProductSellPrice::where('stock_id',$branch_stock_product_id)->where('stock_type','bar')->get();
-						$item_total_ml = isset($branch_product_stock_sell_price_info[0]->total_ml)?$branch_product_stock_sell_price_info[0]->total_ml:'';
-					}
-					
-					$item_total_ml=1500;
-
-					if($item_size_ml!=''){
-						if($item_total_ml>=$item_size_ml){
-							$item_prices=[];
-							$item_prices[]=array(
-								'price_id'		=> $size_id,
-								'selling_price'	=> $item_size_result->product_mrp,
-								'offer_price'	=> $item_size_result->product_mrp,
-								'product_mrp'	=> $item_size_result->product_mrp,
-								'w_qty'			=> 0,
-								'c_qty'			=> 0
-							);
-
-							$product_result=array(
-								'product_id'				=> $product_id,
-								'size_price_id'				=> $size_id,
-								'branch_stock_product_id'	=> $branch_stock_product_id,
-								'product_barcode'			=> $item_result[0]->product_barcode,
-								'brand_name'				=> trim($item_result[0]->product_name),
-								'size'						=> $size_title,
-								'item_prices'				=> $item_prices
-							);
-						}
-					}
-					//print_r($product_result);exit;
-				}
-			}
-		}
-
-		$return_data['product_result']	= $product_result;
+	public function ajaxpost_getProductByKeyup(Request $request){
+        $search = $request->search;
+        $result = Product::select('id','product_barcode','brand')
+                            ->where('brand', 'LIKE', "%{$search}%")
+                            ->orWhere('product_barcode', 'LIKE', "%{$search}%")
+                            ->take(20)->get();
+        $return_data['result']	= $result;
+		$return_data['status']	= 1;
 		echo json_encode($return_data);
-	}
-
-	/*END BAR POS*/
+    }
 	
 	/*COUNTER POS*/
 	public function ajaxpost_update_stock_product_qty($request) {
@@ -964,8 +676,9 @@ class AjaxController extends Controller {
 				$return_data['status']	= 0;
 				echo json_encode($return_data);
 			}else{
+				$branch_id=$inward_stock['store_id'];
 				$purchaseStockData=array(
-					'supplier_id'  		=> $branch_id,
+					'supplier_id'  		=> $inward_stock['store_id'],
 					'invoice_no'  		=> $inward_stock['invoice_no'],
 					'purchase_date'  	=> $inward_stock['invoice_purchase_date'],
 					'inward_date'  		=> $inward_stock['invoice_inward_date'],
@@ -978,6 +691,7 @@ class AjaxController extends Controller {
 					'additional_note'  	=> $inward_stock['additional_note'],
 					'total_amount'  	=> $inward_stock['total_amount'],
 				);
+				//echo '<pre>';print_r($purchaseStockData);exit;
 				$purchaseInwardStock	= PurchaseInwardStock::create($purchaseStockData);
 				$purchaseInwardStockId	= $purchaseInwardStock->id;
 				//echo '<pre>';print_r($purchaseStockData);exit;
@@ -1206,6 +920,8 @@ class AjaxController extends Controller {
 			//echo 'Not data found';exit;
 		}	
 	}
+
+	
 
 	public function ajaxpost_check_product_barcode($request) {
 		$product_barcode	= trim($request->product_barcode);
