@@ -184,10 +184,16 @@ $adminRoll = Session::get('admin_type');
                 <h6>Pending Stock Request : <strong id="pending_t_qty_label">0</strong></h6>
               </div>
             </div>
+            <div class="mb-3 d-flex align-items-center">
+              <div class="modal-body-sub-head1">
+                <h6>Left available stock: <strong id="left_t_qty_label">0</strong></h6>
+              </div>
+            
+            </div>
 
             <div class="mb-3">
               <label for="" class="form-label">Request Stock:</label>
-              <input type="number" class="form-control" id="t_qty-input" name="t_qty" required />
+              <input type="number" class="form-control update_c_qty" id="t_qty-input" name="t_qty" required />
             </div>
 
             <div class="mb-3">
@@ -289,12 +295,6 @@ $adminRoll = Session::get('admin_type');
         Swal.fire({title:"Stock Pending Request!", html: swal_html});
       },
   });
-
-    //var swal_html = '<div class="card-footer p-0"><ul class="nav flex-column"><li class="nav-item"><a href="#" class="nav-link">Projects <span class="float-right badge bg-primary">31</span></a></li><li class="nav-item"><a href="#" class="nav-link">Tasks <span class="float-right badge bg-info">5</span></a></li><li class="nav-item"><a href="#" class="nav-link">Completed Projects <span class="float-right badge bg-success">12</span></a></li><li class="nav-item"><a href="#" class="nav-link">Followers <span class="float-right badge bg-danger">842</span></a></li></ul></div>';
-    
-    
-
-
   });
 
 
@@ -304,7 +304,9 @@ $adminRoll = Session::get('admin_type');
     var total_qty = 0;
     var original_w_qty = $('#original_t_qty').val();
     var input_qty = $(this).val();
-    if (Number(original_w_qty) < input_qty) {
+    var new_w_qty=0;
+    if(input_qty>0){
+      if (Number(original_w_qty) < input_qty) {
       $(this).val('');
       $('#left_t_qty_label').text(original_w_qty);
       toastr.error("Entered Qty should not be greater than Stock");
@@ -320,7 +322,17 @@ $adminRoll = Session::get('admin_type');
       var new_w_qty = parseInt(original_w_qty) - parseInt(total_qty);
       $('#left_t_qty_label').text(new_w_qty);
     }
+
+    }else{
+      $('#left_t_qty_label').text(original_w_qty);
+      $(this).val('');
+      toastr.error("Entered Qty should not be less than 0");
+      return false;
+
+    }
+
   });
+
   $(document).on('click', '.exchange_btn', function() {
     var stock_id = $(this).data('stock_id');
     var price_id = $(this).data('price_id');
@@ -328,6 +340,8 @@ $adminRoll = Session::get('admin_type');
     var store_id = $(this).data('store_id');
     var pending_r_qty = $(this).data('pending_r_qty');
     $('#prev_t_qty_label').text(t_qty);
+    $('#left_t_qty_label').text(t_qty);
+    
     $('#pending_t_qty_label').text(pending_r_qty);
     $('#input-store_id').val(store_id);
     $('#stock_id').val(stock_id);
@@ -361,12 +375,18 @@ $adminRoll = Session::get('admin_type');
       },
       submitHandler: function(form) {
         var t_qty = $('#t_qty-input').val();
+        var o_qty = $('#original_t_qty').val();
+        
         var store_name = $("#req_store_id option:selected").text();
         if (t_qty != 0) {
           if (t_qty < 0) {
             toastr.error("Request Stock Should not be 0");
           } else {
-            var title = 'Do you want to send stock request ' + t_qty + ' Qty  From ' + store_name + '?';
+            if (Number(o_qty) < t_qty) {
+              toastr.error("Entered Qty should not be greater than Stock");
+              return false;
+            }else{
+              var title = 'Do you want to send stock request ' + t_qty + ' Qty  To ' + store_name + '?';
             Swal.fire({
               title: title,
               showDenyButton: true,
@@ -400,6 +420,8 @@ $adminRoll = Session::get('admin_type');
                 Swal.fire('Changes are not saved', '', 'info')
               }
             });
+
+            }
           }
         } else {
           toastr.error("Enter Stock!");

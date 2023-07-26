@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authenticate;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\SupplierController;
@@ -52,12 +53,16 @@ Route::match(['GET', 'POST'], '/daily_product_purchase_history/{id}', [CronContr
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::match(['GET'], '/logout', [Authenticate::class, 'logout'])->name('auth.logout');
 	//Route::match(['GET'], '/setting', [UserController::class, 'setting'])->name('auth.setting');
-    Route::get('/dashboard', function () {
-        $data = [];
-        $data['heading'] = 'Dashboard';
-        $data['breadcrumb'] = ['Dashboard'];
-        return view('admin/dashboard', compact('data'));
-    })->name('dashboard');
+
+	Route::match(['GET'], '/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+	
+    // Route::get('/dashboard', function () {
+    //     $data = [];
+    //     $data['heading'] = 'Dashboard';
+    //     $data['breadcrumb'] = ['Dashboard'];
+    //     return view('admin/dashboard', compact('data'));
+    // })->name('dashboard');
 	//->middleware('checkPermission:all,normal_user');
 
    /* // user route
@@ -178,6 +183,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET'], '/ajax-get', [PurchaseOrderController::class, 'ajaxPurchaseById'])->name('list.ajax');
 
         Route::match(['GET', 'POST'], '/stock-transfer', [PurchaseOrderController::class, 'stockTranfer'])->name('stock.transfer');
+		Route::match(['GET', 'POST'], '/stock-transfer-request', [PurchaseOrderController::class, 'stockTranferRequest'])->name('stock.transferRequest');
 		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
 		
 		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');

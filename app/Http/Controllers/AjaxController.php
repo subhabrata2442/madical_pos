@@ -70,7 +70,7 @@ class AjaxController extends Controller {
 		
 		//$BranchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('from_store_id',$store_id)
 
-		$branchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('from_store_id',$store_id)->groupBy('to_store_id')->selectRaw('sum(r_qty) as t_qty, to_store_id, product_id')->get();
+		$branchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('status',1)->where('from_store_id',$store_id)->groupBy('to_store_id')->selectRaw('sum(r_qty) as t_qty, to_store_id, product_id')->get();
 
 		//print_r($branchStockRequestResult);exit;
 
@@ -102,6 +102,171 @@ class AjaxController extends Controller {
         $return_data['result']	= $result;
 		$return_data['status']	= 1;
 		echo json_encode($return_data);
+    }
+
+	public function ajaxpost_requested_stock_accept(Request $request){
+        $stock_id = $request->stock_id;
+
+		//print_r($_POST);exit;
+
+		if($stock_id!=''){
+			$result = BranchStockRequest::where('id',$stock_id)->get();
+			
+			if(count($result)>0){
+				$req_qty			= $result[0]->r_qty;
+				$product_id			= $result[0]->product_id;
+				$product_barcode	= $result[0]->product_barcode;
+				$from_store_id		= $result[0]->from_store_id;
+				$to_store_id		= $result[0]->to_store_id;
+
+				$branchProductStockResult=BranchStockProducts::where('branch_id',$to_store_id)->where('product_id',$product_id)->get();
+				$avaibleStock=0;
+				$prev_qty=0;
+				$update_qty=0;
+				if(count($branchProductStockResult)>0){
+					$avaibleStock +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+					$prev_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+
+					$update_qty +=$avaibleStock;
+					$update_qty +=$req_qty;
+
+					$branch_stock_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+					BranchStockProducts::where('id', $branch_stock_id)->update(['t_qty' => $update_qty]);
+				}else{
+					$productInfo=Product::where('id',$product_id)->first();
+					$product_mrp	= isset($productInfo->product_mrp)?$productInfo->product_mrp:0;
+					$net_price		= isset($productInfo->net_price)?$productInfo->net_price:0;
+					$selling_price	= isset($productInfo->selling_price)?$productInfo->selling_price:0;
+
+					$branchStocktData=array(
+						'branch_id'			=> $to_store_id,
+						'product_id'		=> $product_id,
+						'product_barcode'	=> $product_barcode,
+						't_qty'  			=> $req_qty,
+						'product_mrp'  		=> $product_mrp,
+						'net_price'			=> $net_price,
+						'selling_price'		=> $selling_price,
+					);
+					BranchStockProducts::create($branchStocktData);
+				}
+
+				BranchStockRequest::where('id', $stock_id)->update(['status' =>2]);
+
+				StockTransferHistory::where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>2]);
+
+				$return_data['status']	= 1;
+				echo json_encode($return_data);exit;
+				
+			}
+
+		}
+
+		exit;
+    }
+	public function ajaxpost_requested_stock_reject(Request $request){
+        $stock_id = $request->stock_id;
+
+		if($stock_id!=''){
+			$result = BranchStockRequest::where('id',$stock_id)->get();
+			if(count($result)>0){
+				$req_qty			= $result[0]->r_qty;
+				$product_id			= $result[0]->product_id;
+				$product_barcode	= $result[0]->product_barcode;
+				$from_store_id		= $result[0]->from_store_id;
+				$to_store_id		= $result[0]->to_store_id;
+
+				$branchProductStockResult=BranchStockProducts::where('branch_id',$from_store_id)->where('product_id',$product_id)->get();
+				$avaibleStock=0;
+				$update_qty=0;
+				if(count($branchProductStockResult)>0){
+					$avaibleStock +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+					$update_qty +=$avaibleStock;
+					$update_qty +=$req_qty;
+					
+					$branch_stock_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+					BranchStockProducts::where('id', $branch_stock_id)->update(['t_qty' => $update_qty]);
+				}
+
+				BranchStockRequest::where('id', $stock_id)->update(['status' =>3]);
+				StockTransferHistory::where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>3]);
+				
+				$return_data['status']	= 1;
+				echo json_encode($return_data);exit;
+			}
+
+		}
+
+		exit;
+    }
+
+	public function ajaxpost_requested_stock_accept_old(Request $request){
+        $stock_id = $request->stock_id;
+
+		//print_r($_POST);exit;
+
+		if($stock_id!=''){
+			$result = BranchStockRequest::where('id',$stock_id)->get();
+			
+			if(count($result)>0){
+				$req_qty			= $result[0]->r_qty;
+				$product_id			= $result[0]->product_id;
+				$product_barcode	= $result[0]->product_barcode;
+				$from_store_id		= $result[0]->from_store_id;
+				$to_store_id		= $result[0]->to_store_id;
+
+				$branchProductStockResult=BranchStockProducts::where('branch_id',$to_store_id)->where('product_id',$product_id)->get();
+				$avaibleStock=0;
+				$prev_qty=0;
+				if(count($branchProductStockResult)>0){
+					$avaibleStock +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+					$prev_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+				}
+				
+				if($avaibleStock<$req_qty){
+					$return_data['status']	= 0;
+					$return_data['msg']		= 'Stock qty is lower then req qty!';
+					echo json_encode($return_data);exit;
+
+				}else{
+					$fromBranchProductStockResult=BranchStockProducts::where('branch_id',$from_store_id)->where('product_id',$product_id)->get();
+					$storeAvaibleStock=0;
+					if(count($fromBranchProductStockResult)>0){
+						$storeAvaibleStock +=isset($fromBranchProductStockResult[0]->t_qty)?$fromBranchProductStockResult[0]->t_qty:0;
+					}
+					$storeAvaibleStock +=$req_qty;
+					$avaibleStock -=$req_qty;
+
+					$sell_price_id=isset($fromBranchProductStockResult[0]->id)?$fromBranchProductStockResult[0]->id:'';
+					BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $storeAvaibleStock]);
+
+				
+					$deduct_stock_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+					BranchStockProducts::where('id', $deduct_stock_id)->update(['t_qty' => $avaibleStock]);
+
+					$stocktransferData=array(
+						'stock_id'		=> $deduct_stock_id,
+						'branch_id'  	=> $to_store_id,
+						'product_id'  	=> $product_id,
+						'prev_qty'		=> $prev_qty,
+						't_qty'  		=> $req_qty,
+						'transfer_to'  	=> $from_store_id,
+					);
+					//print_r($stocktransferData);exit;
+					
+					StockTransferHistory::create($stocktransferData);
+
+					BranchStockRequest::where('id', $stock_id)->update(['status' =>2]);
+
+					
+
+					$return_data['status']	= 1;
+					echo json_encode($return_data);exit;
+				}
+			}
+
+		}
+
+		exit;
     }
 	
 	/*COUNTER POS*/
