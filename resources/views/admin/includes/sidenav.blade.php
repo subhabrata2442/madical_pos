@@ -124,6 +124,14 @@ if($adminId!=1){
                   </a> 
                 </li>
                 @endif
+                @if(in_array('admin-purchase-stock-transfer-request', $page_permission))
+                @if ($adminRoll != 1)
+                <li class="nav-item"> <a href="{{ route('admin.purchase.stock.transferRequest') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.stock.transferRequest') active @endif"> <i class="fas fa-list nav-icon"></i>
+                  <p>Stock Transfer Rquest</p>
+                  </a> 
+                </li>
+                @endif
+                @endif
               </ul>
             </li>
           @endif

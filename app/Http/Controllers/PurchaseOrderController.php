@@ -2377,25 +2377,48 @@ class PurchaseOrderController extends Controller
 				$r_qty			= $request->t_qty;
 
 				$branchStockResult	=	BranchStockProducts::where('id', $stock_id)->get();
-
+				
 				if(count($branchStockResult)>0){
 					$product_id			= $branchStockResult[0]->product_id;
 					$product_barcode	= $branchStockResult[0]->product_barcode;
+					$avaibleStock 		= isset($branchStockResult[0]->t_qty)?$branchStockResult[0]->t_qty:0;
+					$storeAvaibleStock  = $avaibleStock;
 
-					$branchStockRequestData=array(
-						'stock_id'			=> $stock_id,
-						'product_id'		=> $product_id,
-						'product_barcode'	=> $product_barcode,
-						'r_qty'  			=> $r_qty,
-						'from_store_id'  	=> $store_id,
-						'to_store_id'		=> $req_store_id,
-						'status'			=> 1,
-					);
+					if($avaibleStock<$r_qty){
+						$return_data['status']	= 0;
+						$return_data['msg']		= 'Stock qty is lower then req qty!';
+						echo json_encode($return_data);exit;
+					}else{
+						$storeAvaibleStock -=$r_qty;
+						BranchStockProducts::where('id', $stock_id)->update(['t_qty' => $storeAvaibleStock]);
+						
+						$stocktransferData=array(
+							'stock_id'		=> $stock_id,
+							'branch_id'  	=> $store_id,
+							'product_id'  	=> $product_id,
+							'prev_qty'		=> $avaibleStock,
+							't_qty'  		=> $r_qty,
+							'c_qty'			=> $storeAvaibleStock,
+							'transfer_to'  	=> $req_store_id,
+						);
+						//print_r($stocktransferData);exit;
+						StockTransferHistory::create($stocktransferData);
 
-					//print_r($branchStockRequestData);exit;
-					
-					BranchStockRequest::create($branchStockRequestData);
-
+						$branchStockRequestData=array(
+							'stock_id'			=> $stock_id,
+							'product_id'		=> $product_id,
+							'product_barcode'	=> $product_barcode,
+							'r_qty'  			=> $r_qty,
+							'from_store_id'  	=> $store_id,
+							'to_store_id'		=> $req_store_id,
+							'status'			=> 1,
+						);
+	
+						//print_r($branchStockRequestData);exit;
+						
+						BranchStockRequest::create($branchStockRequestData);
+						
+					}
 					$return_data['status']	= 1;
 					echo json_encode($return_data);exit;
 				}
@@ -2454,6 +2477,50 @@ class PurchaseOrderController extends Controller
 			//echo '<pre>';print_r($data['store']);exit;
 			
 			return view('admin.stock_transfer.list', compact('data'));				
+		} catch (\Exception $e) {
+			echo $e;die;
+            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+        }
+	}
+	//Stock Tranfer Request
+	public function stockTranferRequest(Request $request){
+		try{
+			$store_id		= Session::get('store_id');
+			$admin_type		= Session::get('admin_type');
+			
+			$stock_product=[];
+
+
+			// $stock_product = BranchStockRequest::where('to_store_id',$store_id);
+			// $stock_product=$stock_product->paginate(20);
+			// echo '<pre>';print_r($stock_product);exit;
+
+
+
+
+			if($admin_type==1){
+				if($request->get('store_id')!=''){
+					$stock_product = BranchStockRequest::where('status',1)->where('to_store_id',$request->get('store_id'));
+					$stock_product=$stock_product->paginate(20);
+					//echo '<pre>';print_r($stock_product);exit;
+				}
+			}else{
+				$stock_product = BranchStockRequest::where('status',1)->where('to_store_id',$store_id);
+				$stock_product=$stock_product->paginate(20);
+				//echo '<pre>';print_r($stock_product);exit;
+			}
+
+			//echo '<pre>';print_r($stock_product);exit;
+			
+			$data = [];
+			$data['heading'] 		= 'Stock Tranfer Request';
+            $data['breadcrumb'] 	= ['Stock Tranfer Request', 'List'];
+			$data['stock_product'] 	= $stock_product;
+
+			
+			//echo '<pre>';print_r($data);exit;
+			
+			return view('admin.stock_transfer.request_list', compact('data'));				
 		} catch (\Exception $e) {
 			echo $e;die;
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
