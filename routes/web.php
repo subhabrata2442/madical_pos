@@ -79,7 +79,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	
 	
 	Route::match(['GET'], '/check_counter_sell', [ReportController::class, 'check_counter_sell'])->name('ReportController');
-	
+
 	
 	
 	Route::prefix('pos')->name('pos.')->group(function () {
