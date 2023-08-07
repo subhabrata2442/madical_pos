@@ -150,6 +150,7 @@ $(document).on("click", "#productfeaturessave", function () {
 
 $(document).on("keyup", "#product_barcode", function () {
     var product_barcode = $(this).val();
+    var product_id = $("#product_id").val();
     if (product_barcode != "") {
         $.ajax({
             url: prop.ajaxurl,
@@ -157,6 +158,7 @@ $(document).on("keyup", "#product_barcode", function () {
             dataType: "json",
             data: {
                 product_barcode: product_barcode,
+                product_id: product_id,
                 action: "check_product_barcode",
                 _token: prop.csrf_token,
             },
@@ -168,8 +170,30 @@ $(document).on("keyup", "#product_barcode", function () {
             },
         });
     }
+});
 
-    console.log(product_barcode);
+$(document).on("change", "#drugstore", function () {
+    var product_barcode = $("#product_barcode").val();
+    var drugstore_id = $(this).val();
+    if (product_barcode != "" && drugstore_id != "") {
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            dataType: "json",
+            data: {
+                product_barcode: product_barcode,
+                drugstore_id: drugstore_id,
+                action: "check_product_barcode",
+                _token: prop.csrf_token,
+            },
+            beforeSend: function () {},
+            success: function (response) {
+                if (response.status == 0) {
+                    toastr.error(response.msg);
+                }
+            },
+        });
+    }
 });
 
 function setProfitCalulation(

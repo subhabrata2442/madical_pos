@@ -1,3 +1,134 @@
+function setProfitCalulation() {
+    $("#product_record_sec tr").each(function (index, e) {
+        var product_id = $(this).attr("id").split("product_")[1];
+        var tbl_row = $(this).data("id");
+
+        var product_mrp = Number(
+            $(this)
+                .find("#product_price_" + product_id)
+                .html()
+        );
+        var cost_rate = Number(
+            $(this)
+                .find("#product_rate_" + product_id)
+                .html()
+        );
+        var selling_price = Number(
+            $(this)
+                .find("#product_sellPrice_" + product_id)
+                .html()
+        );
+        var product_quantity = Number(
+            $(this)
+                .find("#product_quantity_" + product_id)
+                .html()
+        );
+        var noper_package = Number(
+            $(this)
+                .find("#product_package_" + product_id)
+                .html()
+        );
+
+        var bonous = Number(
+            $(this)
+                .find("#product_bonous_" + product_id)
+                .html()
+        );
+
+        var net_price = 0;
+        if (
+            product_mrp > 0 &&
+            cost_rate > 0 &&
+            product_quantity > 0 &&
+            noper_package > 0
+        ) {
+            var net_price =
+                (Number(product_mrp) * Number(cost_rate) * product_quantity) /
+                (Number(product_quantity) + Number(bonous));
+            net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
+        }
+        $("#product_netPrice_" + product_id).html(net_price);
+
+        var profitAmount = 0;
+        if (selling_price > 0 && product_quantity > 0) {
+            profitAmount = (Number(selling_price) - Number(net_price)).toFixed(
+                2
+            );
+        }
+        if (profitAmount <= 0) {
+            $("#product_profit_" + product_id).css("color", "#c9571b");
+        } else {
+            $("#product_profit_" + product_id).css("color", "black");
+        }
+        $("#product_profit_" + product_id).html(profitAmount);
+
+        var profitPercent = 0;
+        if (profitAmount > 0 && product_quantity > 0) {
+            profitPercent = (
+                (Number(profitAmount) / Number(net_price)) *
+                Number(100)
+            ).toFixed(2);
+        }
+        if (profitPercent <= 0) {
+            $("#product_profitPercent_" + product_id).css("color", "#c9571b");
+        } else {
+            $("#product_profitPercent_" + product_id).css("color", "black");
+        }
+        $("#product_profitPercent_" + product_id).html(profitPercent);
+
+        console.log("net_price", net_price);
+
+        // console.log("product_id", product_id);
+        // console.log("product_mrp", product_mrp);
+        // console.log("cost_rate", cost_rate);
+        // console.log("selling_price", selling_price);
+        // console.log("product_quantity", product_quantity);
+        // console.log("noper_package", noper_package);
+        // console.log("bonous", bonous);
+    });
+}
+
+$(document).on("keyup", ".product_price", function () {
+    var product_id = $(this).attr("id").split("product_price_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_rate", function () {
+    var product_id = $(this).attr("id").split("product_rate_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_sellPrice", function () {
+    var product_id = $(this).attr("id").split("product_sellPrice_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_quantity", function () {
+    var product_id = $(this).attr("id").split("product_quantity_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_package", function () {
+    var product_id = $(this).attr("id").split("product_package_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_bonous", function () {
+    var product_id = $(this).attr("id").split("product_bonous_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+
+    setProfitCalulation();
+});
+
 $(document).on("keyup", ".input-product_totalQuantity", function () {
     var product_id = $(this).attr("id").split("product_totalQuantity_")[1];
     var tbl_row = $(this).closest("tr").data("id");

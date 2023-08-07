@@ -46,67 +46,46 @@ class ProductController extends Controller
 	public function list(Request $request)
     {
 		
-		//echo '<pre>';print_r($page_permission);exit;
-        try {
-            if ($request->ajax()) {
-                $product = Product::orderBy('id', 'desc')->get();
-				
-                return DataTables::of($product)
-					->addColumn('product_barcode', function ($row) {
-						return $row->product_barcode;
-					})
-                    ->addColumn('brand', function ($row) {
-                        return $row->brand;
-                    })
-                    ->addColumn('dosage_name', function ($row) {
-                        return $row->dosage_name;
-                    })
-					->addColumn('company_name', function ($row) {
-                        return $row->company_name;
-                    })
-                    ->addColumn('drugstore_name', function ($row) {
-						return $row->drugstore_name;
-                    })
-                    ->addColumn('mrp', function ($row) {
-                        return $row->product_mrp;
-                    })
-                    ->addColumn('qty', function ($row) {
-						return $row->stock_qty;
-                    })
-					->addColumn('action', function ($row) {
-						$adminId=Auth::user()->id;
-						$page_permission=array();
-						$roleWisePermissionResult = RoleWisePermission::where('branch_id',$adminId)->where('role_id',1)->orderBy('id', 'asc')->get();
-						foreach($roleWisePermissionResult as $prow){
-							$page_permission[]=$prow->get_slug->slug;
-						}
-						
-						$dropdown ='';
-						if(in_array('admin-product-edit', $page_permission)){
-							$dropdown .= '<a class="dropdown-item" href="' . route('admin.product.edit', [base64_encode($row->id)]) . '">Edit</a>';
-						}
-						if(in_array('admin-product-delete', $page_permission)){
-							$dropdown .= '<a class="dropdown-item delete-item" href="#" id="delete_product" data-url="' . route('admin.product.delete', [base64_encode($row->id)]) . '">Delete</a>';
-						}
-						
-                        $btn = '<div class="dropdown">
-                                    <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        ' . $dropdown . '
-                                    </div>
-                                </div>
-                                ';
+		$branch_id=Auth::user()->id;
+		$store_id = Session::get('store_id');
+		$user_role=Auth::user()->role;
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action','brand','dosage_name'])
-                    ->make(true);
-            }
-            $data = [];
-            $data['heading'] = 'Product List';
+		if($user_role==1){
+			$drugstore_id=isset($request['drugstore'])?$request['drugstore']:0;
+		}else{
+			$drugstore_id=$store_id;
+		}
+		//$store_id=2;;
+		//echo '<pre>';print_r($store_id);exit;
+        try {
+			$data = [];
+			$queryProduct = Product::query();
+			//$products = $queryProduct->where('drugstore_id',$drugstore_id);
+			if(!is_null($request['product_barcode'])) {
+				$queryProduct->where('product_barcode',$request['product_barcode']);
+			}
+			if(!is_null($request['product_name'])) {
+				$queryProduct->where('brand',$request['product_name']);
+			}
+			$products = $queryProduct->get();
+
+			//echo '<pre>';print_r($product);exit;
+
+			$data['store']			= [];
+			if($user_role==1){
+				$data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}
+
+			//echo '<pre>';print_r($data['store']);exit;
+			
+			$stockProducts 		= $queryProduct->paginate(10);
+            $data['heading'] 	= 'Product List';
             $data['breadcrumb'] = ['Product', 'List'];
+			$data['products']   = $stockProducts;
+			//$products = $products->toArray();
+			//echo '<pre>';print_r($data['store']);exit;
+
+
             return view('admin.product.list', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -116,12 +95,15 @@ class ProductController extends Controller
     public function add(Request $request)
     {
         try {
+			$branch_id=Auth::user()->id;
+			$store_id = Session::get('store_id');
 
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
                     'product_name' 		=> 'required',
-					'product_barcode' 	=> 'required|unique:products,product_barcode'
-                    //'sku_code' 		=> 'required',
+					//'product_barcode' 	=> 'required|unique:products,product_barcode',
+					'product_barcode' 	=> 'required',
+                    //'drugstore' 		=> 'required',
                 ]);
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -143,9 +125,7 @@ class ProductController extends Controller
 				$alert_product_qty=$request->alert_product_qty;
 				$default_qty=$request->default_qty;
 				$days_before_product_expiry=$request->days_before_product_expiry;
-				$product_desc=$request->product_desc;
-				$product_note=$request->product_note;
-
+				
 				$dosage_name='';
 				$dosage_id=$request->dosage;
 				$company_name='';
@@ -179,67 +159,18 @@ class ProductController extends Controller
 					$company_name=isset($company_result->name)?$company_result->name:'';
 				}
 
-				if($drugstore_id!=''){
-					$drugstore_result=Drugstore::where('id',$drugstore_id)->first();
-					$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
-				}
-				
-				$product_mrp_data=$request->product_mrp;
-				$cost_rate_data=$request->cost_rate;
-				$selling_price_data=$request->selling_price;
-				$product_quantity_data=$request->product_quantity;
-				$noper_package_data=$request->noper_package;
-				$bonous_data=$request->bonous;
-				$net_price_data=$request->net_price;
-				$profit_amount_data=$request->profit_amount;
-				$profit_percent_data=$request->profit_percent;
-
-
-
-				$product_mrp=isset($product_mrp_data[0])?$product_mrp_data[0]:0;
-				$cost_rate=isset($cost_rate_data[0])?$cost_rate_data[0]:0;
-				$selling_price=isset($selling_price_data[0])?$selling_price_data[0]:0;
-				$product_quantity=isset($product_quantity_data[0])?$product_quantity_data[0]:0;
-				$no_package=isset($noper_package_data[0])?$noper_package_data[0]:0;
-				$bonous=isset($bonous_data[0])?$bonous_data[0]:0;
-				$net_price=isset($net_price_data[0])?$net_price_data[0]:0;
-				$profit_amount=isset($profit_amount_data[0])?$profit_amount_data[0]:0;
-				$profit_percent=isset($profit_percent_data[0])?$profit_percent_data[0]:0;
+				// if($drugstore_id!=''){
+				// 	$drugstore_result=User::where('id',$drugstore_id)->first();
+				// 	$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
+				// }
 
 				$product_slug=$this->create_slug($product_name.'-'.$product_barcode);
 
+				//echo '<pre>';print_r($product_slug);exit;
+
 				$product_result=Product::where('product_barcode',$product_barcode)->get();
 				if(count($product_result)>0){
-					$product_id=$product_result[0]->id;
-					$update_data=array(
-						'sku_code'				=> $sku_code,
-						'brand'  				=> $product_name,
-						'brand_id'  			=> $brand_id,
-						'slug'  				=> $product_slug,
-						'dosage_name'  			=> $dosage_name,
-						'dosage_id'  			=> $dosage_id,
-						'company_name'  		=> $company_name,
-						'company_id'  			=> $company_id,
-						'drugstore_name'  		=> $drugstore_name,
-						'drugstore_id'  		=> $drugstore_id,
-						'default_qty'			=> $default_qty,
-						'total_qty'				=> $product_quantity,
-						'no_package'			=> $no_package,
-						'net_price'  			=> $net_price,
-						'selling_price'  		=> $selling_price,
-						'profit_amount'  		=> $profit_amount,
-						'profit_percent'  		=> $profit_percent,
-						'cost_rate'  			=> $cost_rate,
-						'product_mrp'  			=> $product_mrp,
-						'cost_price'  			=> $product_mrp,
-						'bonous'				=> $bonous,
-						'stock_qty'  			=> $product_quantity,
-						'product_desc'			=> $product_desc,
-						'product_note'			=> $product_note,
-						'days_before_product_expiry'=>$days_before_product_expiry,
-						'alert_product_qty'		=> $alert_product_qty,
-					);
-					Product::where('id',$product_id)->update($update_data);
+					return redirect()->back()->with('error', 'This barcode already exists in Drugstore!');
 				}else{
 					$insert_data=array(
 						'sku_code'				=> $sku_code,
@@ -255,19 +186,6 @@ class ProductController extends Controller
 						'drugstore_name'  		=> $drugstore_name,
 						'drugstore_id'  		=> $drugstore_id,
 						'default_qty'			=> $default_qty,
-						'total_qty'				=> $product_quantity,
-						'no_package'			=> $no_package,
-						'net_price'  			=> $net_price,
-						'selling_price'  		=> $selling_price,
-						'profit_amount'  		=> $profit_amount,
-						'profit_percent'  		=> $profit_percent,
-						'cost_rate'  			=> $cost_rate,
-						'product_mrp'  			=> $product_mrp,
-						'cost_price'  			=> $product_mrp,
-						'bonous'				=> $bonous,
-						'stock_qty'  			=> $product_quantity,
-						'product_desc'			=> $product_desc,
-						'product_note'			=> $product_note,
 						'days_before_product_expiry'=>$days_before_product_expiry,
 						'alert_product_qty'		=> $alert_product_qty,
 					);
@@ -288,10 +206,23 @@ class ProductController extends Controller
 			$data['company'] 		= Company::all();
 			$data['brand'] 			= Brand::all();
 			$data['subcategory'] 	= Subcategory::all();
-			$data['drugstore'] 		= Drugstore::all();
+			//$data['drugstore'] 		= Drugstore::all();
 			$data['thumb']			= asset('images/placeholder.png');
+
+			$data['store']			= [];
 			
-			//print_r($data);exit;
+			$drugstore_id = 0;
+			if($branch_id==1){
+				$stores 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}else{
+				$drugstore_id 	= $store_id;
+				$stores 		= User::where('id',$drugstore_id)->get();
+			}
+
+			$data['drugstore']			= $stores;
+			$data['drugstore_id']	= $drugstore_id;
+			
+			//echo '<pre>';print_r($data);exit;
 			
             return view('admin.product.add', compact('data'));
         } catch (\Exception $e) {
@@ -303,6 +234,8 @@ class ProductController extends Controller
     public function edit($id, Request $request)
     {
         try {
+			$branch_id=Auth::user()->id;
+			$store_id = Session::get('store_id');
             $product_id = base64_decode($id);
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
@@ -328,7 +261,7 @@ class ProductController extends Controller
 				$company_name='';
 				$company_id=$request->company;
 				$drugstore_name='';
-				$drugstore_id=$request->drugstore;
+				$drugstore_id='';
 
 				$brand_id=0;
 				if($product_name!=''){
@@ -356,32 +289,14 @@ class ProductController extends Controller
 					$company_name=isset($company_result->name)?$company_result->name:'';
 				}
 
-				if($drugstore_id!=''){
-					$drugstore_result=Drugstore::where('id',$drugstore_id)->first();
-					$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
-				}
+				// if($drugstore_id!=''){
+				// 	$drugstore_result=Drugstore::where('id',$drugstore_id)->first();
+				// 	$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
+				// }
+
+				//echo '<pre>';print_r($_POST);exit;
 				
-				$product_mrp_data=$request->product_mrp;
-				$cost_rate_data=$request->cost_rate;
-				$selling_price_data=$request->selling_price;
-				$product_quantity_data=$request->product_quantity;
-				$noper_package_data=$request->noper_package;
-				$bonous_data=$request->bonous;
-				$net_price_data=$request->net_price;
-				$profit_amount_data=$request->profit_amount;
-				$profit_percent_data=$request->profit_percent;
-
-
-
-				$product_mrp=isset($product_mrp_data[0])?$product_mrp_data[0]:0;
-				$cost_rate=isset($cost_rate_data[0])?$cost_rate_data[0]:0;
-				$selling_price=isset($selling_price_data[0])?$selling_price_data[0]:0;
-				$product_quantity=isset($product_quantity_data[0])?$product_quantity_data[0]:0;
-				$no_package=isset($noper_package_data[0])?$noper_package_data[0]:0;
-				$bonous=isset($bonous_data[0])?$bonous_data[0]:0;
-				$net_price=isset($net_price_data[0])?$net_price_data[0]:0;
-				$profit_amount=isset($profit_amount_data[0])?$profit_amount_data[0]:0;
-				$profit_percent=isset($profit_percent_data[0])?$profit_percent_data[0]:0;
+				
 
 				$product_slug=$this->create_slug($product_name.'-'.$product_barcode);
 
@@ -394,22 +309,7 @@ class ProductController extends Controller
 					'dosage_id'  			=> $dosage_id,
 					'company_name'  		=> $company_name,
 					'company_id'  			=> $company_id,
-					'drugstore_name'  		=> $drugstore_name,
-					'drugstore_id'  		=> $drugstore_id,
 					'default_qty'			=> $default_qty,
-					'total_qty'				=> $product_quantity,
-					'no_package'			=> $no_package,
-					'net_price'  			=> $net_price,
-					'selling_price'  		=> $selling_price,
-					'profit_amount'  		=> $profit_amount,
-					'profit_percent'  		=> $profit_percent,
-					'cost_rate'  			=> $cost_rate,
-					'product_mrp'  			=> $product_mrp,
-					'cost_price'  			=> $product_mrp,
-					'bonous'				=> $bonous,
-					'stock_qty'  			=> $product_quantity,
-					'product_desc'			=> $product_desc,
-					'product_note'			=> $product_note,
 					'days_before_product_expiry'=>$days_before_product_expiry,
 					'alert_product_qty'		=> $alert_product_qty,
 				);
@@ -427,10 +327,19 @@ class ProductController extends Controller
 			$data['company'] 		= Company::all();
 			$data['brand'] 			= Brand::all();
 			$data['subcategory'] 	= Subcategory::all();
-			$data['drugstore'] 		= Drugstore::all();
+			//$data['drugstore'] 		= Drugstore::all();
 			$data['thumb']			= asset('images/placeholder.png');
 			$data['products']		= Product::find($product_id);
 
+			$drugstore_id = 0;
+			if($branch_id==1){
+				$stores 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}else{
+				$stores 		= User::where('id',$drugstore_id)->get();
+			}
+
+			$data['drugstore']			= $stores;
+			
 			//echo '<pre>';print_r($data['products']);exit;
 			
             return view('admin.product.edit', compact('data'));

@@ -831,7 +831,7 @@ function setRow(element) {
                         "</td>" +
                         '<td id="product_drugstore_' +
                         product_id +
-                        '">' +
+                        '" style="display:none">' +
                         drugstore +
                         "</td>" +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_quantity" contenteditable = "true" id = "product_quantity_' +
@@ -844,7 +844,7 @@ function setRow(element) {
                         '">' +
                         package +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_netPrice" contenteditable = "true" id="product_netPrice_' +
+                        '<td onkeypress="return check_character(event);" class="number  product_netPrice" id="product_netPrice_' +
                         product_id +
                         '">' +
                         net_price +
@@ -874,12 +874,12 @@ function setRow(element) {
                         '">' +
                         sell_price +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_profit" contenteditable = "true" id="product_profit_' +
+                        '<td onkeypress="return check_character(event);" class="number  product_profit"  id="product_profit_' +
                         product_id +
                         '">' +
                         profit +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_profitPercent" contenteditable = "true" id="product_profitPercent_' +
+                        '<td onkeypress="return check_character(event);" class="number  product_profitPercent"  id="product_profitPercent_' +
                         product_id +
                         '">' +
                         profit_percent +
