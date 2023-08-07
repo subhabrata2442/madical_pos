@@ -1090,12 +1090,21 @@ class AjaxController extends Controller {
 
 	public function ajaxpost_check_product_barcode($request) {
 		$product_barcode	= trim($request->product_barcode);
-
-		$count=Product::where('product_barcode',$product_barcode)->count();
+		$product_id			= trim($request->product_id);
 		
-		if($count>0){
-			$return_data['msg']		= 'This barcode already exists!';
-			$return_data['status']	= 0;
+		$product_result=Product::where('product_barcode',$product_barcode)->get();
+		
+		if(count($product_result)>0){
+			if($product_id!=''){
+				if($product_result[0]->id!=$product_id){
+					$return_data['msg']		= 'This barcode already exists!';
+					$return_data['status']	= 0;
+				}
+			}else{
+				$return_data['msg']		= 'This barcode already exists!';
+				$return_data['status']	= 0;
+			}
+			
 		}else{
 			$return_data['status']	= 1;
 		}

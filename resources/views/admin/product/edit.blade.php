@@ -5,6 +5,7 @@
     <form method="post" action="{{ route('admin.product.edit', [base64_encode($data['products']->id)]) }}"
       class="needs-validation" novalidate enctype="multipart/form-data">
       @csrf
+      <input type="hidden" id="product_id" value="{{$data['products']->id}}">
       <div class="card">
         <div class="row">
           <x-alert />
@@ -58,134 +59,9 @@
           </div>
         </div>
       </div>
-      <div class="card"> <a href="javascript:;" class="toggleBtn">Others Options <i class="fas fa-caret-down"></i></a> </div>
-      <div class="card toggleArea" style="display: none;">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="product_desc" class="form-label">Product Description</label>
-              <textarea name="product_desc" rows="3" id="product_desc" class="form-control admin-textarea">{{ $data['products']->product_desc }}</textarea>
-              @error('product_desc')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="product_note" class="form-label">Product Note</label>
-              <textarea name="product_note" rows="3" id="product_note" class="form-control admin-textarea">{{ $data['products']->product_note }}</textarea>
-              @error('product_note')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-          </div>
-        </div>
-      </div>
-      {{-- <div class="add_more_size_btn"><a href="javascript:;"><i class="fa fa-plus" aria-hidden="true"></i></a></div> --}}
-      <div class="add_more_size_section" id="add_more_size_section_row">
       
-        <div class="card" id="add_more_size_row_0">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="product_mrp" class="form-label">Product Price</label>
-                <input type="text" class="form-control admin-input number product_mrp onclickselect" id="product_mrp_0" name="product_mrp[]" value="{{ $data['products']->product_mrp }}"  autocomplete="off" required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="cost_rate" class="form-label">US/IQ Rate</label>
-                <input type="text" class="form-control admin-input cost_rate onclickselect" id="cost_rate_0" name="cost_rate[]" value="{{ $data['products']->cost_rate }}" required autocomplete="off">
-                @error('cost_rate')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="selling_price_0" class="form-label">Selling Price</label>
-                <input type="text" class="form-control admin-input selling_price onclickselect" id="selling_price_0" name="selling_price[]" value="{{ $data['products']->selling_price }}"  autocomplete="off">
-                @error('selling_price')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="product_quantity_0" class="form-label">Quantity</label>
-                <input type="text" class="form-control admin-input product_quantity onclickselect" id="product_quantity_0" name="product_quantity[]" value="{{ $data['products']->total_qty }}" required autocomplete="off">
-                @error('product_quantity')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="noper_package_0" class="form-label">No per package</label>
-                <input type="text" class="form-control admin-input noper_package onclickselect" id="noper_package_0" name="noper_package[]" value="{{ $data['products']->no_package }}" required autocomplete="off">
-                @error('noper_package')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="bonous_0" class="form-label">Bonous</label>
-                <input type="text" class="form-control admin-input bonous onclickselect" id="bonous_0" name="bonous[]" value="{{ $data['products']->bonous }}" required autocomplete="off">
-                @error('bonous')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="net_price_0" class="form-label">Net Price</label>
-                <input type="text" class="form-control admin-input notallowinput" id="net_price_0" name="net_price[]" value="{{ $data['products']->net_price }}"  autocomplete="off">
-                @error('net_price')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="profit_amount_0" class="form-label">Profit &#8377; </label>
-                <input type="text" class="form-control admin-input notallowinput" id="profit_amount_0" name="profit_amount[]" value="{{ $data['products']->profit_amount }}"  autocomplete="off">
-                @error('profit_amount')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="profit_percent" class="form-label">Profit %</label>
-                <input type="text" class="form-control admin-input notallowinput" id="profit_percent_0" name="profit_percent[]" value="{{ $data['products']->profit_percent }}"  autocomplete="off">
-                @error('profit_percent')
-                <div class="error admin-error">{{ $message }}</div>
-                @enderror </div>
-            </div>
-          </div>
-        </div>
-        
-        
-      </div>
-      {{-- <div class="card">
-        <div class="row">
-          <div class="suppliers-table table-responsive">
-            <table class="table text-nowrap bt-none">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Product Image Caption</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><div class="product-image"> <a href="javascript:;" class="preview fetch_image" id="thumb-image"><img src="{{ $data['thumb'] ??  ''}}" alt="{{ $thumb ?? ''}}" width="150px"></a>
-                      <input type="hidden" name="image" value="{{$data->image ?? ''}}" id="input-image">
-                      <input name="upload_photo" id="upload_photo" style="display:none" onchange="preview_image(this.files)" type="file">
-                    </div></td>
-                  <td><input type="text" id="product_image_caption" name="product_image_caption" class="form-control admin-input"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div> --}}
+      
+      
       <div class="card">
         <div class="row">
           <div class="col-md-4 plusBoxWrap relative">
@@ -220,22 +96,7 @@
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="company" data-title="Company"><i class="fas fa-plus"></i></a></div>
           </div>
-          <div class="col-md-4 plusBoxWrap relative">
-            <div class="form-group">
-              <label for="drugstore" class="form-label">Drugstore name</label>
-              <select name="drugstore" id="drugstore" class="form-control form-inputtext">
-                <option value="">Select Drugstore</option>
-                @if(count($data['drugstore'])>0)
-                @foreach($data['drugstore'] as $row)
-                <option value="{{$row->id}}" {{ ($data['products']->drugstore_id == $row->id ? "selected":"") }}>{{$row->name}}</option>
-                @endforeach
-                @endif
-              </select>
-              @error('drugstore')
-              <div class="error admin-error">{{ $message }}</div>
-              @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="drugstore" data-title="Drugstore"><i class="fas fa-plus"></i></a></div>
-          </div>
+          
         </div>
       </div>
       <div class="card">
