@@ -2384,6 +2384,10 @@ class PurchaseOrderController extends Controller
 					$avaibleStock 		= isset($branchStockResult[0]->t_qty)?$branchStockResult[0]->t_qty:0;
 					$storeAvaibleStock  = $avaibleStock;
 
+					$product_mrp 		= isset($branchStockResult[0]->product_mrp)?$branchStockResult[0]->product_mrp:0;
+					$net_price 			= isset($branchStockResult[0]->net_price)?$branchStockResult[0]->net_price:0;
+					$selling_price 		= isset($branchStockResult[0]->selling_price)?$branchStockResult[0]->selling_price:0;
+
 					if($avaibleStock<$r_qty){
 						$return_data['status']	= 0;
 						$return_data['msg']		= 'Stock qty is lower then req qty!';
@@ -2400,6 +2404,9 @@ class PurchaseOrderController extends Controller
 							't_qty'  		=> $r_qty,
 							'c_qty'			=> $storeAvaibleStock,
 							'transfer_to'  	=> $req_store_id,
+							'product_mrp'  	=> $product_mrp,
+							'net_price'  	=> $net_price,
+							'selling_price'  => $selling_price,
 						);
 						//print_r($stocktransferData);exit;
 						StockTransferHistory::create($stocktransferData);
@@ -2411,6 +2418,9 @@ class PurchaseOrderController extends Controller
 							'r_qty'  			=> $r_qty,
 							'from_store_id'  	=> $store_id,
 							'to_store_id'		=> $req_store_id,
+							'product_mrp'  		=> $product_mrp,
+							'net_price'  		=> $net_price,
+							'selling_price'  	=> $selling_price,
 							'status'			=> 1,
 						);
 	

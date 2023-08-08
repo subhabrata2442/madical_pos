@@ -729,8 +729,8 @@ function setRow(element) {
                 var dosage = item_detail.dosage;
                 var company = item_detail.company;
                 var drugstore = item_detail.drugstore;
-                var quantity = item_detail.quantity;
-                var package = item_detail.package;
+                var quantity = 1;
+                var package = 1;
                 var net_price = item_detail.net_price;
 
                 var price = item_detail.price;
@@ -1160,6 +1160,94 @@ function setSupplierRow(element) {
 }
 
 $(document).on("click", "#inwardStockSubmitBtm", function () {
+    var no_of_items = 0;
+    $("#product_record_sec tr").each(function (index, e) {
+        var product_id = $(this).attr("id").split("product_")[1];
+        var tbl_row = $(this).data("id");
+        no_of_items += Number(1);
+
+        $(this)
+            .find("td")
+            .each(function () {
+                //console.log($(this).attr("id"));
+
+                if ($(this).attr("id") == "product_quantity_" + product_id) {
+                    var val = $(this).html();
+
+                    if (val > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter Quantity!");
+                        return false;
+                    }
+                }
+                if ($(this).attr("id") == "product_package_" + product_id) {
+                    var val = $(this).html();
+
+                    if (val > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter No per package!");
+                        return false;
+                    }
+                }
+
+                if (
+                    $(this).attr("id") ==
+                    "product_totalQuantity_" + product_id
+                ) {
+                    var totalqty = $(this).html();
+
+                    if (totalqty > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter Total Quantity!");
+                        return false;
+                    }
+                }
+                if ($(this).attr("id") == "product_price_" + product_id) {
+                    var val = $(this).html();
+
+                    if (val > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter Price!");
+                        return false;
+                    }
+                }
+                if ($(this).attr("id") == "product_rate_" + product_id) {
+                    var val = $(this).html();
+
+                    if (val > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter US/IQ rate!");
+                        return false;
+                    }
+                }
+                if ($(this).attr("id") == "product_sellPrice_" + product_id) {
+                    var val = $(this).html();
+
+                    if (val > 0) {
+                        $(this).removeClass("red_border");
+                    } else {
+                        $(this).addClass("red_border");
+                        toastr.error("Enter Sell Price!");
+                        return false;
+                    }
+                }
+            });
+    });
+
+    if (no_of_items <= 0) {
+        toastr.error("Not Item Found!");
+    }
+
     var invoice_no = $("#invoice_no").val();
     if (invoice_no == "") {
         $("#invoice_no").removeClass("black_border").addClass("red_border");

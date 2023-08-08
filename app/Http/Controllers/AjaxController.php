@@ -111,6 +111,8 @@ class AjaxController extends Controller {
 
 		if($stock_id!=''){
 			$result = BranchStockRequest::where('id',$stock_id)->get();
+
+			//print_r($result);exit;
 			
 			if(count($result)>0){
 				$req_qty			= $result[0]->r_qty;
@@ -119,7 +121,11 @@ class AjaxController extends Controller {
 				$from_store_id		= $result[0]->from_store_id;
 				$to_store_id		= $result[0]->to_store_id;
 
-				$branchProductStockResult=BranchStockProducts::where('branch_id',$to_store_id)->where('product_id',$product_id)->get();
+				$product_mrp		= $result[0]->product_mrp;
+				$net_price			= $result[0]->net_price;
+				$selling_price		= $result[0]->selling_price;
+
+				$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->where('branch_id',$to_store_id)->where('product_id',$product_id)->get();
 				$avaibleStock=0;
 				$prev_qty=0;
 				$update_qty=0;
@@ -134,9 +140,9 @@ class AjaxController extends Controller {
 					BranchStockProducts::where('id', $branch_stock_id)->update(['t_qty' => $update_qty]);
 				}else{
 					$productInfo=Product::where('id',$product_id)->first();
-					$product_mrp	= isset($productInfo->product_mrp)?$productInfo->product_mrp:0;
-					$net_price		= isset($productInfo->net_price)?$productInfo->net_price:0;
-					$selling_price	= isset($productInfo->selling_price)?$productInfo->selling_price:0;
+					// $product_mrp	= isset($productInfo->product_mrp)?$productInfo->product_mrp:0;
+					// $net_price		= isset($productInfo->net_price)?$productInfo->net_price:0;
+					// $selling_price	= isset($productInfo->selling_price)?$productInfo->selling_price:0;
 
 					$branchStocktData=array(
 						'branch_id'			=> $to_store_id,
@@ -152,7 +158,7 @@ class AjaxController extends Controller {
 
 				BranchStockRequest::where('id', $stock_id)->update(['status' =>2]);
 
-				StockTransferHistory::where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>2]);
+				StockTransferHistory::where('product_mrp', $product_mrp)->where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>2]);
 
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;
@@ -175,20 +181,26 @@ class AjaxController extends Controller {
 				$from_store_id		= $result[0]->from_store_id;
 				$to_store_id		= $result[0]->to_store_id;
 
-				$branchProductStockResult=BranchStockProducts::where('branch_id',$from_store_id)->where('product_id',$product_id)->get();
+				$product_mrp		= $result[0]->product_mrp;
+				$net_price			= $result[0]->net_price;
+				$selling_price		= $result[0]->selling_price;
+
+
+
+				$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->where('branch_id',$from_store_id)->where('product_id',$product_id)->get();
+
 				$avaibleStock=0;
 				$update_qty=0;
 				if(count($branchProductStockResult)>0){
 					$avaibleStock +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
 					$update_qty +=$avaibleStock;
 					$update_qty +=$req_qty;
-					
 					$branch_stock_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
 					BranchStockProducts::where('id', $branch_stock_id)->update(['t_qty' => $update_qty]);
 				}
 
 				BranchStockRequest::where('id', $stock_id)->update(['status' =>3]);
-				StockTransferHistory::where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>3]);
+				StockTransferHistory::where('product_mrp', $product_mrp)->where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>3]);
 				
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;
@@ -896,7 +908,7 @@ class AjaxController extends Controller {
 							$product_profit		= isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
 							$product_profitPercent	= isset($inward_stock['product_detail'][$i]['product_profitPercent'])?$inward_stock['product_detail'][$i]['product_profitPercent']:0;
 
-							$branchProductStockResult=BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 							if(count($branchProductStockResult)>0){
 								$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
 
