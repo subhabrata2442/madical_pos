@@ -158,11 +158,11 @@ $adminRoll = Session::get('admin_type');
                   <span class="d-block" id="qty_total"></span>
                 </td>
                 <td>
-                  <h5>Gross Total</h5>
+                  <h5>Total Net Price</h5>
                   <span class="d-block" id="sub_total"></span>
                 </td>
                 <td>
-                  <h5>Grand Total</h5>
+                  <h5>Total Sell Price</h5>
                   <span class="d-block" id="gross_total_amount"></span>
                 </td>
 

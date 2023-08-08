@@ -170,7 +170,7 @@ class ProductController extends Controller
 
 				$product_result=Product::where('product_barcode',$product_barcode)->get();
 				if(count($product_result)>0){
-					return redirect()->back()->with('error', 'This barcode already exists in Drugstore!');
+					return redirect()->back()->with('error', 'This barcode already exists!');
 				}else{
 					$insert_data=array(
 						'sku_code'				=> $sku_code,

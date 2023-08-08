@@ -800,7 +800,10 @@ hr {
 
 .inwordTableWrap th,
 .inwordTableWrap td {
-	font-size: .6rem;
+	font-size: .7rem;
+}
+.table tr td.red_border {
+    border: 2px solid #e50b0b !important;
 }
 
 .noteAreaInner:not(:last-child) {

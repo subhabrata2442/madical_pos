@@ -1,4 +1,8 @@
 function setProfitCalulation() {
+    var qty_total = 0;
+    var sub_total = 0;
+    var gross_total_amount = 0;
+
     $("#product_record_sec tr").each(function (index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
         var tbl_row = $(this).data("id");
@@ -18,11 +22,15 @@ function setProfitCalulation() {
                 .find("#product_sellPrice_" + product_id)
                 .html()
         );
+
+        gross_total_amount += Number(selling_price);
         var product_quantity = Number(
             $(this)
                 .find("#product_quantity_" + product_id)
                 .html()
         );
+        qty_total += Number(product_quantity);
+
         var noper_package = Number(
             $(this)
                 .find("#product_package_" + product_id)
@@ -48,6 +56,7 @@ function setProfitCalulation() {
             net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
         }
         $("#product_netPrice_" + product_id).html(net_price);
+        sub_total += Number(net_price);
 
         var profitAmount = 0;
         if (selling_price > 0 && product_quantity > 0) {
@@ -86,6 +95,20 @@ function setProfitCalulation() {
         // console.log("noper_package", noper_package);
         // console.log("bonous", bonous);
     });
+
+    console.log("qty_total", qty_total);
+    $("#qty_total").html(qty_total);
+    $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
+    $("#gross_total_amount").html(
+        "$" + gross_total_amount.toFixed(decimalpoints)
+    );
+
+    $("#input-supplier_qty_total").val(qty_total);
+    $("#input-supplier_sub_total").val(sub_total.toFixed(decimalpoints));
+    $("#input-supplier_gross_amount").val(sub_total.toFixed(decimalpoints));
+    $("#input-gross_total_amount").val(
+        gross_total_amount.toFixed(decimalpoints)
+    );
 }
 
 $(document).on("keyup", ".product_price", function () {
@@ -182,28 +205,25 @@ function final_calculation() {
             .each(function () {
                 //console.log($(this).attr("id"));
 
-                if (
-                    $(this).attr("id") ==
-                    "product_totalQuantity_" + product_id
-                ) {
+                if ($(this).attr("id") == "product_quantity_" + product_id) {
                     var totalqty = $(this).html();
                     if (totalqty == "") {
                         totalqty = 0;
                     }
                     qty_total += Number(totalqty);
                 }
-                if ($(this).attr("id") == "product_netPrice_" + product_id) {
-                    var netPrice = $(this).html();
-                    if ($.isNumeric(netPrice)) {
-                        sub_total += Number(netPrice);
-                    }
-                }
-                if ($(this).attr("id") == "product_sellPrice_" + product_id) {
-                    var sellPrice = $(this).html();
-                    if ($.isNumeric(sellPrice)) {
-                        gross_total_amount += Number(sellPrice);
-                    }
-                }
+                // if ($(this).attr("id") == "product_netPrice_" + product_id) {
+                //     var netPrice = $(this).html();
+                //     if ($.isNumeric(netPrice)) {
+                //         sub_total += Number(netPrice);
+                //     }
+                // }
+                // if ($(this).attr("id") == "product_sellPrice_" + product_id) {
+                //     var sellPrice = $(this).html();
+                //     if ($.isNumeric(sellPrice)) {
+                //         gross_total_amount += Number(sellPrice);
+                //     }
+                // }
                 // if (
                 //     $(this).attr("id") == "product_qty_" + product_id ||
                 //     $(this).attr("id") == "free_qty_" + product_id
@@ -224,6 +244,8 @@ function final_calculation() {
 
     // var tax_amount = ((Number(sub_total)) - (Number(gross_amount)));
     // tax_amount = (tax_amount.toFixed(decimalpoints));
+
+    //alert(qty_total);
     $("#no_of_items").html(no_of_items);
     $("#qty_total").html(qty_total);
     $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
