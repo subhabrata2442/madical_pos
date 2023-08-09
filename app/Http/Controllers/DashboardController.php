@@ -24,9 +24,10 @@ class DashboardController extends Controller
             $data = [];
             $data['heading'] = 'Dashboard';
             $data['breadcrumb'] = ['Dashboard'];
+            //$data['breadcrumb'] = ['Dashboard'];
 
-            //echo 'ddd';exit;
-
+            echo '<pre>';print_r($data);exit;
+            
             return view('admin.dashboard', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
