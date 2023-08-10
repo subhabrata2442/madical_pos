@@ -101,9 +101,9 @@ class ProductController extends Controller
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
                     'product_name' 		=> 'required',
-					//'product_barcode' 	=> 'required|unique:products,product_barcode',
 					'product_barcode' 	=> 'required',
-                    //'drugstore' 		=> 'required',
+					'selling_by' 		=> 'required',
+					'no_package' 		=> 'required',
                 ]);
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -132,6 +132,14 @@ class ProductController extends Controller
 				$company_id=$request->company;
 				$drugstore_name='';
 				$drugstore_id=$request->drugstore;
+
+				$no_package=$request->no_package;
+				$selling_by=$request->selling_by;
+
+				$selling_by_name='Pack';
+				if($selling_by==2){
+					$selling_by_name='Single item';
+				}
 
 				$brand_id=0;
 				if($product_name!=''){
@@ -173,7 +181,7 @@ class ProductController extends Controller
 					return redirect()->back()->with('error', 'This barcode already exists!');
 				}else{
 					$insert_data=array(
-						'sku_code'				=> $sku_code,
+						//'sku_code'				=> $sku_code,
 						'uqc_id'  				=> $uqc_id,
 						'product_barcode'  		=> $product_barcode,
 						'brand'  				=> $product_name,
@@ -188,6 +196,9 @@ class ProductController extends Controller
 						'default_qty'			=> $default_qty,
 						'days_before_product_expiry'=>$days_before_product_expiry,
 						'alert_product_qty'		=> $alert_product_qty,
+						'no_package'			=> $no_package,
+						'selling_by'			=> $selling_by,
+						'selling_by_name'		=> $selling_by_name,
 					);
 					$data_insert=Product::create($insert_data);
 					$product_id=$data_insert->id;
@@ -255,6 +266,12 @@ class ProductController extends Controller
 				$days_before_product_expiry=$request->days_before_product_expiry;
 				$product_desc=$request->product_desc;
 				$product_note=$request->product_note;
+				$no_package=$request->no_package;
+				$selling_by=$request->selling_by;
+				$selling_by_name='Pack';
+				if($selling_by==2){
+					$selling_by_name='Single item';
+				}
 
 				$dosage_name='';
 				$dosage_id=$request->dosage;
@@ -301,7 +318,7 @@ class ProductController extends Controller
 				$product_slug=$this->create_slug($product_name.'-'.$product_barcode);
 
 				$update_data=array(
-					'sku_code'				=> $sku_code,
+					//'sku_code'				=> $sku_code,
 					'brand'  				=> $product_name,
 					'brand_id'  			=> $brand_id,
 					'slug'  				=> $product_slug,
@@ -312,6 +329,10 @@ class ProductController extends Controller
 					'default_qty'			=> $default_qty,
 					'days_before_product_expiry'=>$days_before_product_expiry,
 					'alert_product_qty'		=> $alert_product_qty,
+					'no_package'			=> $no_package,
+					'selling_by'			=> $selling_by,
+					'selling_by_name'		=> $selling_by_name,
+					
 				);
 				Product::where('id',$product_id)->update($update_data);
 				

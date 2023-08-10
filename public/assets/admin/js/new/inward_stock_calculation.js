@@ -7,6 +7,12 @@ function setProfitCalulation() {
         var product_id = $(this).attr("id").split("product_")[1];
         var tbl_row = $(this).data("id");
 
+        var selling_type = Number(
+            $(this)
+                .find("#selling_type_" + product_id)
+                .val()
+        );
+
         var product_mrp = Number(
             $(this)
                 .find("#product_price_" + product_id)
@@ -36,6 +42,14 @@ function setProfitCalulation() {
                 .find("#product_package_" + product_id)
                 .html()
         );
+
+        var total_quantity = 0;
+
+        if (selling_type == 1) {
+            total_quantity = product_quantity;
+        } else {
+            total_quantity = product_quantity * noper_package;
+        }
 
         var bonous = Number(
             $(this)
@@ -84,6 +98,7 @@ function setProfitCalulation() {
             $("#product_profitPercent_" + product_id).css("color", "black");
         }
         $("#product_profitPercent_" + product_id).html(profitPercent);
+        $("#product_totalQuantity_" + product_id).html(total_quantity);
 
         console.log("net_price", net_price);
 

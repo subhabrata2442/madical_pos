@@ -25,14 +25,14 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
-          <div class="col-md-4">
+          {{-- <div class="col-md-4">
             <div class="form-group">
               <label for="sku_code" class="form-label">Product SKU</label>
               <input type="text" class="form-control admin-input" id="sku_code" name="sku_code" value="{{ $data['products']->sku_code }}"  autocomplete="off">
               @error('sku_code')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
-          </div>
+          </div> --}}
           <div class="col-md-4">
             <div class="form-group">
               <label for="alert_product_qty" class="form-label">Low Stock Alert</label>
@@ -64,7 +64,32 @@
       
       <div class="card">
         <div class="row">
-          <div class="col-md-4 plusBoxWrap relative">
+          <div class="col-md-3 plusBoxWrap relative">
+            <div class="form-group">
+              <label for="no_package" class="form-label">No per package</label>
+              <select name="no_package" id="no_package" class="form-control form-inputtext" required>
+                <option value="">Select No per package</option>
+                @for($i=1;10>$i;$i++)
+                <option value="{{$i}}" {{ ($data['products']->no_package == $i ? "selected":"") }}> {{$i}}</option>
+                @endfor
+              </select>
+              @error('no_package')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
+          <div class="col-md-3 plusBoxWrap relative">
+            <div class="form-group">
+              <label for="selling_by" class="form-label">Selling by </label>
+              <select name="selling_by" id="selling_by" class="form-control form-inputtext" required>
+                <option value="">Select Selling by</option>
+                <option value="1" {{ ($data['products']->selling_by == 1 ? "selected":"") }}>Pack</option>
+                <option value="2" {{ ($data['products']->selling_by == 2 ? "selected":"") }}>Single item</option>
+              </select>
+              @error('no_package')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
+          <div class="col-md-3 plusBoxWrap relative">
             <div class="form-group">
               <label for="dosage" class="form-label">Dosage Form</label>
               <select name="dosage" id="dosage" class="form-control form-inputtext">
@@ -80,7 +105,7 @@
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="dosage" data-title="Dosage Form"><i class="fas fa-plus"></i></a></div>
           </div>
-          <div class="col-md-4 plusBoxWrap relative">
+          <div class="col-md-3 plusBoxWrap relative">
             <div class="form-group">
               <label for="company" class="form-label">Company</label>
               <select name="company" id="company" class="form-control form-inputtext">

@@ -50,7 +50,8 @@ $user_role=Auth::user()->role;
 						<th>Brand Name</th>
 						<th>Dosage Form</th>
 						<th>Company Name</th>
-						{{-- <th>Drugstore Name</th> --}}
+						<th>No per package</th>
+						<th>Selling by</th>
 						<th>Action</th>
 					</thead>
 					<tbody>
@@ -60,6 +61,8 @@ $user_role=Auth::user()->role;
 							<td>{{$product->brand}}</td>
 							<td>{{$product->dosage_name}}</td>
 							<td>{{$product->company_name}}</td>
+							<td>{{$product->no_package}}</td>
+							<td>{{$product->selling_by_name}}</td>
 							{{-- <td>{{$product->drugstore_name}}</td> --}}
 							<td>
 								<div class="dropdown">
