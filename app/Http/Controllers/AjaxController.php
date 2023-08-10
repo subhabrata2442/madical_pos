@@ -526,6 +526,8 @@ class AjaxController extends Controller {
 					'drugstore'			=> $res->drugstore_name,
 					'quantity'			=> $res->total_qty,
 					'package'			=> $res->no_package,
+					'selling_by'		=> $res->selling_by_name,
+					'selling_type'		=> $res->selling_by,
 					'net_price'			=> $res->net_price,
 					'price'				=> $res->cost_price,
 					'bonous'			=> $res->bonous,

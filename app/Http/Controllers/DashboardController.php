@@ -8,10 +8,15 @@ use App\Models\RolePermission;
 use App\Models\RoleWisePermission;
 use App\Models\UserRolePermission;
 use App\Models\RoleSubPermission;
-use App\Models\User;
-use Illuminate\Http\Request;
-use DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+use App\Models\User;
+
+use App\Models\PurchaseInwardStock;
+
+use DataTables;
+
 use Hash;
 use Auth;
 
@@ -20,13 +25,39 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            $parent_id=Auth::user()->id;
+            $branch_id=Auth::user()->id;
+			$store_id = Session::get('store_id');
+            $admin_type = Session::get('admin_type');
             $data = [];
             $data['heading'] = 'Dashboard';
             $data['breadcrumb'] = ['Dashboard'];
             //$data['breadcrumb'] = ['Dashboard'];
 
-            echo '<pre>';print_r($data);exit;
+            if($admin_type==1){
+                $total_sales=0;
+                $total_purchases=PurchaseInwardStock::sum('total_amount');
+                $total_profit=PurchaseInwardStock::sum('total_profit');
+                $total_net_price=0; 
+                $total_sell_return=0;
+
+            }else{
+                $total_sales=0;
+                $total_purchases=PurchaseInwardStock::where('supplier_id',$store_id)->sum('total_amount');
+                $total_profit=PurchaseInwardStock::where('supplier_id',$store_id)->sum('total_profit');
+                $total_net_price=0;
+                $total_sell_return=0;
+            }
+            $data['total_sales']=$total_sales;
+            $data['total_purchases']=$total_purchases;
+            $data['total_profit']=$total_profit;
+            $data['total_net_price']=$total_net_price;
+            $data['total_sell_return']=$total_sell_return;
+
+
+
+
+
+            //echo '<pre>';print_r($admin_type);exit;
             
             return view('admin.dashboard', compact('data'));
         } catch (\Exception $e) {

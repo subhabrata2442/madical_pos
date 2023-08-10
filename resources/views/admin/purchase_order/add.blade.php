@@ -36,7 +36,7 @@ $adminRoll = Session::get('admin_type');
                   <li class="invAreaInf">Purchase Date</li>
                   <li class="invAreaVal">
                     <input type="date" name="purchase_date" id="purchase_date" class="form-control input-1"
-                      required="required">
+                      required="required" value="<?php echo date('Y-m-d'); ?>">
                   </li>
                 </ul>
                 <ul class="d-flex flex-wrap align-items-center">
@@ -105,6 +105,17 @@ $adminRoll = Session::get('admin_type');
                   <li class="invAreaVal">
                     <input type="date" name="payment_date" id="payment_date" class="form-control input-1"
                       required="required">
+                  </li>
+                </ul>
+                <ul class="d-flex flex-wrap align-items-center">
+                  <input type="hidden" id="payment_currency_usd_rate" value="1360">
+                  <li class="invAreaInf">Payment Currency</li>
+                  <li class="invAreaVal">
+                    <select class="form-control custom-select form-control-select" id="payment_currency_type"
+                      name="payment_currency_type" required="required">
+                      <option value="usd">USD</option>
+                      <option value="iqd">IQD </option>
+                    </select>
                   </li>
                 </ul>
 
@@ -197,13 +208,14 @@ $adminRoll = Session::get('admin_type');
                   <th>The Brand</th>
                   <th>Dosage Form</th>
                   <th>Company</th>
+                  <th>Selling by</th>
                   {{-- <th>Drugstore name</th> --}}
                   <th>Quantity</th>
                   <th>No per package</th>
                   <th>Net Price</th>
                   <th>Price</th>
                   <th>Bonous</th>
-                  <th>US/IQ rate</th>
+                  <th id="th_rate_title">US/IQ rate</th>
                   <th>Total Quantity</th>
                   <th>Sell Price</th>
                   <th>Profit</th>
@@ -219,12 +231,12 @@ $adminRoll = Session::get('admin_type');
       </div>
     </div>
 
-    <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
+    {{-- <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
       <div class="form-group relative formBox m-0">
         <button type="button" class="saveBtn saveBtnMd" id="inwardStockSubmitBtm">Save <i
             class="fas fa-paper-plane ml-2"></i></button>
       </div>
-    </div>
+    </div> --}}
 
   </form>
   <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

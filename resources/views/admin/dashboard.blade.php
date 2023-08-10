@@ -6,7 +6,7 @@
     <div class="col-lg-3 col-6">
       <div class="small-box bg-info-g">
         <div class="inner">
-          <h3>150</h3>
+          <h3>${{$data['total_sales']}}</h3>
 
           <p>Total sales</p>
         </div>
@@ -17,11 +17,70 @@
       </div>
     </div>
     <div class="col-lg-3 col-6">
+      <div class="small-box bg-danger-g">
+        <div class="inner">
+          <h3>${{$data['total_net_price']}}</h3>
+          <p>Total net price </p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-arrow-graph-up-right"></i>
+        </div>
+        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-warning-g">
+        <div class="inner">
+          <h3>${{$data['total_profit']}}</h3>
+          <p>Total profit </p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-bag"></i>
+        </div>
+        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-warning-g">
+        <div class="inner">
+          <h3>{{$data['total_profit']}}<sup style="font-size: 20px">%</sup></h3>
+          <p>Profit </p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-bag"></i>
+        </div>
+        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
       <div class="small-box bg-success-g">
         <div class="inner">
-          <h3>153<sup style="font-size: 20px">%</sup></h3>
-
-          <p>Total profit</p>
+          <h3>${{$data['total_sell_return']}}</h3>
+          <p>Total sell return </p>
+        </div>
+        <div class="icon">
+          <i class="ion-arrow-graph-up-right"></i>
+        </div>
+        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-info-g">
+        <div class="inner">
+          <h3>${{$data['total_purchases']}}</h3>
+          <p>Total purchases </p>
+        </div>
+        <div class="icon">
+          <i class="ion-arrow-graph-up-right"></i>
+        </div>
+        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-danger-g">
+        <div class="inner">
+          <h3>${{$data['total_sell_return']}}</h3>
+          <p>Total expenses </p>
         </div>
         <div class="icon">
           <i class="ion-arrow-graph-up-right"></i>
@@ -32,32 +91,20 @@
     <div class="col-lg-3 col-6">
       <div class="small-box bg-warning-g">
         <div class="inner">
-          <h3>150</h3>
-
-          <p>Total sell return</p>
+          <h3>${{$data['total_sell_return']}}</h3>
+          <p>Total purchase return </p>
         </div>
         <div class="icon">
-          <i class="ion ion-bag"></i>
-        </div>
-        <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
-      </div>
-    </div>
-    <div class="col-lg-3 col-6">
-      <div class="small-box bg-danger-g">
-        <div class="inner">
-          <h3>150</h3>
-          <p>Total purchases </p>
-        </div>
-        <div class="icon">
-          <i class="ion ion-arrow-graph-up-right"></i>
+          <i class="ion-arrow-graph-up-right"></i>
         </div>
         <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
       </div>
     </div>
   </div>
 </div>
+
 <div class="chartArea">
-<div class="row g-3">
+  <div class="row g-3">
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- DONUT CHART -->
       <div class="card">
@@ -65,12 +112,12 @@
           <h3 class="card-title">Donut Chart</h3>
         </div>
         <div class="card-body">
-          <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          <canvas id="donutChart"
+            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
         </div>
         <!-- /.card-body -->
       </div>
       <!-- /.card -->
-          
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- AREA CHART -->
@@ -80,7 +127,8 @@
         </div>
         <div class="card-body">
           <div class="chart">
-            <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            <canvas id="areaChart"
+              style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
           </div>
         </div>
         <!-- /.card-body -->
@@ -110,7 +158,8 @@
         </div>
         <div class="card-body">
           <div class="chart">
-            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            <canvas id="barChart"
+              style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
           </div>
         </div>
         <!-- /.card-body -->
@@ -123,11 +172,12 @@
           <h3 class="card-title">Sales Chart</h3>
         </div>
         <div class="card-body">
-          <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          <canvas class="chart" id="line-chart"
+            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
         </div>
         <!-- /.card-body -->
       </div>
-      
+
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <div class="card">
@@ -168,445 +218,336 @@
         </div>
       </div>
     </div>
-  <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
       <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Products</h3>
-                  <div class="card-tools">
-                    <a href="#" class="btn btn-tool btn-sm">
-                      <i class="fas fa-download"></i>
-                    </a>
-                    <a href="#" class="btn btn-tool btn-sm">
-                      <i class="fas fa-bars"></i>
-                    </a>
-                  </div>
-                </div>
-                <div class="card-body table-responsive p-0">
-                  <table class="table table-valign-middle">
-                    <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Price</th>
-                      <th>Sales</th>
-                      <th>More</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td>
-                        
-                        Some Product
-                      </td>
-                      <td>$13 USD</td>
-                      <td>
-                        <small class="text-success mr-1">
-                          <i class="fas fa-arrow-up"></i>
-                          12%
-                        </small>
-                        12,000 Sold
-                      </td>
-                      <td>
-                        <a href="#" class="text-muted">
-                          <i class="fas fa-search"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        
-                        Another Product
-                      </td>
-                      <td>$29 USD</td>
-                      <td>
-                        <small class="text-warning mr-1">
-                          <i class="fas fa-arrow-down"></i>
-                          0.5%
-                        </small>
-                        123,234 Sold
-                      </td>
-                      <td>
-                        <a href="#" class="text-muted">
-                          <i class="fas fa-search"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        
-                        Amazing Product
-                      </td>
-                      <td>$1,230 USD</td>
-                      <td>
-                        <small class="text-danger mr-1">
-                          <i class="fas fa-arrow-down"></i>
-                          3%
-                        </small>
-                        198 Sold
-                      </td>
-                      <td>
-                        <a href="#" class="text-muted">
-                          <i class="fas fa-search"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        
-                        Perfect Item
-                        <span class="badge bg-danger">NEW</span>
-                      </td>
-                      <td>$199 USD</td>
-                      <td>
-                        <small class="text-success mr-1">
-                          <i class="fas fa-arrow-up"></i>
-                          63%
-                        </small>
-                        87 Sold
-                      </td>
-                      <td>
-                        <a href="#" class="text-muted">
-                          <i class="fas fa-search"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
+        <div class="card-header">
+          <h3 class="card-title">Top 10 selling items across the stores </h3>
+          <div class="card-tools">
+            {{-- <a href="#" class="btn btn-tool btn-sm">
+              <i class="fas fa-download"></i>
+            </a>
+            <a href="#" class="btn btn-tool btn-sm">
+              <i class="fas fa-bars"></i>
+            </a> --}}
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-valign-middle">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Barcode</th>
+                <th>Store</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+
+                  Some Product
+                </td>
+                <td>123456789</td>
+                <td>Test Store</td>
+
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
       </div>
-  </div>
-  <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-    <div class="card">
-                <div class="card-header border-0">
-                  <h3 class="card-title">Online Store Overview</h3>
-                  <div class="card-tools">
-                    <a href="#" class="btn btn-sm btn-tool">
-                      <i class="fas fa-download"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-tool">
-                      <i class="fas fa-bars"></i>
-                    </a>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                    <p class="text-success text-xl">
-                      <i class="ion ion-ios-refresh-empty"></i>
-                    </p>
-                    <p class="d-flex flex-column text-right">
-                      <span class="font-weight-bold">
-                        <i class="ion ion-android-arrow-up text-success"></i> 12%
-                      </span>
-                      <span class="text-muted">CONVERSION RATE</span>
-                    </p>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                    <p class="text-warning text-xl">
-                      <i class="ion ion-ios-cart-outline"></i>
-                    </p>
-                    <p class="d-flex flex-column text-right">
-                      <span class="font-weight-bold">
-                        <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                      </span>
-                      <span class="text-muted">SALES RATE</span>
-                    </p>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center mb-0">
-                    <p class="text-danger text-xl">
-                      <i class="ion ion-ios-people-outline"></i>
-                    </p>
-                    <p class="d-flex flex-column text-right">
-                      <span class="font-weight-bold">
-                        <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                      </span>
-                      <span class="text-muted">REGISTRATION RATE</span>
-                    </p>
-                  </div>
-                </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Near expiry alert list</h3>
+          <div class="card-tools">
+            {{-- <a href="#" class="btn btn-tool btn-sm">
+              <i class="fas fa-download"></i>
+            </a>
+            <a href="#" class="btn btn-tool btn-sm">
+              <i class="fas fa-bars"></i>
+            </a> --}}
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-valign-middle">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Barcode</th>
+                <th>Store</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+
+                  Some Product
+                </td>
+                <td>123456789</td>
+                <td>Test Store</td>
+
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
   </div>
-</div>
 
+  @endsection
 
-@endsection
-
-@section('scripts') 
-<script src="{{ url('assets/admin/js/plugins/chart/Chart.min.js') }}"></script>
-<script type="text/javascript">
-  $(function () {
-    var areaChartCanvas = $('#areaChart').get(0).getContext('2d');
-    var areaChartData = {
-      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label               : 'Digital Goods',
-          backgroundColor     : 'rgba(60,141,188,0.9)',
-          borderColor         : 'rgba(60,141,188,0.8)',
-          pointRadius          : false,
-          pointColor          : '#3b8bba',
-          pointStrokeColor    : 'rgba(60,141,188,1)',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(60,141,188,1)',
-          data                : [28, 48, 40, 19, 86, 27, 90]
-        },
-        {
-          label               : 'Electronics',
-          backgroundColor     : 'rgba(210, 214, 222, 1)',
-          borderColor         : 'rgba(210, 214, 222, 1)',
-          pointRadius         : false,
-          pointColor          : 'rgba(210, 214, 222, 1)',
-          pointStrokeColor    : '#c1c7d1',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data                : [65, 59, 80, 81, 56, 55, 40]
-        },
-      ]
-    }
-
-    var areaChartOptions = {
-      maintainAspectRatio : false,
-      responsive : true,
-      legend: {
-        display: false
-      },
-      scales: {
-        xAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }],
-        yAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }]
+  @section('scripts')
+  <script src="{{ url('assets/admin/js/plugins/chart/Chart.min.js') }}"></script>
+  <script type="text/javascript">
+    $(function() {
+      var areaChartCanvas = $('#areaChart').get(0).getContext('2d');
+      var areaChartData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'Digital Goods',
+            backgroundColor: 'rgba(60,141,188,0.9)',
+            borderColor: 'rgba(60,141,188,0.8)',
+            pointRadius: false,
+            pointColor: '#3b8bba',
+            pointStrokeColor: 'rgba(60,141,188,1)',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data: [28, 48, 40, 19, 86, 27, 90]
+          },
+          {
+            label: 'Electronics',
+            backgroundColor: 'rgba(210, 214, 222, 1)',
+            borderColor: 'rgba(210, 214, 222, 1)',
+            pointRadius: false,
+            pointColor: 'rgba(210, 214, 222, 1)',
+            pointStrokeColor: '#c1c7d1',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data: [65, 59, 80, 81, 56, 55, 40]
+          },
+        ]
       }
-    }
-
-    // This will get the first returned node in the jQuery collection.
-    new Chart(areaChartCanvas, {
-      type: 'line',
-      data: areaChartData,
-      options: areaChartOptions
-    })
-
-    //-------------
-    //- DONUT CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-    var donutData        = {
-      labels: [
+      var areaChartOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false,
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false,
+            }
+          }]
+        }
+      }
+      // This will get the first returned node in the jQuery collection.
+      new Chart(areaChartCanvas, {
+        type: 'line',
+        data: areaChartData,
+        options: areaChartOptions
+      })
+      //-------------
+      //- DONUT CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+      var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+      var donutData = {
+        labels: [
           'Chrome',
           'IE',
           'FireFox',
           'Safari',
           'Opera',
           'Navigator',
-      ],
-      datasets: [
-        {
-          data: [700,500,400,600,300,100],
-          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
-        }
-      ]
-    }
-    var donutOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: donutData,
-      options: donutOptions
-    })
-
-     //-------------
-    //- PIE CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-    var pieData        = donutData;
-    var pieOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(pieChartCanvas, {
-      type: 'pie',
-      data: pieData,
-      options: pieOptions
-    })
-
-
-    //-------------
-    //- BAR CHART -
-    //-------------
-    var barChartCanvas = $('#barChart').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    barChartData.datasets[0] = temp1
-    barChartData.datasets[1] = temp0
-
-    var barChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      datasetFill             : false
-    }
-
-    new Chart(barChartCanvas, {
-      type: 'bar',
-      data: barChartData,
-      options: barChartOptions
-    })
-
-
-     // Sales graph chart
-  var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
-  // $('#revenue-chart').get(0).getContext('2d');
-
-  var salesGraphChartData = {
-    labels: ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4', '2013 Q1', '2013 Q2'],
-    datasets: [
-      {
-        label: 'Digital Goods',
-        fill: false,
-        borderWidth: 1,
-        lineTension: 0,
-        spanGaps: true,
-        borderColor: '#EB008A',
-        pointRadius: 3,
-        pointHoverRadius: 7,
-        pointColor: '#efefef',
-        pointBackgroundColor: '#EB008A',
-        data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
-      }
-    ]
-  }
-
-  var salesGraphChartOptions = {
-    maintainAspectRatio: false,
-    responsive: true,
-    legend: {
-      display: false
-    },
-    scales: {
-      xAxes: [{
-        ticks: {
-          fontColor: '#666'
-        },
-        gridLines: {
-          display: false,
-          color: '#efefef',
-          drawBorder: false
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          stepSize: 5000,
-          fontColor: '#666'
-        },
-        gridLines: {
-          display: true,
-          color: '#efefef',
-          drawBorder: false
-        }
-      }]
-    }
-  }
-
-  // This will get the first returned node in the jQuery collection.
-  // eslint-disable-next-line no-unused-vars
-  var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
-    type: 'line',
-    data: salesGraphChartData,
-    options: salesGraphChartOptions
-  })
-
-
-  var ticksStyle = {
-    fontColor: '#495057',
-    fontStyle: 'bold'
-  }
-
-  var mode = 'index'
-  var intersect = true
-  var $salesChart = $('#sales-chart')
-  // eslint-disable-next-line no-unused-vars
-  var salesChart = new Chart($salesChart, {
-    type: 'bar',
-    data: {
-      labels: ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      datasets: [
-        {
-          backgroundColor: '#007bff',
-          borderColor: '#007bff',
-          data: [1000, 2000, 3000, 2500, 2700, 2500, 3000]
-        },
-        {
-          backgroundColor: '#ced4da',
-          borderColor: '#ced4da',
-          data: [700, 1700, 2700, 2000, 1800, 1500, 2000]
-        }
-      ]
-    },
-    options: {
-      maintainAspectRatio: false,
-      tooltips: {
-        mode: mode,
-        intersect: intersect
-      },
-      hover: {
-        mode: mode,
-        intersect: intersect
-      },
-      legend: {
-        display: false
-      },
-      scales: {
-        yAxes: [{
-          // display: false,
-          gridLines: {
-            display: true,
-            lineWidth: '4px',
-            color: 'rgba(0, 0, 0, .2)',
-            zeroLineColor: 'transparent'
-          },
-          ticks: $.extend({
-            beginAtZero: true,
-
-            // Include a dollar sign in the ticks
-            callback: function (value) {
-              if (value >= 1000) {
-                value /= 1000
-                value += 'k'
-              }
-
-              return '$' + value
-            }
-          }, ticksStyle)
-        }],
-        xAxes: [{
-          display: true,
-          gridLines: {
-            display: false
-          },
-          ticks: ticksStyle
+        ],
+        datasets: [{
+          data: [700, 500, 400, 600, 300, 100],
+          backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
         }]
       }
-    }
-  })
-
-
-
-
-
-
-  });
-
-  
-</script> 
-@endsection 
+      var donutOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+      }
+      //Create pie or douhnut chart
+      // You can switch between pie and douhnut using the method below.
+      new Chart(donutChartCanvas, {
+        type: 'doughnut',
+        data: donutData,
+        options: donutOptions
+      })
+      //-------------
+      //- PIE CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+      var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+      var pieData = donutData;
+      var pieOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+      }
+      //Create pie or douhnut chart
+      // You can switch between pie and douhnut using the method below.
+      new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: pieData,
+        options: pieOptions
+      })
+      //-------------
+      //- BAR CHART -
+      //-------------
+      var barChartCanvas = $('#barChart').get(0).getContext('2d')
+      var barChartData = $.extend(true, {}, areaChartData)
+      var temp0 = areaChartData.datasets[0]
+      var temp1 = areaChartData.datasets[1]
+      barChartData.datasets[0] = temp1
+      barChartData.datasets[1] = temp0
+      var barChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        datasetFill: false
+      }
+      new Chart(barChartCanvas, {
+        type: 'bar',
+        data: barChartData,
+        options: barChartOptions
+      })
+      // Sales graph chart
+      var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
+      // $('#revenue-chart').get(0).getContext('2d');
+      var salesGraphChartData = {
+        labels: ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4',
+          '2013 Q1', '2013 Q2'
+        ],
+        datasets: [{
+          label: 'Digital Goods',
+          fill: false,
+          borderWidth: 1,
+          lineTension: 0,
+          spanGaps: true,
+          borderColor: '#EB008A',
+          pointRadius: 3,
+          pointHoverRadius: 7,
+          pointColor: '#efefef',
+          pointBackgroundColor: '#EB008A',
+          data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
+        }]
+      }
+      var salesGraphChartOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontColor: '#666'
+            },
+            gridLines: {
+              display: false,
+              color: '#efefef',
+              drawBorder: false
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              stepSize: 5000,
+              fontColor: '#666'
+            },
+            gridLines: {
+              display: true,
+              color: '#efefef',
+              drawBorder: false
+            }
+          }]
+        }
+      }
+      // This will get the first returned node in the jQuery collection.
+      // eslint-disable-next-line no-unused-vars
+      var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+        type: 'line',
+        data: salesGraphChartData,
+        options: salesGraphChartOptions
+      })
+      var ticksStyle = {
+        fontColor: '#495057',
+        fontStyle: 'bold'
+      }
+      var mode = 'index'
+      var intersect = true
+      var $salesChart = $('#sales-chart')
+      // eslint-disable-next-line no-unused-vars
+      var salesChart = new Chart($salesChart, {
+        type: 'bar',
+        data: {
+          labels: ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+          datasets: [{
+              backgroundColor: '#007bff',
+              borderColor: '#007bff',
+              data: [1000, 2000, 3000, 2500, 2700, 2500, 3000]
+            },
+            {
+              backgroundColor: '#ced4da',
+              borderColor: '#ced4da',
+              data: [700, 1700, 2700, 2000, 1800, 1500, 2000]
+            }
+          ]
+        },
+        options: {
+          maintainAspectRatio: false,
+          tooltips: {
+            mode: mode,
+            intersect: intersect
+          },
+          hover: {
+            mode: mode,
+            intersect: intersect
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              // display: false,
+              gridLines: {
+                display: true,
+                lineWidth: '4px',
+                color: 'rgba(0, 0, 0, .2)',
+                zeroLineColor: 'transparent'
+              },
+              ticks: $.extend({
+                beginAtZero: true,
+                // Include a dollar sign in the ticks
+                callback: function(value) {
+                  if (value >= 1000) {
+                    value /= 1000
+                    value += 'k'
+                  }
+                  return '$' + value
+                }
+              }, ticksStyle)
+            }],
+            xAxes: [{
+              display: true,
+              gridLines: {
+                display: false
+              },
+              ticks: ticksStyle
+            }]
+          }
+        }
+      })
+    });
+  </script>
+  @endsection
