@@ -57,6 +57,18 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="is_chronic" class="form-label">Is Chronic</label>
+              <select name="is_chronic" id="is_chronic" class="form-control form-inputtext" required>
+                <option value="">Select</option>
+                <option value="yes" {{ ($data['products']->is_chronic == 'yes' ? "selected":"") }}>Yes</option>
+                <option value="no" {{ ($data['products']->is_chronic == 'no' ? "selected":"") }}>No</option>
+              </select>
+              @error('is_chronic')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
         </div>
       </div>
       

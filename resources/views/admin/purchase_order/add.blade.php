@@ -97,6 +97,7 @@ $adminRoll = Session::get('admin_type');
                       <option value="cheque">Cheque</option>
                       <option value="net_banking">Net Banking</option>
                       <option value="cash">Cash</option>
+                      <option value="debt">Debt</option>
                     </select>
                   </li>
                 </ul>
@@ -108,7 +109,7 @@ $adminRoll = Session::get('admin_type');
                   </li>
                 </ul>
                 <ul class="d-flex flex-wrap align-items-center">
-                  <input type="hidden" id="payment_currency_usd_rate" value="1360">
+                  {{-- <input type="hidden" id="payment_currency_usd_rate" value="1360"> --}}
                   <li class="invAreaInf">Payment Currency</li>
                   <li class="invAreaVal">
                     <select class="form-control custom-select form-control-select" id="payment_currency_type"
@@ -116,6 +117,13 @@ $adminRoll = Session::get('admin_type');
                       <option value="usd">USD</option>
                       <option value="iqd">IQD </option>
                     </select>
+                  </li>
+                </ul>
+                <ul class="d-flex flex-wrap align-items-center" id="payment_currency_usd_rate_section">
+                  <li class="invAreaInf">US/IQ rate</li>
+                  <li class="invAreaVal">
+                    <input type="text" id="payment_currency_usd_rate" class="form-control input-1"
+                      required="required" value="">
                   </li>
                 </ul>
 
@@ -127,9 +135,9 @@ $adminRoll = Session::get('admin_type');
               @if (isset($data['inward_stock_type']) && $data['inward_stock_type'] == 'edit')
 
               @else
-              {{-- <div class="noteAreaInner">
+              <div class="noteAreaInner">
               <button type="submit" class="btn btn-primary w-100">Submit <i class="fas fa-paper-plane"></i></button>
-            </div> --}}
+            </div>
               @endif
             </div>
           </div>
@@ -139,7 +147,7 @@ $adminRoll = Session::get('admin_type');
   </form>
 
   <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate
-    enctype="multipart/form-data">
+    enctype="multipart/form-data" style="display: none">
 
     {{-- <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
   <input type="hidden" name="invoice_purchase_date" id="input-supplier_invoice_purchase_date" />
@@ -154,7 +162,8 @@ $adminRoll = Session::get('admin_type');
 
     <div class="col-12 mb-3">
       <div class="commonBox purcheseDetails vTop">
-        {{-- <div class="arrowUpDown open_supplier_form"> <span class="arrowUp"><i class="fas fa-arrow-alt-circle-up"></i></span> </div> --}}
+        <div class="arrowUpDown close_supplier_form" style="display: none"> <span class="arrowUp"><i class="fas fa-arrow-alt-circle-down"></i></span> </div>
+        <div class="arrowUpDown open_supplier_form" > <span class="arrowUp"><i class="fas fa-arrow-alt-circle-up"></i></span> </div>
 
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -214,12 +223,14 @@ $adminRoll = Session::get('admin_type');
                   <th>No per package</th>
                   <th>Net Price</th>
                   <th>Price</th>
+                  <th>Discount %</th>
                   <th>Bonous</th>
                   <th id="th_rate_title">US/IQ rate</th>
                   <th>Total Quantity</th>
                   <th>Sell Price</th>
                   <th>Profit</th>
                   <th>Actual % of profit</th>
+                  <th>Is Chronic</th>
                 </tr>
               </thead>
               <tbody id="product_record_sec">
@@ -231,12 +242,12 @@ $adminRoll = Session::get('admin_type');
       </div>
     </div>
 
-    {{-- <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
+    <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
       <div class="form-group relative formBox m-0">
         <button type="button" class="saveBtn saveBtnMd" id="inwardStockSubmitBtm">Save <i
             class="fas fa-paper-plane ml-2"></i></button>
       </div>
-    </div> --}}
+    </div>
 
   </form>
   <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

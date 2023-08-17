@@ -135,6 +135,7 @@ class ProductController extends Controller
 
 				$no_package=$request->no_package;
 				$selling_by=$request->selling_by;
+				$is_chronic=$request->is_chronic;
 
 				$selling_by_name='Pack';
 				if($selling_by==2){
@@ -187,6 +188,7 @@ class ProductController extends Controller
 						'brand'  				=> $product_name,
 						'brand_id'  			=> $brand_id,
 						'slug'  				=> $product_slug,
+						'is_chronic'  			=> $is_chronic,
 						'dosage_name'  			=> $dosage_name,
 						'dosage_id'  			=> $dosage_id,
 						'company_name'  		=> $company_name,
@@ -280,6 +282,8 @@ class ProductController extends Controller
 				$drugstore_name='';
 				$drugstore_id='';
 
+				$is_chronic=$request->is_chronic;
+
 				$brand_id=0;
 				if($product_name!=''){
 					$brand_slug 	= $this->create_slug($product_name);
@@ -322,6 +326,7 @@ class ProductController extends Controller
 					'brand'  				=> $product_name,
 					'brand_id'  			=> $brand_id,
 					'slug'  				=> $product_slug,
+					'is_chronic'  			=> $is_chronic,
 					'dosage_name'  			=> $dosage_name,
 					'dosage_id'  			=> $dosage_id,
 					'company_name'  		=> $company_name,

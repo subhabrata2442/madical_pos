@@ -52,6 +52,7 @@ $user_role=Auth::user()->role;
 						<th>Company Name</th>
 						<th>No per package</th>
 						<th>Selling by</th>
+						<th>Is Chronic</th>
 						<th>Action</th>
 					</thead>
 					<tbody>
@@ -63,6 +64,7 @@ $user_role=Auth::user()->role;
 							<td>{{$product->company_name}}</td>
 							<td>{{$product->no_package}}</td>
 							<td>{{$product->selling_by_name}}</td>
+							<td>{{ ucfirst(trans($product->is_chronic)) }}</td>
 							{{-- <td>{{$product->drugstore_name}}</td> --}}
 							<td>
 								<div class="dropdown">

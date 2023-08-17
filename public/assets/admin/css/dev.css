@@ -426,7 +426,7 @@ a.circle-button {
 }
 
 .hide {
-	display: none;
+	display: none !important;
 }
 
 .pos-left-bottom-fixed {

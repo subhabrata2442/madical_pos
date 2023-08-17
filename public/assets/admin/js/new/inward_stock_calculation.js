@@ -56,6 +56,11 @@ function setProfitCalulation() {
                 .find("#product_bonous_" + product_id)
                 .html()
         );
+        var product_discount = Number(
+            $(this)
+                .find("#product_discount_" + product_id)
+                .html()
+        );
 
         var net_price = 0;
         if (
@@ -69,6 +74,15 @@ function setProfitCalulation() {
                 (Number(product_quantity) + Number(bonous));
             net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
         }
+        $("#product_totalNetPrice_" + product_id).val(net_price);
+        if (product_discount > 0 && net_price > 0) {
+            var discount_value = (net_price / 100) * product_discount;
+            net_price = Number(net_price) - Number(discount_value);
+            $("#product_discountCost_" + product_id).val(
+                discount_value.toFixed(decimalpoints)
+            );
+        }
+
         $("#product_netPrice_" + product_id).html(net_price);
         sub_total += Number(net_price);
 
@@ -164,6 +178,10 @@ $(document).on("keyup", ".product_bonous", function () {
     var product_id = $(this).attr("id").split("product_bonous_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".product_discount", function () {
     setProfitCalulation();
 });
 
