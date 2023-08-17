@@ -12,16 +12,11 @@ $(document).on("change", "#payment_currency_type", function () {
     var payment_currency_usd_rate = $("#payment_currency_usd_rate").val();
     var rate = payment_currency_usd_rate;
 
+    $("#payment_currency_usd_rate_section").removeClass("hide");
     if (currency_type == "iqd") {
         th_rate_title = "IQD rate";
         rate = 1;
-    }
-    var total_item = $("#product_record_sec tr").length;
-    if (total_item > 0) {
-        $(".product_rate").html(rate);
-        setTimeout(function () {
-            setProfitCalulation();
-        }, 500);
+        $("#payment_currency_usd_rate_section").addClass("hide");
     }
 
     $("#th_rate_title").text(th_rate_title);
@@ -551,41 +546,78 @@ $(document).ready(function () {
             $(element).addClass("has-success").removeClass("has-error");
         },
         submitHandler: function (form) {
-            $("#supplier_company_name").html($("#supplier").val());
-            $("#supplier_invoice_no").html($("#invoice_no").val());
-            $("#supplier_transport_pass_no").html($("#tp_no").val());
-            $("#supplier_invoice_purchase_date").html(
-                $("#purchase_date").val()
-            );
-            $("#supplier_invoice_inward_date").html($("#inward_date").val());
+            // $("#supplier_company_name").html($("#supplier").val());
+            // $("#supplier_invoice_no").html($("#invoice_no").val());
+            // $("#supplier_transport_pass_no").html($("#tp_no").val());
+            // $("#supplier_invoice_purchase_date").html(
+            //     $("#purchase_date").val()
+            // );
+            // $("#supplier_invoice_inward_date").html($("#inward_date").val());
 
             $("#supplier-inward_stock-form").hide();
             $("#supplier-inward_stock-product-form").show();
+            //$("#product_record_sec").html("");
 
-            $("#input-supplier_company_name").val($("#supplier").val());
-            $("#input-supplier_company_id").val($("#supplier_id").val());
-            $("#input-supplier_invoice_no").val($("#invoice_no").val());
-            $("#input-supplier_invoice_purchase_date").val(
-                $("#purchase_date").val()
-            );
-            $("#input-supplier_invoice_inward_date").val(
-                $("#inward_date").val()
-            );
+            $(".close_supplier_form").hide();
+            $(".open_supplier_form").show();
+            $("#no_of_items").html("0");
+            $("#qty_total").html("0");
+            $("#sub_total").html("0");
+            $("#gross_total_amount").html("0");
 
-            $("#input-supplier_shipping_note").val($("#shipping_note").val());
-            $("#input-supplier_additional_note").val($("#shipping_note").val());
+            var currency_type = $("#payment_currency_type").val();
+            var payment_currency_usd_rate = $(
+                "#payment_currency_usd_rate"
+            ).val();
+            var rate = payment_currency_usd_rate;
 
-            $("#input-invoice_stock").val($("#invoice_stock").val());
-            $("#input-invoice_stock_type").val($("#invoice_stock_type").val());
+            if (currency_type == "iqd") {
+                rate = 1;
+            }
+
+            //var no_of_items = 0;
+
+            var total_item = $("#product_record_sec tr").length;
+            $("#no_of_items").html(total_item);
+            if (total_item > 0) {
+                $(".product_rate").html(rate);
+                setTimeout(function () {
+                    setProfitCalulation();
+                }, 500);
+            }
+
+            // $("#input-supplier_company_name").val($("#supplier").val());
+            // $("#input-supplier_company_id").val($("#supplier_id").val());
+            // $("#input-supplier_invoice_no").val($("#invoice_no").val());
+            // $("#input-supplier_invoice_purchase_date").val(
+            //     $("#purchase_date").val()
+            // );
+            // $("#input-supplier_invoice_inward_date").val(
+            //     $("#inward_date").val()
+            // );
+
+            // $("#input-supplier_shipping_note").val($("#shipping_note").val());
+            // $("#input-supplier_additional_note").val($("#shipping_note").val());
+
+            // $("#input-invoice_stock").val($("#invoice_stock").val());
+            // $("#input-invoice_stock_type").val($("#invoice_stock_type").val());
 
             //toastr.error("Supplier can not be empty!");
         },
     });
 });
 
+$(document).on("click", ".close_supplier_form", function () {
+    $(this).hide();
+    $(".open_supplier_form").show();
+    $("#supplier-inward_stock-form").hide();
+    //$("#supplier-inward_stock-product-form").hide();
+});
 $(document).on("click", ".open_supplier_form", function () {
+    $(this).hide();
+    $(".close_supplier_form").show();
     $("#supplier-inward_stock-form").show();
-    $("#supplier-inward_stock-product-form").hide();
+    //$("#supplier-inward_stock-product-form").hide();
 });
 
 $(document).on("click", "#payment_detail_modal_btn", function () {
@@ -771,6 +803,9 @@ function setRow(element) {
                 var subcategory_id = "";
                 var category_id = "";
 
+                var discount = 0;
+                var is_chronic = item_detail.is_chronic;
+
                 var payment_currency_type = $("#payment_currency_type").val();
                 var payment_currency_usd_rate = $(
                     "#payment_currency_usd_rate"
@@ -822,6 +857,20 @@ function setRow(element) {
                         product_id +
                         '" value="' +
                         scan_time +
+                        '">' +
+                        '<input type="hidden" name="product_discountCost_' +
+                        product_id +
+                        '" id="product_discountCost_' +
+                        product_id +
+                        '" value="' +
+                        discount +
+                        '">' +
+                        '<input type="hidden" name="product_totalNetPrice_' +
+                        product_id +
+                        '" id="product_totalNetPrice_' +
+                        product_id +
+                        '" value="' +
+                        net_price +
                         '">' +
                         '<input type="hidden" name="selling_type_' +
                         product_id +
@@ -891,6 +940,11 @@ function setRow(element) {
                         '">' +
                         price +
                         "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
+                        product_id +
+                        '">' +
+                        discount +
+                        "</td>" +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_bonous" contenteditable = "true" id="product_bonous_' +
                         product_id +
                         '">' +
@@ -920,6 +974,11 @@ function setRow(element) {
                         product_id +
                         '">' +
                         profit_percent +
+                        "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number product_isChronic"  id="product_isChronic_' +
+                        product_id +
+                        '">' +
+                        is_chronic +
                         "</td>" +
                         "</tr>";
                 }
@@ -1197,90 +1256,6 @@ function setSupplierRow(element) {
 }
 
 $(document).on("click", "#inwardStockSubmitBtm", function () {
-    var no_of_items = 0;
-    $("#product_record_sec tr").each(function (index, e) {
-        var product_id = $(this).attr("id").split("product_")[1];
-        var tbl_row = $(this).data("id");
-        no_of_items += Number(1);
-
-        $(this)
-            .find("td")
-            .each(function () {
-                //console.log($(this).attr("id"));
-
-                if ($(this).attr("id") == "product_quantity_" + product_id) {
-                    var val = $(this).html();
-
-                    if (val > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter Quantity!");
-                        return false;
-                    }
-                }
-                if ($(this).attr("id") == "product_package_" + product_id) {
-                    var val = $(this).html();
-
-                    if (val > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter No per package!");
-                        return false;
-                    }
-                }
-
-                if (
-                    $(this).attr("id") ==
-                    "product_totalQuantity_" + product_id
-                ) {
-                    var totalqty = $(this).html();
-
-                    if (totalqty > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter Total Quantity!");
-                        return false;
-                    }
-                }
-                if ($(this).attr("id") == "product_price_" + product_id) {
-                    var val = $(this).html();
-
-                    if (val > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter Price!");
-                        return false;
-                    }
-                }
-                if ($(this).attr("id") == "product_rate_" + product_id) {
-                    var val = $(this).html();
-
-                    if (val > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter US/IQ rate!");
-                        return false;
-                    }
-                }
-                if ($(this).attr("id") == "product_sellPrice_" + product_id) {
-                    var val = $(this).html();
-
-                    if (val > 0) {
-                        $(this).removeClass("red_border");
-                    } else {
-                        $(this).addClass("red_border");
-                        toastr.error("Enter Sell Price!");
-                        return false;
-                    }
-                }
-            });
-    });
-
     if (no_of_items <= 0) {
         toastr.error("Not Item Found!");
     }
@@ -1352,6 +1327,19 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
     inward_stock_info["total_amount"] = $("#input-gross_total_amount").val();
 
     inward_stock_info["store_id"] = $("#store_id").val();
+    inward_stock_info["payment_currency_type"] = $(
+        "#payment_currency_type"
+    ).val();
+
+    var currency_type = $("#payment_currency_type").val();
+
+    if (currency_type == "iqd") {
+        inward_stock_info["payment_currency_rate"] = 1;
+    } else {
+        inward_stock_info["payment_currency_rate"] = $(
+            "#payment_currency_usd_rate"
+        ).val();
+    }
 
     $("#product_record_sec tr").each(function (index, e) {
         var rowcount = $(this).data("id");
@@ -1366,6 +1354,13 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
                 var values = "";
                 product_detail["product_id"] = product_id;
                 var cost_price = "";
+
+                product_detail["product_discountCost"] = $(
+                    "#product_discountCost_" + product_id
+                ).val();
+                product_detail["product_totalNetPrice"] = $(
+                    "#product_totalNetPrice_" + product_id
+                ).val();
 
                 $(this)
                     .find("td")

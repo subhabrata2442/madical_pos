@@ -536,6 +536,7 @@ class AjaxController extends Controller {
 					'sell_price'		=> $res->selling_price,
 					'profit'			=> $res->profit_amount,
 					'profit_percent'	=> $res->profit_percent,
+					'is_chronic'		=> ucfirst(trans($res->is_chronic)),
 				);
 			}
 		}
@@ -846,6 +847,8 @@ class AjaxController extends Controller {
 		$inward_stock	= $request->inward_stock;
 		//echo '<pre>';print_r($inward_stock);exit;
 
+		
+
 		if($inward_stock['invoice_no']!=''){
 			$invoice_no=$inward_stock['invoice_no'];
 			$count=PurchaseInwardStock::where('invoice_no',$invoice_no)->count();
@@ -853,8 +856,45 @@ class AjaxController extends Controller {
 			if($count>0){
 				$return_data['msg']		= 'This invoice already exists!';
 				$return_data['status']	= 0;
-				echo json_encode($return_data);
+				echo json_encode($return_data);exit;
 			}else{
+
+				$product_total_profit=0;
+				$productItemErrorMsg=[];
+				if(isset($inward_stock['product_detail'])){
+					if(count($inward_stock['product_detail'])>0){
+						for($i=0;count($inward_stock['product_detail'])>$i;$i++){
+							$product_total_profit += isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
+							$product_quantity	= isset($inward_stock['product_detail'][$i]['product_quantity'])?$inward_stock['product_detail'][$i]['product_quantity']:0;
+							if($product_quantity==0 || $product_quantity==''){
+								$productItemErrorMsg[]='Quantity should not be empty or 0!';
+							}
+							$product_price	= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
+							if($product_price==0 || $product_price==''){
+								$productItemErrorMsg[]='Price should not be empty or 0!';
+							}
+							$product_sellPrice	= isset($inward_stock['product_detail'][$i]['product_sellPrice'])?$inward_stock['product_detail'][$i]['product_sellPrice']:0;
+							if($product_sellPrice==0 || $product_sellPrice==''){
+								$productItemErrorMsg[]='Sell Price should not be empty or 0!';
+							}
+						}
+					}else{
+						$return_data['msg']		= 'items not exists!';
+						$return_data['status']	= 0;
+						echo json_encode($return_data);exit;
+					}
+				}else{
+					$return_data['msg']		= 'items not exists!';
+					$return_data['status']	= 0;
+					echo json_encode($return_data);exit;
+				}
+
+				if(count($productItemErrorMsg)>0){
+					$return_data['msg']		= $productItemErrorMsg[0];
+					$return_data['status']	= 0;
+					echo json_encode($return_data);exit;
+				}
+				
 				$branch_id=$inward_stock['store_id'];
 				$purchaseStockData=array(
 					'supplier_id'  		=> $inward_stock['store_id'],
@@ -869,6 +909,9 @@ class AjaxController extends Controller {
 					'sub_total'  		=> $inward_stock['sub_total'],
 					'additional_note'  	=> $inward_stock['additional_note'],
 					'total_amount'  	=> $inward_stock['total_amount'],
+					'currency_type'  	=> $inward_stock['payment_currency_type'],
+					'rate'  			=> $inward_stock['payment_currency_rate'],
+					'total_profit'  	=> $product_total_profit,
 				);
 				//echo '<pre>';print_r($purchaseStockData);exit;
 				$purchaseInwardStock	= PurchaseInwardStock::create($purchaseStockData);
@@ -899,8 +942,8 @@ class AjaxController extends Controller {
 							$product_dosage_id	= isset($product_info->dosage_id)?$product_info->dosage_id:0;
 							$product_company	= isset($inward_stock['product_detail'][$i]['product_company'])?$inward_stock['product_detail'][$i]['product_company']:0;
 							$product_company_id	= isset($product_info->company_id)?$product_info->company_id:0;
-							$product_drugstore	= isset($inward_stock['product_detail'][$i]['product_drugstore'])?$inward_stock['product_detail'][$i]['product_drugstore']:0;
-							$drugstore_id		= isset($product_info->drugstore_id)?$product_info->drugstore_id:0;
+							//$product_drugstore	= isset($inward_stock['product_detail'][$i]['product_drugstore'])?$inward_stock['product_detail'][$i]['product_drugstore']:0;
+							//$drugstore_id		= isset($product_info->drugstore_id)?$product_info->drugstore_id:0;
 
 							$product_package	= isset($inward_stock['product_detail'][$i]['product_package'])?$inward_stock['product_detail'][$i]['product_package']:0;
 							$net_price			= isset($inward_stock['product_detail'][$i]['product_netPrice'])?$inward_stock['product_detail'][$i]['product_netPrice']:0;
@@ -910,6 +953,8 @@ class AjaxController extends Controller {
 							$product_profit		= isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
 							$product_profitPercent	= isset($inward_stock['product_detail'][$i]['product_profitPercent'])?$inward_stock['product_detail'][$i]['product_profitPercent']:0;
 
+							$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
+							
 							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 							if(count($branchProductStockResult)>0){
 								$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
@@ -942,10 +987,14 @@ class AjaxController extends Controller {
 								'brand'  			=> $inward_stock['product_detail'][$i]['product_brand'],
 								'dosage'  			=> $inward_stock['product_detail'][$i]['product_dosage'],
 								'company'  			=> $inward_stock['product_detail'][$i]['product_company'],
-								'drugstore'  		=> $inward_stock['product_detail'][$i]['product_drugstore'],
+								'drugstore'  		=> $branch_id,
 								'product_qty'  		=> $inward_stock['product_detail'][$i]['product_quantity'],
 								'total_qty'  		=> $inward_stock['product_detail'][$i]['product_totalQuantity'],
 								'no_package'  		=> $inward_stock['product_detail'][$i]['product_package'],
+								'net_price_befour_discount' => $inward_stock['product_detail'][$i]['product_totalNetPrice'],
+								'discount_cost'  	=> $inward_stock['product_detail'][$i]['product_discountCost'],
+								'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
+								'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
 								'net_price'  		=> $inward_stock['product_detail'][$i]['product_netPrice'],
 								'product_mrp'  		=> $inward_stock['product_detail'][$i]['product_price'],
 								'cost_price'  		=> $inward_stock['product_detail'][$i]['product_price'],
@@ -954,6 +1003,7 @@ class AjaxController extends Controller {
 								'selling_price'		=> $inward_stock['product_detail'][$i]['product_sellPrice'],
 								'profit_amount'  	=> $inward_stock['product_detail'][$i]['product_profit'],
 								'profit_percent'  	=> $inward_stock['product_detail'][$i]['product_profitPercent'],
+								'selling_by'		=> $product_sellingBy,
 							);
 							InwardStockProducts::create($inward_stock_product);
 							//echo '<pre>';print_r($inward_stock_product);exit;

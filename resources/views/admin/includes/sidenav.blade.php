@@ -149,11 +149,11 @@ if($adminId!=1){
                   </a> </li>
                 @endif
                 @if(in_array('admin-report-inventory', $page_permission))
-                  <li class="nav-item"> <a href="{{ route('admin.report.inventory') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.inventory') active @endif"> 
+                  {{-- <li class="nav-item"> <a href="{{ route('admin.report.inventory') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.inventory') active @endif"> 
                     <i class="fas fa-warehouse nav-icon"></i>
                     <p>Inventory</p>
                     </a> 
-                  </li>
+                  </li> --}}
                 @endif
               </ul>
             </li>
