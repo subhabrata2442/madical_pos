@@ -147,7 +147,7 @@ $adminRoll = Session::get('admin_type');
   </form>
 
   <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate
-    enctype="multipart/form-data" style="display: none">
+    enctype="multipart/form-data" >
 
     {{-- <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
   <input type="hidden" name="invoice_purchase_date" id="input-supplier_invoice_purchase_date" />

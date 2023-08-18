@@ -9,14 +9,41 @@
       <div class="card">
         <div class="row">
           <x-alert />
-          <div class="col-md-4">
+          <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="product_name" class="form-label">Brand Name</label>
-              <input type="text" class="form-control admin-input" id="product_name" name="product_name" value="{{ $data['products']->brand }}" required autocomplete="off">
+              <label for="brand" class="form-label">Brand Name</label>
+              <select name="brand" id="brand" class="form-control form-inputtext" required>
+                <option value="">Select Brand</option>
+                @if(count($data['brand'])>0)
+                  @foreach($data['brand'] as $row)
+                    <option value="{{$row->id}}" {{$row->id == $data['products']->brand_id ? 'selected' : ''}}>{{$row->name}}</option>
+                  @endforeach
+                @endif
+              </select>
+              @error('brand')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="brand" data-title="Brand"><i class="fas fa-plus"></i></a></div>
+          </div>
+          <div class="col-md-4 plusBoxWrap relative">
+            <div class="form-group">
+              <label for="product_name" class="form-label">Product Name</label>
+              <div id="product_name_div">
+                <input type="text" class="form-control admin-input" id="product_name" name="product_name" value="{{ $data['products']->product_name }}" required autocomplete="off">
+              </div>
               @error('product_name')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
+            <div class="plusBox" id="add_product_name_btn" style="display: none;"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="product" data-title="Product Name"><i class="fas fa-plus"></i></a></div>
           </div>
+          {{-- <div class="col-md-4">
+            <div class="form-group">
+              <label for="product_name" class="form-label">Product Name</label>
+              <input type="text" class="form-control admin-input" id="product_name" name="product_name" value="{{ $data['products']->product_name }}" required autocomplete="off">
+              @error('product_name')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div> --}}
           <div class="col-md-4">
             <div class="form-group">
               <label for="product_barcode" class="form-label">Product Barcode</label>
@@ -159,7 +186,7 @@
       <form id="productfeaturesform">
         <input type="hidden" id="product_features_type" autocomplete="off">
         <div class="modal-body">
-          <div class="input-group input-group-default floating-label">
+          <div class="input-group-default">
             <label class="form-label dnamic_feature_name"> </label>
             <input class="form-control form-inputtext" autocomplete="off" name="product_feature_data_value" id="product_feature_data_value" maxlength="100" type="text" placeholder=" ">
           </div>

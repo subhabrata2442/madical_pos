@@ -1,8 +1,8 @@
-$(".onclickselect").click(function () {
+$(".onclickselect").click(function() {
     $(this).select();
 });
 
-$(document).on("click", ".add_more_size_btn", function () {
+$(document).on("click", ".add_more_size_btn", function() {
     var count = $(".add_more_size_section").find(".card").length;
 
     var size_html = $("#size-sec-0").html();
@@ -100,22 +100,27 @@ $(document).on("click", ".add_more_size_btn", function () {
     $("#add_more_size_section_row").append(html);
 });
 
-$(document).on("click", ".addmoreoption", function () {
+$(document).on("click", ".addmoreoption", function() {
     var feature_title = $(this).data("title");
     var feature_type = $(this).data("type");
+    if (feature_type == 'product') {
+        $('#product_name_div select').remove();
+        $('#product_name_div').html('<input class="form-control admin-input" autocomplete="off" name="product_name" id="product_name_input" maxlength="100" type="text" placeholder=" ">');
+    } else {
+        $(".dnamic_feature_title").html("Add " + feature_title);
+        $(".dnamic_feature_name").html(feature_title);
+        $("#product_features_type").val(feature_type);
+        $("#product_feature_data_value").val("");
+        $("#addproducts_features").modal("show");
+    }
 
-    $(".dnamic_feature_title").html("Add " + feature_title);
-    $(".dnamic_feature_name").html(feature_title);
-    $("#product_features_type").val(feature_type);
-    $("#product_feature_data_value").val("");
-    $("#addproducts_features").modal("show");
 });
 
-$(document).on("click", ".modal_close_btn", function () {
+$(document).on("click", ".modal_close_btn", function() {
     $("#addproducts_features").modal("hide");
 });
 
-$(document).on("click", "#productfeaturessave", function () {
+$(document).on("click", "#productfeaturessave", function() {
     var product_type = $("#product_features_type").val();
     var feature_title = $("#product_feature_data_value").val();
 
@@ -129,8 +134,8 @@ $(document).on("click", "#productfeaturessave", function () {
             action: "set_feature_option",
             _token: prop.csrf_token,
         },
-        beforeSend: function () {},
-        success: function (response) {
+        beforeSend: function() {},
+        success: function(response) {
             if (response.status == 0) {
                 toastr.error(response.msg);
             } else {
@@ -141,9 +146,9 @@ $(document).on("click", "#productfeaturessave", function () {
                 }
                 $("#" + product_type).append(
                     $("<option></option>")
-                        .attr("value", response.val)
-                        .attr("selected", "selected")
-                        .text(response.title)
+                    .attr("value", response.val)
+                    .attr("selected", "selected")
+                    .text(response.title)
                 );
 
                 toastr.success(response.msg);
@@ -153,7 +158,7 @@ $(document).on("click", "#productfeaturessave", function () {
     });
 });
 
-$(document).on("keyup", "#product_barcode", function () {
+$(document).on("keyup", "#product_barcode", function() {
     var product_barcode = $(this).val();
     var product_id = $("#product_id").val();
     if (product_barcode != "") {
@@ -167,8 +172,8 @@ $(document).on("keyup", "#product_barcode", function () {
                 action: "check_product_barcode",
                 _token: prop.csrf_token,
             },
-            beforeSend: function () {},
-            success: function (response) {
+            beforeSend: function() {},
+            success: function(response) {
                 if (response.status == 0) {
                     toastr.error(response.msg);
                 }
@@ -177,8 +182,9 @@ $(document).on("keyup", "#product_barcode", function () {
     }
 });
 
-$(document).on("change", "#brand", function () {
+$(document).on("change", "#brand", function() {
     var brand_id = $(this).val();
+    $("#product_name_div").html('<select name="product_name" id="product_name" class="form-control form-inputtext" required=""><option value="">Select Product</option></select>');
     if (brand_id != "") {
         $.ajax({
             url: prop.ajaxurl,
@@ -189,11 +195,13 @@ $(document).on("change", "#brand", function () {
                 action: "get_product_by_brandId",
                 _token: prop.csrf_token,
             },
-            beforeSend: function () {},
-            success: function (response) {
+            beforeSend: function() {},
+            success: function(response) {
                 //alert(response.result.length);
                 var html = "";
                 if (response.result.length > 0) {
+                    $('#add_product_name_btn').show();
+                    html += '<select name="product_name" id="product_name" class="form-control form-inputtext" required="">';
                     for (var i = 0; i < response.result.length; i++) {
                         var id = response.result[i]["id"];
                         var name = response.result[i]["product_name"];
@@ -204,8 +212,12 @@ $(document).on("change", "#brand", function () {
                             name +
                             "</option>";
                     }
-                    $("#product_name").html(html);
+                    html += '</select>';
+                    $("#product_name_div").html(html);
                 } else {
+                    $('#product_name_div select').remove();
+                    $('#add_product_name_btn').hide();
+                    $('#product_name_div').html('<input class="form-control admin-input" autocomplete="off" name="product_name" id="product_name_input" maxlength="100" type="text" placeholder=" ">');
                     toastr.error("No Product Found. Plz add product name");
                 }
             },
@@ -213,7 +225,7 @@ $(document).on("change", "#brand", function () {
     }
 });
 
-$(document).on("change", "#drugstore", function () {
+$(document).on("change", "#drugstore", function() {
     var product_barcode = $("#product_barcode").val();
     var drugstore_id = $(this).val();
     if (product_barcode != "" && drugstore_id != "") {
@@ -227,8 +239,8 @@ $(document).on("change", "#drugstore", function () {
                 action: "check_product_barcode",
                 _token: prop.csrf_token,
             },
-            beforeSend: function () {},
-            success: function (response) {
+            beforeSend: function() {},
+            success: function(response) {
                 if (response.status == 0) {
                     toastr.error(response.msg);
                 }
@@ -285,7 +297,7 @@ function setProfitCalulation(
     // console.log("profitPercent", profitPercent);
 }
 
-$(document).on("keyup", ".product_mrp", function () {
+$(document).on("keyup", ".product_mrp", function() {
     var row_id = $(this).attr("id").split("product_mrp_")[1];
     var product_mrp = $(this).val();
     var cost_rate = $("#cost_rate_" + row_id).val();
@@ -304,7 +316,7 @@ $(document).on("keyup", ".product_mrp", function () {
     );
 });
 
-$(document).on("keyup", ".cost_rate", function () {
+$(document).on("keyup", ".cost_rate", function() {
     var row_id = $(this).attr("id").split("cost_rate_")[1];
     var product_mrp = $("#product_mrp_" + row_id).val();
     var cost_rate = $(this).val();
@@ -323,7 +335,7 @@ $(document).on("keyup", ".cost_rate", function () {
     );
 });
 
-$(document).on("keyup", ".selling_price", function () {
+$(document).on("keyup", ".selling_price", function() {
     var row_id = $(this).attr("id").split("selling_price_")[1];
     var product_mrp = $("#product_mrp_" + row_id).val();
     var cost_rate = $("#cost_rate_" + row_id).val();
@@ -342,7 +354,7 @@ $(document).on("keyup", ".selling_price", function () {
     );
 });
 
-$(document).on("keyup", ".product_quantity", function () {
+$(document).on("keyup", ".product_quantity", function() {
     var row_id = $(this).attr("id").split("product_quantity_")[1];
     var product_mrp = $("#product_mrp_" + row_id).val();
     var cost_rate = $("#cost_rate_" + row_id).val();
@@ -361,7 +373,7 @@ $(document).on("keyup", ".product_quantity", function () {
     );
 });
 
-$(document).on("keyup", ".noper_package", function () {
+$(document).on("keyup", ".noper_package", function() {
     var row_id = $(this).attr("id").split("noper_package_")[1];
     var product_mrp = $("#product_mrp_" + row_id).val();
     var cost_rate = $("#cost_rate_" + row_id).val();
@@ -380,7 +392,7 @@ $(document).on("keyup", ".noper_package", function () {
     );
 });
 
-$(document).on("keyup", ".bonous", function () {
+$(document).on("keyup", ".bonous", function() {
     var row_id = $(this).attr("id").split("bonous_")[1];
     var product_mrp = $("#product_mrp_" + row_id).val();
     var cost_rate = $("#cost_rate_" + row_id).val();
@@ -399,9 +411,10 @@ $(document).on("keyup", ".bonous", function () {
     );
 });
 
-$(document).on("click", ".fetch_image", function (e) {
+$(document).on("click", ".fetch_image", function(e) {
     $("#upload_photo").click();
 });
+
 function preview_image(files) {
     var input = document.getElementById("upload_photo");
     var files = !!input.files ? input.files : [];
@@ -409,7 +422,7 @@ function preview_image(files) {
     if (/^image/.test(files[0].type)) {
         var reader = new FileReader(); // instance of the FileReader
         reader.readAsDataURL(files[0]); // read the local file
-        reader.onloadend = function () {
+        reader.onloadend = function() {
             // set image data as background of div
             //$("#form-image-upload").submit()
             //$("#view_image_"+index).attr("src",this.result);

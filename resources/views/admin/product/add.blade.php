@@ -28,13 +28,15 @@
           <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
               <label for="product_name" class="form-label">Product Name</label>
-              <select name="product_name" id="product_name" class="form-control form-inputtext" required>
-                <option value="">Select Product</option>
-              </select>
+              <div id="product_name_div">
+                <select name="product_name" id="product_name" class="form-control form-inputtext" required>
+                  <option value="">Select Product</option>
+                </select>
+              </div>
               @error('product_name')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
-            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="product" data-title="Product Name"><i class="fas fa-plus"></i></a></div>
+            <div class="plusBox" id="add_product_name_btn"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="product" data-title="Product Name"><i class="fas fa-plus"></i></a></div>
           </div>
 
           <div class="col-md-4">

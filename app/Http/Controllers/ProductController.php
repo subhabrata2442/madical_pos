@@ -99,7 +99,9 @@ class ProductController extends Controller
 			$store_id = Session::get('store_id');
 
             if ($request->isMethod('post')) {
+				//dd($request->all());
                 $validator = Validator::make($request->all(), [
+                    'brand' 		=> 'required',
                     'product_name' 		=> 'required',
 					'product_barcode' 	=> 'required',
 					'selling_by' 		=> 'required',
@@ -118,7 +120,9 @@ class ProductController extends Controller
 				$n=Product::count();
 				$uqc_id=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
 				
-				
+				$brand_name='';
+				$brand_id=$request->brand;
+
 				$product_name=$request->product_name;
 				$product_barcode=$request->product_barcode;
 				$sku_code=$request->sku_code;
@@ -142,7 +146,7 @@ class ProductController extends Controller
 					$selling_by_name='Single item';
 				}
 
-				$brand_id=0;
+				/* $brand_id=0;
 				if($product_name!=''){
 					$brand_slug 	= $this->create_slug($product_name);
 					$brand_result	= Brand::where('name',$product_name)->get();
@@ -156,6 +160,10 @@ class ProductController extends Controller
 						$data_insert=Brand::create($insert_data);
 						$brand_id=$data_insert->id;
 					}
+				} */
+				if($brand_id !=''){
+					$brand_result=Brand::where('id',$brand_id)->first();
+					$brand_name=isset($brand_result->name)?$brand_result->name:'';
 				}
 
 				if($dosage_id!=''){
@@ -173,19 +181,23 @@ class ProductController extends Controller
 				// 	$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
 				// }
 
-				$product_slug=$this->create_slug($product_name.'-'.$product_barcode);
+				$product_slug=$this->create_slug($brand_name.'-'.$product_name.'-'.$product_barcode);
 
 				//echo '<pre>';print_r($product_slug);exit;
 
 				$product_result=Product::where('product_barcode',$product_barcode)->get();
+				$check_brand_product_name=Product::where('product_name',$product_name)->where('brand_id',$brand_id)->get();
 				if(count($product_result)>0){
 					return redirect()->back()->with('error', 'This barcode already exists!');
+				}else if(count($check_brand_product_name)>0){
+					return redirect()->back()->with('error', 'This brand and product name already exists!');
 				}else{
 					$insert_data=array(
 						//'sku_code'				=> $sku_code,
 						'uqc_id'  				=> $uqc_id,
 						'product_barcode'  		=> $product_barcode,
-						'brand'  				=> $product_name,
+						'brand'  				=> $brand_name,
+						'product_name'  		=> $product_name,
 						'brand_id'  			=> $brand_id,
 						'slug'  				=> $product_slug,
 						'is_chronic'  			=> $is_chronic,
@@ -252,39 +264,44 @@ class ProductController extends Controller
             $product_id = base64_decode($id);
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
-					'product_name' 		=> 'required',
                     'product_barcode' 	=> 'required|unique:products,product_barcode,' . $product_id,
+					'brand' 		=> 'required',
+                    'product_name' 		=> 'required',
+					'selling_by' 		=> 'required',
+					'no_package' 		=> 'required',
                 ]);
 				
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
 				
+				$brand_name='';
+				$brand_id=$request->brand;
+
 				$product_name=$request->product_name;
 				$product_barcode=$request->product_barcode;
 				$sku_code=$request->sku_code;
 				$alert_product_qty=$request->alert_product_qty;
 				$default_qty=$request->default_qty;
 				$days_before_product_expiry=$request->days_before_product_expiry;
-				$product_desc=$request->product_desc;
-				$product_note=$request->product_note;
-				$no_package=$request->no_package;
-				$selling_by=$request->selling_by;
-				$selling_by_name='Pack';
-				if($selling_by==2){
-					$selling_by_name='Single item';
-				}
-
+				
 				$dosage_name='';
 				$dosage_id=$request->dosage;
 				$company_name='';
 				$company_id=$request->company;
 				$drugstore_name='';
-				$drugstore_id='';
+				$drugstore_id=$request->drugstore;
 
+				$no_package=$request->no_package;
+				$selling_by=$request->selling_by;
 				$is_chronic=$request->is_chronic;
 
-				$brand_id=0;
+				$selling_by_name='Pack';
+				if($selling_by==2){
+					$selling_by_name='Single item';
+				}
+
+				/* $brand_id=0;
 				if($product_name!=''){
 					$brand_slug 	= $this->create_slug($product_name);
 					$brand_result	= Brand::where('name',$product_name)->get();
@@ -298,6 +315,10 @@ class ProductController extends Controller
 						$data_insert=Brand::create($insert_data);
 						$brand_id=$data_insert->id;
 					}
+				} */
+				if($brand_id !=''){
+					$brand_result=Brand::where('id',$brand_id)->first();
+					$brand_name=isset($brand_result->name)?$brand_result->name:'';
 				}
 
 				if($dosage_id!=''){
@@ -311,35 +332,46 @@ class ProductController extends Controller
 				}
 
 				// if($drugstore_id!=''){
-				// 	$drugstore_result=Drugstore::where('id',$drugstore_id)->first();
+				// 	$drugstore_result=User::where('id',$drugstore_id)->first();
 				// 	$drugstore_name=isset($drugstore_result->name)?$drugstore_result->name:'';
 				// }
 
-				//echo '<pre>';print_r($_POST);exit;
+				$product_slug=$this->create_slug($brand_name.'-'.$product_name.'-'.$product_barcode);
 				
 				
 
 				$product_slug=$this->create_slug($product_name.'-'.$product_barcode);
+				$product_result=Product::where('product_barcode',$product_barcode)->where('id','!=',$product_id)->get();
+				$check_brand_product_name=Product::where('product_name',$product_name)->where('brand_id',$brand_id)->where('id','!=',$product_id)->get();
+				if(count($product_result)>0){
+					return redirect()->back()->with('error', 'This barcode already exists!');
+				}else if(count($check_brand_product_name)>0){
+					return redirect()->back()->with('error', 'This brand and product name already exists!');
+				}else{
+					$update_data=array(
+						//'sku_code'				=> $sku_code,
+						'brand'  				=> $brand_name,
+						'product_name'  		=> $product_name,
+						'brand_id'  			=> $brand_id,
+						'product_barcode'  		=> $product_barcode,
+						'slug'  				=> $product_slug,
+						'is_chronic'  			=> $is_chronic,
+						'dosage_name'  			=> $dosage_name,
+						'dosage_id'  			=> $dosage_id,
+						'company_name'  		=> $company_name,
+						'company_id'  			=> $company_id,
+						'default_qty'			=> $default_qty,
+						'days_before_product_expiry'=>$days_before_product_expiry,
+						'alert_product_qty'		=> $alert_product_qty,
+						'no_package'			=> $no_package,
+						'selling_by'			=> $selling_by,
+						'selling_by_name'		=> $selling_by_name,
+						
+					);
+					Product::where('id',$product_id)->update($update_data);
+				}
 
-				$update_data=array(
-					//'sku_code'				=> $sku_code,
-					'brand'  				=> $product_name,
-					'brand_id'  			=> $brand_id,
-					'slug'  				=> $product_slug,
-					'is_chronic'  			=> $is_chronic,
-					'dosage_name'  			=> $dosage_name,
-					'dosage_id'  			=> $dosage_id,
-					'company_name'  		=> $company_name,
-					'company_id'  			=> $company_id,
-					'default_qty'			=> $default_qty,
-					'days_before_product_expiry'=>$days_before_product_expiry,
-					'alert_product_qty'		=> $alert_product_qty,
-					'no_package'			=> $no_package,
-					'selling_by'			=> $selling_by,
-					'selling_by_name'		=> $selling_by_name,
-					
-				);
-				Product::where('id',$product_id)->update($update_data);
+				
 				
 				return redirect()->back()->with('success', 'Product updated successfully');
             }
