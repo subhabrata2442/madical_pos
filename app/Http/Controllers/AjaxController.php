@@ -63,6 +63,25 @@ class AjaxController extends Controller {
 		$this->{'ajaxpost_' . $action}($request);
 	}
 
+	public function ajaxpost_get_product_by_brandId($request) {
+		$brand_id	= $request->brand_id;
+		$res = Product::where('brand_id',$brand_id)->get();
+
+		$result=[];
+
+		foreach($res as $row){
+			$result[]=array(
+				'id'=>$row->id,
+				'product_name'=>$row->product_name,
+			);
+		}
+
+		$return_data['result']	= $result;
+		$return_data['status']	= 1;
+
+		echo json_encode($return_data);
+	}
+
 	public function ajaxpost_requested_stock($request) {
 		$stock_id	= trim($request->stock_id);
 		$store_id	= trim($request->store_id);
@@ -1183,17 +1202,19 @@ class AjaxController extends Controller {
 
 		$return_data['msg']		= 'Something went wrong. Please try later!';
 		$return_data['status']	= 0;
-		if($product_type=='category'){
-			$count=Category::where('name',$feature_title)->count();
+		if($product_type=='brand'){
+			$count=Brand::where('name',$feature_title)->count();
 			if($count>0){
-				$return_data['msg']		= 'This category already exists!';
+				$return_data['msg']		= 'This Brand already exists!';
 				$return_data['status']	= 0;
 			}else{
+				$brand_slug	= Media::create_slug(trim($feature_title));
 				$feature_data=array(
 					'name'  		=> $feature_title,
+					'slug'  		=> $brand_slug,
 					'created_at'	=> date('Y-m-d')
 				);
-				$feature=Category::create($feature_data);
+				$feature=Brand::create($feature_data);
 				$feature_id=$feature->id;
 
 				$return_data['val']		= $feature_id;

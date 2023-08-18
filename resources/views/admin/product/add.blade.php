@@ -8,14 +8,35 @@
       <div class="card">
         <div class="row">
           <x-alert />
-          <div class="col-md-4">
+          <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
-              <label for="product_name" class="form-label">Brand Name</label>
-              <input type="text" class="form-control admin-input" id="product_name" name="product_name" value="{{ old('product_name') }}" required autocomplete="off">
+              <label for="brand" class="form-label">Brand Name</label>
+              <select name="brand" id="brand" class="form-control form-inputtext" required>
+                <option value="">Select Brand</option>
+                @if(count($data['brand'])>0)
+                @foreach($data['brand'] as $row)
+                <option value="{{$row->id}}">{{$row->name}}</option>
+                @endforeach
+                @endif
+              </select>
+              @error('brand')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="brand" data-title="Brand"><i class="fas fa-plus"></i></a></div>
+          </div>
+
+          <div class="col-md-4 plusBoxWrap relative">
+            <div class="form-group">
+              <label for="product_name" class="form-label">Product Name</label>
+              <select name="product_name" id="product_name" class="form-control form-inputtext" required>
+                <option value="">Select Product</option>
+              </select>
               @error('product_name')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
+            <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="product" data-title="Product Name"><i class="fas fa-plus"></i></a></div>
           </div>
+
           <div class="col-md-4">
             <div class="form-group">
               <label for="product_barcode" class="form-label">Product Barcode</label>

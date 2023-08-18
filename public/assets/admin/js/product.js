@@ -134,6 +134,11 @@ $(document).on("click", "#productfeaturessave", function () {
             if (response.status == 0) {
                 toastr.error(response.msg);
             } else {
+                if (product_type == "brand") {
+                    $("#product_name").html(
+                        '<option value="">Select Product</option>'
+                    );
+                }
                 $("#" + product_type).append(
                     $("<option></option>")
                         .attr("value", response.val)
@@ -166,6 +171,42 @@ $(document).on("keyup", "#product_barcode", function () {
             success: function (response) {
                 if (response.status == 0) {
                     toastr.error(response.msg);
+                }
+            },
+        });
+    }
+});
+
+$(document).on("change", "#brand", function () {
+    var brand_id = $(this).val();
+    if (brand_id != "") {
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            dataType: "json",
+            data: {
+                brand_id: brand_id,
+                action: "get_product_by_brandId",
+                _token: prop.csrf_token,
+            },
+            beforeSend: function () {},
+            success: function (response) {
+                //alert(response.result.length);
+                var html = "";
+                if (response.result.length > 0) {
+                    for (var i = 0; i < response.result.length; i++) {
+                        var id = response.result[i]["id"];
+                        var name = response.result[i]["product_name"];
+                        html +=
+                            '<option value="' +
+                            name +
+                            '"> ' +
+                            name +
+                            "</option>";
+                    }
+                    $("#product_name").html(html);
+                } else {
+                    toastr.error("No Product Found. Plz add product name");
                 }
             },
         });
