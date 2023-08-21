@@ -529,6 +529,25 @@ class AjaxController extends Controller {
 
 		echo json_encode($return_data);
 	}
+	public function ajaxpost_get_product_by_scanner($request){
+		$barcode	= $request->barcode;
+		$product = Product::where('product_barcode', $barcode)->first();
+		$status=1;
+		$product_result=[];
+		if($product){
+			$product_result=array(
+				'product_id'		=> $product->id,
+				'product_name'			=> $product->product_name,
+			);
+		}else{
+			$status=0;
+		}
+		
+		$return_data['result']	= $product_result;
+		$return_data['status']	= $status;
+		echo json_encode($return_data);
+
+	}
 	public function ajaxpost_get_product_byId($request) {
 		$product_id	= $request->product_id;
 		$res = Product::find($product_id);
@@ -539,6 +558,7 @@ class AjaxController extends Controller {
 				$product_result=array(
 					'product_id'		=> $res->id,
 					'barcode'			=> $res->product_barcode,
+					'product_name'		=> $res->product_name,
 					'brand_name'		=> $res->brand,
 					'dosage'			=> $res->dosage_name,
 					'company'			=> $res->company_name,
@@ -950,8 +970,14 @@ class AjaxController extends Controller {
 							$current_stock += $inward_stock['product_detail'][$i]['product_totalQuantity'];
 
 							$product_barcode=$inward_stock['product_detail'][$i]['product_barcode'];
-
-							$product_mrp		= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
+							$product_isChronic = $inward_stock['product_detail'][$i]['product_isChronic'];
+							$product_mrp = 0;
+							if($product_isChronic == 'Yes'){
+								$product_mrp		= isset($inward_stock['product_detail'][$i]['chronic_amount'])? $inward_stock['product_detail'][$i]['chronic_amount']:0;
+							}else{
+								$product_mrp		= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
+							}
+							
 							$product_bonous		= isset($inward_stock['product_detail'][$i]['product_bonous'])?$inward_stock['product_detail'][$i]['product_bonous']:0;
 							$product_qty		= isset($inward_stock['product_detail'][$i]['product_totalQuantity'])?$inward_stock['product_detail'][$i]['product_totalQuantity']:0;
 
@@ -1004,6 +1030,7 @@ class AjaxController extends Controller {
 								'branch_id'  		=> $branch_id,
 								'product_id'  		=> $product_id,
 								'brand'  			=> $inward_stock['product_detail'][$i]['product_brand'],
+								'product_name'  			=> $inward_stock['product_detail'][$i]['product_name'],
 								'dosage'  			=> $inward_stock['product_detail'][$i]['product_dosage'],
 								'company'  			=> $inward_stock['product_detail'][$i]['product_company'],
 								'drugstore'  		=> $branch_id,
@@ -1015,7 +1042,9 @@ class AjaxController extends Controller {
 								'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
 								'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
 								'net_price'  		=> $inward_stock['product_detail'][$i]['product_netPrice'],
-								'product_mrp'  		=> $inward_stock['product_detail'][$i]['product_price'],
+								'product_mrp'  		=> $product_mrp,
+								'chronic_amount'  	=> $inward_stock['product_detail'][$i]['chronic_amount'] ? $inward_stock['product_detail'][$i]['chronic_amount'] : 0,
+								'option_product_mrp'=> $inward_stock['product_detail'][$i]['product_isChronic'] == 'Yes' ? $inward_stock['product_detail'][$i]['product_price'] : 0,
 								'cost_price'  		=> $inward_stock['product_detail'][$i]['product_price'],
 								'cost_rate'  		=> $inward_stock['product_detail'][$i]['product_rate'],
 								'bonous'  			=> $inward_stock['product_detail'][$i]['product_bonous'],

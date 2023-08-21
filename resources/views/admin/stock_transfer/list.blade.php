@@ -116,6 +116,7 @@ $adminRoll = Session::get('admin_type');
           <thead>
             <th scope="col">Barcode</th>
             <th scope="col">The Brand</th>
+            <th scope="col">Product Name</th>
             <th scope="col">Dosage Form</th>
             <th scope="col">Company</th>
             {{-- <th scope="col">Drugstore name</th> --}}
@@ -134,6 +135,7 @@ $adminRoll = Session::get('admin_type');
             <tr>
               <td>{{$product_stock->product->product_barcode}}</td>
               <td>{{$product_stock->product->brand}}</td>
+              <td>{{$product_stock->product->product_name}}</td>
               <td>{{$product_stock->product->dosage_name}}</td>
               <td>{{$product_stock->product->company_name}}</td>
               {{-- <td>{{$product_stock->product->drugstore_name}}</td> --}}

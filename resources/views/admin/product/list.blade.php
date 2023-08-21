@@ -48,6 +48,7 @@ $user_role=Auth::user()->role;
 					<thead>
 						<th>Barcode</th>
 						<th>Brand Name</th>
+						<th>Product Name</th>
 						<th>Dosage Form</th>
 						<th>Company Name</th>
 						<th>No per package</th>
@@ -60,6 +61,7 @@ $user_role=Auth::user()->role;
 						<tr>
 							<td>{{$product->product_barcode}}</td>
 							<td>{{$product->brand}}</td>
+							<td>{{$product->product_name}}</td>
 							<td>{{$product->dosage_name}}</td>
 							<td>{{$product->company_name}}</td>
 							<td>{{$product->no_package}}</td>

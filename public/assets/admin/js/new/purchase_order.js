@@ -73,7 +73,7 @@ $(document).on("keyup", "#purchase_final_cost_input", function() {
     $("#input-gross_total_amount").val(total_amount);
     $("#gross_total_amount").html("₹" + total_amount.toFixed(decimalpoints));
 
-    console.log(total_amount);
+    //console.log(total_amount);
     //tcs_amt=(tcs_amt.toFixed(decimalpoints));
 
     //console.log(tcs_amt);
@@ -554,6 +554,7 @@ $(document).ready(function() {
 
             $("#supplier-inward_stock-form").hide();
             $("#supplier-inward_stock-product-form").show();
+            $("#search_product_div").show();
             //$("#product_record_sec").html("");
 
             $(".close_supplier_form").hide();
@@ -733,7 +734,7 @@ $(document).ready(function() {
 });
 
 function remove(row) {
-    console.log(row);
+    //console.log(row);
     $("#product_record_sec")
         .find("tr[data-id='" + row + "']")
         .remove();
@@ -754,6 +755,7 @@ function check_character(event) {
 
 // Set Text to search box and get details
 function setRow(element) {
+    //console.log(element);
     var value = $(element).text();
     var product_id = $(element).val();
 
@@ -772,6 +774,8 @@ function setRow(element) {
         dataType: "json",
         success: function(response) {
             if (response.status == "1") {
+                const ul = document.getElementById('product_search_result');
+                ul.innerHTML = '';
                 var html = "";
                 var scan_time = moment().format("DD-MM-YYYY h:mm:ss a");
                 var item_detail = response.result;
@@ -780,6 +784,7 @@ function setRow(element) {
                 var item_category = "";
                 var item_sub_category = "";
                 var brand_name = item_detail.brand_name;
+                var product_name = item_detail.product_name;
                 var dosage = item_detail.dosage;
                 var company = item_detail.company;
                 var drugstore = item_detail.drugstore;
@@ -812,7 +817,13 @@ function setRow(element) {
                 if (payment_currency_type == "usd") {
                     rate = payment_currency_usd_rate;
                 }
-
+                var chronic_amount = 0;
+                var chronic_amount_edit = 'false';
+                var chronic_amount_edit_class = '';
+                if (is_chronic == 'Yes') {
+                    var chronic_amount_edit = 'true';
+                    var chronic_amount_edit_class = 'greenBg';
+                }
                 //var is_new = "new_item";
                 var is_new = "old_item";
 
@@ -877,12 +888,21 @@ function setRow(element) {
                         '" value="' +
                         selling_type +
                         '">' +
+                        '<input type="hidden" name="is_chronic_' +
+                        product_id +
+                        '" id="is_chronic_' +
+                        product_id +
+                        '" value="' +
+                        is_chronic +
+                        '">' +
                         '<input type="hidden" name="stock_transfers_detail_id_' +
                         product_id +
                         '" id="stock_transfers_detail_id_' +
                         product_id +
                         '" value="">' +
-                        "<td><a href='javascript:;'><i class='fa fa-times' aria-hidden='true'></i></a></td>" +
+                        "<td><a href='javascript:;' onclick='remove(" +
+                        item_row +
+                        ")';><i class='fa fa-times' aria-hidden='true'></i></a></td>" +
                         '<td id="subcategory_id_' +
                         product_id +
                         '" style="display:none">' +
@@ -902,6 +922,10 @@ function setRow(element) {
                         product_id +
                         '">' +
                         brand_name +
+                        "</td>" + '<td id="product_name_' +
+                        product_id +
+                        '">' +
+                        product_name +
                         "</td>" +
                         '<td id="product_dosage_' +
                         product_id +
@@ -937,6 +961,11 @@ function setRow(element) {
                         product_id +
                         '">' +
                         price +
+                        "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
+                        product_id +
+                        '">' +
+                        chronic_amount +
                         "</td>" +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
@@ -1405,5 +1434,33 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
                 });
             }
         },
+    });
+});
+
+$(document).ready(function() {
+    $('#barcode_scanner_frm').submit(function(event) {
+        event.preventDefault(); // Prevent normal form submission
+
+        var barcodeValue = $('#product_search').val();
+        //console.log(barcodeValue);
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            data: {
+                barcode: barcodeValue,
+                action: "get_product_by_scanner",
+                _token: prop.csrf_token,
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.status == "1") {
+                    var item_detail = response.result;
+                    $(".loader_section").show();
+                    setRow('<li value="' + item_detail.product_id + '">' + item_detail.product_name + '</li>');
+                } else {
+                    toastr.error('Product not found');
+                }
+            }
+        });
     });
 });

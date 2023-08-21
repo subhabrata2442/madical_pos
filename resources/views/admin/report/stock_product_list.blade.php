@@ -9,6 +9,7 @@
           <thead>
             <th>Barcode</th>
             <th>Brand Name</th>
+            <th>Product Name</th>
             <th>Dosage Form</th>
             <th>Company</th>
             <th>Drugstore name</th>
@@ -21,6 +22,7 @@
             <th>Sell Price</th>
             <th>Profit</th>
             <th>Actual % of profit</th>
+            <th>Is Chronic</th>
            </thead>
           <tbody>
           </tbody>
@@ -48,6 +50,10 @@ $(function() {
 			{
 				data: 'brand',
 				name: 'brand'
+			},	
+			{
+				data: 'product_name',
+				name: 'product_name'
 			},	
 			{
 				data: 'dosage',
@@ -96,6 +102,10 @@ $(function() {
 			{
 				data: 'profit_percent',
 				name: 'profit_percent'
+			},
+			{
+				data: 'is_chronic',
+				name: 'is_chronic'
 			},
 		]
 	});
