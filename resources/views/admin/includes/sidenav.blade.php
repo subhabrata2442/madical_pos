@@ -137,6 +137,27 @@ if($adminId!=1){
           @endif
         @endif
 
+        @if ($adminRoll != 1)
+        @if(isset($permission))
+        @if(in_array(18, $permission))
+        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.pos') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.pos') !== false) parent-active @endif"> <i class="fas fa-shopping-cart"></i>
+          <p>SALE <i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+            @if(in_array('admin-pos-create_order', $page_permission))
+            <li class="nav-item"> <a href="{{ route('admin.pos.pos_create') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.pos_create') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+              <p>Create Order</p>
+              </a> </li>
+              @endif
+          </ul>
+        </li>
+        @endif
+        @endif
+        @endif
+
+
+
+
         @if(isset($permission))
           @if(in_array(3, $permission))
             <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.report') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.report') !== false) parent-active @endif"> <i class="fas fa-cart-plus"></i>

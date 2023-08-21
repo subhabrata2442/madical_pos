@@ -61,6 +61,7 @@ use App\Models\DailyProductPurchaseHistory;
 use Carbon\Carbon;
 use Smalot\PdfParser\Parser;
 use Illuminate\Support\Facades\Session;
+use Auth;
 
 require_once '../mpdf/vendor/autoload.php';
 
@@ -333,64 +334,41 @@ class PosController extends Controller
         DB::beginTransaction();
         try {
             $data = [];
+			$store_id = Session::get('store_id');
 			
-			$branch_id=Session::get('branch_id');
-			$stock_type	= Common::get_user_settings($where=['option_name'=>'stock_type'],$branch_id);
-			
-			$data['stock_type'] 	= isset($stock_type)?$stock_type:'w';
-            $data['heading'] 		= 'Add Order';
-            $data['breadcrumb'] 	= ['Stock', 'Purchase Order', 'Add'];
-            $data['supplier'] 		= Supplier::all();
+            $data['heading'] 		= 'Sell Product';
+            $data['breadcrumb'] 	= ['Sell Product', 'Add'];
             $data['product'] 		= Product::all();
 			
-			
-			
-			
-			/*$data['purchase_product_result']	= BranchStockProducts::select('master_products.id as product_id','products.slug','products.product_name','products.product_name')
-				->leftJoin('products', function($join) {
-					$join->on('branch_stock_products.product_id', '=', 'products.id');
-				})
-				->leftJoin('master_products', function($join) {
-					$join->on('products.slug', '=', 'master_products.slug');
-				})
-				->where('branch_stock_products.branch_id',$branch_id)
-				->where('branch_stock_products.stock_type','counter')
-				->groupby('product_id')
-				->orderby('branch_stock_products.id','DESC')
-				->offset(0)->limit(20)
-				->get()
-				->toArray();
-				
-				
-			echo '<pre>';print_r($data['purchase_product_result']);exit;	*/
+			//echo '<pre>';print_r($data['product']);exit;
 			
 			
 			$data['top_selling_product_result']=[];
 			
-			$selling_product_result	= SellStockProducts::select('products.slug','products.product_name','products.product_name','sell_stock_products.size_id','sell_stock_products.subcategory_id')->leftJoin('sell_inward_stock', function($join) {
-				$join->on('sell_stock_products.inward_stock_id', '=', 'sell_inward_stock.id');
-				})
-				->leftJoin('products', function($join) {
-					$join->on('sell_stock_products.product_id', '=', 'products.id');
-				})
-				->where('sell_inward_stock.branch_id',$branch_id)
-				->groupby('product_id')
-				->orderby('sell_stock_products.id','DESC')
-				->offset(0)->limit(10)
-				->get()
-				->toArray();
+			// $selling_product_result	= SellStockProducts::select('products.slug','products.product_name','products.product_name','sell_stock_products.size_id','sell_stock_products.subcategory_id')->leftJoin('sell_inward_stock', function($join) {
+			// 	$join->on('sell_stock_products.inward_stock_id', '=', 'sell_inward_stock.id');
+			// 	})
+			// 	->leftJoin('products', function($join) {
+			// 		$join->on('sell_stock_products.product_id', '=', 'products.id');
+			// 	})
+			// 	->where('sell_inward_stock.branch_id',$branch_id)
+			// 	->groupby('product_id')
+			// 	->orderby('sell_stock_products.id','DESC')
+			// 	->offset(0)->limit(10)
+			// 	->get()
+			// 	->toArray();
 			//$top_selling_product_ids=[];
 			
-			foreach($selling_product_result as $row){
-				$product_result=MasterProducts::where('slug',$row['slug'])->where('subcategory_id',$row['subcategory_id'])->where('size_id',$row['size_id'])->first();
-				//print_r($product_result);exit;
-				$product_size=isset($product_result->size->name)?$product_result->size->name:'';
-				$data['top_selling_product_result'][]=array(
-					'product_id'	=> isset($product_result->id)?$product_result->id:'',
-					'product_name'	=> isset($product_result->product_name)?$product_result->product_name:'',
-					'product_size'	=> $product_size,
-				);
-			}
+			// foreach($selling_product_result as $row){
+			// 	$product_result=MasterProducts::where('slug',$row['slug'])->where('subcategory_id',$row['subcategory_id'])->where('size_id',$row['size_id'])->first();
+			// 	//print_r($product_result);exit;
+			// 	$product_size=isset($product_result->size->name)?$product_result->size->name:'';
+			// 	$data['top_selling_product_result'][]=array(
+			// 		'product_id'	=> isset($product_result->id)?$product_result->id:'',
+			// 		'product_name'	=> isset($product_result->product_name)?$product_result->product_name:'',
+			// 		'product_size'	=> $product_size,
+			// 	);
+			// }
 			
 			
 			$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
@@ -414,7 +392,7 @@ class PosController extends Controller
 			$data['invoice_url']		= $invoice_url;
 			
 			
-			$supplier_id	= Session::get('adminId');
+			$supplier_id	= Session::get('store_id');
 			
 			$data['supplier']=User::find($supplier_id);
 			
