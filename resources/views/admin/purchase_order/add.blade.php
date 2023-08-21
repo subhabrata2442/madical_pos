@@ -145,21 +145,7 @@ $adminRoll = Session::get('admin_type');
       </div>
     </div>
   </form>
-
-  <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate
-    enctype="multipart/form-data" style="display: none">
-
-    {{-- <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
-  <input type="hidden" name="invoice_purchase_date" id="input-supplier_invoice_purchase_date" />
-  <input type="hidden" name="invoice_inward_date" id="input-supplier_invoice_inward_date" /> --}}
-    <input type="hidden" name="qty_total" id="input-supplier_qty_total" />
-    <input type="hidden" name="sub_total" id="input-supplier_sub_total" />
-    <input type="hidden" name="gross_amount" id="input-supplier_gross_amount" />
-    <input type="hidden" name="gross_total_amount" id="input-gross_total_amount" />
-    {{-- <input type="hidden" name="tax_amount" id="input-supplier_tax_amount" /> --}}
-    {{-- <input type="hidden" name="shipping_note" id="input-supplier_shipping_note" />
-  <input type="hidden" name="additional_note" id="input-supplier_additional_note" /> --}}
-
+  <div id="search_product_div" style="display: none;">
     <div class="col-12 mb-3">
       <div class="commonBox purcheseDetails vTop">
         <div class="arrowUpDown close_supplier_form" style="display: none"> <span class="arrowUp"><i class="fas fa-arrow-alt-circle-down"></i></span> </div>
@@ -192,8 +178,8 @@ $adminRoll = Session::get('admin_type');
         </div>
       </div>
     </div>
-    <div class="col-12">
-      <div class="commonBox">
+    <form id="barcode_scanner_frm">
+      <div class="col-12">
         <div class="enterBarcode mb-3">
           <div class="row">
             <div class="col">
@@ -207,47 +193,80 @@ $adminRoll = Session::get('admin_type');
             </div>
           </div>
         </div>
-        <div class="inwordTableWrap">
-          <div class="table-responsive forTableHeight">
-            <table class="inwordTable table-striped table-hover table mb-0">
-              <thead>
-                <tr>
-                  <th><i class="fas fa-times"></i></th>
-                  <th>Barcode</th>
-                  <th>The Brand</th>
-                  <th>Dosage Form</th>
-                  <th>Company</th>
-                  <th>Selling by</th>
-                  {{-- <th>Drugstore name</th> --}}
-                  <th>Quantity</th>
-                  <th>No per package</th>
-                  <th>Net Price</th>
-                  <th>Price</th>
-                  <th>Discount %</th>
-                  <th>Bonous</th>
-                  <th id="th_rate_title">US/IQ rate</th>
-                  <th>Total Quantity</th>
-                  <th>Sell Price</th>
-                  <th>Profit</th>
-                  <th>Actual % of profit</th>
-                  <th>Is Chronic</th>
-                </tr>
-              </thead>
-              <tbody id="product_record_sec">
-                
-              </tbody>
-            </table>
+      </div>
+    </form>
+  </div>
+  <div class="col-12">
+    <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate
+      enctype="multipart/form-data" style="display: none">
+
+      {{-- <input type="hidden" name="invoice_no" id="input-supplier_invoice_no" />
+    <input type="hidden" name="invoice_purchase_date" id="input-supplier_invoice_purchase_date" />
+    <input type="hidden" name="invoice_inward_date" id="input-supplier_invoice_inward_date" /> --}}
+      <input type="hidden" name="qty_total" id="input-supplier_qty_total" />
+      <input type="hidden" name="sub_total" id="input-supplier_sub_total" />
+      <input type="hidden" name="gross_amount" id="input-supplier_gross_amount" />
+      <input type="hidden" name="gross_total_amount" id="input-gross_total_amount" />
+      {{-- <input type="hidden" name="tax_amount" id="input-supplier_tax_amount" /> --}}
+      {{-- <input type="hidden" name="shipping_note" id="input-supplier_shipping_note" />
+    <input type="hidden" name="additional_note" id="input-supplier_additional_note" /> --}}
+    
+        <div class="commonBox">
+          {{-- <div class="enterBarcode mb-3">
+            <div class="row">
+              <div class="col">
+                <div class="form-group relative enterBarcodeSrc m-0">
+                  <input type="text" name="product_search" id="product_search" class="form-control input-1"
+                    autocomplete="off" placeholder="Enter Barcode/Product Code/Product Name">
+                  <button type="button" class="searchBtn"><i class="fas fa-search"></i></button>
+                  <ul id="product_search_result">
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div> --}}
+          <div class="inwordTableWrap">
+            <div class="table-responsive forTableHeight">
+              <table class="inwordTable table-striped table-hover table mb-0">
+                <thead>
+                  <tr>
+                    <th><i class="fas fa-times"></i></th>
+                    <th>Barcode</th>
+                    <th>The Brand</th>
+                    <th>Product Name</th>
+                    <th>Dosage Form</th>
+                    <th>Company</th>
+                    <th>Selling by</th>
+                    {{-- <th>Drugstore name</th> --}}
+                    <th>Quantity</th>
+                    <th>No per package</th>
+                    <th>Net Price</th>
+                    <th>Price</th>
+                    <th>Chronic Amount</th>
+                    <th>Discount %</th>
+                    <th>Bonous</th>
+                    <th id="th_rate_title">US/IQ rate</th>
+                    <th>Total Quantity</th>
+                    <th>Sell Price</th>
+                    <th>Profit</th>
+                    <th>Actual % of profit</th>
+                    <th>Is Chronic</th>
+                  </tr>
+                </thead>
+                <tbody id="product_record_sec">
+                  
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
-      <div class="form-group relative formBox m-0">
-        <button type="button" class="saveBtn saveBtnMd" id="inwardStockSubmitBtm">Save <i
-            class="fas fa-paper-plane ml-2"></i></button>
-      </div>
-    </div>
+        <div class="inwardStockBtm" id="inwardStockSubmitBtmSec" style="display:none">
+          <div class="form-group relative formBox m-0">
+            <button type="button" class="saveBtn saveBtnMd" id="inwardStockSubmitBtm">Save <i
+                class="fas fa-paper-plane ml-2"></i></button>
+          </div>
+        </div>
+  </div>
 
   </form>
   <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

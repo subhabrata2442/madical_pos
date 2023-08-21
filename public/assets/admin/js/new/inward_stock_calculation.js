@@ -3,44 +3,59 @@ function setProfitCalulation() {
     var sub_total = 0;
     var gross_total_amount = 0;
 
-    $("#product_record_sec tr").each(function (index, e) {
+    $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
         var tbl_row = $(this).data("id");
-
+        var product_mrp = 0;
         var selling_type = Number(
             $(this)
-                .find("#selling_type_" + product_id)
-                .val()
+            .find("#selling_type_" + product_id)
+            .val()
         );
-
-        var product_mrp = Number(
+        var product_isChronic =
             $(this)
-                .find("#product_price_" + product_id)
-                .html()
+            .find("#is_chronic_" + product_id)
+            .val();
+        console.log(product_isChronic);
+
+        var product_price = Number(
+            $(this)
+            .find("#product_price_" + product_id)
+            .html()
         );
+        var chronic_amount = Number(
+            $(this)
+            .find("#chronic_amount_" + product_id)
+            .html()
+        );
+        if (product_isChronic == 'Yes') {
+            product_mrp = chronic_amount;
+        } else {
+            product_mrp = product_price;
+        }
         var cost_rate = Number(
             $(this)
-                .find("#product_rate_" + product_id)
-                .html()
+            .find("#product_rate_" + product_id)
+            .html()
         );
         var selling_price = Number(
             $(this)
-                .find("#product_sellPrice_" + product_id)
-                .html()
+            .find("#product_sellPrice_" + product_id)
+            .html()
         );
 
         gross_total_amount += Number(selling_price);
         var product_quantity = Number(
             $(this)
-                .find("#product_quantity_" + product_id)
-                .html()
+            .find("#product_quantity_" + product_id)
+            .html()
         );
         qty_total += Number(product_quantity);
 
         var noper_package = Number(
             $(this)
-                .find("#product_package_" + product_id)
-                .html()
+            .find("#product_package_" + product_id)
+            .html()
         );
 
         var total_quantity = 0;
@@ -53,13 +68,13 @@ function setProfitCalulation() {
 
         var bonous = Number(
             $(this)
-                .find("#product_bonous_" + product_id)
-                .html()
+            .find("#product_bonous_" + product_id)
+            .html()
         );
         var product_discount = Number(
             $(this)
-                .find("#product_discount_" + product_id)
-                .html()
+            .find("#product_discount_" + product_id)
+            .html()
         );
 
         var net_price = 0;
@@ -140,64 +155,68 @@ function setProfitCalulation() {
     );
 }
 
-$(document).on("keyup", ".product_price", function () {
+$(document).on("keyup", ".product_price", function() {
     var product_id = $(this).attr("id").split("product_price_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_rate", function () {
+$(document).on("keyup", ".product_rate", function() {
     var product_id = $(this).attr("id").split("product_rate_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_sellPrice", function () {
+$(document).on("keyup", ".product_sellPrice", function() {
     var product_id = $(this).attr("id").split("product_sellPrice_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_quantity", function () {
+$(document).on("keyup", ".product_quantity", function() {
     var product_id = $(this).attr("id").split("product_quantity_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_package", function () {
+$(document).on("keyup", ".product_package", function() {
     var product_id = $(this).attr("id").split("product_package_")[1];
     var tbl_row = $(this).closest("tr").data("id");
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_bonous", function () {
+$(document).on("keyup", ".product_bonous", function() {
     var product_id = $(this).attr("id").split("product_bonous_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".product_discount", function () {
+$(document).on("keyup", ".product_discount", function() {
     setProfitCalulation();
 });
 
-$(document).on("keyup", ".input-product_totalQuantity", function () {
+$(document).on("keyup", ".chronic_amount", function() {
+    setProfitCalulation();
+});
+
+$(document).on("keyup", ".input-product_totalQuantity", function() {
     var product_id = $(this).attr("id").split("product_totalQuantity_")[1];
     var tbl_row = $(this).closest("tr").data("id");
 
-    setTimeout(function () {
+    setTimeout(function() {
         $("#product_record_sec")
             .find("tr[data-id='" + tbl_row + "']")
-            .each(function () {
+            .each(function() {
                 if (tbl_row != undefined) {
                     var p_qty = Number(
                         $(this)
-                            .find("#product_totalQuantity_" + product_id)
-                            .html()
+                        .find("#product_totalQuantity_" + product_id)
+                        .html()
                     );
 
                     if (p_qty == "" || p_qty == 0 || isNaN(p_qty)) {
@@ -226,7 +245,7 @@ function final_calculation() {
     var sub_total = 0;
     var gross_total_amount = 0;
 
-    $("#product_record_sec tr").each(function (index, e) {
+    $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
         var tbl_row = $(this).data("id");
         no_of_items += Number(1);
@@ -235,7 +254,7 @@ function final_calculation() {
 
         $(this)
             .find("td")
-            .each(function () {
+            .each(function() {
                 //console.log($(this).attr("id"));
 
                 if ($(this).attr("id") == "product_quantity_" + product_id) {

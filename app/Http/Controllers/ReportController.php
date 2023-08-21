@@ -133,6 +133,9 @@ class ReportController extends Controller
 				->addColumn('brand', function ($row) {
 					return $row->brand;
 				})
+				->addColumn('product_name', function ($row) {
+					return $row->product_name;
+				})
 				->addColumn('dosage', function ($row) {
 					return $row->dosage;
 				})
@@ -162,6 +165,9 @@ class ReportController extends Controller
 				})
 				->addColumn('profit_percent', function ($row) {
 					return $row->profit_percent;
+				})
+				->addColumn('is_chronic', function ($row) {
+					return $row->is_chronic;
 				})
 				->rawColumns([])
 				->make(true);

@@ -1,11 +1,11 @@
-$(document).on("click", ".product_quantity", function () {
+$(document).on("click", ".product_quantity", function() {
     $(this).select();
 });
-$(document).on("change", "#invoice_stock", function () {
+$(document).on("change", "#invoice_stock", function() {
     var stock_type = $(this).val();
     $("#upload_invoice_stock_type").val(stock_type);
 });
-$(document).on("change", "#payment_currency_type", function () {
+$(document).on("change", "#payment_currency_type", function() {
     var currency_type = $(this).val();
     var th_rate_title = "US/IQ rate";
 
@@ -22,7 +22,7 @@ $(document).on("change", "#payment_currency_type", function () {
     $("#th_rate_title").text(th_rate_title);
 });
 
-$(document).on("click", "#add_purchase_final_cost", function () {
+$(document).on("click", "#add_purchase_final_cost", function() {
     $(this).hide();
     var sub_total = $("#input-supplier_sub_total").val();
     $("#purchase_final_cost_val").html(sub_total);
@@ -34,7 +34,7 @@ function naiveRound(num, decimalPlaces) {
     return Math.round(num * p) / p;
 }
 
-$(document).on("keyup", "#purchase_final_cost_input", function () {
+$(document).on("keyup", "#purchase_final_cost_input", function() {
     var final_cost = $(this).html();
     var add_cost = 0;
 
@@ -73,14 +73,14 @@ $(document).on("keyup", "#purchase_final_cost_input", function () {
     $("#input-gross_total_amount").val(total_amount);
     $("#gross_total_amount").html("₹" + total_amount.toFixed(decimalpoints));
 
-    console.log(total_amount);
+    //console.log(total_amount);
     //tcs_amt=(tcs_amt.toFixed(decimalpoints));
 
     //console.log(tcs_amt);
 });
 
-$(document).ready(function () {
-    $("#invoice_upload-form").submit(function (evt) {
+$(document).ready(function() {
+    $("#invoice_upload-form").submit(function(evt) {
         evt.preventDefault();
         var formData = new FormData(this);
         $.ajax({
@@ -91,13 +91,13 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             dataType: "json",
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#ajax_loader").fadeIn();
             },
-            complete: function () {
+            complete: function() {
                 $("#ajax_loader").fadeOut();
             },
-            success: function (json) {
+            success: function(json) {
                 if (json.success == 1) {
                     $("#inwardStockSubmitBtmSec").show();
                     Swal.fire({
@@ -109,8 +109,7 @@ $(document).ready(function () {
                         if (result.isConfirmed) {
                             //$('#supplier-inward_stock-form').hide();
                             //$('#supplier-inward_stock-product-form').show();
-                        } else if (result.isDenied) {
-                        }
+                        } else if (result.isDenied) {}
                     });
 
                     $("#invoice_upload-form")[0].reset();
@@ -289,7 +288,7 @@ $(document).ready(function () {
                     $("#invoice_upload-form")[0].reset();
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function(xhr, ajaxOptions, thrownError) {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
@@ -303,16 +302,16 @@ $(document).ready(function () {
     });
 });
 
-$(document).on("click", "#addProductSubmitBtm", function () {
+$(document).on("click", "#addProductSubmitBtm", function() {
     $("#ajax_loader").show();
     var product_info = [];
     var inward_stock_info = {};
 
-    $("#new_product_record_sec tr").each(function (index, e) {
+    $("#new_product_record_sec tr").each(function(index, e) {
         var rowcount = $(this).data("id");
         $("#new_product_record_sec")
             .find("tr[data-id='" + rowcount + "']")
-            .each(function (key, keyval) {
+            .each(function(key, keyval) {
                 var product_detail = {};
                 var tr = $(this).attr("id");
                 var product_id = tr.split("product_")[1];
@@ -324,7 +323,7 @@ $(document).on("click", "#addProductSubmitBtm", function () {
 
                 $(this)
                     .find("td")
-                    .each(function () {
+                    .each(function() {
                         if ($(this).attr("id") != undefined) {
                             id = $(this)
                                 .attr("id")
@@ -346,7 +345,7 @@ $(document).on("click", "#addProductSubmitBtm", function () {
             _token: prop.csrf_token,
         },
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             $("#newProductItemsModal").modal("hide");
             $("#ajax_loader").hide();
             var html = "";
@@ -509,14 +508,13 @@ $(document).on("click", "#addProductSubmitBtm", function () {
                 if (result.isConfirmed) {
                     //$('#supplier-inward_stock-form').hide();
                     //$('#supplier-inward_stock-product-form').show();
-                } else if (result.isDenied) {
-                }
+                } else if (result.isDenied) {}
             });
         },
     });
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#supplier-inward_stock-form").validate({
         rules: {
             supplier_company_name: "required",
@@ -534,18 +532,18 @@ $(document).ready(function () {
             //promo: "Required",
         },
         errorElement: "em",
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             // Add the `help-block` class to the error element
             error.addClass("help-block");
             error.insertAfter(element);
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function(element, errorClass, validClass) {
             $(element).addClass("has-error").removeClass("has-success");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function(element, errorClass, validClass) {
             $(element).addClass("has-success").removeClass("has-error");
         },
-        submitHandler: function (form) {
+        submitHandler: function(form) {
             // $("#supplier_company_name").html($("#supplier").val());
             // $("#supplier_invoice_no").html($("#invoice_no").val());
             // $("#supplier_transport_pass_no").html($("#tp_no").val());
@@ -556,6 +554,7 @@ $(document).ready(function () {
 
             $("#supplier-inward_stock-form").hide();
             $("#supplier-inward_stock-product-form").show();
+            $("#search_product_div").show();
             //$("#product_record_sec").html("");
 
             $(".close_supplier_form").hide();
@@ -581,7 +580,7 @@ $(document).ready(function () {
             $("#no_of_items").html(total_item);
             if (total_item > 0) {
                 $(".product_rate").html(rate);
-                setTimeout(function () {
+                setTimeout(function() {
                     setProfitCalulation();
                 }, 500);
             }
@@ -607,28 +606,28 @@ $(document).ready(function () {
     });
 });
 
-$(document).on("click", ".close_supplier_form", function () {
+$(document).on("click", ".close_supplier_form", function() {
     $(this).hide();
     $(".open_supplier_form").show();
     $("#supplier-inward_stock-form").hide();
     //$("#supplier-inward_stock-product-form").hide();
 });
-$(document).on("click", ".open_supplier_form", function () {
+$(document).on("click", ".open_supplier_form", function() {
     $(this).hide();
     $(".close_supplier_form").show();
     $("#supplier-inward_stock-form").show();
     //$("#supplier-inward_stock-product-form").hide();
 });
 
-$(document).on("click", "#payment_detail_modal_btn", function () {
+$(document).on("click", "#payment_detail_modal_btn", function() {
     $("#paymentDetailModal").modal("show");
 });
 
-$(document).on("click", "#changeAddressBtn", function () {
+$(document).on("click", "#changeAddressBtn", function() {
     $("#changeAddressModal").modal("show");
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
     /*$("#supplier").keyup(function() {
         var search = $(this).val();
         if (search != "") {
@@ -660,7 +659,7 @@ $(document).ready(function () {
         }
     });*/
 
-    $("#warehouse").keyup(function () {
+    $("#warehouse").keyup(function() {
         var search = $(this).val();
         if (search != "") {
             $.ajax({
@@ -672,7 +671,7 @@ $(document).ready(function () {
                     _token: prop.csrf_token,
                 },
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     var len = response.result.length;
 
                     $("#warehouse_search_result").empty();
@@ -684,7 +683,7 @@ $(document).ready(function () {
                         );
                     }
                     // binding click event to li
-                    $("#warehouse_search_result li").bind("click", function () {
+                    $("#warehouse_search_result li").bind("click", function() {
                         $(".loader_section").show();
                         setWarehouseRow(this);
                     });
@@ -693,7 +692,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#product_search").keyup(function () {
+    $("#product_search").keyup(function() {
         var search = $(this).val();
         if (search != "") {
             $.ajax({
@@ -705,7 +704,7 @@ $(document).ready(function () {
                     _token: prop.csrf_token,
                 },
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     var len = response.result.length;
 
                     $("#product_search_result").empty();
@@ -721,7 +720,7 @@ $(document).ready(function () {
                     }
                     $("#inwardStockSubmitBtmSec").show();
                     // binding click event to li
-                    $("#product_search_result li").bind("click", function () {
+                    $("#product_search_result li").bind("click", function() {
                         $(".loader_section").show();
                         setRow(this);
                     });
@@ -735,7 +734,7 @@ $(document).ready(function () {
 });
 
 function remove(row) {
-    console.log(row);
+    //console.log(row);
     $("#product_record_sec")
         .find("tr[data-id='" + row + "']")
         .remove();
@@ -756,6 +755,7 @@ function check_character(event) {
 
 // Set Text to search box and get details
 function setRow(element) {
+    //console.log(element);
     var value = $(element).text();
     var product_id = $(element).val();
 
@@ -772,8 +772,10 @@ function setRow(element) {
             _token: prop.csrf_token,
         },
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             if (response.status == "1") {
+                const ul = document.getElementById('product_search_result');
+                ul.innerHTML = '';
                 var html = "";
                 var scan_time = moment().format("DD-MM-YYYY h:mm:ss a");
                 var item_detail = response.result;
@@ -782,6 +784,7 @@ function setRow(element) {
                 var item_category = "";
                 var item_sub_category = "";
                 var brand_name = item_detail.brand_name;
+                var product_name = item_detail.product_name;
                 var dosage = item_detail.dosage;
                 var company = item_detail.company;
                 var drugstore = item_detail.drugstore;
@@ -814,7 +817,13 @@ function setRow(element) {
                 if (payment_currency_type == "usd") {
                     rate = payment_currency_usd_rate;
                 }
-
+                var chronic_amount = 0;
+                var chronic_amount_edit = 'false';
+                var chronic_amount_edit_class = '';
+                if (is_chronic == 'Yes') {
+                    var chronic_amount_edit = 'true';
+                    var chronic_amount_edit_class = 'greenBg';
+                }
                 //var is_new = "new_item";
                 var is_new = "old_item";
 
@@ -825,7 +834,7 @@ function setRow(element) {
                     item_row++;
                 } else {
                     var max = 0;
-                    $("#product_record_sec tr").each(function () {
+                    $("#product_record_sec tr").each(function() {
                         var value = parseInt($(this).data("id"));
                         max = value > max ? value : max;
                     });
@@ -834,7 +843,7 @@ function setRow(element) {
 
                 var row = 0;
                 var same_item = 0;
-                $("#product_record_sec tr").each(function () {
+                $("#product_record_sec tr").each(function() {
                     var row_product_id = $(this).attr("id").split("_")[1];
                     if (row_product_id == product_id) {
                         same_item = 1;
@@ -879,12 +888,21 @@ function setRow(element) {
                         '" value="' +
                         selling_type +
                         '">' +
+                        '<input type="hidden" name="is_chronic_' +
+                        product_id +
+                        '" id="is_chronic_' +
+                        product_id +
+                        '" value="' +
+                        is_chronic +
+                        '">' +
                         '<input type="hidden" name="stock_transfers_detail_id_' +
                         product_id +
                         '" id="stock_transfers_detail_id_' +
                         product_id +
                         '" value="">' +
-                        "<td><a href='javascript:;'><i class='fa fa-times' aria-hidden='true'></i></a></td>" +
+                        "<td><a href='javascript:;' onclick='remove(" +
+                        item_row +
+                        ")';><i class='fa fa-times' aria-hidden='true'></i></a></td>" +
                         '<td id="subcategory_id_' +
                         product_id +
                         '" style="display:none">' +
@@ -904,6 +922,10 @@ function setRow(element) {
                         product_id +
                         '">' +
                         brand_name +
+                        "</td>" + '<td id="product_name_' +
+                        product_id +
+                        '">' +
+                        product_name +
                         "</td>" +
                         '<td id="product_dosage_' +
                         product_id +
@@ -939,6 +961,11 @@ function setRow(element) {
                         product_id +
                         '">' +
                         price +
+                        "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
+                        product_id +
+                        '">' +
+                        chronic_amount +
                         "</td>" +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
@@ -1007,7 +1034,7 @@ function setWarehouseRow(element) {
             _token: prop.csrf_token,
         },
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             if (response.status == "1") {
                 var html = "";
                 var supplier_detail = response.warehouse;
@@ -1123,7 +1150,7 @@ function setSupplierRow(element) {
             _token: prop.csrf_token,
         },
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             if (response.status == "1") {
                 var html = "";
                 var supplier_detail = response.supplier;
@@ -1255,7 +1282,7 @@ function setSupplierRow(element) {
     });
 }
 
-$(document).on("click", "#inwardStockSubmitBtm", function () {
+$(document).on("click", "#inwardStockSubmitBtm", function() {
     if (no_of_items <= 0) {
         toastr.error("Not Item Found!");
     }
@@ -1341,11 +1368,11 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
         ).val();
     }
 
-    $("#product_record_sec tr").each(function (index, e) {
+    $("#product_record_sec tr").each(function(index, e) {
         var rowcount = $(this).data("id");
         $("#product_record_sec")
             .find("tr[data-id='" + rowcount + "']")
-            .each(function (key, keyval) {
+            .each(function(key, keyval) {
                 var product_detail = {};
                 var tr = $(this).attr("id");
                 var product_id = tr.split("product_")[1];
@@ -1364,7 +1391,7 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
 
                 $(this)
                     .find("td")
-                    .each(function () {
+                    .each(function() {
                         if ($(this).attr("id") != undefined) {
                             id = $(this)
                                 .attr("id")
@@ -1391,7 +1418,7 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
             _token: prop.csrf_token,
         },
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             if (response.status == 0) {
                 toastr.error(response.msg);
             } else {
@@ -1403,10 +1430,37 @@ $(document).on("click", "#inwardStockSubmitBtm", function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         location.reload();
-                    } else if (result.isDenied) {
-                    }
+                    } else if (result.isDenied) {}
                 });
             }
         },
+    });
+});
+
+$(document).ready(function() {
+    $('#barcode_scanner_frm').submit(function(event) {
+        event.preventDefault(); // Prevent normal form submission
+
+        var barcodeValue = $('#product_search').val();
+        //console.log(barcodeValue);
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            data: {
+                barcode: barcodeValue,
+                action: "get_product_by_scanner",
+                _token: prop.csrf_token,
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.status == "1") {
+                    var item_detail = response.result;
+                    $(".loader_section").show();
+                    setRow('<li value="' + item_detail.product_id + '">' + item_detail.product_name + '</li>');
+                } else {
+                    toastr.error('Product not found');
+                }
+            }
+        });
     });
 });
