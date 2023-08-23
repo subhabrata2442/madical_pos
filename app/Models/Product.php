@@ -53,6 +53,11 @@ class Product extends Model
     {
 		return $this->hasOne(Service::class,'id', 'service_id'); 
     }
+	public function inwardStockProduct()
+    {
+		return $this->hasOne(InwardStockProducts::class,'product_id', 'id'); 
+    }
+	
 	
 	
 }

@@ -126,8 +126,8 @@
   </div>
   <div class="col-lg-4 col-md-4">
     <div class="srcArea relative">
-      <input type="text" placeholder="Search by name" class="input-2">
-      <span class="plusCircle"><i class="fas fa-plus-circle"></i></span> </div>
+      <input type="text" placeholder="Search by name/contact number" class="input-2">
+      <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span> </div>
     <div class="dateSales">
       <ul class="d-flex justify-content-between align-items-center">
         <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
@@ -247,6 +247,48 @@
     </div>
   </div>
 </div>
+{{-- Create Customer Modal --}}
+<div class="modal fade modalMdHeader" id="modal_createCustomer" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-1Label">Create New Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="applyCouponBox">
+          <form action="" method="get" id="create_customer_form">
+            <div class="mb-3">
+              <label for="" class="form-label">Customer Name</label>
+              <input type="text" class="form-control number" name="customer_name" id="customer_name" autocomplete="off">
+            </div>
+            <div class="mb-3">
+              <label for="" class="form-label">Contact Number</label>
+              <input type="text" class="form-control number" name="customer_mobile" id="customer_mobile" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{-- End create customer modal --}}
+{{-- Multiple price Modal --}}
+<div class="modal fade modalMdHeader" id="modal_multiple_price_list" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-1Label">Select Price Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+    </div>
+  </div>
+</div>
+{{-- End multiple price modal --}}
 
 <!--<div class="modal fade modalMdHeader" id="modal-2" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">

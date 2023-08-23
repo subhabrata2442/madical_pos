@@ -178,11 +178,11 @@ $adminRoll = Session::get('admin_type');
         </div>
       </div>
     </div>
-    <form id="barcode_scanner_frm">
+    {{-- <form id="barcode_scanner_frm"> --}}
       <div class="col-12">
         <div class="enterBarcode mb-3">
           <div class="row">
-            <div class="col">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
               <div class="form-group relative enterBarcodeSrc m-0">
                 <input type="text" name="product_search" id="product_search" class="form-control input-1"
                   autocomplete="off" placeholder="Enter Barcode/Product Code/Product Name">
@@ -191,10 +191,17 @@ $adminRoll = Session::get('admin_type');
                 </ul>
               </div>
             </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+              <div class="enterProduct d-flex align-items-center justify-content-between">
+                <div class="enterProductInner d-flex">
+                  <input type="text" name="search_barcode_product" id="search_barcode_product" placeholder="Scan Barcode" value="">
+                </div>
+                <span><i class="fas fa-barcode"></i></span> </div>
+            </div>
           </div>
         </div>
       </div>
-    </form>
+    {{-- </form> --}}
   </div>
   <div class="col-12">
     <form method="post" action="" class="needs-validation" id="supplier-inward_stock-product-form" novalidate
@@ -368,6 +375,7 @@ $adminRoll = Session::get('admin_type');
   @endsection
 
   @section('scripts')
+  <script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
   <script src="{{ url('assets/admin/js/cHVyY2hhc2VfaW53YXJkX3N0b2Nr.js') }}"></script>

@@ -389,16 +389,25 @@ class AjaxController extends Controller {
 		$searchValues 		= preg_split('/\s+/', $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
 
 		//print_r($searchValues);exit;
-
-		$res=MasterProducts::query()->where('product_name', 'LIKE', "%{$search}%")->orWhere('product_barcode', $search)->orWhere('barcode2', $search)->orWhere('barcode3', $search)->take(20)->get();
+		$store_id	= Session::get('store_id');
+		$queryInwardStockProduct = InwardStockProducts::query();
+		$queryInwardStockProduct->where('branch_id',$store_id);
+		$queryInwardStockProduct->with('product',function($q) use ($search){
+			$q->where('product_barcode', 'like', "%{$search}%")
+			->orWhere('brand', 'like', '%' . $search . '%')->take(20);
+		});
+		$res= $queryInwardStockProduct->groupBy('product_id')->get();
+		//dd($res);
+		/* $res=MasterProducts::query()->where('product_name', 'LIKE', "%{$search}%")->orWhere('product_barcode', $search)->orWhere('barcode2', $search)->orWhere('barcode3', $search)->take(20)->get(); */
 		$result=[];
 
 		foreach($res as $row){
 			$result[]=array(
-				'id'				=> $row->id,
-				'product_barcode'	=> $row->product_barcode,
-				'product_name'		=> $row->product_name,
-				'product_size'		=> $row->size->name,
+				//'id'				=> $row->id,
+				'id'				=> $row->product->id,
+				'product_barcode'	=> $row->product->product_barcode,
+				'product_name'		=> $row->product->product_name,
+				//'product_size'		=> $row->size->name,
 			);
 		}
 
@@ -414,14 +423,20 @@ class AjaxController extends Controller {
 		$search				= $request->search;
 		$result=[];
 		if($search!=''){
-			$product_barcode=trim($search);
-			$res=MasterProducts::query()->where('product_barcode', $search)->orWhere('barcode2', $search)->orWhere('barcode3', $search)->take(1)->get();
-			if(count($res)>0){
+			$store_id	= Session::get('store_id');
+			$queryProduct = Product::query();
+			$queryProduct->where('product_barcode',$search);
+			$queryProduct->whereHas('inwardStockProduct',function($q) use ($store_id){
+				$q->where('branch_id', $store_id);
+			});
+			$res= $queryProduct->first();
+			//dd($res);
+			if($res){
 				$result[]=array(
-					'id'				=> isset($res[0]->id)?$res[0]->id:'',
-					'product_barcode'	=> isset($res[0]->product_barcode)?trim($res[0]->product_barcode):'',
-					'product_name'		=> isset($res[0]->product_name)?trim($res[0]->product_name):'',
-					'product_size'		=> isset($res[0]->size->name)?trim($res[0]->size->name):''
+					'id'				=> isset($res->id)?$res->id:'',
+					'product_barcode'	=> isset($res->product_barcode)?trim($res->product_barcode):'',
+					'product_name'		=> isset($res->product_name)?trim($res->product_name):'',
+					//'product_size'		=> isset($res[0]->size->name)?trim($res[0]->size->name):''
 				);
 			}
 		}
@@ -434,39 +449,39 @@ class AjaxController extends Controller {
 
 	public function ajaxpost_get_sell_product_byId($request) {
 		$search_id	= $request->product_id;
-		$res = MasterProducts::find($search_id);
-
-		$branch_id=Session::get('branch_id');
+		//echo $search_id;die;
+		$product = Product::find($search_id);
+		//dd($product);
+		$branch_id=Session::get('store_id');
+		//echo $branch_id;die;
 		$return_data=[];
 		$product_result=[];
-		if(isset($res->id)){
-			if($res->id!=''){
-				$brand_slug		= $res->slug;
-				$category_id	= $res->category_id;
-				$subcategory_id	= $res->subcategory_id;
-				$size_id		= $res->size_id;
-				$size_title		= $res->size->name;
-				$bottle_case	= $res->qty;
-				$product_barcode	= $res->product_barcode;
+		if(isset($product->id)){
+			if($product->id!=''){
+				$brand_slug		= $product->slug;
+				$category_id	= $product->category_id;
+				$subcategory_id	= $product->subcategory_id;
+				$product_barcode	= $product->product_barcode;
 
-				$item_result = Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-				$product_id	 = isset($item_result[0]->id)?$item_result[0]->id:'';
+				//$item_result = Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
+				$product_id	 = $product->id;
 
-				$branch_stock_product_result = BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('size_id',$size_id)->where('stock_type','counter')->get();
+				$branch_stock_product_result = BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+				//dd($branch_stock_product_result);
 				$branch_stock_product_id	= isset($branch_stock_product_result[0]->id)?$branch_stock_product_result[0]->id:'';
 
 				if($branch_stock_product_id!=''){
-					$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('stock_id',$branch_stock_product_id)->where('stock_type','counter')->get();
-					if(count($branch_product_stock_sell_price_info)>0){
+					/* $branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('stock_id',$branch_stock_product_id)->where('stock_type','counter')->get(); */
+					if(count($branch_stock_product_result)>0){
 						$item_prices=[];
-						foreach($branch_product_stock_sell_price_info as $row){
+						foreach($branch_stock_product_result as $row){
 							$item_prices[]=array(
 								'price_id'		=> $row->id,
 								'selling_price'	=> $row->selling_price,
-								'offer_price'	=> $row->offer_price,
+								'offer_price'	=> 0,
 								'product_mrp'	=> $row->product_mrp,
-								'w_qty'			=> $row->w_qty,
-								'c_qty'			=> $row->c_qty,
+								't_qty'			=> $row->t_qty,
+								//'c_qty'			=> $row->c_qty,
 							);
 						}
 
@@ -474,7 +489,7 @@ class AjaxController extends Controller {
 							'product_id'				=> $product_id,
 							'branch_stock_product_id'	=> $branch_stock_product_id,
 							'product_barcode'			=> $product_barcode,
-							'brand_name'				=> trim($item_result[0]->product_name).' ('.$size_title.')',
+							'brand_name'				=> $product->brand,
 							'item_prices'				=> $item_prices,
 						);
 						$return_data['status']	= 1;
@@ -491,7 +506,7 @@ class AjaxController extends Controller {
 		}else{
 			$return_data['status']	= 0;
 		}
-
+		//dd($return_data);
 		echo json_encode($return_data);
 	}
 
@@ -1314,6 +1329,18 @@ class AjaxController extends Controller {
 			}
 		}
 		//print_r($return_data);exit;
+		echo json_encode($return_data);
+	}
+
+	public function ajaxpost_get_stock_branch_stock_productId($request) {
+		//dd($request);
+		$branch_stock_product_id = $request->branch_stock_product_id;
+		$return_data = [];
+		if($branch_stock_product_id !=''){
+			$branchStockProduct = BranchStockProducts::where('id',$branch_stock_product_id)->first();
+			$return_data['stock'] = $branchStockProduct->t_qty;
+			$return_data['status']	= 1;
+		}
 		echo json_encode($return_data);
 	}
 
