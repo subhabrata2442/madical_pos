@@ -790,7 +790,7 @@ function setRow(element) {
                 var drugstore = item_detail.drugstore;
                 var quantity = 0;
                 var package = item_detail.package;
-                var net_price = item_detail.net_price;
+                var net_price = Number(item_detail.net_price).toFixed(2);
                 var selling_by = item_detail.selling_by;
                 var selling_type = item_detail.selling_type;
 
@@ -1437,30 +1437,44 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
     });
 });
 
-$(document).ready(function() {
-    $('#barcode_scanner_frm').submit(function(event) {
-        event.preventDefault(); // Prevent normal form submission
 
-        var barcodeValue = $('#product_search').val();
-        //console.log(barcodeValue);
-        $.ajax({
-            url: prop.ajaxurl,
-            type: "post",
-            data: {
-                barcode: barcodeValue,
-                action: "get_product_by_scanner",
-                _token: prop.csrf_token,
-            },
-            dataType: "json",
-            success: function(response) {
-                if (response.status == "1") {
-                    var item_detail = response.result;
-                    $(".loader_section").show();
-                    setRow('<li value="' + item_detail.product_id + '">' + item_detail.product_name + '</li>');
-                } else {
-                    toastr.error('Product not found');
-                }
-            }
-        });
-    });
+$(document).scannerDetection({
+    timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+    startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
+    endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+    avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+
+    onComplete: function(barcode, qty) {
+        //console.log(barcode);
+        barcodeScanner(barcode);
+    }
 });
+
+function barcodeScanner(barcode) {
+
+    var barcodeValue = barcode;
+    //console.log(barcodeValue);
+    $("#search_barcode_product").val('');
+    $.ajax({
+        url: prop.ajaxurl,
+        type: "post",
+        data: {
+            barcode: barcodeValue,
+            action: "get_product_by_scanner",
+            _token: prop.csrf_token,
+        },
+        dataType: "json",
+        success: function(response) {
+            if (response.status == "1") {
+                var item_detail = response.result;
+                $(".loader_section").show();
+                $("#search_barcode_product").focus();
+                setRow('<li value="' + item_detail.product_id + '">' + item_detail.product_name + '</li>');
+            } else {
+                $("#search_barcode_product").focus();
+                toastr.error('Product not found');
+            }
+
+        }
+    });
+}
