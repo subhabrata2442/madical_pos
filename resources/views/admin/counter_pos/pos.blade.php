@@ -49,9 +49,10 @@
                 <th width="6%">Barcode</th>
                 <th width="10%">Brand</th>
                 <th width="19%">Product</th>
-                <th width="7%">Stock</th>
+                <th width="4%">Selling by</th>
+                <th width="6%">Stock</th>
                 <th width="11%">MRP</th>
-                <th width="9%">Qty.</th>
+                <th width="6%">Qty.</th>
                 <th width="11%">Disc%</th>
                 <th width="11%">Disc Amt.</th>
                 <th width="8%">Unit Price</th>
@@ -277,7 +278,7 @@
 {{-- End create customer modal --}}
 {{-- Multiple price Modal --}}
 <div class="modal fade modalMdHeader" data-bs-backdrop="static" data-bs-keyboard="false" id="modal_multiple_price_list" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-1Label">Select Price Item</h5>
@@ -291,15 +292,18 @@
                         <th>Brand</th>
                         <th>Product</th>
                         <th>Barcode</th>
+                        <th>Selling by</th>
                         <th>Stock</th>
                         <th>MRP</th>
                         <th>Select</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- <tr>
+                    <tr>
                         <td>230KIN</td>
                         <td>Elviton tab</td>
+                        <td>Elviton tab</td>
+                        <td>Selling by</td>
                         <td>35</td>
                         <td>50</td>
                         <td><button type="button" class="product-select">select</button></td>
@@ -307,13 +311,18 @@
                     <tr>
                         <td>230KIN</td>
                         <td>Elviton tab</td>
+                        <td>Elviton tab</td>
+                        <td>Selling by</td>
                         <td>35</td>
                         <td>50</td>
                         <td><button type="button" class="product-select">select</button></td>
-                    </tr> --}}
+                    </tr>
                 </tbody>
             </table>
         </div>
+      </div>
+      <div class="modal-footer invoiceBalance">
+        <button type="button" class="close-btn" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
