@@ -2587,3 +2587,26 @@ a.downloadBtn {
 .enterProduct span {
     font-size: 1.6vw;
 }
+.add-plus-wrap {
+    padding-right: 50px;
+}
+.add-plus-box{
+    position: absolute;
+    right: 0;
+    bottom: 17px;
+    width: 40px;
+    top: 0;
+}
+.add-plus-box-btn {
+    display: block;
+    text-align: center;
+    height: 34px;
+    line-height: 34px;
+    background: #e3e3e3;
+    color: #000 !important;
+    border-radius: 3px;
+    font-size: 14px;
+}
+.supplier-input-wrap {
+    margin-bottom: 5px;
+}

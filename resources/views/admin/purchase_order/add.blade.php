@@ -64,6 +64,15 @@ $adminRoll = Session::get('admin_type');
                 @else
                 <input type="hidden" id="store_id" name="store_id" value="{{$adminId}}">
                 @endif
+                <ul class="d-flex flex-wrap align-items-center">
+                    <li class="invAreaInf">Supplier</li>
+                    <li class="invAreaVal">
+                        <div class="add-plus-wrap relative">
+                            <input type="text" name="invoice_no" id="invoice_no" class="form-control input-1" required="required">
+                            <div class="add-plus-box"><a href="javascript:;" id="supplierAddModalBtn" class="add-plus-box-btn"><i class="fas fa-plus"></i></a></div>
+                        </div>
+                      </li>
+                  </ul>
               </div>
             </div>
           </div>
@@ -217,7 +226,7 @@ $adminRoll = Session::get('admin_type');
       {{-- <input type="hidden" name="tax_amount" id="input-supplier_tax_amount" /> --}}
       {{-- <input type="hidden" name="shipping_note" id="input-supplier_shipping_note" />
     <input type="hidden" name="additional_note" id="input-supplier_additional_note" /> --}}
-    
+
         <div class="commonBox">
           {{-- <div class="enterBarcode mb-3">
             <div class="row">
@@ -261,7 +270,7 @@ $adminRoll = Session::get('admin_type');
                   </tr>
                 </thead>
                 <tbody id="product_record_sec">
-                  
+
                 </tbody>
               </table>
             </div>
@@ -371,11 +380,102 @@ $adminRoll = Session::get('admin_type');
       <input name="inward_stock_file" id="upload_excel_input" style="display:none" type="file">
     </form>
   </div>
+{{-- Modal Supplier add --}}
+  <div class="modal fade" id="supplierAddModal" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Supplier</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Supplier Name</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Phone No</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Email</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Supplier Owner Name</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Business Type</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Address Line 1</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Address Line 2</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">State</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Landmark / Area</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">City</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Country</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                    <div class="supplier-input-wrap">
+                        <label for="recipient-name" class="col-form-label">Pin / Zip Code</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   @endsection
 
   @section('scripts')
-  <script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script> 
+  <script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
   <script src="{{ url('assets/admin/js/cHVyY2hhc2VfaW53YXJkX3N0b2Nr.js') }}"></script>
@@ -385,6 +485,9 @@ $adminRoll = Session::get('admin_type');
     });
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
+    });
+    $(document).on('click', '#supplierAddModalBtn', function(e) {
+      $('#supplierAddModal').modal('show');
     });
   </script>
 
