@@ -47,7 +47,8 @@
             <thead>
               <tr>
                 <th width="6%">Barcode</th>
-                <th width="29%">Product</th>
+                <th width="10%">Brand</th>
+                <th width="19%">Product</th>
                 <th width="7%">Stock</th>
                 <th width="11%">MRP</th>
                 <th width="9%">Qty.</th>
@@ -284,18 +285,19 @@
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="price_item_table">
                 <thead>
                     <tr>
-                        <th>Barcode</th>
+                        <th>Brand</th>
                         <th>Product</th>
+                        <th>Barcode</th>
                         <th>Stock</th>
                         <th>MRP</th>
                         <th>Select</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    {{-- <tr>
                         <td>230KIN</td>
                         <td>Elviton tab</td>
                         <td>35</td>
@@ -308,7 +310,7 @@
                         <td>35</td>
                         <td>50</td>
                         <td><button type="button" class="product-select">select</button></td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
         </div>

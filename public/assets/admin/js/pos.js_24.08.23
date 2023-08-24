@@ -1213,11 +1213,13 @@ function setProductRow(element) {
                 var option_html = '';
 
                 if (item_prices_length > 1) {
+
+
                     // w_stock = item_detail.item_prices[0].w_qty;
                     //c_stock = item_detail.item_prices[0].c_qty;
-                    /* stock = item_detail.item_prices[0].t_qty;
+                    stock = item_detail.item_prices[0].t_qty;
                     product_mrp = item_detail.item_prices[0].selling_price;
-                    product_price_id = item_detail.item_prices[0].price_id; */
+                    product_price_id = item_detail.item_prices[0].price_id;
                     var price_modal_html = '';
                     for (var p = 0; item_detail.item_prices.length > p; p++) {
                         option_html += '<option value="' + item_detail.item_prices[p].selling_price + '" data-stock_product_id="' + item_detail.item_prices[p].price_id + '">' + item_detail.item_prices[p].selling_price + '</option>';
@@ -1228,7 +1230,7 @@ function setProductRow(element) {
                         <td>${item_detail.item_prices[p].product_barcode}</td>
                         <td>${item_detail.item_prices[p].t_qty}</td>
                         <td>${item_detail.item_prices[p].selling_price}</td>
-                        <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
+                        <td><button type="button" class="product-select">select</button></td>
                     </tr>`;
                     }
                     $('#price_item_table tbody').html(price_modal_html);
@@ -1238,137 +1240,11 @@ function setProductRow(element) {
                     //c_stock = item_detail.item_prices[0].c_qty;
                     product_mrp = item_detail.item_prices[0].selling_price;
                     product_price_id = item_detail.item_prices[0].price_id;
-                    option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
-
-                    var item_row = 0;
-                    if ($('#product_sell_record_sec tr').length == 0) {
-                        item_row++;
-                    } else {
-                        var max = 0;
-                        $("#product_sell_record_sec tr").each(function() {
-                            var value = parseInt($(this).data('id'));
-                            max = (value > max) ? value : max;
-                        });
-                        item_row = max + 1;
-                    }
-
-                    if (stock > 0) {
-                        var same_item = 0;
-                        $("#product_sell_record_sec tr").each(function() {
-                            var row_product_id = $(this).attr('id').split('_')[2];
-                            //console.log(row_product_id);
-                            if (row_product_id == product_id) {
-                                same_item = 1;
-
-                                var qty = $('#product_qty_' + product_id).val();
-                                var item_qty = Number(qty) + 1;
-
-                                if (Number(item_qty) > Number(stock)) {
-                                    $('#product_qty_' + product_id).val(stock);
-                                    toastr.error("Entered Qty should not be greater than Stock");
-                                    return false;
-                                } else {
-                                    $('#product_qty_' + product_id).val(item_qty);
-                                    var unit_price = $("#product_unit_price_amount_" + product_id).val();
-                                    //console.log(unit_price);
-                                    var discount_percent = $("#product_disc_percent_" + product_id).val();
-                                    var total_discount = (Number(unit_price) * Number(item_qty)) * Number(discount_percent) / 100;
-
-                                    if (Number(discount_percent) != 0 || discount_percent != '') {
-                                        $("#product_disc_amount_" + product_id).val(total_discount.toFixed(2));
-                                    }
-                                    var total_selling_cost = Number(unit_price) * Number(item_qty);
-                                    var discount_amount = Number(total_selling_cost) - Number(total_discount);
-                                    var total_amount = Number(discount_amount)
-                                    $("#product_total_amount_" + product_id).html(Number(total_amount).toFixed(2));
-                                    $("#input-product_total_amount_" + product_id).val(Number(total_amount).toFixed(2));
-                                }
-
-                                total_cal();
-                            }
-                        });
-
-                        if (same_item == 0) {
-                            html += `<tr id="sell_product_${product_id}" data-id="${item_row}">
-                                        <input type="hidden" name="product_id[]" value="${product_id}">
-                                        <input type="hidden" id="product_stock_${product_id}" value="${stock}">
-                                        <input type="hidden" name="product_total_amount[]" id="input-product_total_amount_${product_id}" value="${product_mrp}">
-                                        <input type="hidden" name="product_price_id[]" id="input-product_price_id_${product_id}" value="${product_id}">
-                                        <input type="hidden" name="product_barcode[]" id="input-product_barcode_${product_id}" value="${barcode}">
-                                        <input type="hidden" name="product_name[]" id="input-product_name_${product_id}" value="${product_name}">
-                                        <input type="hidden" name="brand_name[]" id="input-brand_name_${product_id}" value="${brand_name}">
-                                        <td>${barcode}</td>
-                                        <td class="">${brand_name}</td>
-                                        <td class="">${product_name}</td>
-                                        <td id="product_stock_td_${product_id}">${stock}</td>
-                                        <td class="relative"><select name="product_unit_price[]" id="product_unit_price_${product_id}" class="product_unit_price">${option_html}</select></td>
-                                        <td>
-                                        <input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
-                                        <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
-                                        <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
-                                        <td id="product_mrp_${product_id}">${product_mrp}</td>
-                                        <input type="hidden" class="product_unit_price_amount input-3" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
-                                        <td id="product_total_amount_${product_id}">${product_mrp}</td>
-                                        <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
-                                    </tr>`;
-                            $("#product_sell_record_sec").prepend(html);
-                            total_cal();
-                        }
-                    } else {
-                        toastr.error("Stock not available for this Product");
-                    }
+                    option_html += '<option value="' + selling_price + '" data-stock_product_id="' + product_price_id + '">' + selling_price + '</option>';
 
                 }
-            } else {
-                toastr.error("Stock not available for this Product");
-            }
-            $("#search_barcode_product").focus();
-        }
-    });
-}
 
-$(document).on('click', '.select_product_item', function() {
-    var branchStockProductId = $(this).attr("data-item_id");
-    $.ajax({
-        url: prop.ajaxurl,
-        type: 'post',
-        data: {
-            branch_stock_product_id: branchStockProductId,
-            action: 'get_stock_branch_stock_productId',
-            _token: prop.csrf_token
-        },
-        dataType: 'json',
-        success: function(response) {
-            if (response.status == '1') {
-                $('#modal_multiple_price_list').modal('hide');
-                var item_detail = response.product_result;
-                var html = '';
-                //console.log(item_detail);
-                var barcode = '';
-                if (item_detail.product_barcode != null || item_detail.product_barcode != undefined) {
-                    barcode = item_detail.product_barcode;
-                }
-
-                var product_name = '';
-                if (item_detail.product_name != null || item_detail.product_name != undefined) {
-                    product_name = item_detail.product_name;
-                }
-                var brand_name = '';
-                if (item_detail.brand_name != null || item_detail.brand_name != undefined) {
-                    brand_name = item_detail.brand_name;
-                }
-
-                var product_id = item_detail.branch_stock_product_id;
-                var stock = 0;
-                var c_stock = 0;
-                var w_stock = 0;
-                var product_mrp = 0;
-                var product_price_id = 0;
-                var option_html = '';
-                stock = item_detail.t_qty;
-                product_mrp = item_detail.selling_price;
-                product_price_id = item_detail.price_id;
-                option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
+                //alert(w_stock);
 
                 var item_row = 0;
                 if ($('#product_sell_record_sec tr').length == 0) {
@@ -1381,6 +1257,12 @@ $(document).on('click', '.select_product_item', function() {
                     });
                     item_row = max + 1;
                 }
+
+                /* if (stock_type == 'w') {
+                    stock = w_stock;
+                } else {
+                    stock = c_stock;
+                } */
 
                 if (stock > 0) {
                     var same_item = 0;
@@ -1419,28 +1301,31 @@ $(document).on('click', '.select_product_item', function() {
                     });
 
                     if (same_item == 0) {
-                        html += `<tr id="sell_product_${product_id}" data-id="${item_row}">
-                                    <input type="hidden" name="product_id[]" value="${product_id}">
-                                    <input type="hidden" id="product_stock_${product_id}" value="${stock}">
-                                    <input type="hidden" name="product_total_amount[]" id="input-product_total_amount_${product_id}" value="${product_mrp}">
-                                    <input type="hidden" name="product_price_id[]" id="input-product_price_id_${product_id}" value="${product_id}">
-                                    <input type="hidden" name="product_barcode[]" id="input-product_barcode_${product_id}" value="${barcode}">
-                                    <input type="hidden" name="product_name[]" id="input-product_name_${product_id}" value="${product_name}">
-                                    <input type="hidden" name="brand_name[]" id="input-brand_name_${product_id}" value="${brand_name}">
-                                    <td>${barcode}</td>
-                                    <td class="">${brand_name}</td>
-                                    <td class="">${product_name}</td>
-                                    <td id="product_stock_td_${product_id}">${stock}</td>
-                                    <td class="relative"><select name="product_unit_price[]" id="product_unit_price_${product_id}" class="product_unit_price">${option_html}</select></td>
-                                    <td>
-                                    <input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
-                                    <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
-                                    <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
-                                    <td id="product_mrp_${product_id}">${product_mrp}</td>
-                                    <input type="hidden" class="product_unit_price_amount input-3" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
-                                    <td id="product_total_amount_${product_id}">${product_mrp}</td>
-                                    <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
-                                </tr>`;
+                        html += '<tr id="sell_product_' + product_id + '" data-id="' + item_row + '">' +
+                            '<input type="hidden" name="product_id[]" value="' + product_id + '">' +
+                            '<input type="hidden" id="product_w_stock_' + product_id + '" value="' + w_stock + '">' +
+                            '<input type="hidden" id="product_c_stock_' + product_id + '" value="' + c_stock + '">' +
+                            '<input type="hidden" id="product_stock_' + product_id + '" value="' + stock + '">' +
+                            '<input type="hidden" name="product_total_amount[]" id="input-product_total_amount_' + product_id + '" value="' + product_mrp + '">' +
+                            '<input type="hidden" name="product_price_id[]" id="input-product_price_id_' + product_id + '" value="' + product_price_id + '">' +
+                            '<input type="hidden" name="product_barcode[]" id="input-product_barcode_' + product_id + '" value="' + barcode + '">' +
+                            '<input type="hidden" name="product_name[]" id="input-product_name_' + product_id + '" value="' + product_name + '">' +
+                            '<input type="hidden" name="product_barcode[]" id="input-product_barcode_' + product_id + '" value="' + barcode + '">' +
+                            '<input type="hidden" name="brand_name[]" id="input-brand_name_' + product_id + '" value="' + brand_name + '">' +
+                            '<td>' + barcode + '</td>' +
+                            '<td class="">' + brand_name + '</td>' +
+                            '<td class="">' + product_name + '</td>' +
+                            '<td id="product_stock_td' + product_id + '">' + stock +
+                            '<td class="relative"><select name="product_unit_price[]" id="product_unit_price_' + product_id + '" class="product_unit_price">' + option_html + '</select>' +
+                            '<td><input type="number" name="product_qty[]" id="product_qty_' + product_id + '" class="input-3 product_qty" value="1"></td>' +
+                            '<td><input type="text" name="product_disc_percent[]" id="product_disc_percent_' + product_id + '" class="input-3 product_disc_percent" value="0"></td>' +
+                            '<td><input type="text" name="product_disc_amount[]" id="product_disc_amount_' + product_id + '" class="input-3 product_disc_amount" value="0"></td>' +
+                            '<td id="product_mrp_' + product_id + '">' + product_mrp +
+                            '</td>' +
+                            '<input type="hidden" class="product_unit_price_amount input-3" id="product_unit_price_amount_' + product_id + '" value="' + product_mrp + '" ></input>' +
+                            '<td id="product_total_amount_' + product_id + '">' + product_mrp + '</td>' +
+                            '<td><a href="javascript:;" onclick="remove_sell_item(' + item_row + ');"><i class="fas fa-times-circle"></i></a></td>' +
+                            '</tr>';
                         $("#product_sell_record_sec").prepend(html);
                         total_cal();
                     }
@@ -1448,14 +1333,12 @@ $(document).on('click', '.select_product_item', function() {
                     toastr.error("Stock not available for this Product");
                 }
             } else {
-                toastr.error("Something went wrong. Please try later.");
+                toastr.error("Stock not available for this Product");
             }
+            $("#search_barcode_product").focus();
         }
     });
-
-});
-
-
+}
 
 function remove_sell_item(row) {
     $("#product_sell_record_sec").find("tr[data-id='" + row + "']").remove();
@@ -1619,7 +1502,7 @@ $(document).on('change', '.product_unit_price', function() {
         //processing the data
         //console.log(d);
         //console.log(available_stock);
-        $('#product_stock_td_' + product_id).html(available_stock);
+        $('#product_stock_td' + product_id).html(available_stock);
         $('#product_stock_' + product_id).val(available_stock);
         var stock = $('#product_stock_' + product_id).val();
         var product_unit_price = $('#product_unit_price_' + product_id).val();
