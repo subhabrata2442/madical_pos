@@ -413,7 +413,7 @@ class PosController extends Controller
     }
 	
 	public function create(Request $request){
-		
+		dd($request->all());
 		$branch_id		= Session::get('branch_id');
 		$supplier_id	= Session::get('adminId');
 		$customer_id	= 2;

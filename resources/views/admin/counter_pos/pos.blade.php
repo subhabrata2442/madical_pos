@@ -52,8 +52,8 @@
                 <th width="4%">Selling by</th>
                 <th width="6%">Stock</th>
                 <th width="11%">MRP</th>
-                <th width="6%">Qty.</th>
-                <th width="11%">Disc%</th>
+                <th width="9%">Qty.</th>
+                <th width="8%">Disc%</th>
                 <th width="11%">Disc Amt.</th>
                 <th width="8%">Unit Price</th>
                 <th width="7%">Total</th>
@@ -178,7 +178,7 @@
       </ul>
     </div>
   </div>
-  <div class="col-12">
+  {{-- <div class="col-12">
     <div class="topsellingProduct">
       <h4>Top Selling Products</h4>
       <ul class="row">
@@ -195,7 +195,7 @@
         <li><a href="javascript:;" data-id="40" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>Kingfisher Strong Premium Beer (650  ml)</span></a></li>-->
       </ul>
     </div>
-  </div>
+  </div> --}}
 </div>
 <div class="modal fade modalMdHeader" id="modal-applyDiscount" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -262,7 +262,7 @@
           <form action="" method="get" id="create_customer_form">
             <div class="mb-3">
               <label for="" class="form-label">Customer Name</label>
-              <input type="text" class="form-control number" name="customer_name" id="customer_name" autocomplete="off">
+              <input type="text" class="form-control" name="customer_name" id="customer_name" autocomplete="off">
             </div>
             <div class="mb-3">
               <label for="" class="form-label">Contact Number</label>

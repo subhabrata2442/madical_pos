@@ -484,6 +484,7 @@ class AjaxController extends Controller {
 								'product_name'	=> $row->product->product_name,
 								'brand_name'	=> $row->product->brand,
 								'product_barcode'	=> $row->product->product_barcode,
+								'selling_by_name'	=> $row->product->selling_by_name,
 								//'c_qty'			=> $row->c_qty,
 							);
 						}
@@ -1350,6 +1351,7 @@ class AjaxController extends Controller {
 					'product_barcode'			=> $branchStockProduct->product->product_barcode,
 					'brand_name'				=> $branchStockProduct->product->brand,
 					'product_name'				=> $branchStockProduct->product->product_name,
+					'selling_by_name'				=> $branchStockProduct->product->selling_by_name,
 					'selling_price'				=> $branchStockProduct->selling_price,
 					'product_mrp'				=> $branchStockProduct->product_mrp,
 					't_qty'						=> $branchStockProduct->t_qty,
@@ -1362,6 +1364,9 @@ class AjaxController extends Controller {
 			
 		}
 		echo json_encode($return_data);
+	}
+	public function ajaxpost_store_customer_details($request){
+		dd($request->all());
 	}
 
 }

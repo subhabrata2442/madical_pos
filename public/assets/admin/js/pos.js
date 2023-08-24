@@ -931,6 +931,50 @@ $(document).on('keyup', '#special_discount_amt', function() {
 $(document).on('click', '.create_customer_btn', function() {
     $('#modal_createCustomer').modal('show');
 });
+$(document).ready(function() {
+    $("#create_customer_form").validate({
+        rules: {
+            customer_name: "required",
+            customer_mobile: "required",
+        },
+        messages: {
+            //promo: "Required",
+        },
+        errorElement: "em",
+        errorPlacement: function(error, element) {
+            // Add the `help-block` class to the error element
+            error.addClass("help-block");
+            error.insertAfter(element);
+        },
+        highlight: function(element, errorClass, validClass) {
+            $(element).addClass("has-error").removeClass("has-success");
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).addClass("has-success").removeClass("has-error");
+        },
+        submitHandler: function(form) {
+            var formData = $(form).serialize();
+            console.log(formData);
+            $.ajax({
+                url: prop.ajaxurl,
+                type: 'post',
+                data: {
+                    formData: formData,
+                    action: 'store_customer_details',
+                    _token: prop.csrf_token
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    }
+                    /* ,
+                                    error: function(xhr, status, error) {
+                                        alert("An error occurred while submitting the form.");
+                                    } */
+            });
+        }
+    });
+})
 
 
 function barcodeEntered(value) {
@@ -1209,6 +1253,7 @@ function setProductRow(element) {
                 var w_stock = 0;
                 var product_mrp = 0;
                 var product_price_id = 0;
+                var selling_by_name = '';
 
                 var option_html = '';
 
@@ -1226,6 +1271,7 @@ function setProductRow(element) {
                         <td>${item_detail.item_prices[p].brand_name}</td>
                         <td>${item_detail.item_prices[p].product_name}</td>
                         <td>${item_detail.item_prices[p].product_barcode}</td>
+                        <td>${item_detail.item_prices[p].selling_by_name}</td>
                         <td>${item_detail.item_prices[p].t_qty}</td>
                         <td>${item_detail.item_prices[p].selling_price}</td>
                         <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
@@ -1238,6 +1284,7 @@ function setProductRow(element) {
                     //c_stock = item_detail.item_prices[0].c_qty;
                     product_mrp = item_detail.item_prices[0].selling_price;
                     product_price_id = item_detail.item_prices[0].price_id;
+                    selling_by_name = item_detail.item_prices[0].selling_by_name;
                     option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
 
                     var item_row = 0;
@@ -1300,10 +1347,11 @@ function setProductRow(element) {
                                         <td>${barcode}</td>
                                         <td class="">${brand_name}</td>
                                         <td class="">${product_name}</td>
+                                        <td class="">${selling_by_name}</td>
                                         <td id="product_stock_td_${product_id}">${stock}</td>
-                                        <td class="relative"><select name="product_unit_price[]" id="product_unit_price_${product_id}" class="product_unit_price">${option_html}</select></td>
-                                        <td>
-                                        <input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
+                                        
+                                        <td id="product_unit_price_${product_id}">${product_mrp}</td>
+                                        <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                         <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                         <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                         <td id="product_mrp_${product_id}">${product_mrp}</td>
@@ -1365,9 +1413,11 @@ $(document).on('click', '.select_product_item', function() {
                 var product_mrp = 0;
                 var product_price_id = 0;
                 var option_html = '';
+                var selling_by_name = '';
                 stock = item_detail.t_qty;
                 product_mrp = item_detail.selling_price;
                 product_price_id = item_detail.price_id;
+                selling_by_name = item_detail.selling_by_name;
                 option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
 
                 var item_row = 0;
@@ -1430,10 +1480,10 @@ $(document).on('click', '.select_product_item', function() {
                                     <td>${barcode}</td>
                                     <td class="">${brand_name}</td>
                                     <td class="">${product_name}</td>
+                                    <td class="">${selling_by_name}</td>
                                     <td id="product_stock_td_${product_id}">${stock}</td>
-                                    <td class="relative"><select name="product_unit_price[]" id="product_unit_price_${product_id}" class="product_unit_price">${option_html}</select></td>
-                                    <td>
-                                    <input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
+                                    <td id="product_unit_price_${product_id}">${product_mrp}</td>
+                                    <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                     <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                     <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                     <td id="product_mrp_${product_id}">${product_mrp}</td>
