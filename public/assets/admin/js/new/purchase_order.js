@@ -1479,7 +1479,7 @@ function barcodeScanner(barcode) {
     });
 }
 
-$(document).on("keyup", "#supplier_id", function() {
+$(document).on("keyup", "#supplier_name", function() {
     var supplier_name = $(this).val();
     if (supplier_name != "") {
         $.ajax({
@@ -1508,7 +1508,14 @@ $(document).on("keyup", "#supplier_id", function() {
 
                     // binding click event to li
                     $("#supplier_search_result li").bind("click", function() {
-                        $(".loader_section").show();
+                        //$(".loader_section").show();
+                        var supplier_name = $(this).text();
+                        var supplier_id = $(this).val();
+                        //console.log(supplier_id);
+                        //console.log(value);
+                        $('#supplier_name').val(supplier_name);
+                        $('#supplier_id').val(supplier_id);
+                        $("#supplier_search_result").empty();
                         //setRow(this);
                     });
                 }
@@ -1564,7 +1571,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 data: formData,
                 success: function(data) {
+                    console.log(data);
                     if (data[0].success == 1) {
+                        $('#supplier_name').val(data[0].supplier_name);
+                        $('#supplier_id').val(data[0].supplier_id);
                         Swal.fire({
                             icon: 'success',
                             title: 'Supplier Created successfully',

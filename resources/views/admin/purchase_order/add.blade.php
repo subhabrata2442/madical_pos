@@ -68,9 +68,10 @@ $adminRoll = Session::get('admin_type');
                     <li class="invAreaInf">Supplier</li>
                     <li class="invAreaVal relative">
                         <div class="add-plus-wrap relative">
-                            <input type="text" name="supplier_id" id="supplier_id" class="form-control input-1">
+                            <input type="text" name="supplier_name" id="supplier_name" class="form-control input-1" autocomplete="off">
                             <div class="add-plus-box"><a href="javascript:;" id="supplierAddModalBtn" class="add-plus-box-btn"><i class="fas fa-plus"></i></a></div>
                         </div>
+                        <input type="hidden" name="supplier_id" id="supplier_id" value="">
                         <div class="custom-list">
                             <ul id="supplier_search_result">
                             </ul>

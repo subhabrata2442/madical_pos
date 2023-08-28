@@ -86,7 +86,7 @@ class SupplierController extends Controller
             if ($request->isMethod('post')) {
 				
                 $validator = Validator::make($request->all(), [
-                    'supplier_company_name' => 'required|unique:suppliers',
+                    'supplier_company_name' => 'required',
                 ]);
                 if ($validator->fails()) {
                     $errors=$validator->errors()->all();
@@ -125,7 +125,7 @@ class SupplierController extends Controller
 				);
 				//print_r($supplier_data);exit;
 				$supplier=Supplier::create($supplier_data);
-				//$supplier_id=$supplier->id;
+				$supplier_id=$supplier->id;
 				
 				/* if(isset($request->supplier_bank_name)){
 					if(count($request->supplier_bank_name)>0){	
@@ -153,6 +153,8 @@ class SupplierController extends Controller
 				
 				SupplierContactDetails::create($supplier_contact_data); */
 				
+				$return_data['supplier_id'] = $supplier_id;
+				$return_data['supplier_name'] = $request->supplier_company_name;
 				$return_data['success'] = 1;
 				return response()->json([$return_data]);;
             }
