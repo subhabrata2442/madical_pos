@@ -66,16 +66,18 @@ $adminRoll = Session::get('admin_type');
                 @endif
                 <ul class="d-flex flex-wrap align-items-center">
                     <li class="invAreaInf">Supplier</li>
-                    <li class="invAreaVal">
+                    <li class="invAreaVal relative">
                         <div class="add-plus-wrap relative">
                             <input type="text" name="supplier_id" id="supplier_id" class="form-control input-1">
                             <div class="add-plus-box"><a href="javascript:;" id="supplierAddModalBtn" class="add-plus-box-btn"><i class="fas fa-plus"></i></a></div>
                         </div>
-                        <ul id="supplier_search_result">
-                        </ul>
+                        <div class="custom-list">
+                            <ul id="supplier_search_result">
+                            </ul>
+                        </div>
                       </li>
                   </ul>
-                  
+
               </div>
             </div>
           </div>
@@ -513,7 +515,7 @@ $adminRoll = Session::get('admin_type');
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
     });
-    
+
   </script>
 
   @endsection

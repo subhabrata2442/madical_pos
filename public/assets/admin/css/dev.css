@@ -2614,3 +2614,26 @@ a.downloadBtn {
 .supplier-input-wrap {
     margin-bottom: 5px;
 }
+.custom-list{
+    list-style: none;
+    padding: 0px;
+    width: calc(100% - 50px);
+    position: absolute;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 99999;
+    top: 100%;
+    background: #cfcff0;
+}
+.custom-list ul li {
+    background: lavender;
+    padding: 7px 15px;
+    margin-bottom: 1px;
+    font-size: 13px;
+}
+.custom-list ul li:hover {
+    cursor: pointer;
+    background: cadetblue;
+    color: white;
+}
