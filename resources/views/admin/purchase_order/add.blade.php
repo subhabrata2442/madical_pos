@@ -68,11 +68,14 @@ $adminRoll = Session::get('admin_type');
                     <li class="invAreaInf">Supplier</li>
                     <li class="invAreaVal">
                         <div class="add-plus-wrap relative">
-                            <input type="text" name="invoice_no" id="invoice_no" class="form-control input-1" required="required">
+                            <input type="text" name="supplier_id" id="supplier_id" class="form-control input-1">
                             <div class="add-plus-box"><a href="javascript:;" id="supplierAddModalBtn" class="add-plus-box-btn"><i class="fas fa-plus"></i></a></div>
                         </div>
+                        <ul id="supplier_search_result">
+                        </ul>
                       </li>
                   </ul>
+                  
               </div>
             </div>
           </div>
@@ -110,11 +113,18 @@ $adminRoll = Session::get('admin_type');
                     </select>
                   </li>
                 </ul>
+                <ul class="d-flex flex-wrap align-items-center hide" id="payment_debt_day_section">
+                  <li class="invAreaInf">Payment Debt Day</li>
+                  <li class="invAreaVal">
+                    <input type="number" id="payment_debt_day" class="form-control input-1"
+                      required="required" name="payment_debt_day" value="" >
+                  </li>
+                </ul>
                 <ul class="d-flex flex-wrap align-items-center">
                   <li class="invAreaInf">Payment Date</li>
                   <li class="invAreaVal">
                     <input type="date" name="payment_date" id="payment_date" class="form-control input-1"
-                      required="required">
+                      required="required" value="">
                   </li>
                 </ul>
                 <ul class="d-flex flex-wrap align-items-center">
@@ -133,6 +143,12 @@ $adminRoll = Session::get('admin_type');
                   <li class="invAreaVal">
                     <input type="text" id="payment_currency_usd_rate" class="form-control input-1"
                       required="required" value="">
+                  </li>
+                </ul>
+                <ul class="d-flex flex-wrap align-items-center" id="payment_discount_section">
+                  <li class="invAreaInf">Discount (%)</li>
+                  <li class="invAreaVal">
+                    <input type="text" id="payment_discount" class="form-control input-1" value="" name="payment_discount">
                   </li>
                 </ul>
 
@@ -179,6 +195,10 @@ $adminRoll = Session::get('admin_type');
                 <td>
                   <h5>Total Sell Price</h5>
                   <span class="d-block" id="gross_total_amount"></span>
+                </td>
+                <td>
+                  <h5>Total Profit</h5>
+                  <span class="d-block" id="total_profit"></span>
                 </td>
 
               </tr>
@@ -386,87 +406,94 @@ $adminRoll = Session::get('admin_type');
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add New Supplier</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+          <button type="button" class="close close_modal_btn" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
         </div>
         <div class="modal-body">
+          <form method="post" action="{{route('admin.supplier.add')}}" class="needs-validation" id="modal_add_supplier_frm" novalidate enctype="multipart/form-data">
+            @csrf
+          {{-- <form action="" method="post" id="modal_add_supplier_frm"> --}}
             <div class="row">
                 <div class="col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Supplier Name</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_company_name" class="col-form-label">Supplier Name</label>
+                        <input type="text" class="form-control" id="supplier_company_name" name="supplier_company_name" required>
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Phone No</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_company_mobile_no" class="col-form-label">Phone No</label>
+                        <input type="text" class="form-control" id="supplier_company_mobile_no" name="supplier_company_mobile_no">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Email</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_email" class="col-form-label">Email</label>
+                        <input type="text" class="form-control" id="supplier_email" name="supplier_email">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Supplier Owner Name</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_owner_name" class="col-form-label">Supplier Owner Name</label>
+                        <input type="text" class="form-control" id="supplier_owner_name" name="supplier_owner_name">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Business Type</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_business_type" class="col-form-label">Business Type</label>
+                        <select name="supplier_business_type" id="supplier_business_type" class="form-control form-inputtext">
+                          <option value="">Select Type</option>
+                          <option value="registered">Registered</option>
+                          <option value="unregistered">Unregistered</option>
+                        </select>
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Address Line 1</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_address1" class="col-form-label">Address Line 1</label>
+                        <input type="text" class="form-control" id="supplier_address1" name="supplier_address1">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Address Line 2</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_address2" class="col-form-label">Address Line 2</label>
+                        <input type="text" class="form-control" id="supplier_address2" name="supplier_address2">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">State</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="state_name" class="col-form-label">State</label>
+                        <input type="text" class="form-control" id="state_name" name="state_name">
                       </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Landmark / Area</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_company_area" class="col-form-label">Landmark / Area</label>
+                        <input type="text" class="form-control" id="supplier_company_area" name="supplier_company_area">
                       </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">City</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_company_city" class="col-form-label">City</label>
+                        <input type="text" class="form-control" id="supplier_company_city" name="supplier_company_city">
                       </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Country</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="country_name" class="col-form-label">Country</label>
+                        <input type="text" class="form-control" id="country_name" name="country_name">
                       </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="supplier-input-wrap">
-                        <label for="recipient-name" class="col-form-label">Pin / Zip Code</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="supplier_company_zipcode" class="col-form-label">Pin / Zip Code</label>
+                        <input type="text" class="form-control" id="supplier_company_zipcode" name="supplier_company_zipcode">
                       </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary close_modal_btn" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </div>
     </div>
@@ -486,9 +513,7 @@ $adminRoll = Session::get('admin_type');
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
     });
-    $(document).on('click', '#supplierAddModalBtn', function(e) {
-      $('#supplierAddModal').modal('show');
-    });
+    
   </script>
 
   @endsection

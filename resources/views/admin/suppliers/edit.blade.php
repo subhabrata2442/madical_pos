@@ -80,21 +80,7 @@
                     @enderror </li>
                 </ul>
               </div>
-              <div class="form-group">
-                <ul class="row mdForm align-items-center">
-                  <li class="inf">
-                    <label for="supplier_country_id" class="form-label">Country</label>
-                  </li>
-                  <li class="vall">
-                    <select name="supplier_country_id" id="supplier_country_id" class="form-control form-inputtext" required>
-                      <option value="">Select Country</option>
-                      <option selected="" value="102">India</option>
-                    </select>
-                    @error('supplier_country_id')
-                    <div class="error admin-error">{{ $message }}</div>
-                    @enderror </li>
-                </ul>
-              </div>
+              
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -135,7 +121,7 @@
                     @enderror </li>
                 </ul>
               </div>
-              <div class="form-group">
+              {{-- <div class="form-group">
                 <ul class="row mdForm align-items-center">
                   <li class="inf">
                     <label for="supplier_gstin_no" class="form-label">GSTIN Number</label>
@@ -158,20 +144,25 @@
                     <div class="error admin-error">{{ $message }}</div>
                     @enderror </li>
                 </ul>
-              </div>
+              </div> --}}
               <div class="form-group">
                 <ul class="row mdForm align-items-center">
                   <li class="inf">
                     <label for="supplier_state_id" class="form-label">State</label>
                   </li>
                   <li class="vall">
-                    <select name="supplier_state_id" id="supplier_state_id" class="form-control form-inputtext">
+                    <input type="text" class="form-control admin-input" id="state_name" name="state_name" value="{{ old('state_name', $data['supplier']->state_name) }}" required autocomplete="off">
+                    @error('state_name')
+                    <div class="error admin-error">{{ $message }}</div>
+                    @enderror </li>
+                    {{-- <select name="supplier_state_id" id="supplier_state_id" class="form-control form-inputtext">
                       <option value="">Select State</option>
                       <option value="19" selected="" >West Bengal</option>
                     </select>
                     @error('supplier_state_id')
                     <div class="error admin-error">{{ $message }}</div>
-                    @enderror </li>
+                    @enderror  --}}
+                  </li>
                 </ul>
               </div>
               <div class="form-group">
@@ -186,8 +177,28 @@
                     @enderror </li>
                 </ul>
               </div>
+              <div class="form-group">
+                <ul class="row mdForm align-items-center">
+                  <li class="inf">
+                    <label for="supplier_country_id" class="form-label">Country</label>
+                  </li>
+                  <li class="vall">
+                    <input type="text" class="form-control admin-input" id="country_name" name="country_name" value="{{ old('country_name', $data['supplier']->country_name) }}" required autocomplete="off">
+                    @error('country_name')
+                    <div class="error admin-error">{{ $message }}</div>
+                    @enderror
+                    {{-- <select name="supplier_country_id" id="supplier_country_id" class="form-control form-inputtext" required>
+                      <option value="">Select Country</option>
+                      <option selected="" value="102">India</option>
+                    </select>
+                    @error('supplier_country_id')
+                    <div class="error admin-error">{{ $message }}</div>
+                    @enderror  --}}
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div class="col-12">
+            {{-- <div class="col-12">
               <div class="advanceDetails"> <a href="javascript:;" class="advDetsBtn" id="supplier_additional_details_btn">Supplier additional Details</a> </div>
             </div>
             <div class="hideArea p-0" id="supplier_additional_details_sec" style="display:none">
@@ -267,7 +278,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> --}}
           </div>
         </div>
       </div>

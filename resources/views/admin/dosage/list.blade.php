@@ -5,17 +5,9 @@
     <div class="card">
       <x-alert />
       <div class="table-responsive dataTable-design">
-        <table id="Supplier_table" class="table table-bordered">
+        <table id="dosage_table" class="table table-bordered">
           <thead>
-          <th>Company Name</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>State</th>
-            {{-- <th>PAN</th> --}}
-            <th>Address</th>
-            <th>Area</th>
-            <th>City</th>
-            <th>Zip Code</th>
+            <th>Dosage Name</th> 
             <th>Actions</th>
               </thead>
           <tbody>
@@ -31,43 +23,14 @@
 <script type="text/javascript">
         $(function() {
 
-            var table = $('#Supplier_table').DataTable({
+            var table = $('#dosage_table').DataTable({
                 processing: true,
                 serverSide: true,
                 searchDelay: 350,
-                ajax: "{{ route('admin.supplier.list') }}",
+                ajax: "{{ route('admin.dosage.list') }}",
                 columns: [{
-                        data: 'company_name',
-                        name: 'company_name',
-                    },
-                    {
-                        data: 'first_name',
-                        name: 'first_name'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-					{
-                        data: 'state_name',
-                        name: 'state_name',
-                    },
-                    
-					{
-                        data: 'address',
-                        name: 'address',
-                    },
-					{
-                        data: 'area',
-                        name: 'area',
-                    },
-					{
-                        data: 'city',
-                        name: 'city',
-                    },
-					{
-                        data: 'pin',
-                        name: 'pin',
+                        data: 'name',
+                        name: 'name',
                     },
                     {
                         data: 'action',
@@ -80,7 +43,7 @@
 
         });
 
-        $(document).on('click', '#delete_supplier', function() {
+        $(document).on('click', '#delete_dosage', function() {
             var url = $(this).data('url');
             Swal.fire({
                 title: 'Are you sure?',

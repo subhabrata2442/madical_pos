@@ -31,12 +31,12 @@ class SupplierController extends Controller
                     ->addColumn('email', function ($row) {
                         return $row->email;
                     })
-                    ->addColumn('state', function ($row) {
-                        return '';
+                    ->addColumn('state_name', function ($row) {
+                        return $row->state_name;
                     })
-					->addColumn('pan', function ($row) {
+					/* ->addColumn('pan', function ($row) {
                         return $row->pan;
-                    })
+                    }) */
 					->addColumn('address', function ($row) {
                         return $row->address;
                     })
@@ -81,10 +81,12 @@ class SupplierController extends Controller
 
     public function add(Request $request)
     {
+		//dd($request->all());
         try {
             if ($request->isMethod('post')) {
+				
                 $validator = Validator::make($request->all(), [
-                    'supplier_company_name' => 'required',
+                    'supplier_company_name' => 'required|unique:suppliers',
                 ]);
                 if ($validator->fails()) {
                     $errors=$validator->errors()->all();
@@ -96,8 +98,6 @@ class SupplierController extends Controller
 					$return_data['error_message'] = $error_html;
 					return response()->json([$return_data]);
                 }
-				
-				
 				
 				//print_r($_POST);exit;
 				
@@ -119,13 +119,15 @@ class SupplierController extends Controller
 					'state'			=> $request->supplier_state_id,
 					'city'			=> $request->supplier_company_city,
 					'website'		=> $request->supplier_website,
+					'state_name'		=> $request->state_name,
+					'country_name'		=> $request->country_name,
 					'created_at'	=> date('Y-m-d')
 				);
 				//print_r($supplier_data);exit;
 				$supplier=Supplier::create($supplier_data);
-				$supplier_id=$supplier->id;
+				//$supplier_id=$supplier->id;
 				
-				if(isset($request->supplier_bank_name)){
+				/* if(isset($request->supplier_bank_name)){
 					if(count($request->supplier_bank_name)>0){	
 						for($i=0;count($request->supplier_bank_name)>$i;$i++){
 							$supplier_bank_data=array(
@@ -149,7 +151,7 @@ class SupplierController extends Controller
 				);
 				//echo '<pre>';print_r($supplier_contact_data);exit;
 				
-				SupplierContactDetails::create($supplier_contact_data);
+				SupplierContactDetails::create($supplier_contact_data); */
 				
 				$return_data['success'] = 1;
 				return response()->json([$return_data]);;
@@ -171,11 +173,6 @@ class SupplierController extends Controller
 				
                 $validator = Validator::make($request->all(), [
                     'supplier_company_name' => 'required',
-                    'supplier_email' => 'required',
-                    'supplier_owner_name' => 'required',
-                    'supplier_pan_no' => 'required',
-                    'supplier_company_city' => 'required',
-                    'supplier_address1' => 'required',
                 ]);
 				
                 if ($validator->fails()) {
@@ -205,6 +202,8 @@ class SupplierController extends Controller
 					'state'			=> $request->supplier_state_id,
 					'city'			=> $request->supplier_company_city,
 					'website'		=> $request->supplier_website,
+					'state_name'		=> $request->state_name,
+					'country_name'		=> $request->country_name,
 					'created_at'	=> date('Y-m-d')
 				);
 				
@@ -213,7 +212,7 @@ class SupplierController extends Controller
 				Supplier::find($supplier_id)->update($supplier_data);
 				
 				
-				SupplierBank::where('supplier_id',$supplier_id)->delete();
+				/* SupplierBank::where('supplier_id',$supplier_id)->delete();
 				if(isset($request->supplier_bank_name)){
 					if(count($request->supplier_bank_name)>0){	
 						for($i=0;count($request->supplier_bank_name)>$i;$i++){
@@ -237,7 +236,7 @@ class SupplierController extends Controller
 					'contact_mobile'  		=> $request->alternet_phone[0],
 					'created_at'			=> date('Y-m-d')
 				);
-				SupplierContactDetails::create($supplier_contact_data);
+				SupplierContactDetails::create($supplier_contact_data); */
 				
 				$return_data['success'] = 1;
 				return response()->json([$return_data]);;
@@ -248,10 +247,10 @@ class SupplierController extends Controller
             $data['breadcrumb'] = ['Supplier', 'Edit'];
             $data['supplier'] = Supplier::find($supplier_id);
 			
-			$data['supplierMobile'] 	= SupplierCompanyMobile::where('supplier_id',$supplier_id)->get();
+			/* $data['supplierMobile'] 	= SupplierCompanyMobile::where('supplier_id',$supplier_id)->get();
 			$data['supplierBank'] 		= SupplierBank::where('supplier_id',$supplier_id)->get();
 			$data['supplierGst'] 		= SupplierGst::where('supplier_id',$supplier_id)->get();
-			$data['supplierContact'] 	= SupplierContactDetails::where('supplier_id',$supplier_id)->get();
+			$data['supplierContact'] 	= SupplierContactDetails::where('supplier_id',$supplier_id)->get(); */
 			
 			//echo '<pre>';print_r($data);exit;
 						

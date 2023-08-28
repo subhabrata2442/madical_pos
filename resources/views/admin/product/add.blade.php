@@ -140,9 +140,9 @@
           </div>
           <div class="col-md-3 plusBoxWrap relative">
             <div class="form-group">
-              <label for="company" class="form-label">Supplier</label>
+              <label for="company" class="form-label">Company</label>
               <select name="company" id="company" class="form-control form-inputtext">
-                <option value="">Select Supplier</option>
+                <option value="">Select Company</option>
                 @if(count($data['company'])>0)
                 @foreach($data['company'] as $row)
                 <option value="{{$row->id}}">{{$row->name}}</option>

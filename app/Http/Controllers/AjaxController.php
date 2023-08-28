@@ -901,6 +901,7 @@ class AjaxController extends Controller {
 	}
 
 	public function ajaxpost_add_inward_stock($request) {
+		//dd($request->all());
 		$branch_id=Auth::user()->id;
 		
 		$inward_stock	= $request->inward_stock;
@@ -1367,6 +1368,16 @@ class AjaxController extends Controller {
 	}
 	public function ajaxpost_store_customer_details($request){
 		dd($request->all());
+	}
+	public function ajaxpost_get_supplier_by_name($request){
+		//dd($request->all());
+		$supplier_name = $request->supplier_name;
+        $result = Supplier::where('company_name', 'LIKE', "%{$supplier_name}%")
+                            //->orWhere('owner_name', 'LIKE', "%{$supplier_name}%")
+                            ->take(20)->get();
+        $return_data['result']	= $result;
+		$return_data['status']	= 1;
+		echo json_encode($return_data);
 	}
 
 }

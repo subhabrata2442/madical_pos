@@ -841,7 +841,7 @@ hr {
 }
 
 .invArea .invAreaVal {
-    flex-grow: 1;
+    flex: 1 0;
 }
 
 .invArea .invAreaInf {
@@ -2587,16 +2587,19 @@ a.downloadBtn {
 .enterProduct span {
     font-size: 1.6vw;
 }
+
 .add-plus-wrap {
     padding-right: 50px;
 }
-.add-plus-box{
+
+.add-plus-box {
     position: absolute;
     right: 0;
     bottom: 17px;
     width: 40px;
     top: 0;
 }
+
 .add-plus-box-btn {
     display: block;
     text-align: center;
@@ -2607,6 +2610,7 @@ a.downloadBtn {
     border-radius: 3px;
     font-size: 14px;
 }
+
 .supplier-input-wrap {
     margin-bottom: 5px;
 }
