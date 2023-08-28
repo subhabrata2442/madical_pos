@@ -1478,3 +1478,152 @@ function barcodeScanner(barcode) {
         }
     });
 }
+
+$(document).on("keyup", "#supplier_name", function() {
+    var supplier_name = $(this).val();
+    if (supplier_name != "") {
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            dataType: "json",
+            data: {
+                supplier_name: supplier_name,
+                action: "get_supplier_by_name",
+                _token: prop.csrf_token,
+            },
+            beforeSend: function() {},
+            success: function(response) {
+                if (response.status == 1) {
+                    var len = response.result.length;
+
+                    $("#supplier_search_result").empty();
+                    for (var i = 0; i < len; i++) {
+                        var id = response.result[i]["id"];
+                        var name =
+                            response.result[i]["company_name"];
+                        $("#supplier_search_result").append(
+                            "<li value='" + id + "'>" + name + "</li>"
+                        );
+                    }
+
+                    // binding click event to li
+                    $("#supplier_search_result li").bind("click", function() {
+                        //$(".loader_section").show();
+                        var supplier_name = $(this).text();
+                        var supplier_id = $(this).val();
+                        //console.log(supplier_id);
+                        //console.log(value);
+                        $('#supplier_name').val(supplier_name);
+                        $('#supplier_id').val(supplier_id);
+                        $("#supplier_search_result").empty();
+                        //setRow(this);
+                    });
+                }
+            },
+        });
+    }
+});
+
+$(document).on('click', '#supplierAddModalBtn', function(e) {
+    $('#supplierAddModal').modal('show');
+});
+$(document).on('click', '.close_modal_btn', function(e) {
+    $('#supplierAddModal').modal('hide');
+});
+$(document).ready(function() {
+    $("#modal_add_supplier_frm").validate({
+
+        rules: {
+            supplier_company_name: "required",
+            /* supplier_email: "required",
+            supplier_first_name: "required",
+            supplier_last_name: "required",
+            supplier_due_days: "required",
+            supplier_due_date: "required",
+            supplier_company_address: "required",
+            supplier_company_area: "required",
+            about: "supplier_company_zipcode", */
+        },
+        messages: {
+            //promo: "Required",
+        },
+        errorElement: "em",
+        errorPlacement: function(error, element) {
+            // Add the `help-block` class to the error element
+            error.addClass("help-block");
+            error.insertAfter(element);
+        },
+        highlight: function(element, errorClass, validClass) {
+            $(element).addClass("has-error").removeClass("has-success");
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).addClass("has-success").removeClass("has-error");
+        },
+        submitHandler: function(form) {
+            var formData = new FormData($(form)[0]);
+            console.log(formData);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                url: $('#modal_add_supplier_frm').attr("action"),
+                dataType: 'json',
+                data: formData,
+                success: function(data) {
+                    console.log(data);
+                    if (data[0].success == 1) {
+                        $('#supplier_name').val(data[0].supplier_name);
+                        $('#supplier_id').val(data[0].supplier_id);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Supplier Created successfully',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        $('#supplierAddModal').modal('hide');
+                        //window.location.replace("{{ route('admin.supplier.list') }}");
+                    } else {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data[0].error_message,
+                            })
+                            //alert(data[0].error_message);
+                    }
+                    //$("html, body").animate({ scrollTop: 0 }, "slow");
+                },
+                beforeSend: function() {
+                    $(".loadingSpan").show();
+                },
+                complete: function() {
+                    $(".loadingSpan").hide();
+                }
+            });
+        }
+    });
+});
+$(document).on('change', '#payment_method', function() {
+    var payment_method = $(this).val();
+    //console.log(payment_method);
+    if (payment_method == 'debt') {
+        $("#payment_debt_day_section").removeClass("hide");
+    } else {
+        $("#payment_debt_day_section").addClass("hide");
+    }
+});
+var timeout = null;
+$(document).on('keyup', '#payment_debt_day', function() {
+    var payment_debt_day = $(this).val();
+    clearTimeout(timeout)
+    timeout = setTimeout(function() {
+        // Do AJAX shit here      
+        if (payment_debt_day != '') {
+            var selecte_date = moment().add(payment_debt_day, 'days').format('YYYY-MM-DD');
+            console.log(selecte_date);
+            $('#payment_date').val(selecte_date);
+        } else {
+            $('#payment_date').val('');
+        }
+    }, 500)
+})

@@ -841,7 +841,7 @@ hr {
 }
 
 .invArea .invAreaVal {
-    flex-grow: 1;
+    flex: 1 0;
 }
 
 .invArea .invAreaInf {
@@ -2586,4 +2586,54 @@ a.downloadBtn {
 
 .enterProduct span {
     font-size: 1.6vw;
+}
+
+.add-plus-wrap {
+    padding-right: 50px;
+}
+
+.add-plus-box {
+    position: absolute;
+    right: 0;
+    bottom: 17px;
+    width: 40px;
+    top: 0;
+}
+
+.add-plus-box-btn {
+    display: block;
+    text-align: center;
+    height: 34px;
+    line-height: 34px;
+    background: #e3e3e3;
+    color: #000 !important;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.supplier-input-wrap {
+    margin-bottom: 5px;
+}
+.custom-list{
+    list-style: none;
+    padding: 0px;
+    width: calc(100% - 50px);
+    position: absolute;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 99999;
+    top: 100%;
+    background: #cfcff0;
+}
+.custom-list ul li {
+    background: lavender;
+    padding: 7px 15px;
+    margin-bottom: 1px;
+    font-size: 13px;
+}
+.custom-list ul li:hover {
+    cursor: pointer;
+    background: cadetblue;
+    color: white;
 }

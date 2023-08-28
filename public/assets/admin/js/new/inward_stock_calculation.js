@@ -2,6 +2,7 @@ function setProfitCalulation() {
     var qty_total = 0;
     var sub_total = 0;
     var gross_total_amount = 0;
+    var total_profit = 0;
 
     $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
@@ -113,7 +114,7 @@ function setProfitCalulation() {
             $("#product_profit_" + product_id).css("color", "black");
         }
         $("#product_profit_" + product_id).html(profitAmount);
-
+        total_profit += Number(profitAmount);
         var profitPercent = 0;
         if (profitAmount > 0 && product_quantity > 0) {
             profitPercent = (
@@ -152,6 +153,9 @@ function setProfitCalulation() {
     $("#input-supplier_gross_amount").val(sub_total.toFixed(decimalpoints));
     $("#input-gross_total_amount").val(
         gross_total_amount.toFixed(decimalpoints)
+    );
+    $("#total_profit").html(
+        "$" + total_profit.toFixed(decimalpoints)
     );
 }
 

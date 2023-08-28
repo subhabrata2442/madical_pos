@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Dosage extends Model
 {
     use HasFactory;
-    //use SoftDeletes;
+    use SoftDeletes;
 	
 	protected $table = 'dosage';
 	protected $guarded	= [];

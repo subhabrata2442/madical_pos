@@ -481,6 +481,10 @@ class AjaxController extends Controller {
 								'offer_price'	=> 0,
 								'product_mrp'	=> $row->product_mrp,
 								't_qty'			=> $row->t_qty,
+								'product_name'	=> $row->product->product_name,
+								'brand_name'	=> $row->product->brand,
+								'product_barcode'	=> $row->product->product_barcode,
+								'selling_by_name'	=> $row->product->selling_by_name,
 								//'c_qty'			=> $row->c_qty,
 							);
 						}
@@ -490,6 +494,7 @@ class AjaxController extends Controller {
 							'branch_stock_product_id'	=> $branch_stock_product_id,
 							'product_barcode'			=> $product_barcode,
 							'brand_name'				=> $product->brand,
+							'product_name'				=> $product->product_name,
 							'item_prices'				=> $item_prices,
 						);
 						$return_data['status']	= 1;
@@ -896,6 +901,7 @@ class AjaxController extends Controller {
 	}
 
 	public function ajaxpost_add_inward_stock($request) {
+		//dd($request->all());
 		$branch_id=Auth::user()->id;
 		
 		$inward_stock	= $request->inward_stock;
@@ -1338,9 +1344,39 @@ class AjaxController extends Controller {
 		$return_data = [];
 		if($branch_stock_product_id !=''){
 			$branchStockProduct = BranchStockProducts::where('id',$branch_stock_product_id)->first();
-			$return_data['stock'] = $branchStockProduct->t_qty;
-			$return_data['status']	= 1;
+			if($branchStockProduct){
+				$return_data['stock'] = $branchStockProduct->t_qty;
+				$product_result=array(
+					'product_id'				=> $branchStockProduct->product_id,
+					'branch_stock_product_id'	=> $branchStockProduct->id,
+					'product_barcode'			=> $branchStockProduct->product->product_barcode,
+					'brand_name'				=> $branchStockProduct->product->brand,
+					'product_name'				=> $branchStockProduct->product->product_name,
+					'selling_by_name'				=> $branchStockProduct->product->selling_by_name,
+					'selling_price'				=> $branchStockProduct->selling_price,
+					'product_mrp'				=> $branchStockProduct->product_mrp,
+					't_qty'						=> $branchStockProduct->t_qty,
+				);
+				$return_data['product_result']	= $product_result;
+				$return_data['status']	= 1;
+			}else{
+				$return_data['status']	= 0;
+			}
+			
 		}
+		echo json_encode($return_data);
+	}
+	public function ajaxpost_store_customer_details($request){
+		dd($request->all());
+	}
+	public function ajaxpost_get_supplier_by_name($request){
+		//dd($request->all());
+		$supplier_name = $request->supplier_name;
+        $result = Supplier::where('company_name', 'LIKE', "%{$supplier_name}%")
+                            //->orWhere('owner_name', 'LIKE', "%{$supplier_name}%")
+                            ->take(20)->get();
+        $return_data['result']	= $result;
+		$return_data['status']	= 1;
 		echo json_encode($return_data);
 	}
 

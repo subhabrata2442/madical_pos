@@ -7,7 +7,7 @@
 .error {
     color: #b30c0c;
 }
- 
+
 </style>
 <div class="row">
   <div class="col-lg-8 col-md-8">
@@ -34,8 +34,8 @@
         <label class="switch">
           <input type="checkbox" id="sell_type">
           <span class="slider round"></span> <span class="absolute-no">Return</span> </label>
-      </div>--> 
-      <!--<input type="button" id="fullscreen_btn" value="Fullscreen" onclick="requestFullScreen(document.body)">--> 
+      </div>-->
+      <!--<input type="button" id="fullscreen_btn" value="Fullscreen" onclick="requestFullScreen(document.body)">-->
     </div>
     <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
       @csrf
@@ -47,11 +47,13 @@
             <thead>
               <tr>
                 <th width="6%">Barcode</th>
-                <th width="29%">Product</th>
-                <th width="7%">Stock</th>
+                <th width="10%">Brand</th>
+                <th width="19%">Product</th>
+                <th width="4%">Selling by</th>
+                <th width="6%">Stock</th>
                 <th width="11%">MRP</th>
                 <th width="9%">Qty.</th>
-                <th width="11%">Disc%</th>
+                <th width="8%">Disc%</th>
                 <th width="11%">Disc Amt.</th>
                 <th width="8%">Unit Price</th>
                 <th width="7%">Total</th>
@@ -133,8 +135,8 @@
         <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
         <li class="d-flex align-items-center">
           <p>Date:</p>
-          <?php echo date('d-m-Y');?> 
-          <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">--> 
+          <?php echo date('d-m-Y');?>
+          <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
         </li>
       </ul>
     </div>
@@ -176,14 +178,14 @@
       </ul>
     </div>
   </div>
-  <div class="col-12">
+  {{-- <div class="col-12">
     <div class="topsellingProduct">
       <h4>Top Selling Products</h4>
       <ul class="row">
         @foreach($data['top_selling_product_result'] as $row)
         <li><a href="javascript:;" data-id="{{$row['product_id']}}" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>{{$row['product_name']}} {{$row['product_size']}}</span></a></li>
-        @endforeach 
-        
+        @endforeach
+
         <!-- <li><a href="javascript:;" data-id="742" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>SEAGRAMS IMPERIAL BLUE CLASSIC GRAIN WHISKY (750  ml)</span></a></li>
         <li><a href="javascript:;" data-id="663" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>OFFICER'S CHOICE DELUXE WHISKY (750  ml)</span></a></li>
         <li><a href="javascript:;" data-id="632" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>Mc Dowells No.1 Luxury Premium Whisky (750  ml)</span></a></li>
@@ -193,7 +195,7 @@
         <li><a href="javascript:;" data-id="40" class="addTopSellingProduct"><img src="{{ url('assets/admin/images/1.png') }}" alt=""><span>Kingfisher Strong Premium Beer (650  ml)</span></a></li>-->
       </ul>
     </div>
-  </div>
+  </div> --}}
 </div>
 <div class="modal fade modalMdHeader" id="modal-applyDiscount" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -260,7 +262,7 @@
           <form action="" method="get" id="create_customer_form">
             <div class="mb-3">
               <label for="" class="form-label">Customer Name</label>
-              <input type="text" class="form-control number" name="customer_name" id="customer_name" autocomplete="off">
+              <input type="text" class="form-control" name="customer_name" id="customer_name" autocomplete="off">
             </div>
             <div class="mb-3">
               <label for="" class="form-label">Contact Number</label>
@@ -275,15 +277,52 @@
 </div>
 {{-- End create customer modal --}}
 {{-- Multiple price Modal --}}
-<div class="modal fade modalMdHeader" id="modal_multiple_price_list" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modalMdHeader" data-bs-backdrop="static" data-bs-keyboard="false" id="modal_multiple_price_list" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-1Label">Select Price Item</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
+        <div class="table-responsive">
+            <table class="table" id="price_item_table">
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Product</th>
+                        <th>Barcode</th>
+                        <th>Selling by</th>
+                        <th>Stock</th>
+                        <th>MRP</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>230KIN</td>
+                        <td>Elviton tab</td>
+                        <td>Elviton tab</td>
+                        <td>Selling by</td>
+                        <td>35</td>
+                        <td>50</td>
+                        <td><button type="button" class="product-select">select</button></td>
+                    </tr>
+                    <tr>
+                        <td>230KIN</td>
+                        <td>Elviton tab</td>
+                        <td>Elviton tab</td>
+                        <td>Selling by</td>
+                        <td>35</td>
+                        <td>50</td>
+                        <td><button type="button" class="product-select">select</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer invoiceBalance">
+        <button type="button" class="close-btn" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -339,7 +378,7 @@
       </div>
     </div>
   </div>
-</div>--> 
+</div>-->
 <!--<div class="modal fade modalMdHeader" id="modal-3" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -686,7 +725,7 @@
                 <input type="text" class="form-control input-2" name="card_invoice_number" id="card_invoice_number" placeholder="Last 4 digits only">
               </div>
               <div class="mb-3">
-                
+
                 <button type="button" class="saveBtn-2" id="calculate_card_payment_btn">Submit</button>
               </div>
             </div>
@@ -701,7 +740,7 @@
               </ul>
             </div>
             <div class="paymentOptionInputBox">
-              
+
               <div class="mb-3">
                 <input type="text" class="paymentOptionInput input-2" id="upi_payble_amount" placeholder="0.00">
               </div>
@@ -724,19 +763,19 @@
 <iframe src="{{$data['invoice_url']}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script>
   var stock_type	= "s";
   </script>
 
-<script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script> 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
-<script src="{{ url('assets/admin/js/pos.js') }}"></script> 
-<script type="text/javascript" src="{{ url('assets/admin/js/fullscreen/jquery.fullscreen.min.js') }}"></script> 
+<script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="{{ url('assets/admin/js/pos.js') }}"></script>
+<script type="text/javascript" src="{{ url('assets/admin/js/fullscreen/jquery.fullscreen.min.js') }}"></script>
 <script>
 
 $(function () {
 	  $('[data-toggle="tooltip"]').tooltip();
   });
-</script> 
-@endsection 
+</script>
+@endsection

@@ -11,12 +11,13 @@ use App\Http\Controllers\EmbloyeesController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\WaiterController;
 use App\Http\Controllers\ManageTableController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\CronController;
-
-
+use App\Http\Controllers\DosageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -234,6 +235,27 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/edit/{id}', [StoreController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [StoreController::class, 'delete'])->name('delete');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [StoreController::class, 'change_status'])->name('changeStatus');
+	});
+	Route::prefix('brand')->name('brand.')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [BrandController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/list', [BrandController::class, 'list'])->name('list');
+        Route::match(['GET', 'POST'], '/edit/{id}', [BrandController::class, 'edit'])->name('edit');
+        Route::match(['GET', 'POST'], '/delete/{id}', [BrandController::class, 'delete'])->name('delete');
+		Route::match(['GET'], '/users/change-status/{id}/{status}', [BrandController::class, 'change_status'])->name('changeStatus');
+	});
+	Route::prefix('dosage')->name('dosage.')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [DosageController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/list', [DosageController::class, 'list'])->name('list');
+        Route::match(['GET', 'POST'], '/edit/{id}', [DosageController::class, 'edit'])->name('edit');
+        Route::match(['GET', 'POST'], '/delete/{id}', [DosageController::class, 'delete'])->name('delete');
+		Route::match(['GET'], '/users/change-status/{id}/{status}', [DosageController::class, 'change_status'])->name('changeStatus');
+	});
+	Route::prefix('company')->name('company.')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [CompanyController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/list', [CompanyController::class, 'list'])->name('list');
+        Route::match(['GET', 'POST'], '/edit/{id}', [CompanyController::class, 'edit'])->name('edit');
+        Route::match(['GET', 'POST'], '/delete/{id}', [CompanyController::class, 'delete'])->name('delete');
+		Route::match(['GET'], '/users/change-status/{id}/{status}', [CompanyController::class, 'change_status'])->name('changeStatus');
 	});
 
 	Route::prefix('embloyees')->name('embloyees.')->middleware('checkPermission:6')->group(function () {
