@@ -967,6 +967,11 @@ function setRow(element) {
                         '">' +
                         chronic_amount +
                         "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number chronic_amount_percentage"  id="chronic_amount_percentage_' +
+                        product_id +
+                        '">' +
+                        0 +
+                        "</td>" +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
                         '">' +
@@ -1352,6 +1357,11 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
     inward_stock_info["payment_ref_no"] = $("#payment_ref_no").val();
 
     inward_stock_info["total_amount"] = $("#input-gross_total_amount").val();
+
+    inward_stock_info["supplier_name"] = $("#supplier_name").val();
+    inward_stock_info["supplier_id"] = $("#supplier_id").val();
+    inward_stock_info["payment_debt_day"] = $("#payment_debt_day").val();
+    inward_stock_info["payment_discount"] = $("#payment_discount").val();
 
     inward_stock_info["store_id"] = $("#store_id").val();
     inward_stock_info["payment_currency_type"] = $(

@@ -3,6 +3,8 @@ function setProfitCalulation() {
     var sub_total = 0;
     var gross_total_amount = 0;
     var total_profit = 0;
+    var payment_discount = $('#payment_discount').val();
+    //console.log($('#payment_discount').val());
 
     $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
@@ -17,7 +19,7 @@ function setProfitCalulation() {
             $(this)
             .find("#is_chronic_" + product_id)
             .val();
-        console.log(product_isChronic);
+        //console.log(product_isChronic);
 
         var product_price = Number(
             $(this)
@@ -79,16 +81,32 @@ function setProfitCalulation() {
         );
 
         var net_price = 0;
+        var chronic_amount_percentage = 0;
         if (
             product_mrp > 0 &&
             cost_rate > 0 &&
             product_quantity > 0 &&
             noper_package > 0
         ) {
+            /* var net_price =
+                (Number(product_mrp) * Number(cost_rate) * product_quantity) /
+                (Number(product_quantity) + Number(bonous));
+            net_price = (Number(net_price) / Number(noper_package)).toFixed(2); */
             var net_price =
                 (Number(product_mrp) * Number(cost_rate) * product_quantity) /
                 (Number(product_quantity) + Number(bonous));
-            net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
+            var final_net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
+            var discountAmount = (final_net_price * payment_discount) / 100;
+
+            net_price = (final_net_price - discountAmount).toFixed(2);
+
+            if (product_isChronic == 'Yes') {
+                chronic_amount_percentage = (
+                    (Number(net_price) - (Number(chronic_amount)) / net_price) *
+                    Number(100)).toFixed(2);
+                // console.log(net_price);
+                // console.log("chronic_amount", chronic_amount);
+            }
         }
         $("#product_totalNetPrice_" + product_id).val(net_price);
         if (product_discount > 0 && net_price > 0) {
@@ -99,7 +117,7 @@ function setProfitCalulation() {
             );
         }
 
-        $("#product_netPrice_" + product_id).html(net_price);
+        $("#product_netPrice_" + product_id).html(Number(net_price).toFixed(2));
         sub_total += Number(net_price);
 
         var profitAmount = 0;
@@ -130,7 +148,10 @@ function setProfitCalulation() {
         $("#product_profitPercent_" + product_id).html(profitPercent);
         $("#product_totalQuantity_" + product_id).html(total_quantity);
 
-        console.log("net_price", net_price);
+
+        $("#chronic_amount_percentage_" + product_id).html(chronic_amount_percentage);
+
+        // console.log("net_price", net_price);
 
         // console.log("product_id", product_id);
         // console.log("product_mrp", product_mrp);
@@ -141,7 +162,7 @@ function setProfitCalulation() {
         // console.log("bonous", bonous);
     });
 
-    console.log("qty_total", qty_total);
+    //console.log("qty_total", qty_total);
     $("#qty_total").html(qty_total);
     $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
     $("#gross_total_amount").html(

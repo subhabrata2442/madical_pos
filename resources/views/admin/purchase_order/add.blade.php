@@ -281,7 +281,8 @@ $adminRoll = Session::get('admin_type');
                     <th>No per package</th>
                     <th>Net Price</th>
                     <th>Price</th>
-                    <th>Chronic Amount</th>
+                    <th>Chronic Price</th>
+                    <th>Chronic Price %</th>
                     <th>Discount %</th>
                     <th>Bonous</th>
                     <th id="th_rate_title">US/IQ rate</th>
