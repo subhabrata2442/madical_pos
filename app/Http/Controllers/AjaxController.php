@@ -957,12 +957,16 @@ class AjaxController extends Controller {
 				
 				$branch_id=$inward_stock['store_id'];
 				$purchaseStockData=array(
-					'supplier_id'  		=> $inward_stock['store_id'],
+					'branch_id'  		=> $inward_stock['store_id'],
+					'supplier_id'  		=> $inward_stock['supplier_id'],
+					'supplier_name'  	=> $inward_stock['supplier_name'],
 					'invoice_no'  		=> $inward_stock['invoice_no'],
 					'purchase_date'  	=> $inward_stock['invoice_purchase_date'],
 					'inward_date'  		=> $inward_stock['invoice_inward_date'],
 					'payment_method'  	=> $inward_stock['payment_method'],
+					'payment_debt_day'  => $inward_stock['payment_debt_day'],
 					'payment_date'  	=> $inward_stock['payment_date'],
+					'payment_discount'  => $inward_stock['payment_discount'],
 					'payment_ref_no'  	=> $inward_stock['payment_ref_no'],
 					'total_qty'  		=> $inward_stock['total_qty'],
 					'gross_amount'  	=> $inward_stock['gross_amount'],
