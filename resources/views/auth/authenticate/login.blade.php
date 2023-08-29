@@ -1,15 +1,16 @@
 @extends('layouts.front')
 @section('front-content')
 <section class="loginWrap d-flex flex-wrap justify-content-center" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;">
-  
- 
+
+
   <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center">
-   <x-alert />
+
     <div class="loginFormFild">
       <form class="" method="post" action="{{ route('auth.login') }}" autocomplete="off">
       @csrf
       <div class="posLogo">
-        <span><img src="{{ asset('assets/img/pos-logo.png') }}" alt=""></span>
+        <span class="mb-4"><img src="{{ asset('assets/img/pos-logo.png') }}" alt=""></span>
+        <x-alert />
       </div>
         <!-- <h3>Pos System</h3> -->
         <div class="logtextBox">
@@ -69,4 +70,4 @@
   </div>
 </div>
 
-@endsection 
+@endsection

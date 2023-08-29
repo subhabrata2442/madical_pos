@@ -46,7 +46,7 @@ if($adminId!=1){
 
 
           @if ($adminRoll == '1')
-            <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.store') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.store') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
+            <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.store') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.store') !== false) parent-active @endif"><i class="nav-icon fas fa-store"></i>
               <p>Manage stores <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
@@ -61,9 +61,9 @@ if($adminId!=1){
                   </a> </li>   --}}
               </ul>
             </li>
-            
+
           @endif
-          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
+          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="nav-icon fas fa-handshake"></i>
             <p>Manage suppliers <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
@@ -75,7 +75,7 @@ if($adminId!=1){
                 </a> </li>
             </ul>
           </li>
-          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
+          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) parent-active @endif"> <i class="nav-icon fas fa-tag"></i>
             <p>Manage brands <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
@@ -87,7 +87,7 @@ if($adminId!=1){
                 </a> </li>
             </ul>
           </li>
-          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
+          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) parent-active @endif"> <i class="nav-icon fas fa-syringe"></i>
             <p>Manage dosages <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
@@ -99,7 +99,7 @@ if($adminId!=1){
                 </a> </li>
             </ul>
           </li>
-          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.company') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.company') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
+          <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.company') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.company') !== false) parent-active @endif"> <i class="nav-icon fas fa-building"></i>
             <p>Manage companies <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
