@@ -156,7 +156,7 @@ class SupplierController extends Controller
 				$return_data['supplier_id'] = $supplier_id;
 				$return_data['supplier_name'] = $request->supplier_company_name;
 				$return_data['success'] = 1;
-				return response()->json([$return_data]);;
+				return response()->json([$return_data]);
             }
             $data = [];
             $data['heading'] = 'Supplier Add';

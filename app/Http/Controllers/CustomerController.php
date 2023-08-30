@@ -20,39 +20,63 @@ class CustomerController extends Controller
         try {
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
-                    'customer_fname' 		=> 'required',
-                    'customer_last_name' 	=> 'required',
+                    'customer_name' 		=> 'required',
+                    'customer_mobile' 	=> 'required',
                     //'sku_code' 		=> 'required',
                 ]);
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
 				
-				$delivery_address=$request->delivery_address;
+				//$delivery_address=$request->delivery_address;
 				
-				//echo '<pre>';print_r($_POST);exit;
 				
-				$is_same_delivery_address='N';
+				/* $is_same_delivery_address='N';
 				if(isset($delivery_address)){
 					if($delivery_address=='yes'){
 						$is_same_delivery_address='Y';
 					}
-				}
+				} */
 				
 				$customer_data=array(
-					'customer_fname'  		=> $request->customer_fname,
-					'customer_last_name'  	=> $request->customer_last_name,
-					'customer_email'		=> $request->customer_email,
-					'customer_mobile'		=> $request->customer_mobile,
-					'gender'				=> $request->gender,
-					'customer_gstin'		=> $request->customer_gstin,
-					'date_of_birth'			=> $request->customer_date_of_birth,
-					'outstanding_duedays'   => $request->outstanding_duedays,
-					'source'   				=> $request->source,
-					'is_same_delivery_address' => $is_same_delivery_address,
+					'customer_name'  		=> $request->customer_name,
+					'customer_mobile'  	=> $request->customer_mobile,
 					'created_at'			=> date('Y-m-d')
 				);
 				$customer=Customer::create($customer_data);
+				$customer_id=$customer->id;
+				
+				/* $customer_address_data=array(
+					'customer_id'  	=> $customer_id,
+					'address'  		=> $request->customer_address,
+					'area'			=> $request->customer_area,
+					'city'			=> $request->customer_city,
+					'pincode'		=> $request->customer_pincode,
+					'state'			=> $request->customer_state_id,
+					'country'		=> $request->customer_country_id,
+					'created_at'	=> date('Y-m-d')
+				);
+				
+				CustomerAddress::create($customer_address_data);
+				
+				
+				
+				$customer_delivery_address_data=array(
+					'customer_id'  	=> $customer_id,
+					'address'  		=> $request->customer_delivery_address,
+					'area'			=> $request->customer_delivery_area,
+					'city'			=> $request->customer_delivery_city,
+					'pincode'		=> $request->customer_delivery_pincode,
+					'state'			=> $request->customer_delivery_state_id,
+					'country'		=> $request->customer_delivery_country_id,
+					'created_at'	=> date('Y-m-d')
+				);
+				
+				if($is_same_delivery_address=='Y'){
+					CustomerDeliveryAddress::create($customer_address_data);
+				}else{
+					CustomerDeliveryAddress::create($customer_delivery_address_data);
+				}
 				$customer_id=$customer->id;
 				
 				$customer_address_data=array(
@@ -85,9 +109,9 @@ class CustomerController extends Controller
 					CustomerDeliveryAddress::create($customer_address_data);
 				}else{
 					CustomerDeliveryAddress::create($customer_delivery_address_data);
-				}
+				} */
 				
-				if(isset($request->child_name)){
+				/* if(isset($request->child_name)){
 					if(count($request->child_name)>0){
 						for($i=0;count($request->child_name)>$i;$i++){
 							$customer_child=array(
@@ -100,8 +124,13 @@ class CustomerController extends Controller
 						}
 					}
 
-				}
-                return redirect()->back()->with('success', 'Customer created successfully');
+				} */
+				$return_data['customer_id'] = $customer_id;
+				$return_data['customer_name'] = $request->customer_name;
+				$return_data['customer_mobile'] = $request->customer_mobile;
+				$return_data['success'] = 1;
+				return response()->json([$return_data]);
+                //return redirect()->back()->with('success', 'Customer created successfully');
             }
             $data = [];
             $data['heading'] 		= 'Add New Customer';

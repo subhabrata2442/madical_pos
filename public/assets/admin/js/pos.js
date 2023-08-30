@@ -187,6 +187,12 @@ function print() {
 
 $(document).ready(function() {
     $(".payBtn").on('click', function(e) {
+        var customer_id = $('#selected_customer_id').val();
+        //console.log(customer_id);
+        if (customer_id == '') {
+            toastr.error("Select/Add Customer Details!");
+            return false;
+        }
         $('.payWrapLeft').show();
         $('.payWrapRight').removeClass('tabMenuHideWrapRight');
 
@@ -362,8 +368,8 @@ $(document).ready(function() {
                     }).then((result) => {
 
                         if (result.isConfirmed) {
-                            var redirect_url = prop.url + '/admin/pos/today-sales-product/download';
-                            window.open(redirect_url, "_blank");
+                            /* var redirect_url = prop.url + '/admin/pos/today-sales-product/download';
+                            window.open(redirect_url, "_blank"); */
                             location.reload();
 
                         } else if (result.isDenied) {}
@@ -760,7 +766,7 @@ $(document).on('click', '.addTopSellingProduct', function() {
 
 $(document).on('click', '#applyChargeBtn', function() {
     var total_payble_amount = $('#total_payble_amount-input').val();
-    $("#charge_total_payable").html('₹' + Number(total_payble_amount).toFixed(2));
+    $("#charge_total_payable").html(Number(total_payble_amount).toFixed(2) + 'ع.د');
 
     var charge_amt = $('#charge_amt-input').val();
     $('#charge_amt').val(charge_amt);
@@ -796,7 +802,7 @@ $(document).ready(function() {
             var total_amount = Number(charge_amount);
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html('₹' + Number(total_amount).toFixed(2));
+            $("#total_payble_amount").html(Number(total_amount).toFixed(2) + ' ع.د');
             $('#charge_amt-input').val(charge_amt);
 
             $('#modal-applyCharges').modal('hide');
@@ -811,7 +817,7 @@ $(document).on('keyup', '#charge_amt', function() {
 
     if (Number(gross_total_amount) > 0) {
         var charge_amount = Number(gross_total_amount) + Number(charge_amt);
-        $("#charge_total_payable").html('₹' + Number(charge_amount).toFixed(2));
+        $("#charge_total_payable").html(Number(charge_amount).toFixed(2) + 'ع.د');
     } else {
         toastr.error("Something Error Occurs!");
         return false;
@@ -823,7 +829,7 @@ $(document).on('keyup', '#charge_amt', function() {
 $(document).on('click', '#applyDiscountBtn', function() {
 
     var total_payble_amount = $('#total_payble_amount-input').val();
-    $("#discount_total_payable").html('₹' + Number(total_payble_amount).toFixed(2));
+    $("#discount_total_payable").html(Number(total_payble_amount).toFixed(2) + 'ع.د');
 
     var discount_percent = $('#selling_special_discount_percent-input').val();
     var total_discount = $('#selling_special_discount_amt-input').val();
@@ -867,7 +873,7 @@ $(document).ready(function() {
             var total_amount = Number(discount_amount);
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html('₹' + Number(total_amount).toFixed(2));
+            $("#total_payble_amount").html(Number(total_amount).toFixed(2) + 'ع.د');
 
             $('#selling_special_discount_percent-input').val(discount_percent);
             $('#selling_special_discount_amt-input').val(total_discount);
@@ -894,7 +900,7 @@ $(document).on('keyup', '#special_discount_percent', function() {
             var total_amount = Number(discount_amount);
 
             $("#special_discount_amt").val(total_discount);
-            $("#discount_total_payable").html('₹' + Number(total_amount).toFixed(2));
+            $("#discount_total_payable").html(Number(total_amount).toFixed(2) + 'ع.د');
         }
 
     } else {
@@ -915,7 +921,7 @@ $(document).on('keyup', '#special_discount_amt', function() {
             var discount_amount = Number(gross_total_amount) - Number(total_discount);
             var total_amount = Number(discount_amount);
 
-            $("#discount_total_payable").html('₹' + Number(total_amount).toFixed(2));
+            $("#discount_total_payable").html(Number(total_amount).toFixed(2) + 'ع.د');
         } else {
             $("#special_discount_percent").val(0);
             toastr.error("Something Error Occurs!");
@@ -953,24 +959,46 @@ $(document).ready(function() {
             $(element).addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            var formData = $(form).serialize();
+            var formData = new FormData($(form)[0]);
             console.log(formData);
             $.ajax({
-                url: prop.ajaxurl,
-                type: 'post',
-                data: {
-                    formData: formData,
-                    action: 'store_customer_details',
-                    _token: prop.csrf_token
-                },
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                url: $('#create_customer_form').attr("action"),
                 dataType: 'json',
-                success: function(response) {
-
+                data: formData,
+                success: function(data) {
+                    console.log(data);
+                    if (data[0].success == 1) {
+                        $('#cd_customer_name span').html(data[0].customer_name);
+                        $('#cd_customer_number span').html(data[0].customer_mobile);
+                        $('#selected_customer_id').val(data[0].customer_id);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Customer Created successfully',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        $('#modal_createCustomer').modal('hide');
+                        //window.location.replace("{{ route('admin.supplier.list') }}");
+                    } else {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data[0].error_message,
+                            })
+                            //alert(data[0].error_message);
                     }
-                    /* ,
-                                    error: function(xhr, status, error) {
-                                        alert("An error occurred while submitting the form.");
-                                    } */
+                    //$("html, body").animate({ scrollTop: 0 }, "slow");
+                },
+                beforeSend: function() {
+                    $(".loadingSpan").show();
+                },
+                complete: function() {
+                    $(".loadingSpan").hide();
+                }
             });
         }
     });
@@ -1355,7 +1383,7 @@ function setProductRow(element) {
                                         <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                         <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                         <td id="product_mrp_${product_id}">${product_mrp}</td>
-                                        <input type="hidden" class="product_unit_price_amount input-3" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
+                                        <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                         <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                         <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
                                     </tr>`;
@@ -1487,7 +1515,7 @@ $(document).on('click', '.select_product_item', function() {
                                     <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                     <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                     <td id="product_mrp_${product_id}">${product_mrp}</td>
-                                    <input type="hidden" class="product_unit_price_amount input-3" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
+                                    <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                     <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                     <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
                                 </tr>`;
@@ -1768,12 +1796,12 @@ function discount_cal(product_id) {
 
 function total_cal() {
     $("#total_quantity").html('0');
-    $("#total_mrp").html('₹0');
-    $("#total_discount_amount").html('₹0');
-    $("#tax_amount").html('₹0');
+    $("#total_mrp").html('0 ع.د');
+    $("#total_discount_amount").html('0 ع.د');
+    $("#tax_amount").html('0 ع.د');
     $('#round_off').val(0);
-    $("#sub_total_mrp").html('₹0');
-    $("#total_payble_amount").html('₹0');
+    $("#sub_total_mrp").html('0 ع.د');
+    $("#total_payble_amount").html('0 ع.د');
 
 
     $('#sub_total_mrp-input').val(0);
@@ -1785,7 +1813,7 @@ function total_cal() {
 
     $('#charge_amt-input').val(0);
     $('#charge_amt').val(0);
-    $("#charge_total_payable").html('₹0');
+    $("#charge_total_payable").html('0 ع.د');
 
     var total_quantity = 0;
     var total_mrp = 0;
@@ -1820,10 +1848,10 @@ function total_cal() {
         });
 
         $("#total_quantity").html(total_quantity);
-        $("#total_mrp").html('₹' + total_mrp);
-        $("#total_discount_amount").html('₹' + total_discount_amount);
-        $("#sub_total_mrp").html('₹' + sub_total_mrp);
-        $("#total_payble_amount").html('₹' + sub_total_mrp);
+        $("#total_mrp").html(total_mrp + 'ع.د');
+        $("#total_discount_amount").html(total_discount_amount + 'ع.د');
+        $("#sub_total_mrp").html(sub_total_mrp + 'ع.د');
+        $("#total_payble_amount").html(sub_total_mrp + 'ع.د');
 
 
         $('#sub_total_mrp-input').val(sub_total_mrp);
@@ -1841,13 +1869,13 @@ function total_cal() {
             var total_discount = Number(gross_total_amount) * Number(special_discount_percent) / 100;
             var discount_amount = Number(gross_total_amount) - Number(total_discount);
 
-            $("#total_payble_amount").html('₹' + discount_amount);
+            $("#total_payble_amount").html(discount_amount + 'ع.د');
             $('#total_payble_amount-input').val(discount_amount);
 
             $("#special_discount_amt").val(total_discount);
             $("#selling_special_discount_amt-input").val(total_discount);
 
-            $("#discount_total_payable").html('₹' + Number(discount_amount).toFixed(2));
+            $("#discount_total_payable").html(Number(discount_amount).toFixed(2) + 'ع.د');
         }
 
     }, 200);
@@ -1886,13 +1914,13 @@ $(document).on('keyup', '#round_off', function() {
 
             var total_payble_amount = (parseFloat(discount_amount) + parseFloat(roundoff)).toFixed(2);
 
-            $("#total_payble_amount").html('₹' + total_payble_amount);
+            $("#total_payble_amount").html(total_payble_amount + 'ع.د');
             $('#total_payble_amount-input').val(total_payble_amount);
 
             $("#special_discount_amt").val(total_discount);
             $("#selling_special_discount_amt-input").val(total_discount);
 
-            $("#discount_total_payable").html('₹' + Number(discount_amount).toFixed(2));
+            $("#discount_total_payable").html(Number(discount_amount).toFixed(2) + 'ع.د');
         } else {
             var total_payble_amount = (parseFloat($("#sub_total_mrp-input").val()) + parseFloat(roundoff)).toFixed(2);
             $("#total_payble_amount").text(total_payble_amount);
@@ -1929,3 +1957,49 @@ function getStockBybranchStockProductId(branchStockProductId, callback) {
         //return stock;
     }
 }
+
+$(document).on("keyup", "#search_customer", function() {
+    var customer_search_val = $(this).val();
+    if (customer_search_val != "") {
+        $.ajax({
+            url: prop.ajaxurl,
+            type: "post",
+            dataType: "json",
+            data: {
+                customer_search_val: customer_search_val,
+                action: "get_customer_by_search",
+                _token: prop.csrf_token,
+            },
+            beforeSend: function() {},
+            success: function(response) {
+                if (response.status == 1) {
+                    var len = response.result.length;
+
+                    $("#customer_search_result").empty();
+                    for (var i = 0; i < len; i++) {
+                        var id = response.result[i]["id"];
+                        var name =
+                            response.result[i]["customer_name"] + '/' + response.result[i]["customer_mobile"];
+                        $("#customer_search_result").append(
+                            "<li value='" + id + "' data-name='" + response.result[i]["customer_name"] + "' data-mobile='" + response.result[i]["customer_mobile"] + "'>" + name + "</li>"
+                        );
+                    }
+
+                    // binding click event to li
+                    $("#customer_search_result li").bind("click", function() {
+                        //$(".loader_section").show();
+                        var fulltext = $(this).text();
+                        var customer_name = $(this).data("name");
+                        var customer_mobile = $(this).data("mobile");
+                        var customer_id = $(this).val();
+                        $('#cd_customer_name span').html(customer_name);
+                        $('#cd_customer_number span').html(customer_mobile);
+                        $('#selected_customer_id').val(customer_id);
+                        $("#customer_search_result").empty();
+                        $("#search_customer").val(fulltext);
+                    });
+                }
+            },
+        });
+    }
+});

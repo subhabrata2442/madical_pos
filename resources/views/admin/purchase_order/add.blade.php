@@ -144,14 +144,14 @@ $adminRoll = Session::get('admin_type');
                 <ul class="d-flex flex-wrap align-items-center" id="payment_currency_usd_rate_section">
                   <li class="invAreaInf">US/IQ rate</li>
                   <li class="invAreaVal">
-                    <input type="text" id="payment_currency_usd_rate" class="form-control input-1"
+                    <input type="number" id="payment_currency_usd_rate" class="form-control input-1"
                       required="required" value="">
                   </li>
                 </ul>
                 <ul class="d-flex flex-wrap align-items-center" id="payment_discount_section">
                   <li class="invAreaInf">Discount (%)</li>
                   <li class="invAreaVal">
-                    <input type="text" id="payment_discount" class="form-control input-1" value="" name="payment_discount">
+                    <input type="number" id="payment_discount" class="form-control input-1" value="" name="payment_discount">
                   </li>
                 </ul>
 

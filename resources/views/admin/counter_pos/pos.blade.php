@@ -75,22 +75,22 @@
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Total -</li>
-              <li class="atpinfo"><span id="total_mrp">₹0.00</span> <small>(inclusive all taxes)</small></li>
+              <li class="atpinfo"><span id="total_mrp">0.00 ع.د</span> <small>(inclusive all taxes)</small></li>
               <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Discount -</li>
-              <li class="atpinfo" id="total_discount_amount">₹0.00</li>
+              <li class="atpinfo" id="total_discount_amount">0.00 ع.د</li>
               <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Tax -</li>
-              <li class="atpinfo" id="tax_amount">₹0.00</li>
+              <li class="atpinfo" id="tax_amount">0.00 ع.د</li>
               <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100 subTotal">
               <li class="atpVall">Sub Total-</li>
-              <li class="atpinfo" id="sub_total_mrp">₹0.00</li>
+              <li class="atpinfo" id="sub_total_mrp">0.00 ع.د</li>
               <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
             </ul>
             <ul class="d-flex w-100">
@@ -110,7 +110,7 @@
         <div class="atpRight d-flex justify-content-center align-items-center">
           <div class="text-center">
             <h6>Amount to pay</h6>
-            <h3 id="total_payble_amount">₹0.00</h3>
+            <h3 id="total_payble_amount">0.00 ع.د</h3>
             <input type="hidden" name="gross_total_amount" id="gross_total_amount-input" value="0">
             <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
             <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
@@ -124,11 +124,16 @@
       <div class="note_coin_count_sec" style="display:none"> </div>
       <div class="upi_payment_sec" style="display:none"> </div>
       <div class="card_details_payment_sec" style="display:none"> </div>
+      <input type="hidden" name="customer_id" id="selected_customer_id" value="">
     </form>
   </div>
   <div class="col-lg-4 col-md-4">
     <div class="srcArea relative">
-      <input type="text" placeholder="Search by name/contact number" class="input-2">
+      <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
+      <div class="custom-list">
+        <ul id="customer_search_result">
+        </ul>
+    </div>
       <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span> </div>
     <div class="dateSales">
       <ul class="d-flex justify-content-between align-items-center">
@@ -144,8 +149,8 @@
       <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
       <div class="customerDetailsMid">
         <ul>
-          <li>Customer Name : <span></span></li>
-          <li>Contact Number : <span></span></li>
+          <li id="cd_customer_name">Customer Name : <span></span></li>
+          <li id="cd_customer_number">Contact Number : <span></span></li>
           <!-- <li>Total Purchase : <span>0</span></li>
           <li>Loyalty Points : <span>0</span></li>
           <li>Member Ship : <span>Gold</span></li>
@@ -156,7 +161,7 @@
       <div class="customerDetailsBtm">
         <ul class="d-flex">
           <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-          <li>Bill Amount - <span>₹{{$data['last_bill_amount']}}</span></li>
+          <li>Bill Amount - <span>{{$data['last_bill_amount']}} ع.د</span></li>
           <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
         </ul>
       </div>
@@ -259,7 +264,8 @@
       </div>
       <div class="modal-body">
         <div class="applyCouponBox">
-          <form action="" method="get" id="create_customer_form">
+          <form action="{{route('admin.customer.add')}}" method="post" id="create_customer_form" class="needs-validation" novalidate="novalidate" enctype="multipart/form-data">
+            @csrf
             <div class="mb-3">
               <label for="" class="form-label">Customer Name</label>
               <input type="text" class="form-control" name="customer_name" id="customer_name" autocomplete="off">
@@ -443,10 +449,10 @@
           <ul>
             <li><a href="javascript:;" class="active p-method-tab" data-type="cash"><span><img src="{{ url('assets/admin/images/cash.png') }}" alt=""></span> Cash</a></li>
             <li><a href="javascript:;" class="p-method-tab" data-type="card"><span><img src="{{ url('assets/admin/images/card-1.png') }}" alt=""></span> Card</a></li>
-            <li><a href="javascript:;" class="p-method-tab" data-type="gPay"><span><img src="{{ url('assets/admin/images/google-pay.png') }}" alt=""></span> Phonepe / Gpay</a></li>
+            {{-- <li><a href="javascript:;" class="p-method-tab" data-type="gPay"><span><img src="{{ url('assets/admin/images/google-pay.png') }}" alt=""></span> Phonepe / Gpay</a></li>
             <li><a href="javascript:;" class="p-method-tab" data-type="coupon"><span><img src="{{ url('assets/admin/images/coupon.png') }}" alt=""></span> Coupon</a></li>
             <li><a href="javascript:;" class="p-method-tab" data-type="credit_card"><span><img src="{{ url('assets/admin/images/credit-card.png') }}" alt=""></span> Credit</a></li>
-            <li><a href="javascript:;" class="p-method-tab" data-type="multiple_pay"><span><img src="{{ url('assets/admin/images/pay-per-click.png') }}" alt=""></span> Multiple Pay</a></li>
+            <li><a href="javascript:;" class="p-method-tab" data-type="multiple_pay"><span><img src="{{ url('assets/admin/images/pay-per-click.png') }}" alt=""></span> Multiple Pay</a></li> --}}
           </ul>
         </div>
       </div>

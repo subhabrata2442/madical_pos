@@ -1109,11 +1109,12 @@ span .loader {
     position: absolute;
     top: 50%;
     right: 5px;
-    font-size: 1.9vw;
+    font-size: 1.5vw;
     cursor: pointer;
     -moz-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
+    display: flex;
 }
 
 .customerDetails {
@@ -1759,4 +1760,3 @@ p {
     box-shadow: none;
     border-radius: 5px;
 }
-

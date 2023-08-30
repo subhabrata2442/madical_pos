@@ -189,7 +189,7 @@ class PosController extends Controller
 	
 	public function print_invoice(){
 		
-		$branch_id 			= Session::get('branch_id');
+		$branch_id 			= Session::get('store_id');
 		$lastSellInwardStock=SellInwardStock::where('branch_id',$branch_id)->orderBy('id','DESC')->take(1)->get();
 		$invoice_url='';
 		if(count($lastSellInwardStock)>0){
@@ -310,7 +310,7 @@ class PosController extends Controller
 			
 			$bill_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
 			
-			$mpdf->Output('uploads/off_counter/'.$bill_no.'-invoice.pdf', 'F');
+			$mpdf->Output('uploads/'.$bill_no.'-invoice.pdf', 'F');
 			
 			//$invoice_url=asset('uploads/off_counter/'.$invoice_no.'-invoice.pdf?v='.time());
 			//$return_data['invoice_url']	= $invoice_url;
@@ -413,10 +413,10 @@ class PosController extends Controller
     }
 	
 	public function create(Request $request){
-		dd($request->all());
-		$branch_id		= Session::get('branch_id');
-		$supplier_id	= Session::get('adminId');
-		$customer_id	= 2;
+		//dd($request->all());
+		$branch_id		= Session::get('store_id');
+		//echo $branch_id;die;
+		//$supplier_id	= 0;
 		
 		$validator = Validator::make($request->all(), [
 			'total_quantity' => 'required',
@@ -427,10 +427,7 @@ class PosController extends Controller
 			$return_data['msg']		= 'Product should not be empty';
 			echo json_encode($return_data);
 		}
-		
 		//print_r($_POST);exit;
-		
-		
 		$invoice_no='';
 		$n=SellInwardStock::where('branch_id',$branch_id)->count();
 		$invoice_no .=date('d');
@@ -447,13 +444,13 @@ class PosController extends Controller
 		
 		$sellStockData=array(
 			'branch_id' 				=> $branch_id,
-			'supplier_id' 				=> $supplier_id,
-			'customer_id' 				=> $customer_id,
+			//'supplier_id' 				=> $supplier_id,
+			'customer_id' 				=> $request->customer_id,
 			'bill_no' 					=> $bill_no,
 			'invoice_no' 				=> $invoice_no,
 			'sell_date' 				=> date('Y-m-d'),
 			'sell_time' 				=> date('H:i'),
-			'stock_type' 				=> $request->stock_type,
+			//'stock_type' 				=> $request->stock_type,
 			'total_qty' 				=> $request->total_quantity,
 			'gross_amount' 				=> $request->total_mrp,
 			'tax_amount' 				=> $request->tax_amount,
@@ -469,7 +466,7 @@ class PosController extends Controller
 			'tendered_change_amount' 	=> $request->tendered_change_amount,
 			'payment_method' 			=> $request->payment_method_type,
 			'payment_date' 				=> date('Y-m-d'),
-			'created_at'				=> date('Y-m-d')
+			//'created_at'				=> date('Y-m-d')
 		);
 		
 		//print_r($sellStockData);exit;
@@ -482,30 +479,29 @@ class PosController extends Controller
 		//$arr=json_decode($result[0]->meta_data,true);	
 		//print_r($arr['upi_payble_amount']);exit;
 		
-		$product_ids			= $request->product_id;
+		$stock_product_ids			= $request->product_id;
 		$product_total_amount	= $request->product_total_amount;
 		$product_barcode		= $request->product_barcode;
 		$product_name			= $request->product_name;
+		$brand_name			= $request->brand_name;
 		$product_qty			= $request->product_qty;
 		$product_disc_percent	= $request->product_disc_percent;
 		$product_disc_amount	= $request->product_disc_amount;
-		$product_unit_price		= $request->product_unit_price;
+		$product_unit_price		= $request->product_unit_price_amount;
 		$product_price_id		= $request->product_price_id;
 		
 		
-		for($i=0;count($product_ids)>$i;$i++){
-			$product_stock_id			= $product_ids[$i];
-			$branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->get();
+		for($i=0;count($stock_product_ids)>$i;$i++){
+			$product_stock_id			= $stock_product_ids[$i];
+			$branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->first();
 			
-			$product_id 		= isset($branch_product_stock_info[0]->product_id)?$branch_product_stock_info[0]->product_id:'';
-			$product_size_id 	= isset($branch_product_stock_info[0]->size_id)?$branch_product_stock_info[0]->size_id:'0';
-			
-			
+			$product_id 		= isset($branch_product_stock_info->product_id)?$branch_product_stock_info->product_id:'';
 			
 			if($product_id!=''){
 				$total_amount	= isset($product_total_amount[$i])?$product_total_amount[$i]:'0';
 				$barcode		= isset($product_barcode[$i])?$product_barcode[$i]:'';
 				$name			= isset($product_name[$i])?$product_name[$i]:'';
+				$brand_name			= isset($brand_name[$i])?$brand_name[$i]:'';
 				$qty			= isset($product_qty[$i])?$product_qty[$i]:'';
 				$disc_percent	= isset($product_disc_percent[$i])?$product_disc_percent[$i]:0;
 				$disc_amount	= isset($product_disc_amount[$i])?$product_disc_amount[$i]:0;
@@ -516,10 +512,10 @@ class PosController extends Controller
 				$category_id	= isset($productInfo[0]->category_id)?$productInfo[0]->category_id:0;
 				$subcategory_id	= isset($productInfo[0]->subcategory_id)?$productInfo[0]->subcategory_id:0;
 				
-				$productSizeInfo= Size::where('id',$product_size_id)->get();
-				$size	= isset($productSizeInfo[0]->name)?$productSizeInfo[0]->name:0;
+				//$productSizeInfo= Size::where('id',$product_size_id)->get();
+				//$size	= isset($productSizeInfo[0]->name)?$productSizeInfo[0]->name:0;
 								
-				$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('id',$price_id)->where('stock_type','counter')->get();
+				/* $branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('id',$price_id)->where('stock_type','counter')->get();
 				
 				$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
 				
@@ -536,7 +532,7 @@ class PosController extends Controller
 				}
 				
 				$size_ml=trim(str_replace('ml', '', $size));
-				$total_ml=(int)$size_ml*(int)$qty;
+				$total_ml=(int)$size_ml*(int)$qty; */
 				
 				$sellStockproductData=array(
 					'inward_stock_id'	=> $sellStockId,
@@ -545,12 +541,13 @@ class PosController extends Controller
 					'product_stock_id'  => $product_stock_id,
 					'barcode'			=> $barcode,
 					'product_name'  	=> $name,
+					'brand_name'  	=> $brand_name,
 					'price_id'  		=> $price_id,
-					'size_id'  			=> $product_size_id,
+					//'size_id'  			=> $product_size_id,
 					'category_id'  		=> $category_id,
 					'subcategory_id'  	=> $subcategory_id,
-					'size_ml'  			=> $size,
-					'total_ml'  		=> $total_ml,
+					//'size_ml'  			=> $size,
+					//'total_ml'  		=> $total_ml,
 					'product_qty'		=> $qty,
 					'discount_percent'  => $disc_percent,
 					'discount_amount'  	=> $disc_amount,
@@ -562,6 +559,9 @@ class PosController extends Controller
 				);
 				//print_r($sellStockproductData);exit;
 				SellStockProducts::create($sellStockproductData);
+				//Update product qty
+				$stock_update_val = ($branch_product_stock_info->t_qty - $qty);
+				BranchStockProducts::where('id',$product_stock_id)->update(['t_qty'=>$stock_update_val]);
 			}
 		}
 		
@@ -599,7 +599,7 @@ class PosController extends Controller
 			//print_r($sell_online_payment_data);exit;
 		}
 		
-		$this->daily_product_sell_history();
+		//$this->daily_product_sell_history();
 		
 		$this->print_invoice();
 		
