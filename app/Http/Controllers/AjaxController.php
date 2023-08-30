@@ -1383,5 +1383,15 @@ class AjaxController extends Controller {
 		$return_data['status']	= 1;
 		echo json_encode($return_data);
 	}
+	public function ajaxpost_get_customer_by_search($request){
+		//dd($request->all());
+		$customer_search_val = $request->customer_search_val;
+        $result = Customer::where('customer_name', 'LIKE', "%{$customer_search_val}%")
+                            ->orWhere('customer_mobile', 'LIKE', "%{$customer_search_val}%")
+                            ->take(20)->get();
+        $return_data['result']	= $result;
+		$return_data['status']	= 1;
+		echo json_encode($return_data);
+	}
 
 }
