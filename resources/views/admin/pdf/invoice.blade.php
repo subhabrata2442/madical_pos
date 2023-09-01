@@ -78,7 +78,7 @@ html, body {
   @endforelse
   @endif
   <tr>
-    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>₹ {{$total['total_price']}}</span></td>
+    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>{{$total['total_price']}} ع.د</span></td>
   </tr>
   <tr>
     <td colspan="4"  style="padding:6px 3px; text-align: center;"><strong>{{$total_amt_in_word}}</strong></td>

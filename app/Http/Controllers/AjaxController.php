@@ -401,15 +401,20 @@ class AjaxController extends Controller {
 		/* $res=MasterProducts::query()->where('product_name', 'LIKE', "%{$search}%")->orWhere('product_barcode', $search)->orWhere('barcode2', $search)->orWhere('barcode3', $search)->take(20)->get(); */
 		$result=[];
 
-		foreach($res as $row){
-			$result[]=array(
-				//'id'				=> $row->id,
-				'id'				=> $row->product->id,
-				'product_barcode'	=> $row->product->product_barcode,
-				'product_name'		=> $row->product->product_name,
-				//'product_size'		=> $row->size->name,
-			);
+		if(count($res) > 0){
+			foreach($res as $row){
+				if($row->product){
+				$result[]=array(
+					//'id'				=> $row->id,
+					'id'				=> @$row->product->id,
+					'product_barcode'	=> @$row->product->product_barcode,
+					'product_name'		=> @$row->product->product_name,
+					//'product_size'		=> $row->size->name,
+				);
+				}
+			}
 		}
+		
 
 		//print_r($result);exit;
 
