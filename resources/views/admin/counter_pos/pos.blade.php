@@ -128,59 +128,68 @@
     </form>
   </div>
   <div class="col-lg-4 col-md-4">
-    <div class="srcArea relative">
-      <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
-      <div class="custom-list">
-        <ul id="customer_search_result">
-        </ul>
-    </div>
-      <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span> </div>
-    <div class="dateSales">
-      <ul class="d-flex justify-content-between align-items-center">
-        <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
-        <li class="d-flex align-items-center">
-          <p>Date:</p>
-          <?php echo date('d-m-Y');?>
-          <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
-        </li>
-      </ul>
-    </div>
-    <div class="customerDetails">
-      <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
-      <div class="customerDetailsMid">
-        <ul>
-          <li id="cd_customer_name">Customer Name : <span></span></li>
-          <li id="cd_customer_number">Contact Number : <span></span></li>
-          <!-- <li>Total Purchase : <span>0</span></li>
-          <li>Loyalty Points : <span>0</span></li>
-          <li>Member Ship : <span>Gold</span></li>
-          <li>Member Ship Discount : <span> CONGRATS22 (50%)
-          <li>Coupon : <span>GH569RT66</span></li> -->
-        </ul>
-      </div>
-      <div class="customerDetailsBtm">
-        <ul class="d-flex">
-          <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-          <li>Bill Amount - <span>{{$data['last_bill_amount']}} ع.د</span></li>
-          <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="sidebar-widget text-center">
-      <ul class="row">
-        <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
-          Coupon</a></li>
-        <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
-          Membership</a></li>
-        <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
-        <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
-        <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
-        <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
-        <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
-        <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li>
-        <li class="payPrint col-6"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
-        <li class="payPrint col-6"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
-      </ul>
+    <div class="d-flex flex-column justify-content-between h-100">
+        <div class="data-sales-head">
+            <div class="srcArea relative">
+                <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
+                <div class="custom-list">
+                    <ul id="customer_search_result">
+                    </ul>
+                </div>
+                <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span>
+            </div>
+        </div>
+        <div class="data-sales-body d-flex flex-column justify-content-start h-100">
+            <div class="dateSales">
+            <ul class="d-flex justify-content-between align-items-center">
+                <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
+                <li class="d-flex align-items-center">
+                <p>Date:</p>
+                <?php echo date('d-m-Y');?>
+                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                </li>
+            </ul>
+            </div>
+            <div class="customerDetails">
+            <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
+            <div class="customerDetailsMid">
+                <ul>
+                <li id="cd_customer_name">Customer Name : <span></span></li>
+                <li id="cd_customer_number">Contact Number : <span></span></li>
+                <!-- <li>Total Purchase : <span>0</span></li>
+                <li>Loyalty Points : <span>0</span></li>
+                <li>Member Ship : <span>Gold</span></li>
+                <li>Member Ship Discount : <span> CONGRATS22 (50%)
+                <li>Coupon : <span>GH569RT66</span></li> -->
+                </ul>
+            </div>
+            <div class="customerDetailsBtm">
+                <ul class="d-flex">
+                <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                <li>Bill Amount - <span>{{$data['last_bill_amount']}} ع.د</span></li>
+                <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
+                </ul>
+            </div>
+            </div>
+        </div>
+        <div class="data-sales-ftr">
+            <div class="sidebar-widget text-center">
+            <ul class="row">
+                {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
+                Coupon</a></li>
+                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
+                Membership</a></li>
+                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
+                <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
+                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
+                <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
+                <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
+                <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
+                <li class="payPrint col-6"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                <li class="payPrint col-6"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
+            </ul>
+            </div>
+        </div>
     </div>
   </div>
   {{-- <div class="col-12">
