@@ -28,6 +28,9 @@ class SellInwardStock extends Model
 	public function top_selling_products($branch_id){
 		print_r($branch_id);exit;
 	}
+    public function storeUser(){
+        return $this->hasOne(User::class,'id','branch_id');
+    }
 	
 	
 	

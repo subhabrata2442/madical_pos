@@ -19,4 +19,10 @@ class InwardStockProducts extends Model
 	public function invoice(){
         return $this->hasOne(PurchaseInwardStock::class,'id','inward_stock_id');
     }
+	public function purchaseInwardStock(){
+        return $this->hasOne(PurchaseInwardStock::class,'id','inward_stock_id');
+    }
+    public function store(){
+        return $this->hasOne(User::class,'id','branch_id');
+    }
 }

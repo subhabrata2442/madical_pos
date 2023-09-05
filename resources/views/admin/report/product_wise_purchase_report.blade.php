@@ -45,13 +45,13 @@
 	<div class="card">
 		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Invoice Wise Sale</h4>
+				<h4>Product Wise Purchase</h4>
 			</div>
 			<div class="col d-flex invoiceAmout justify-content-center">
 				<ul class="d-flex">
 					<li>Total Invoice : <span>{{$data['total_invoice']}}</span></li>
 					<li>Total Qty : <span>{{$data['total_qty']}}</span></li>
-					<li>Total Amount : <span>{{number_format($data['total_ammount'],2)}}</span></li>
+					<li>Total Profit : <span>{{number_format($data['total_profit'],2)}}</span></li>
 					<!-- <li>advanced Search : <span>0</span></li> -->
 				</ul>
 			</div>
@@ -72,16 +72,16 @@
 					<input type="hidden" name="end_date" id="end_date" value="{{request()->input('end_date')}}">
 				</div>
 			</div>
-			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="customer_last_name" class="form-label">By Customer Name / Mobile</label>
-					<div class="position-relative">
-						<input type="text" class="form-control" id="search_customer" name="customer" value="{{request()->input('customer')}}" autocomplete="off">
-						<ul id="search_customer_list" class="auto_search_result">
+				{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+					<div class="form-group">
+						<label for="customer_last_name" class="form-label">By Customer Name / Mobile</label>
+						<div class="position-relative">
+							<input type="text" class="form-control" id="search_customer" name="customer" value="{{request()->input('customer')}}" autocomplete="off">
+							<ul id="search_customer_list" class="auto_search_result">
+						</div>
+						<input type="hidden" name="customer_id" id="customer_id" value="{{request()->input('customer_id')}}">
 					</div>
-					<input type="hidden" name="customer_id" id="customer_id" value="{{request()->input('customer_id')}}">
-				</div>
-			</div> --}}
+				</div> --}}
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="customer_last_name" class="form-label">Invoice No.</label>
@@ -94,17 +94,62 @@
 			</div>
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
-					<label for="" class="form-label">Select Store</label>
-					<select class="form-control custom-select form-control-select" id="" name="store_id">
-						<option value="">Select Store</option>
-						@forelse ($data['storeUsers'] as $store)
-							<option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+					<label for="customer_last_name" class="form-label">Product Name / Barcode</label>
+					<div class="position-relative">
+						<input type="text" class="form-control" id="search_product" name="product" value="{{request()->input('product')}}" autocomplete="off">
+						<ul id="search_product_list" class="auto_search_result">
+					</div>
+					<input type="hidden" id="product_id" name="product_id" value="{{request()->input('product_id')}}">
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="" class="form-label">Select Brand</label>
+					<select class="form-control custom-select form-control-select" id="" name="brand">
+						<option value="">Select Brand</option>
+						@forelse ($data['brands'] as $brand)
+							<option value="{{$brand->id}}" {{request()->input('brand') == $brand->id ? 'selected' : ''}}>{{$brand->name}}</option>
 						@empty
 							
 						@endforelse
 					</select>
 				</div>
 			</div>
+			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="" class="form-label">Select Dosage Form</label>
+					<select class="form-control custom-select form-control-select" id="" name="dosage">
+						<option value="">Select Dosage Form</option>
+						@forelse ($data['dosages'] as $dosage)
+							<option value="{{$dosage->id}}" {{request()->input('dosage') == $dosage->id ? 'selected' : ''}}>{{$dosage->name}}</option>
+						@empty
+							
+						@endforelse
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="" class="form-label">Select Company</label>
+					<select class="form-control custom-select form-control-select" id="" name="company">
+						<option value="">Select Company</option>
+						@forelse ($data['companies'] as $company)
+							<option value="{{$company->id}}" {{request()->input('company') == $company->id ? 'selected' : ''}}>{{$company->name}}</option>
+						@empty
+							
+						@endforelse
+					</select>
+				</div>
+			</div>
+			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="" class="form-label">Select Brand</label>
+					<select class="form-control custom-select form-control-select" id="">
+						<option value="">Select 1</option>
+					</select>
+				</div>
+			</div> --}}
+			
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -118,6 +163,10 @@
 							<select class="form-control custom-select form-control-select" id="report_type">
 								<option value=""> Select Report Type</option>
 								<option value="item_wise_sales_report"> Item Wise sales report</option>
+								<option value="month_wise_report"> Month Wise report</option>
+                                <option value="brand_wise_report"> Brand Wise report</option>
+                                <option value="e_report"> E-Report</option>
+								<option value="text_download"> Text Download</option>
 							</select>
 						</div>
 						<div>
@@ -129,43 +178,71 @@
 		</div>
 	</form>
 </div>
+
+
+
+
 <div class="row">
   <div class="col-12">
     <div class="card">
       <x-alert />
+	  {{-- <div class="d-flex justify-content-between align-items-center mb-4">
+		<form method="get" id="search-form" class="form-inline" role="form">
+			<input type="hidden" name="item_id" value="{{$data['item_id']}}" id="item_id">
+			<input type="hidden" name="start_date" id="start_date" value="">
+			<input type="hidden" name="end_date" id="end_date" value="">
+			<div class="form-group">
+				<label for="date_search" class="mr-3">Date</label>
+				<input type="text" class="form-control" name="datefilter" id="reportrange" placeholder="Select Date" autocomplete="off">
+			</div>
+			<button type="submit" class="btn btn-primary ml-3">Search</button>
+		</form>
+		<a href="javascript:;" id="download" data-date="" class="downloadBtn"><i class="fas fa-download"></i> Download</a>
+	  </div> --}}
+	  
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
-			<thead>
-				<th scope="col">Invoice No</th>
-				<th scope="col">Store Name</th>
-				<th scope="col">Sell Date</th>
-				<th scope="col">Total Qty</th>
-				<th scope="col">Gross Amount</th>
-				<th scope="col">Discount Amount</th>
-				<th scope="col">Sub Total</th>
-				<th scope="col">Pay Amount</th>
-				<th scope="col">Payment Method</th>
-			</thead>
-			<tbody>
-				@forelse ($data['sales'] as $sale)
-				<tr>
-					<th><a class="td-anchor" href="{{route('admin.report.sales.product',['id'=>base64_encode($sale->id)])}}" target="_blank">{{$sale->invoice_no}}</a></th>
-					<th>{{@$sale->storeUser->name}}</th>
-					<td>{{date('d-m-Y', strtotime($sale->sell_date))}}</td>
-					<th>{{$sale->total_qty}}</th>
-					<th>{{number_format($sale->gross_amount,2)}}</th>
-					<th>{{number_format($sale->discount_amount,2)}}</th>
-					<th>{{number_format($sale->sub_total,2)}}</th>
-					<th>{{number_format($sale->pay_amount,2)}}</th>
-					<th>{{$sale->payment_method}}</th>
-				</tr>
-				@empty
-					<tr ><td colspan="11"> No data found </td></tr>
-				@endforelse
-				
-			</tbody>
+          <thead>
+			<th scope="col">Invoice No</th>
+            <th scope="col">Purchase Date</th>
+			<th scope="col">Store</th>
+			<th scope="col">Supplier</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Brand Name</th>
+            <th scope="col">Product Barcode</th>
+            <th scope="col">Dosage</th>
+            <th scope="col">Selling By</th>
+            <th scope="col">Company Name</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Net Price</th>
+            <th scope="col">Selling Price</th>
+            <th scope="col">Profit Amount</th>
+           </thead>
+          <tbody>
+			@forelse ($data['products'] as $product)
+			<tr>
+				<td>{{@$product->purchaseInwardStock->invoice_no}}</td>
+				<td>{{date('d-m-Y', strtotime($product->purchaseInwardStock->purchase_date))}}</td>
+				<td>{{@$product->store->name}}</td>
+				<td>{{$product->purchaseInwardStock->supplier_name}}</td>
+				<td>{{$product->product_name}}</td>
+				<td>{{$product->brand}}</td>
+				<td>{{$product->product->product_barcode}}</td>
+				<td>{{$product->dosage}}</td>
+				<td>{{$product->selling_by}}</td>
+				<td>{{$product->company}}</td>
+				<td>{{$product->product_qty}}</td>
+				<td>{{number_format($product->net_price,2)}}</td>
+				<td>{{number_format($product->selling_price,2)}}</td>
+				<td>{{number_format($product->profit_amount,2)}}</td>
+			</tr>
+			@empty
+				<tr ><td colspan="13"> No data found </td></tr>
+			@endforelse
+			
+          </tbody>
         </table>
-		{{ $data['sales']->appends($_GET)->links() }}
+		{{ $data['products']->appends($_GET)->links() }}
       </div>
     </div>
   </div>
@@ -185,45 +262,7 @@ $(function() {
 	
 	
 
-	$('#download_report').on("click",function(){
-		var report_type = $('#report_type').val();
-		var start_date = $('input[name=start_date]').val();
-		var end_date = $('input[name=end_date]').val();
-		if(report_type == ''){
-			Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select report type!',
-            })
-		}else if(start_date == '' && end_date== ''){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select date!',
-            })
-        }else{
-			console.log('sdfd');
-            var url = "{{route('admin.report.sales.product.item_wise')}}";
-			var href = url+'?start_date='+start_date+'&end_date='+end_date;
-
-			window.open(href);
-		    //$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
-			//window.location = window.location.href;
-        }
-        
-		
-	})
-	//Start date range picker
-	/* var start = moment().subtract(29, 'days');
-    var end = moment();
-	 */
-
-   /*  function cb(start, end) {
-        //$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        $('#reportrange').val(start.format('D-MM-YYYY') + ' - ' + end.format('D-MM-YYYY'));
-		$('#start_date').val(start.format('YYYY-MM-DD'));
-		$('#end_date').val(end.format('YYYY-MM-DD'));
-    } */
+	
 
     $('#reportrange').daterangepicker({
         //startDate: start,
@@ -289,7 +328,7 @@ $(function() {
 		var search = $(this).val();
 		if (search != "") {
             $.ajax({
-                url: '{{route('admin.ajax.sale-invoice-list')}}',
+                url: '{{route('admin.ajax.purchase-invoice-list')}}',
                 type: 'get',
                 data: {
                     search: search,
@@ -335,14 +374,14 @@ $(function() {
                     $("#search_product_list").empty();
                     for (var i = 0; i < len; i++) {
                         var id = response.result[i]['id'];
-                        var name = response.result[i]['product_name']+ ' ' + response.result[i]['product_barcode'];
+                        var name = response.result[i]['product_name']+ ' / ' + response.result[i]['product_barcode'];
                         $("#search_product_list").append("<li value='" + id + "'>" + name + "</li>");
                     }
                     // binding click event to li
                     $("#search_product_list li").bind("click", function() {
                         $('.loader_section').show();
 						var cname = $(this).text();
-						console.log(cname);
+						//console.log(cname);
     					var cid = $(this).val();
 						$('#search_product').val(cname);
 						$('#product_id').val(cid);

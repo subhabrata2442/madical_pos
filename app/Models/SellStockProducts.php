@@ -27,4 +27,7 @@ class SellStockProducts extends Model
     public function sellInwardStock(){
         return $this->hasOne(SellInwardStock::class,'id','inward_stock_id');
     }
+    public function product(){
+        return $this->hasOne(Product::class,'id','product_id');
+    }
 }

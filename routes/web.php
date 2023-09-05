@@ -205,17 +205,19 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// Route::prefix('counter')->name('counter.')->group(function () {
 		// 	Route::match(['GET'], '/purchase', [ReportController::class, 'counterPurchase'])->name('counter_purchase');
 		// });
-        // Route::match(['GET'], '/sales/sales-product', [ReportController::class, 'salesProduct'])->name('sales.product');
+        Route::match(['GET'], '/sales/sales-product', [ReportController::class, 'salesProduct'])->name('sales.product');
         // Route::match(['GET'], '/sales-product/download', [ReportController::class, 'salesProductDownload'])->name('sales.product.download');
         
 		Route::match(['GET'], '/purchase', [ReportController::class, 'purchase'])->name('purchase');
+		Route::match(['GET'], '/purchase/invoice-wise', [ReportController::class, 'invoiceWisePurchaseReport'])->name('purchase.invoice_wise');
         Route::match(['GET'], '/stock-product-list/{slug}', [ReportController::class, 'stockProductList'])->name('stock_product.list');
+		Route::match(['GET'], '/purchase/product-wise', [ReportController::class, 'productWisePurchaseReport'])->name('purchase.product_wise');
 		Route::match(['GET'], '/inventory', [ReportController::class, 'inventory'])->name('inventory');
 
 		// Route::match(['GET'], '/reminders', [ReportController::class, 'reminders'])->name('reminders');
-        // Route::match(['GET'], '/sales/sales-item', [ReportController::class, 'salesItems'])->name('sales.item');
-        // Route::match(['GET'],'/item-wise-sales-report', [ReportController::class, 'itemWiseSaleReportPdf'])->name('sales.product.item_wise');
-        // Route::match(['GET'],'/product-wise-sales-report', [ReportController::class, 'productWiseSaleReport'])->name('sales.report.product.wise');
+        Route::match(['GET'], '/sales/sales-item', [ReportController::class, 'salesItems'])->name('sales.item');
+        Route::match(['GET'],'/item-wise-sales-report', [ReportController::class, 'itemWiseSaleReportPdf'])->name('sales.product.item_wise');
+        Route::match(['GET'],'/product-wise-sales-report', [ReportController::class, 'productWiseSaleReport'])->name('sales.report.product.wise');
 		// Route::match(['GET'],'/stock-transfer-report', [ReportController::class, 'stockTransferReport'])->name('sales.report.stock_transfer');
         // Route::match(['GET'],'/month-wise-pdf', [ReportController::class, 'monthWiseReportPdf'])->name('product.month_wise');
 		// Route::match(['GET'], '/brand_report', [ReportController::class, 'brand_report'])->name('sales.product.product_wise');
@@ -294,6 +296,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     //Ajax get customer by name type
 	Route::get('/get-customer-by-name',[ReportController::class,'getCustomerByKeyup'])->name('ajax.customer-list');
 	Route::get('/get-sale-invoice-by-name',[ReportController::class,'getSaleInvoiceByKeyup'])->name('ajax.sale-invoice-list');
+	Route::get('/get-purchase-invoice-by-name',[ReportController::class,'getPurchaseInvoiceByKeyup'])->name('ajax.purchase-invoice-list');
 	Route::get('/get-product-by-name',[ReportController::class,'getProductByKeyup'])->name('ajax.sale-product');
 	
 });

@@ -38,8 +38,10 @@ use App\Models\ProductRelationshipSize;
 use App\Models\DailyProductPurchaseHistory;
 use App\Models\Warehouse;
 use App\Models\Common;
-
+use App\Models\Company;
 use App\Models\DailyStockTransferHistory;
+use App\Models\Dosage;
+use App\Models\User;
 use Carbon\Carbon;
 Use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -111,77 +113,168 @@ class ReportController extends Controller
 	   }
    }
 
+   public function invoiceWisePurchaseReport(Request $request){
+		$branch_id=Auth::user()->id;
+		$user_role=Auth::user()->role;
+		if($user_role==1){
+			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','');
+		}else{
+			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('supplier_id',$branch_id);
+		}
+		//$sales = SellInwardStock::where('invoice_no','!=','');
+		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+			if($request->get('start_date') == $request->get('end_date')){
+				$purchase->whereDate('purchase_date', $request->get('start_date'));
+			}else{
+				$purchase->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')]);
+			}    
+		}
+		if(!empty($request->get('invoice'))){
+			
+			$purchase->where('invoice_no', $request->get('invoice'));
+			
+		}
+
+		$purchase->orderBy('id', 'desc')->get();
+
+		$data = [];
+		$data['total_profit'] = $purchase->sum('total_profit');
+		$data['total_qty'] = $purchase->sum('total_qty');
+		$data['total_invoice'] = $purchase->count();
+		$data['purchases'] = $purchase->paginate(10);
+		$data['heading'] = 'Invoice Wise Purchase List';
+		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+
+		return view('admin.report.invoice_wise_purchase_list', compact('data'));
+   }
    	public function stockProductList(Request $request,$inward_stock_id){
 
-	//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
-	//echo '<pre>';print_r($purchase[0]->product->brand);exit;
-	
-	try {
-		if ($request->ajax()) {
-			//echo base64_decode($inward_stock_id);die;
-			$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->orderBy('id', 'desc')->get();
-			return DataTables::of($purchase)
-				->addColumn('barcode', function ($row) {
-					return $row->product->product_barcode;
-				})
-				->addColumn('product_qty', function ($row) {
-					return $row->product_qty;
-				})
-				->addColumn('no_package', function ($row) {
-					return $row->no_package;
-				})
-				->addColumn('brand', function ($row) {
-					return $row->brand;
-				})
-				->addColumn('product_name', function ($row) {
-					return $row->product_name;
-				})
-				->addColumn('dosage', function ($row) {
-					return $row->dosage;
-				})
-				->addColumn('company', function ($row) {
-					return $row->company;
-				})
-				->addColumn('drugstore', function ($row) {
-					return $row->drugstore;
-				})
-				->addColumn('net_price', function ($row) {
-					return $row->net_price;
-				})
-				->addColumn('product_mrp', function ($row) {
-					return $row->product_mrp;
-				})
-				->addColumn('cost_rate', function ($row) {
-					return $row->cost_rate;
-				})
-				->addColumn('bonous', function ($row) {
-					return $row->bonous;
-				})
-				->addColumn('selling_price', function ($row) {
-					return $row->selling_price;
-				})
-				->addColumn('profit_amount', function ($row) {
-					return $row->profit_amount;
-				})
-				->addColumn('profit_percent', function ($row) {
-					return $row->profit_percent;
-				})
-				->addColumn('is_chronic', function ($row) {
-					return $row->is_chronic;
-				})
-				->rawColumns([])
-				->make(true);
-		}
+		//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
+		//echo '<pre>';print_r($purchase[0]->product->brand);exit;
 		
-		$data = [];
-		$data['heading'] = 'Stock Product List';
-		$data['breadcrumb'] = ['Stock', 'Product', 'List'];
-		$data['inward_stock_id'] = $inward_stock_id;
-		return view('admin.report.stock_product_list', compact('data'));
-	} catch (\Exception $e) {
-		return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+		try {
+			if ($request->ajax()) {
+				//echo base64_decode($inward_stock_id);die;
+				$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->orderBy('id', 'desc')->get();
+				return DataTables::of($purchase)
+					->addColumn('barcode', function ($row) {
+						return $row->product->product_barcode;
+					})
+					->addColumn('product_qty', function ($row) {
+						return $row->product_qty;
+					})
+					->addColumn('no_package', function ($row) {
+						return $row->no_package;
+					})
+					->addColumn('brand', function ($row) {
+						return $row->brand;
+					})
+					->addColumn('product_name', function ($row) {
+						return $row->product_name;
+					})
+					->addColumn('dosage', function ($row) {
+						return $row->dosage;
+					})
+					->addColumn('company', function ($row) {
+						return $row->company;
+					})
+					->addColumn('drugstore', function ($row) {
+						return $row->drugstore;
+					})
+					->addColumn('net_price', function ($row) {
+						return $row->net_price;
+					})
+					->addColumn('product_mrp', function ($row) {
+						return $row->product_mrp;
+					})
+					->addColumn('cost_rate', function ($row) {
+						return $row->cost_rate;
+					})
+					->addColumn('bonous', function ($row) {
+						return $row->bonous;
+					})
+					->addColumn('selling_price', function ($row) {
+						return $row->selling_price;
+					})
+					->addColumn('profit_amount', function ($row) {
+						return $row->profit_amount;
+					})
+					->addColumn('profit_percent', function ($row) {
+						return $row->profit_percent;
+					})
+					->addColumn('is_chronic', function ($row) {
+						return $row->is_chronic;
+					})
+					->rawColumns([])
+					->make(true);
+			}
+			
+			$data = [];
+			$data['heading'] = 'Stock Product List';
+			$data['breadcrumb'] = ['Stock', 'Product', 'List'];
+			$data['inward_stock_id'] = $inward_stock_id;
+			return view('admin.report.stock_product_list', compact('data'));
+		} catch (\Exception $e) {
+			return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+		}
 	}
-}
+	public function productWisePurchaseReport(Request $request){
+		//dd($request->all());
+		$data = [];
+		$queryProduct = InwardStockProducts::query();
+		//Add sorting
+		$queryProduct->orderBy('id', 'desc');
+		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+			if($request->get('start_date') == $request->get('end_date')){
+				$queryProduct->whereDate('created_at', $request->get('start_date'));
+			}else{
+				$queryProduct->whereBetween('created_at', [$request->get('start_date'), $request->get('end_date')]);
+			}    
+		}
+		/* if(!is_null($request['customer_id'])) {
+			$queryProduct->whereHas('sellInwardStock',function($q) use ($request){
+				return $q->where('customer_id',$request['customer_id']);
+			});
+		} */
+		if(!is_null($request['invoice_id'])) {
+			$queryProduct->whereHas('purchaseInwardStock',function($q) use ($request){
+				return $q->where('id',$request['invoice_id']);
+			});
+		}
+		if(!is_null($request['product_id'])) {
+			$queryProduct->where('product_id',$request['product_id']);
+		}
+		if(!is_null($request['brand'])) {
+			$queryProduct->whereHas('product',function($q) use ($request){
+				return $q->where('brand_id',$request['brand']);
+			});
+		}
+		if(!is_null($request['dosage'])) {
+			$queryProduct->whereHas('product',function($q) use ($request){
+				return $q->where('dosage_id',$request['dosage']);
+			});
+		}
+		if(!is_null($request['company'])) {
+			$queryProduct->whereHas('product',function($q) use ($request){
+				return $q->where('company_id',$request['company']);
+			});
+		}
+		$total_qty =  $queryProduct->sum('product_qty');
+		$total_profit =  $queryProduct->sum('profit_amount');
+		//$total_cost =  0;
+		$all_product = $queryProduct->get();
+		$products = $queryProduct->paginate(10);
+		$data['heading']    = 'Product Purchase List';
+		$data['breadcrumb'] = ['Purchase', '', 'List'];
+		$data['products']   = $products;
+		$data['total_invoice']  = count(array_unique(array_column($all_product->toArray(), 'inward_stock_id')));
+		$data['total_qty']  = $total_qty;
+		$data['total_profit'] = $total_profit;
+		$data['brands'] = Brand::all();
+		$data['dosages'] = Dosage::all();
+		$data['companies']      = Company::all();
+		return view('admin.report.product_wise_purchase_report', compact('data'));
+	}
 	public function inventory(Request $request){
 		$branch_id=Auth::user()->id;
 		
@@ -2570,8 +2663,8 @@ class ReportController extends Controller
                         return date('d-m-Y', strtotime($row->created_at));
                     })
                   
-                    ->addColumn('measure', function ($row) {
-                        return $row->size->name;
+                    ->addColumn('brand_name', function ($row) {
+                        return $row->brand_name;
                     })
                     
                     ->addColumn('product_qty', function ($row) {
@@ -2645,6 +2738,11 @@ class ReportController extends Controller
                     $sales->where('invoice_no', $request->get('invoice'));
                       
                 }
+                if(!empty($request->get('store_id'))){
+                    
+                    $sales->where('branch_id', $request->get('store_id'));
+                      
+                }
 
             $sales->orderBy('id', 'desc')->get();
             
@@ -2653,6 +2751,7 @@ class ReportController extends Controller
             $data['total_qty'] = $sales->sum('total_qty');
             $data['total_invoice'] = $sales->count();
             $data['sales'] = $sales->paginate(10);
+            $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
             $data['heading'] = 'Invoice Wise Sales List';
             $data['breadcrumb'] = ['Invoice Wise Sales', '', 'List'];
 
@@ -2712,7 +2811,7 @@ class ReportController extends Controller
     public function productWiseSaleReport(Request $request){
         try {
             //echo $request->get('start_date');die;
-            //dd($request);
+            //dd($request->all());
             $data = [];
             $queryProduct = SellStockProducts::query();
             //Add sorting
@@ -2737,15 +2836,22 @@ class ReportController extends Controller
             if(!is_null($request['product_id'])) {
                 $queryProduct->where('product_id',$request['product_id']);
             }
-            if(!is_null($request['category'])) {
-                $queryProduct->where('category_id',$request['category']);
+            if(!is_null($request['brand'])) {
+                $queryProduct->whereHas('product',function($q) use ($request){
+                    return $q->where('brand_id',$request['brand']);
+                });
             }
-            if(!is_null($request['sub_category'])) {
-                $queryProduct->where('subcategory_id',$request['sub_category']);
+            if(!is_null($request['dosage'])) {
+                $queryProduct->whereHas('product',function($q) use ($request){
+                    return $q->where('dosage_id',$request['dosage_id']);
+                });
             }
-            if(!is_null($request['size'])) {
-                $queryProduct->where('size_id',$request['size']);
+            if(!is_null($request['company'])) {
+				$queryProduct->whereHas('product',function($q) use ($request){
+                    return $q->where('company_id',$request['company']);
+                });
             }
+            
             $total_qty =  $queryProduct->sum('product_qty');
             $total_cost =  $queryProduct->sum('total_cost');
             $all_product = $queryProduct->get();
@@ -2756,9 +2862,9 @@ class ReportController extends Controller
             $data['total_invoice']  = count(array_unique(array_column($all_product->toArray(), 'inward_stock_id')));
             $data['total_qty']  = $total_qty;
             $data['total_cost'] = $total_cost;
-            $data['categories'] = Category::all();
-            $data['sizes']      = Size::all();
-            $data['sub_categories']      = Subcategory::all();
+            $data['brands'] = Brand::all();
+			$data['dosages'] = Dosage::all();
+			$data['companies']      = Company::all();
             //$data['request'] = $request;
             return view('admin.report.product_wise_sales_report', compact('data'));
         } catch (\Exception $e) {
@@ -2830,7 +2936,11 @@ class ReportController extends Controller
 
     public function getCustomerByKeyup(Request $request){
         $search = $request->search;
-        $result = Customer::select('customer_fname','customer_last_name','id')->whereRaw("concat(customer_fname, ' ', customer_last_name) like '%" .$search. "%' ")->take(20)->get();
+        //$result = Customer::select('customer_fname','customer_last_name','id')->whereRaw("concat(customer_fname, ' ', customer_last_name) like '%" .$search. "%' ")->take(20)->get();
+        $result = Customer::select('customer_name','customer_mobile','id')
+		->where('customer_name', 'LIKE', "%{$search}%")
+		->orWhere('customer_mobile', 'LIKE', "%{$search}%")
+		->take(20)->get();
         $return_data['result']	= $result;
 		$return_data['status']	= 1;
 		echo json_encode($return_data);	
@@ -2842,9 +2952,16 @@ class ReportController extends Controller
 		$return_data['status']	= 1;
 		echo json_encode($return_data);	
     }
+    public function getPurchaseInvoiceByKeyup(Request $request){
+        $search = $request->search;
+        $result = PurchaseInwardStock::select('id','invoice_no')->where('invoice_no', 'LIKE', "%{$search}%")->take(20)->get();
+        $return_data['result']	= $result;
+		$return_data['status']	= 1;
+		echo json_encode($return_data);	
+    }
     public function getProductByKeyup(Request $request){
         $search = $request->search;
-        $result = Product::select('id','product_barcode','brand')
+        $result = Product::select('id','product_barcode','brand','product_name')
                             ->where('brand', 'LIKE', "%{$search}%")
                             ->orWhere('product_barcode', 'LIKE', "%{$search}%")
                             ->take(20)->get();

@@ -29,7 +29,7 @@
           <thead>
 			<th>Product Name</th>
             <th>Barcode</th>
-			<th>Measure</th>
+			<th>Brand Name</th>
 			<th>Qty</th>
             <th>MRP</th>
             <th>Total Cost</th>
@@ -80,8 +80,8 @@ $(function() {
 				name: 'barcode'
 			},	
 			{
-				data: 'measure',
-				name: 'measure'
+				data: 'brand_name',
+				name: 'brand_name'
 			},	
 			{
 				data: 'product_qty',
@@ -111,13 +111,7 @@ $(function() {
         e.preventDefault();
     });
 
-	$('#download').on("click",function(){
-		var start_date = $('input[name=start_date]').val();
-		//alert(start_date);
-		var end_date = $('input[name=end_date]').val();
-		var url = "{{route('admin.report.sales.product.download')}}";
-		$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
-	})
+	
 	//Start date range picker
 	/* var start = moment().subtract(29, 'days');
     var end = moment();
