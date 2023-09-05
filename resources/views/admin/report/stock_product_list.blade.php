@@ -12,7 +12,7 @@
             <th>Product Name</th>
             <th>Dosage Form</th>
             <th>Company</th>
-            <th>Drugstore name</th>
+            {{-- <th>Drugstore name</th> --}}
             <th>Total Quantity</th>
             <th>No per package</th>
             <th>Net Price</th>
@@ -63,10 +63,10 @@ $(function() {
 				data: 'company',
 				name: 'company'
 			},	
-			{
+			/* {
 				data: 'drugstore',
 				name: 'drugstore'
-			},	
+			}, */	
 			{
 				data: 'product_qty',
 				name: 'product_qty'

@@ -45,13 +45,13 @@
 	<div class="card">
 		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Invoice Wise Sale</h4>
+				<h4>Invoice Wise Purchase</h4>
 			</div>
 			<div class="col d-flex invoiceAmout justify-content-center">
 				<ul class="d-flex">
 					<li>Total Invoice : <span>{{$data['total_invoice']}}</span></li>
 					<li>Total Qty : <span>{{$data['total_qty']}}</span></li>
-					<li>Total Amount : <span>{{number_format($data['total_ammount'],2)}}</span></li>
+					<li>Total Profit : <span>{{number_format($data['total_profit'],2)}}</span></li>
 					<!-- <li>advanced Search : <span>0</span></li> -->
 				</ul>
 			</div>
@@ -92,19 +92,6 @@
 					<input type="hidden" id="invoice_id" name="invoice_id" value="{{request()->input('invoice_id')}}">
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="" class="form-label">Select Store</label>
-					<select class="form-control custom-select form-control-select" id="" name="store_id">
-						<option value="">Select Store</option>
-						@forelse ($data['storeUsers'] as $store)
-							<option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
-						@empty
-							
-						@endforelse
-					</select>
-				</div>
-			</div>
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -137,27 +124,32 @@
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Invoice No</th>
-				<th scope="col">Store Name</th>
-				<th scope="col">Sell Date</th>
+				<th scope="col">Inward date</th>
+				<th scope="col">Purchase date</th>
 				<th scope="col">Total Qty</th>
-				<th scope="col">Gross Amount</th>
-				<th scope="col">Discount Amount</th>
-				<th scope="col">Sub Total</th>
-				<th scope="col">Pay Amount</th>
-				<th scope="col">Payment Method</th>
+				<th scope="col">Total Cost</th>
+				<th scope="col" class="text-center">Action</th>
+				
 			</thead>
 			<tbody>
-				@forelse ($data['sales'] as $sale)
+				@forelse ($data['purchases'] as $purchase)
 				<tr>
-					<th><a class="td-anchor" href="{{route('admin.report.sales.product',['id'=>base64_encode($sale->id)])}}" target="_blank">{{$sale->invoice_no}}</a></th>
-					<th>{{@$sale->storeUser->name}}</th>
-					<td>{{date('d-m-Y', strtotime($sale->sell_date))}}</td>
-					<th>{{$sale->total_qty}}</th>
-					<th>{{number_format($sale->gross_amount,2)}}</th>
-					<th>{{number_format($sale->discount_amount,2)}}</th>
-					<th>{{number_format($sale->sub_total,2)}}</th>
-					<th>{{number_format($sale->pay_amount,2)}}</th>
-					<th>{{$sale->payment_method}}</th>
+					<td><a class="td-anchor" href="{{route('admin.report.stock_product.list',[base64_encode($purchase->id)])}}" target="_blank">{{$purchase->invoice_no}}</a></td>
+					<td>{{date('d-m-Y', strtotime($purchase->inward_date))}}</td>
+					<td>{{date('d-m-Y', strtotime($purchase->purchase_date))}}</td>
+					<td>{{$purchase->total_qty}}</td>
+					<td>{{number_format($purchase->sub_total,2)}}</td>
+					<td class="text-center">
+						<div class="dropdown">
+							<div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+								<svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+							</div>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+								<a class="dropdown-item" href="{{route('admin.report.stock_product.list', [base64_encode($purchase->id)])}}" target="_blank">View</a>
+								<a class="dropdown-item delete-item" id="delete_inward_stock" href="#" data-url="{{route('admin.purchase.inward-stock.delete', [base64_encode($purchase->id)])}}">Delete</a>
+							</div>
+						</div>
+					</td>
 				</tr>
 				@empty
 					<tr ><td colspan="11"> No data found </td></tr>
@@ -165,7 +157,7 @@
 				
 			</tbody>
         </table>
-		{{ $data['sales']->appends($_GET)->links() }}
+		{{ $data['purchases']->appends($_GET)->links() }}
       </div>
     </div>
   </div>
@@ -203,7 +195,7 @@ $(function() {
             })
         }else{
 			console.log('sdfd');
-            var url = "{{route('admin.report.sales.product.item_wise')}}";
+            var url = "{{route('admin.report.purchase.invoice_wise')}}";
 			var href = url+'?start_date='+start_date+'&end_date='+end_date;
 
 			window.open(href);
@@ -289,7 +281,7 @@ $(function() {
 		var search = $(this).val();
 		if (search != "") {
             $.ajax({
-                url: '{{route('admin.ajax.sale-invoice-list')}}',
+                url: '{{route('admin.ajax.purchase-invoice-list')}}',
                 type: 'get',
                 data: {
                     search: search,

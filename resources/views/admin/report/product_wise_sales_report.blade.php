@@ -104,11 +104,11 @@
 			</div>
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
-					<label for="" class="form-label">Select Category</label>
-					<select class="form-control custom-select form-control-select" id="" name="category">
-						<option value="">Select Category</option>
-						@forelse ($data['categories'] as $category)
-							<option value="{{$category->id}}" {{request()->input('category') == $category->id ? 'selected' : ''}}>{{$category->name}}</option>
+					<label for="" class="form-label">Select Brand</label>
+					<select class="form-control custom-select form-control-select" id="" name="brand">
+						<option value="">Select Brand</option>
+						@forelse ($data['brands'] as $brand)
+							<option value="{{$brand->id}}" {{request()->input('brand') == $brand->id ? 'selected' : ''}}>{{$brand->name}}</option>
 						@empty
 							
 						@endforelse
@@ -117,11 +117,11 @@
 			</div>
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
-					<label for="" class="form-label">Select Subcategory</label>
-					<select class="form-control custom-select form-control-select" id="" name="sub_category">
-						<option value="">Select Subcategory</option>
-						@forelse ($data['sub_categories'] as $sub_category)
-							<option value="{{$sub_category->id}}" {{request()->input('sub_category') == $sub_category->id ? 'selected' : ''}}>{{$sub_category->name}}</option>
+					<label for="" class="form-label">Select Dosage Form</label>
+					<select class="form-control custom-select form-control-select" id="" name="dosage">
+						<option value="">Select Dosage Form</option>
+						@forelse ($data['dosages'] as $dosage)
+							<option value="{{$dosage->id}}" {{request()->input('dosage') == $dosage->id ? 'selected' : ''}}>{{$dosage->name}}</option>
 						@empty
 							
 						@endforelse
@@ -130,11 +130,11 @@
 			</div>
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
-					<label for="" class="form-label">Select Size</label>
-					<select class="form-control custom-select form-control-select" id="" name="size">
-						<option value="">Select Size</option>
-						@forelse ($data['sizes'] as $size)
-							<option value="{{$size->id}}" {{request()->input('size') == $size->id ? 'selected' : ''}}>{{$size->name}}</option>
+					<label for="" class="form-label">Select Company</label>
+					<select class="form-control custom-select form-control-select" id="" name="company">
+						<option value="">Select Company</option>
+						@forelse ($data['companies'] as $company)
+							<option value="{{$company->id}}" {{request()->input('company') == $company->id ? 'selected' : ''}}>{{$company->name}}</option>
 						@empty
 							
 						@endforelse
@@ -158,7 +158,7 @@
 					<li>
 						<button class="saveBtn-2" type="submit">Search <i class="fas fa-arrow-circle-right"></i></button>
 					</li>
-					<li class="d-flex align-items-center">
+					{{-- <li class="d-flex align-items-center">
 						<div>
 							<select class="form-control custom-select form-control-select" id="report_type">
 								<option value=""> Select Report Type</option>
@@ -172,7 +172,7 @@
 						<div>
 							<button type="button" id="download_report" class="srcBtnWrapGo"><i class="fas fa-download"></i></button>
 						</div>
-					</li>
+					</li> --}}
 				</ul>
 			</div>
 		</div>
@@ -206,12 +206,11 @@
 			<th scope="col">Invoice No</th>
             <th scope="col">Bill Date</th>
 			<th scope="col">Customer</th>
-			<th scope="col">Supplier</th>
+			<th scope="col">Store</th>
             <th scope="col">Product Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Sub Category</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Barcode</th>
             <th scope="col">Qty</th>
-            <th scope="col">Size</th>
             <th scope="col">Mrp</th>
             <th scope="col">Total Cost</th>
            </thead>
@@ -220,13 +219,12 @@
 			<tr>
 				<th>{{$product->sellInwardStock->invoice_no}}</th>
 				<td>{{date('d-m-Y', strtotime($product->sellInwardStock->sell_date))}}</td>
-				<td>{{$product->sellInwardStock->customer->customer_fname.' '.$product->sellInwardStock->customer->customer_last_name;}}</td>
-				<td>{{$product->sellInwardStock->supplierDetails->name}}</td>
+				<td>{{@$product->sellInwardStock->customer->customer_name}}</td>
+				<td>{{@$product->sellInwardStock->storeUser->name}}</td>
 				<td>{{$product->product_name;}}</td>
-				<td>{{$product->category->name}}</td>
-				<td>{{$product->subCategory->name}}</td>
+				<td>{{@$product->brand_name}}</td>
+				<td>{{@$product->barcode}}</td>
 				<td>{{$product->product_qty}}</td>
-				<td>{{$product->size_ml}}</td>
 				<td>{{number_format($product->product_mrp,2)}}</td>
 				<td>{{number_format($product->total_cost,2)}}</td>
 			</tr>
@@ -254,68 +252,11 @@
 
 $(function() {
 	
-	/* $('#download_report').on("click",function(){
-		var start_date = $('input[name=start_date]').val();
-		//alert(start_date);
-		var end_date = $('input[name=end_date]').val();
-		var url = "{{route('admin.report.sales.product.download')}}";
-		$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
-	}) */
+	
 
 	$('#download_report').on("click",function(){
-		var report_type = $('#report_type').val();
-		var start_date = $('input[name=start_date]').val();
-		var end_date = $('input[name=end_date]').val();
-		if(report_type == ''){
-			Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select report type!',
-            })
-		}else if(start_date == '' && end_date== ''){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select date!',
-            })
-        }else{
-			//console.log('sdfd');
-			if(report_type == 'item_wise_sales_report'){
-				var url = "{{route('admin.report.sales.product.item_wise')}}";
-				var href = url+'?start_date='+start_date+'&end_date='+end_date;
-			}else if(report_type == 'month_wise_report'){
-				var url = "{{route('admin.report.product.month_wise')}}";
-				var href = url+'?start_date='+start_date+'&end_date='+end_date;
-			}else if(report_type == 'text_download'){
-				var url = "{{route('admin.report.sales.product.download')}}";
-				var href = url+'?start_date='+start_date+'&end_date='+end_date;
-				//$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
-			}else if(report_type == 'e_report'){
-				var url = "{{route('admin.report.sales.product.e_report')}}";
-				var href = url+'?start_date='+start_date+'&end_date='+end_date;
-				//$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
-			}else if(report_type == 'brand_wise_report'){
-				var product_id = $('input[name=product_id]').val();
-				
-				if(product_id == ''){
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: 'Please select Product!',
-					});
-					return false;	
-				}
-				
-				var url = "{{route('admin.report.sales.product.product_wise')}}";
-				var href = url+'?start_date='+start_date+'&end_date='+end_date+'&product_id='+product_id;
-				
-				
-			}
-			window.open(href);
-		    
-        }
-        
 		
+      	
 	})
 	//Start date range picker
 	/* var start = moment().subtract(29, 'days');
@@ -372,7 +313,7 @@ $(function() {
                     $("#search_customer_list").empty();
                     for (var i = 0; i < len; i++) {
                         var id = response.result[i]['id'];
-                        var name = response.result[i]['customer_fname'] + ' ' + response.result[i]['customer_last_name'];
+                        var name = response.result[i]['customer_name'] + '/' + response.result[i]['customer_mobile'];
                         $("#search_customer_list").append("<li value='" + id + "'>" + name + "</li>");
                     }
                     // binding click event to li
