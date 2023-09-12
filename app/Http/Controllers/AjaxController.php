@@ -490,6 +490,7 @@ class AjaxController extends Controller {
 								'brand_name'	=> $row->product->brand,
 								'product_barcode'	=> $row->product->product_barcode,
 								'selling_by_name'	=> $row->product->selling_by_name,
+								'product_expiry_date'	=> $row->product_expiry_date,
 								//'c_qty'			=> $row->c_qty,
 							);
 						}
@@ -942,6 +943,10 @@ class AjaxController extends Controller {
 							if($product_sellPrice==0 || $product_sellPrice==''){
 								$productItemErrorMsg[]='Sell Price should not be empty or 0!';
 							}
+							$product_expiry_date	= isset($inward_stock['product_detail'][$i]['product_expiry_date'])?$inward_stock['product_detail'][$i]['product_expiry_date']:'';
+							if($product_expiry_date==''){
+								$productItemErrorMsg[]='Product Expiry Date should not be empty!';
+							}
 						}
 					}else{
 						$return_data['msg']		= 'items not exists!';
@@ -988,8 +993,12 @@ class AjaxController extends Controller {
 				//echo '<pre>';print_r($purchaseStockData);exit;
 
 				//$purchaseInwardStockId=2;
+				
 				if(isset($inward_stock['product_detail'])){
 					if(count($inward_stock['product_detail'])>0){
+						$qty_total_net_price = 0;
+						$qty_total_sell_price = 0;
+						$qty_total_profit = 0;
 						for($i=0;count($inward_stock['product_detail'])>$i;$i++){
 							$product_id=$inward_stock['product_detail'][$i]['product_id'];
 							$product_info=Product::find($inward_stock['product_detail'][$i]['product_id']);
@@ -1000,6 +1009,9 @@ class AjaxController extends Controller {
 							$current_stock += $inward_stock['product_detail'][$i]['product_totalQuantity'];
 
 							$product_barcode=$inward_stock['product_detail'][$i]['product_barcode'];
+
+							$product_expiry_date=$inward_stock['product_detail'][$i]['product_expiry_date'];
+
 							$product_isChronic = $inward_stock['product_detail'][$i]['product_isChronic'];
 							$product_mrp = 0;
 							if($product_isChronic == 'Yes'){
@@ -1030,7 +1042,7 @@ class AjaxController extends Controller {
 
 							$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
 							
-							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',$product_expiry_date)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 							if(count($branchProductStockResult)>0){
 								$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
 
@@ -1050,6 +1062,7 @@ class AjaxController extends Controller {
 									'selling_price'		=> $selling_price,
 									'product_mrp'  		=> $product_mrp,
 									'net_price'  		=> $net_price,
+									'product_expiry_date'  		=> $product_expiry_date,
 								);
 								BranchStockProducts::create($branchProductStockSellPriceData);
 								//echo '<pre>';print_r($branchProductStockSellPriceData);exit;
@@ -1081,11 +1094,19 @@ class AjaxController extends Controller {
 								'selling_price'		=> $inward_stock['product_detail'][$i]['product_sellPrice'],
 								'profit_amount'  	=> $inward_stock['product_detail'][$i]['product_profit'],
 								'profit_percent'  	=> $inward_stock['product_detail'][$i]['product_profitPercent'],
+								'product_expiry_date'  	=> $inward_stock['product_detail'][$i]['product_expiry_date'],
 								'selling_by'		=> $product_sellingBy,
+								'qty_total_net_price'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_netPrice'],
+								'qty_total_sell_price'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_sellPrice'],
+								'qty_total_profit'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'],
 							);
 							InwardStockProducts::create($inward_stock_product);
 							//echo '<pre>';print_r($inward_stock_product);exit;
+							$qty_total_net_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_netPrice'];
+							$qty_total_sell_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_sellPrice'];
+							$qty_total_profit += $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'];
 						}
+						PurchaseInwardStock::where('id',$purchaseInwardStockId)->update(['qty_total_net_price' => $qty_total_net_price,'qty_total_sell_price' => $qty_total_sell_price,'qty_total_profit' => $qty_total_profit]);
 					}
 				}
 			}

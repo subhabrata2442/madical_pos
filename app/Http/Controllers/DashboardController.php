@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 use App\Models\PurchaseInwardStock;
-
+use App\Models\SellInwardStock;
 use DataTables;
 
 use Hash;
@@ -34,17 +34,17 @@ class DashboardController extends Controller
             //$data['breadcrumb'] = ['Dashboard'];
 
             if($admin_type==1){
-                $total_sales=0;
+                $total_sales= SellInwardStock::sum('pay_amount');
                 $total_purchases=PurchaseInwardStock::sum('total_amount');
-                $total_profit=PurchaseInwardStock::sum('total_profit');
-                $total_net_price=0; 
+                $total_profit=PurchaseInwardStock::sum('qty_total_profit');
+                $total_net_price=PurchaseInwardStock::sum('qty_total_net_price'); 
                 $total_sell_return=0;
 
             }else{
-                $total_sales=0;
-                $total_purchases=PurchaseInwardStock::where('supplier_id',$store_id)->sum('total_amount');
-                $total_profit=PurchaseInwardStock::where('supplier_id',$store_id)->sum('total_profit');
-                $total_net_price=0;
+                $total_sales=SellInwardStock::where('branch_id',$store_id)->sum('pay_amount');
+                $total_purchases=PurchaseInwardStock::where('branch_id',$store_id)->sum('total_amount');
+                $total_profit=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_profit');
+                $total_net_price=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_net_price');
                 $total_sell_return=0;
             }
             $data['total_sales']=$total_sales;

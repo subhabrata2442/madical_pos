@@ -874,6 +874,11 @@ function setRow(element) {
                         '" value="' +
                         discount +
                         '">' +
+                        '<input type="hidden" name="product_expiry_date_' +
+                        product_id +
+                        '" id="product_expiry_date_' +
+                        product_id +
+                        '" value="">' +
                         '<input type="hidden" name="product_totalNetPrice_' +
                         product_id +
                         '" id="product_totalNetPrice_' +
@@ -942,6 +947,12 @@ function setRow(element) {
                         '">' +
                         selling_by +
                         "</td>" +
+                        '<td>' +
+                        '<input type="date" name="set_product_expiry_date_' +
+                        product_id +
+                        '" id="set_product_expiry_date_' +
+                        product_id +
+                        '" value="" class="set_product_expiry_date">' +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_quantity" contenteditable = "true" id = "product_quantity_' +
                         product_id +
                         '">' +
@@ -1397,6 +1408,9 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
                 ).val();
                 product_detail["product_totalNetPrice"] = $(
                     "#product_totalNetPrice_" + product_id
+                ).val();
+                product_detail["product_expiry_date"] = $(
+                    "#product_expiry_date_" + product_id
                 ).val();
 
                 $(this)
