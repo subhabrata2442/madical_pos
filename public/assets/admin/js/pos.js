@@ -1302,6 +1302,7 @@ function setProductRow(element) {
                         <td>${item_detail.item_prices[p].selling_by_name}</td>
                         <td>${item_detail.item_prices[p].t_qty}</td>
                         <td>${item_detail.item_prices[p].selling_price}</td>
+                        <td>${item_detail.item_prices[p].product_expiry_date}</td>
                         <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
                     </tr>`;
                     }

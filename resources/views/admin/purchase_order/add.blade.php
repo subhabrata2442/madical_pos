@@ -277,6 +277,7 @@ $adminRoll = Session::get('admin_type');
                     <th>Company</th>
                     <th>Selling by</th>
                     {{-- <th>Drugstore name</th> --}}
+                    <th>Expiry Date</th>
                     <th>Quantity</th>
                     <th>No per package</th>
                     <th>Net Price</th>

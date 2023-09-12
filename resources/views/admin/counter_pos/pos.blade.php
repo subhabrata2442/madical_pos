@@ -293,7 +293,7 @@
 {{-- End create customer modal --}}
 {{-- Multiple price Modal --}}
 <div class="modal fade modalMdHeader" data-bs-backdrop="static" data-bs-keyboard="false" id="modal_multiple_price_list" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-1Label">Select Price Item</h5>
@@ -310,6 +310,7 @@
                         <th>Selling by</th>
                         <th>Stock</th>
                         <th>MRP</th>
+                        <th>Expiry Date</th>
                         <th>Select</th>
                     </tr>
                 </thead>

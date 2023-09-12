@@ -259,6 +259,15 @@ $(document).on("keyup", ".input-product_totalQuantity", function() {
     }, 500);
 });
 
+$(document).on('change', '.set_product_expiry_date', function() {
+    var product_id = $(this).attr("id").split("set_product_expiry_date_")[1];
+    var tbl_row = $(this).closest("tr").data("id");
+    //console.log($(this).val());
+    console.log('product_id', product_id);
+    $('#product_expiry_date_' + product_id).val($(this).val());
+    //console.log('tbl_row', tbl_row);
+});
+
 function final_calculation() {
     $("#no_of_items").html("0");
     $("#qty_total").html("0");
