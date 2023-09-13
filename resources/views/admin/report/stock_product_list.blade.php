@@ -1,5 +1,23 @@
 @extends('layouts.admin')
 @section('admin-content')
+<div class="srcBtnWrap">
+	<div class="card">
+		<div class="row align-items-center justify-content-between">
+			{{-- <div class="col-auto">
+				<h4>Invoice Wise Purchase</h4>
+			</div> --}}
+			<div class="col d-flex invoiceAmout justify-content-center">
+				<ul class="d-flex">
+					<li>Invoice No : <span>{{@$data['purchase_inward_stock']->invoice_no}}</span></li>
+					<li>Inward date : <span>{{@date('d-m-Y', strtotime($data['purchase_inward_stock']->inward_date))}}</span></li>
+					<li>Purchase date : <span>{{@date('d-m-Y', strtotime($data['purchase_inward_stock']->purchase_date))}}</span></li>
+					<!-- <li>advanced Search : <span>0</span></li> -->
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+</div>
 <div class="row">
   <div class="col-12">
     <div class="card">
