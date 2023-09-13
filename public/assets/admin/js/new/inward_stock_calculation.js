@@ -101,8 +101,11 @@ function setProfitCalulation() {
             net_price = (final_net_price - discountAmount).toFixed(2);
 
             if (product_isChronic == 'Yes') {
+                // chronic_amount_percentage = (
+                //     (Number(net_price) - (Number(chronic_amount)) / net_price) *
+                //     Number(100)).toFixed(2);
                 chronic_amount_percentage = (
-                    (Number(net_price) - (Number(chronic_amount)) / net_price) *
+                    ((Number(chronic_amount) - Number(net_price)) / net_price) *
                     Number(100)).toFixed(2);
                 // console.log(net_price);
                 // console.log("chronic_amount", chronic_amount);
