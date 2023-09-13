@@ -151,6 +151,7 @@ class ReportController extends Controller
 
 		//$purchase = InwardStockProducts::where('inward_stock_id',base64_decode($inward_stock_id))->limit(1)->offset(0)->orderBy('id', 'desc')->get();
 		//echo '<pre>';print_r($purchase[0]->product->brand);exit;
+		$purchase_inward_stock = PurchaseInwardStock::where('id',base64_decode($inward_stock_id))->first();
 		
 		try {
 			if ($request->ajax()) {
@@ -207,11 +208,13 @@ class ReportController extends Controller
 					})
 					->rawColumns([])
 					->make(true);
+			
 			}
 			
 			$data = [];
 			$data['heading'] = 'Stock Product List';
 			$data['breadcrumb'] = ['Stock', 'Product', 'List'];
+			$data['purchase_inward_stock'] = $purchase_inward_stock;
 			$data['inward_stock_id'] = $inward_stock_id;
 			return view('admin.report.stock_product_list', compact('data'));
 		} catch (\Exception $e) {
