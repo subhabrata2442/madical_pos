@@ -95,10 +95,14 @@ function setProfitCalulation() {
             var net_price =
                 (Number(product_mrp) * Number(cost_rate) * product_quantity) /
                 (Number(product_quantity) + Number(bonous));
-            var final_net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
-            var discountAmount = (final_net_price * payment_discount) / 100;
+            // var final_net_price = (Number(net_price) / Number(noper_package)).toFixed(2);
+            // var discountAmount = (final_net_price * payment_discount) / 100;
 
-            net_price = (final_net_price - discountAmount).toFixed(2);
+            // net_price = (final_net_price - discountAmount).toFixed(2);
+            var discountAmount = (net_price * payment_discount) / 100;
+
+            net_price = (net_price - discountAmount).toFixed(2);
+
 
             if (product_isChronic == 'Yes') {
                 // chronic_amount_percentage = (
