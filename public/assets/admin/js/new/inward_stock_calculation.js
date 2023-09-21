@@ -101,7 +101,7 @@ function setProfitCalulation() {
             // net_price = (final_net_price - discountAmount).toFixed(2);
             var discountAmount = (net_price * payment_discount) / 100;
 
-            net_price = (net_price - discountAmount).toFixed(2);
+            net_price = (net_price - discountAmount).toFixed();
 
 
             if (product_isChronic == 'Yes') {
