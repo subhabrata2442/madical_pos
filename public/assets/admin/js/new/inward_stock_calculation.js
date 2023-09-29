@@ -31,11 +31,12 @@ function setProfitCalulation() {
             .find("#chronic_amount_" + product_id)
             .html()
         );
-        if (product_isChronic == 'Yes') {
+        /* if (product_isChronic == 'Yes') {
             product_mrp = chronic_amount;
         } else {
             product_mrp = product_price;
-        }
+        } */
+        product_mrp = product_price;
         var cost_rate = Number(
             $(this)
             .find("#product_rate_" + product_id)
@@ -128,11 +129,16 @@ function setProfitCalulation() {
         sub_total += Number(net_price);
 
         var profitAmount = 0;
-        if (selling_price > 0 && product_quantity > 0) {
-            profitAmount = (Number(selling_price) - Number(net_price)).toFixed(
-                2
-            );
+        if (product_isChronic == 'Yes') {
+            profitAmount = (Number(chronic_amount) - Number(net_price));
+        } else {
+            if (selling_price > 0 && product_quantity > 0) {
+                profitAmount = (Number(selling_price) - Number(net_price)).toFixed(
+                    2
+                );
+            }
         }
+
         if (profitAmount <= 0) {
             $("#product_profit_" + product_id).css("color", "#c9571b");
         } else {
