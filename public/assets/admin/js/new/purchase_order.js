@@ -973,21 +973,11 @@ function setRow(element) {
                         '">' +
                         price +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
-                        product_id +
-                        '">' +
-                        chronic_amount +
-                        "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number chronic_amount_percentage"  id="chronic_amount_percentage_' +
-                        product_id +
-                        '">' +
-                        0 +
-                        "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
+                        /* '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
                         '">' +
                         discount +
-                        "</td>" +
+                        "</td>" + */
                         '<td onkeypress="return check_character(event);" class="number greenBg product_bonous" contenteditable = "true" id="product_bonous_' +
                         product_id +
                         '">' +
@@ -1008,6 +998,11 @@ function setRow(element) {
                         '">' +
                         sell_price +
                         "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
+                        product_id +
+                        '">' +
+                        chronic_amount +
+                        "</td>" +
                         '<td onkeypress="return check_character(event);" class="number  product_profit"  id="product_profit_' +
                         product_id +
                         '">' +
@@ -1017,6 +1012,11 @@ function setRow(element) {
                         product_id +
                         '">' +
                         profit_percent +
+                        "</td>" +
+                        '<td onkeypress="return check_character(event);" class="number chronic_amount_percentage"  id="chronic_amount_percentage_' +
+                        product_id +
+                        '">' +
+                        0 +
                         "</td>" +
                         '<td onkeypress="return check_character(event);" class="number product_isChronic"  id="product_isChronic_' +
                         product_id +
