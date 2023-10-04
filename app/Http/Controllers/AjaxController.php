@@ -1082,7 +1082,7 @@ class AjaxController extends Controller {
 								'no_package'  		=> $inward_stock['product_detail'][$i]['product_package'],
 								'net_price_befour_discount' => $inward_stock['product_detail'][$i]['product_totalNetPrice'],
 								'discount_cost'  	=> $inward_stock['product_detail'][$i]['product_discountCost'],
-								'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
+								//'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
 								'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
 								'net_price'  		=> $inward_stock['product_detail'][$i]['product_netPrice'],
 								'product_mrp'  		=> $product_mrp,
