@@ -3,9 +3,10 @@ function setProfitCalulation() {
     var sub_total = 0;
     var gross_total_amount = 0;
     var total_profit = 0;
+    var total_profit_percent = 0;
     var payment_discount = $('#payment_discount').val();
     //console.log($('#payment_discount').val());
-
+    //console.log("total_profit-", total_profit);
     $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
         var tbl_row = $(this).data("id");
@@ -27,9 +28,9 @@ function setProfitCalulation() {
             .html()
         );
         var chronic_amount = Number(
-            $(this)
-            .find("#chronic_amount_" + product_id)
-            .html()
+            ($(this)
+                .find("#chronic_amount_" + product_id)
+                .html()).replace(/,/g, '')
         );
         /* if (product_isChronic == 'Yes') {
             product_mrp = chronic_amount;
@@ -43,9 +44,9 @@ function setProfitCalulation() {
             .html()
         );
         var selling_price = Number(
-            $(this)
-            .find("#product_sellPrice_" + product_id)
-            .html()
+            ($(this)
+                .find("#product_sellPrice_" + product_id)
+                .html()).replace(/,/g, '')
         );
 
         gross_total_amount += Number(selling_price);
@@ -61,20 +62,22 @@ function setProfitCalulation() {
             .find("#product_package_" + product_id)
             .html()
         );
-
-        var total_quantity = 0;
-
-        if (selling_type == 1) {
-            total_quantity = product_quantity;
-        } else {
-            total_quantity = product_quantity * noper_package;
-        }
-
         var bonous = Number(
             $(this)
             .find("#product_bonous_" + product_id)
             .html()
         );
+        qty_total += Number(bonous);
+
+        var total_quantity = 0;
+
+        if (selling_type == 1) {
+            total_quantity = product_quantity + bonous;
+        } else {
+            total_quantity = (product_quantity + bonous) * noper_package;
+        }
+
+
         var product_discount = Number(
             $(this)
             .find("#product_discount_" + product_id)
@@ -102,7 +105,15 @@ function setProfitCalulation() {
             // net_price = (final_net_price - discountAmount).toFixed(2);
             var discountAmount = (net_price * payment_discount) / 100;
 
+            // if (selling_type == 1) {
             net_price = (net_price - discountAmount).toFixed();
+            // } else {
+            //     net_price = ((net_price - discountAmount).toFixed()) / Number(noper_package).toFixed();
+            // }
+            if (selling_type == 2) {
+                net_price = (net_price / noper_package).toFixed();
+            }
+
 
 
             if (product_isChronic == 'Yes') {
@@ -111,7 +122,7 @@ function setProfitCalulation() {
                 //     Number(100)).toFixed(2);
                 chronic_amount_percentage = (
                     ((Number(chronic_amount) - Number(net_price)) / net_price) *
-                    Number(100)).toFixed(2);
+                    Number(100)).toFixed();
                 // console.log(net_price);
                 // console.log("chronic_amount", chronic_amount);
             }
@@ -121,11 +132,12 @@ function setProfitCalulation() {
             var discount_value = (net_price / 100) * product_discount;
             net_price = Number(net_price) - Number(discount_value);
             $("#product_discountCost_" + product_id).val(
-                discount_value.toFixed(decimalpoints)
+                discount_value.toFixed()
             );
         }
 
-        $("#product_netPrice_" + product_id).html(Number(net_price).toFixed(2));
+        //$("#product_netPrice_" + product_id).html(Number(net_price).toFixed(2));
+        $("#product_netPrice_" + product_id).html(formatNumber(0 + parseFloat(net_price)));
         sub_total += Number(net_price);
 
         var profitAmount = 0;
@@ -133,9 +145,7 @@ function setProfitCalulation() {
             profitAmount = (Number(chronic_amount) - Number(net_price));
         } else {
             if (selling_price > 0 && product_quantity > 0) {
-                profitAmount = (Number(selling_price) - Number(net_price)).toFixed(
-                    2
-                );
+                profitAmount = (Number(selling_price) - Number(net_price)).toFixed();
             }
         }
 
@@ -148,21 +158,27 @@ function setProfitCalulation() {
         total_profit += Number(profitAmount);
         var profitPercent = 0;
         if (profitAmount > 0 && product_quantity > 0) {
-            profitPercent = (
-                (Number(profitAmount) / Number(net_price)) *
-                Number(100)
-            ).toFixed(2);
+
+            if (product_isChronic == 'Yes') {
+                profitPercent = (((Number(selling_price) - Number(net_price)) / Number(net_price)) * Number(100)).toFixed();
+            } else {
+                profitPercent = (
+                    (Number(profitAmount) / Number(net_price)) *
+                    Number(100)
+                ).toFixed();
+            }
+
         }
         if (profitPercent <= 0) {
             $("#product_profitPercent_" + product_id).css("color", "#c9571b");
         } else {
             $("#product_profitPercent_" + product_id).css("color", "black");
         }
-        $("#product_profitPercent_" + product_id).html(profitPercent);
+        $("#product_profitPercent_" + product_id).html(profitPercent + '%');
         $("#product_totalQuantity_" + product_id).html(total_quantity);
 
 
-        $("#chronic_amount_percentage_" + product_id).html(chronic_amount_percentage);
+        $("#chronic_amount_percentage_" + product_id).html(chronic_amount_percentage + '%');
 
         // console.log("net_price", net_price);
 
@@ -177,20 +193,29 @@ function setProfitCalulation() {
 
     //console.log("qty_total", qty_total);
     $("#qty_total").html(qty_total);
-    $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
+    // $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
+    $("#sub_total").html("$" + formatNumber(0 + parseFloat(sub_total)));
+    // $("#gross_total_amount").html(
+    //     "$" + gross_total_amount.toFixed(decimalpoints)
+    // );
     $("#gross_total_amount").html(
-        "$" + gross_total_amount.toFixed(decimalpoints)
+        "$" + formatNumber(0 + parseFloat(gross_total_amount))
     );
 
     $("#input-supplier_qty_total").val(qty_total);
-    $("#input-supplier_sub_total").val(sub_total.toFixed(decimalpoints));
-    $("#input-supplier_gross_amount").val(sub_total.toFixed(decimalpoints));
+    $("#input-supplier_sub_total").val(sub_total.toFixed());
+    $("#input-supplier_gross_amount").val(sub_total.toFixed());
     $("#input-gross_total_amount").val(
-        gross_total_amount.toFixed(decimalpoints)
+        gross_total_amount.toFixed()
     );
+
     $("#total_profit").html(
-        "$" + total_profit.toFixed(decimalpoints)
+        "$" + formatNumber(0 + parseFloat(total_profit))
     );
+    if (total_profit > 0 && sub_total > 0) {
+        total_profit_percent = ((Number(total_profit) / Number(sub_total)) * Number(100)).toFixed();
+    }
+    $('#total_profit_percent').html(total_profit_percent + '%');
 }
 
 $(document).on("keyup", ".product_price", function() {
@@ -210,7 +235,12 @@ $(document).on("keyup", ".product_rate", function() {
 $(document).on("keyup", ".product_sellPrice", function() {
     var product_id = $(this).attr("id").split("product_sellPrice_")[1];
     var tbl_row = $(this).closest("tr").data("id");
-
+    // format number
+    $(this).text(function(index, value) {
+        return value
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
     setProfitCalulation();
 });
 
@@ -239,6 +269,12 @@ $(document).on("keyup", ".product_discount", function() {
 });
 
 $(document).on("keyup", ".chronic_amount", function() {
+    // format number
+    $(this).text(function(index, value) {
+        return value
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
     setProfitCalulation();
 });
 
@@ -291,6 +327,7 @@ function final_calculation() {
     var qty_total = 0;
     var sub_total = 0;
     var gross_total_amount = 0;
+    var total_profit = 0;
 
     $("#product_record_sec tr").each(function(index, e) {
         var product_id = $(this).attr("id").split("product_")[1];
@@ -347,18 +384,31 @@ function final_calculation() {
     //alert(qty_total);
     $("#no_of_items").html(no_of_items);
     $("#qty_total").html(qty_total);
-    $("#sub_total").html("$" + sub_total.toFixed(decimalpoints));
-    $("#gross_total_amount").html("$" + sub_total.toFixed(decimalpoints));
+    $("#sub_total").html("$" + sub_total.toFixed());
+    //$("#gross_total_amount").html("$" + sub_total.toFixed(decimalpoints));
+    $("#gross_total_amount").html("$" + formatNumber(0 + parseFloat(sub_total)));
     // $("#sub_total").html('₹' + sub_total);
 
     $("#input-supplier_qty_total").val(qty_total);
-    $("#input-supplier_sub_total").val(sub_total.toFixed(decimalpoints));
-    $("#input-supplier_gross_amount").val(sub_total.toFixed(decimalpoints));
-    $("#input-gross_total_amount").val(sub_total.toFixed(decimalpoints));
+    $("#input-supplier_sub_total").val(sub_total.toFixed());
+    $("#input-supplier_gross_amount").val(sub_total.toFixed());
+    $("#input-gross_total_amount").val(sub_total.toFixed());
+    $("#total_profit").html(
+        "$" + formatNumber(0 + parseFloat(total_profit))
+    );
     // $("#input-supplier_tax_amount").val(tax_amount);
 
     // $('#inwardStockSubmitBtmSec').hide();
     // if (qty_total > 0) {
     //     $('#inwardStockSubmitBtmSec').show();
     // }
+    setProfitCalulation();
+}
+
+function formatNumber(net_price) {
+    //const options = { style: 'decimal', minimumFractionDigits: 2 };
+    const formattedNumber = net_price.toLocaleString('en-US');
+    // console.log(formattedNumber);
+    //const roundNumber = Math.round(formattedNumber);
+    return formattedNumber;
 }

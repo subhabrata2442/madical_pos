@@ -80,7 +80,7 @@ $(document).on("keyup", "#purchase_final_cost_input", function() {
 });
 
 $(document).ready(function() {
-    $("#invoice_upload-form").submit(function(evt) {
+    /* $("#invoice_upload-form").submit(function(evt) {
         evt.preventDefault();
         var formData = new FormData(this);
         $.ajax({
@@ -246,12 +246,14 @@ $(document).ready(function() {
                             product_id +
                             '">' +
                             bonous +
-                            "</td>" +
-                            '<td id="product_rate_' +
-                            product_id +
-                            '">' +
-                            rate +
-                            "</td>" +
+                            "</td>"
+                            // +
+                            //                            '<td id="product_rate_' +
+                            //                            product_id +
+                            //                            '">' +
+                            //                            rate +
+                            //                            "</td>"
+                            +
                             '<td id="product_totalQuantity_' +
                             product_id +
                             '">' +
@@ -299,7 +301,7 @@ $(document).ready(function() {
                 //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
             },
         });
-    });
+    }); */
 });
 
 $(document).on("click", "#addProductSubmitBtm", function() {
@@ -751,6 +753,7 @@ function check_character(event) {
     ) {
         event.preventDefault();
     }
+
 }
 
 // Set Text to search box and get details
@@ -788,17 +791,20 @@ function setRow(element) {
                 var dosage = item_detail.dosage;
                 var company = item_detail.company;
                 var drugstore = item_detail.drugstore;
-                var quantity = 0;
+                var quantity = '';
                 var package = item_detail.package;
                 var net_price = Number(item_detail.net_price).toFixed(2);
                 var selling_by = item_detail.selling_by;
                 var selling_type = item_detail.selling_type;
 
-                var price = item_detail.price;
-                var bonous = item_detail.bonous;
+                //var price = item_detail.price;
+                var price = '';
+                //var bonous = item_detail.bonous;
+                var bonous = '';
                 var rate = 1;
                 var total_quantity = item_detail.total_quantity;
-                var sell_price = item_detail.sell_price;
+                //var sell_price = item_detail.sell_price;
+                var sell_price = '';
 
                 var profit = item_detail.profit;
                 var profit_percent = item_detail.profit_percent;
@@ -817,7 +823,7 @@ function setRow(element) {
                 if (payment_currency_type == "usd") {
                     rate = payment_currency_usd_rate;
                 }
-                var chronic_amount = 0;
+                var chronic_amount = '';
                 var chronic_amount_edit = 'false';
                 var chronic_amount_edit_class = '';
                 if (is_chronic == 'Yes') {
@@ -917,21 +923,24 @@ function setRow(element) {
                         product_id +
                         '" style="display:none">' +
                         category_id +
-                        "</td>" +
-                        '<td id="product_barcode_' +
-                        product_id +
-                        '">' +
-                        product_barcode +
-                        "</td>" +
+                        "</td>"
+                        /* +
+                                               '<td id="product_barcode_' +
+                                               product_id +
+                                               '">' +
+                                               product_barcode +
+                                               "</td>" */
+                        +
                         '<td id="product_brand_' +
                         product_id +
                         '">' +
                         brand_name +
-                        "</td>" + '<td id="product_name_' +
-                        product_id +
-                        '">' +
-                        product_name +
                         "</td>" +
+                        /* '<td id="product_name_' +
+                                               product_id +
+                                               '">' +
+                                               product_name +
+                                               "</td>" + */
                         '<td id="product_dosage_' +
                         product_id +
                         '">' +
@@ -948,11 +957,11 @@ function setRow(element) {
                         selling_by +
                         "</td>" +
                         '<td>' +
-                        '<input type="date" name="set_product_expiry_date_' +
+                        '<input type="text" name="set_product_expiry_date_' +
                         product_id +
                         '" id="set_product_expiry_date_' +
                         product_id +
-                        '" value="" class="set_product_expiry_date">' +
+                        '" value="" class="set_product_expiry_date" placeholder="MM/YYYY">' +
                         '<td onkeypress="return check_character(event);" class="number greenBg product_quantity" contenteditable = "true" id = "product_quantity_' +
                         product_id +
                         '">' +
@@ -983,7 +992,7 @@ function setRow(element) {
                         '">' +
                         bonous +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number product_rate" id="product_rate_' +
+                        '<td onkeypress="return check_character(event);" class="number product_rate" style="display:none" id="product_rate_' +
                         product_id +
                         '">' +
                         rate +
@@ -993,12 +1002,12 @@ function setRow(element) {
                         '">' +
                         total_quantity +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_sellPrice" contenteditable = "true" id="product_sellPrice_' +
+                        '<td onkeypress="return check_character(event);" class="number greenBg product_sellPrice text-bold" contenteditable = "true" id="product_sellPrice_' +
                         product_id +
                         '">' +
                         sell_price +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
+                        '<td onkeypress="return check_character(event);" class="number text-bold ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
                         product_id +
                         '">' +
                         chronic_amount +
@@ -1651,3 +1660,9 @@ $(document).on('keyup', '#payment_debt_day', function() {
         }
     }, 500)
 })
+
+$(document).ready(function() {
+    $('.inputSelect').click(function() {
+        $(this).select();
+    });
+});
