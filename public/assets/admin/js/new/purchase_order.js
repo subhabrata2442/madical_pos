@@ -824,10 +824,10 @@ function setRow(element) {
                     rate = payment_currency_usd_rate;
                 }
                 var chronic_amount = '';
-                var chronic_amount_edit = 'false';
+                var chronic_amount_edit = 'display:none';
                 var chronic_amount_edit_class = '';
                 if (is_chronic == 'Yes') {
-                    var chronic_amount_edit = 'true';
+                    var chronic_amount_edit = 'display:block';
                     var chronic_amount_edit_class = 'greenBg';
                 }
                 //var is_new = "new_item";
@@ -924,23 +924,23 @@ function setRow(element) {
                         '" style="display:none">' +
                         category_id +
                         "</td>"
-                        /* +
-                                               '<td id="product_barcode_' +
+                        +
+                                               '<td style="display:none;" id="product_barcode_' +
                                                product_id +
                                                '">' +
                                                product_barcode +
-                                               "</td>" */
+                                               "</td>"
                         +
                         '<td id="product_brand_' +
                         product_id +
                         '">' +
                         brand_name +
                         "</td>" +
-                        /* '<td id="product_name_' +
+                        '<td style="display:none;" id="product_name_' +
                                                product_id +
                                                '">' +
                                                product_name +
-                                               "</td>" + */
+                                               "</td>" +
                         '<td id="product_dosage_' +
                         product_id +
                         '">' +
@@ -961,12 +961,10 @@ function setRow(element) {
                         product_id +
                         '" id="set_product_expiry_date_' +
                         product_id +
-                        '" value="" class="set_product_expiry_date" placeholder="MM/YYYY">' +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_quantity" contenteditable = "true" id = "product_quantity_' +
+                        '" value="" class="set_product_expiry_date isnumber" placeholder="MM/YYYY" onkeyup="modifyInput(this)" size="7" minlength="7" maxlength="7">' +
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_quantity" id = "product_quantity_' +
                         product_id +
-                        '">' +
-                        quantity +
-                        "</td>" +
+                        '" value"'+quantity+'"></td>' +
                         '<td onkeypress="return check_character(event);" class="number product_package" id="product_package_' +
                         product_id +
                         '">' +
@@ -977,21 +975,17 @@ function setRow(element) {
                         '">' +
                         net_price +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_price" contenteditable = "true" id="product_price_' +
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_price" id="product_price_' +
                         product_id +
-                        '">' +
-                        price +
-                        "</td>" +
+                        '" value="'+price+'"></td>' +
                         /* '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
                         '">' +
                         discount +
                         "</td>" + */
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_bonous" contenteditable = "true" id="product_bonous_' +
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_bonous" id="product_bonous_' +
                         product_id +
-                        '">' +
-                        bonous +
-                        "</td>" +
+                        '" value="'+bonous+'"></td>' +
                         '<td onkeypress="return check_character(event);" class="number product_rate" style="display:none" id="product_rate_' +
                         product_id +
                         '">' +
@@ -1002,16 +996,11 @@ function setRow(element) {
                         '">' +
                         total_quantity +
                         "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number greenBg product_sellPrice text-bold" contenteditable = "true" id="product_sellPrice_' +
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_sellPrice text-bold" id="product_sellPrice_' +
+                        product_id +'" value="'+sell_price+'">'+
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize text-bold ' + chronic_amount_edit_class + ' chronic_amount" style="'+chronic_amount_edit+'" id="chronic_amount_' +
                         product_id +
-                        '">' +
-                        sell_price +
-                        "</td>" +
-                        '<td onkeypress="return check_character(event);" class="number text-bold ' + chronic_amount_edit_class + ' chronic_amount" contenteditable = "' + chronic_amount_edit + '" id="chronic_amount_' +
-                        product_id +
-                        '">' +
-                        chronic_amount +
-                        "</td>" +
+                        '" value="'+chronic_amount+'"></td>' +
                         '<td onkeypress="return check_character(event);" class="number  product_profit"  id="product_profit_' +
                         product_id +
                         '">' +
@@ -1434,11 +1423,25 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
                             product_detail[id] = values;
                         }
                     });
+                // product_info.push(product_detail);
+
+                $(this)
+                    .find("td input")
+                    .each(function() {
+                        if ($(this).attr("id") != undefined) {
+                            id = $(this)
+                                .attr("id")
+                                .split("_" + product_id)[0];
+                            //console.log(id);return false;
+                            values = $(this).val();
+                            product_detail[id] = values;
+                        }
+                    });
                 product_info.push(product_detail);
             });
     });
 
-    //console.log(product_info);
+    console.log(product_info);
     //return false;
 
     inward_stock_info["product_detail"] = product_info;
@@ -1666,3 +1669,17 @@ $(document).ready(function() {
         $(this).select();
     });
 });
+
+function modifyInput(ele) {
+    if (ele.value.length === 2){ 
+        ele.value = ele.value + '/';
+    }else if (ele.value.length === 3 && ele.value.charAt(2) === '/'){
+        ele.value = ele.value.replace('/', '');
+    }
+}
+
+// $(document).ready(function() {
+//     $(".isnumber").keydown(function(e) {
+//         -1 !== $.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || 65 == e.keyCode && (!0 === e.ctrlKey || !0 === e.metaKey) || 67 == e.keyCode && (!0 === e.ctrlKey || !0 === e.metaKey) || 88 == e.keyCode && (!0 === e.ctrlKey || !0 === e.metaKey) || e.keyCode >= 35 && e.keyCode <= 39 || (e.shiftKey || e.keyCode < 48 || e.keyCode > 57) && (e.keyCode < 96 || e.keyCode > 105) && e.preventDefault()
+//     });
+// });
