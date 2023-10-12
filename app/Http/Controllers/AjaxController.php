@@ -54,6 +54,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 
 use Auth;
+use DB;
 
 
 class AjaxController extends Controller {
@@ -907,6 +908,10 @@ class AjaxController extends Controller {
 	}
 
 	public function ajaxpost_add_inward_stock($request) {
+
+	DB::beginTransaction();
+
+	try {
 		//dd($request->all());
 		$branch_id=Auth::user()->id;
 		
@@ -994,7 +999,7 @@ class AjaxController extends Controller {
 
 				//$purchaseInwardStockId=2;
 
-			try {	
+				
 				
 				if(isset($inward_stock['product_detail'])){
 					if(count($inward_stock['product_detail'])>0){
@@ -1116,9 +1121,7 @@ class AjaxController extends Controller {
 				}
 
 
-			} catch (\Exception $e) {
-				PurchaseInwardStock::where('id',$purchaseInwardStockId)->delete();
-			}
+			
 
 
 
@@ -1126,9 +1129,19 @@ class AjaxController extends Controller {
 			}
 		}
 		
+		DB::commit();
+
 		$return_data['msg']		= 'Successfully added';
 		$return_data['status']	= 1;
 		echo json_encode($return_data);
+		
+	} catch (\Exception $e) {
+		DB::rollback();
+		$return_data['msg']		= 'Something went wrong';
+		$return_data['status']	= 0;
+		echo json_encode($return_data);
+	}
+
 	}
 	
 	

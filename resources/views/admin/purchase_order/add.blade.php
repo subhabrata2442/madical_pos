@@ -282,18 +282,18 @@ $adminRoll = Session::get('admin_type');
                     <th>Selling by</th>
                     {{-- <th>Drugstore name</th> --}}
                     <th>Expiry Date</th>
-                    <th>Quantity</th>
+                    <th style="width: 80px;">Quantity</th>
                     <th>NPP</th> {{-- No per package --}}
                     <th>Net Price</th>
-                    <th>Price</th>
+                    <th style="width: 80px;">Price</th>
                     
                     
                     {{-- <th>Discount %</th> --}}
-                    <th>Bonous</th>
+                    <th style="width: 80px;">Bonous</th>
                     {{-- <th id="th_rate_title">US/IQ rate</th> --}}
                     <th>Total Quantity</th>
-                    <th>Sell Price</th>
-                    <th>Chronic Price</th>
+                    <th style="width: 80px;">Sell Price</th>
+                    <th style="width: 80px;">Chronic Price</th>
                     <th>Profit</th>
                     <th>% Profit</th>
                     <th>Chronic %</th>
