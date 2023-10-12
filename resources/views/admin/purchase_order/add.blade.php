@@ -39,13 +39,13 @@ $adminRoll = Session::get('admin_type');
                       required="required" value="<?php echo date('Y-m-d'); ?>">
                   </li>
                 </ul>
-                <ul class="d-flex flex-wrap align-items-center">
+                {{-- <ul class="d-flex flex-wrap align-items-center">
                   <li class="invAreaInf">Inward Date</li>
                   <li class="invAreaVal">
                     <input type="date" name="inward_date" id="inward_date" class=" form-control input-1"
                       required="required">
                   </li>
-                </ul>
+                </ul> --}}
 
                 @if($adminRoll==1)
                 <ul class="d-flex flex-wrap align-items-center">
@@ -203,6 +203,10 @@ $adminRoll = Session::get('admin_type');
                   <h5>Total Profit</h5>
                   <span class="d-block" id="total_profit"></span>
                 </td>
+                <td>
+                  <h5>% Profit</h5>
+                  <span class="d-block" id="total_profit_percent"></span>
+                </td>
 
               </tr>
             </tbody>
@@ -270,29 +274,29 @@ $adminRoll = Session::get('admin_type');
                 <thead>
                   <tr>
                     <th><i class="fas fa-times"></i></th>
-                    <th>Barcode</th>
+                    {{-- <th>Barcode</th> --}}
                     <th>The Brand</th>
-                    <th>Product Name</th>
+                    {{-- <th>Product Name</th> --}}
                     <th>Dosage Form</th>
                     <th>Company</th>
                     <th>Selling by</th>
                     {{-- <th>Drugstore name</th> --}}
                     <th>Expiry Date</th>
                     <th>Quantity</th>
-                    <th>No per package</th>
+                    <th>NPP</th> {{-- No per package --}}
                     <th>Net Price</th>
                     <th>Price</th>
                     
                     
                     {{-- <th>Discount %</th> --}}
                     <th>Bonous</th>
-                    <th id="th_rate_title">US/IQ rate</th>
+                    {{-- <th id="th_rate_title">US/IQ rate</th> --}}
                     <th>Total Quantity</th>
                     <th>Sell Price</th>
                     <th>Chronic Price</th>
                     <th>Profit</th>
-                    <th>Actual % of profit</th>
-                    <th>Chronic Price %</th>
+                    <th>% Profit</th>
+                    <th>Chronic %</th>
                     <th>Is Chronic</th>
                   </tr>
                 </thead>
