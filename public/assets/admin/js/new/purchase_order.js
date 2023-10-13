@@ -998,7 +998,7 @@ function setRow(element) {
                         "</td>" +
                         '<td><input style="font-size: 12px;" type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_sellPrice text-bold" id="product_sellPrice_' +
                         product_id +'" value="'+sell_price+'">'+
-                        '<td><input style="font-size: 12px;" type="text" onkeypress="return check_character(event);" class="number inputSize text-bold ' + chronic_amount_edit_class + ' chronic_amount" style="'+chronic_amount_edit+'" id="chronic_amount_' +
+                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize text-bold ' + chronic_amount_edit_class + ' chronic_amount" style="font-size: 12px;'+chronic_amount_edit+'" id="chronic_amount_' +
                         product_id +
                         '" value="'+chronic_amount+'"></td>' +
                         '<td onkeypress="return check_character(event);" class="number  product_profit"  id="product_profit_' +
