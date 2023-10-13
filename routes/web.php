@@ -180,6 +180,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET', 'POST'], '/invoice_upload', [PurchaseOrderController::class, 'invoice_upload'])->name('invoice_upload');
 		
 		Route::match(['GET', 'POST'], '/inward_stock', [PurchaseOrderController::class, 'create_order'])->name('inward_stock');
+		Route::match(['GET', 'POST'], '/inward_list', [PurchaseOrderController::class, 'list_order'])->name('inward_list');
+		Route::match(['GET', 'POST'], '/inward_edit/{id}', [PurchaseOrderController::class, 'edit_order'])->name('inward_edit');
         Route::match(['GET', 'POST'], '/material_inward', [PurchaseOrderController::class, 'material_inward'])->name('material_inward');
 		Route::match(['GET', 'POST'], '/supplier_bill', [PurchaseOrderController::class, 'supplier_bill'])->name('supplier_bill');
         Route::match(['GET', 'POST'], '/debitnote', [PurchaseOrderController::class, 'debitnote'])->name('debitnote');

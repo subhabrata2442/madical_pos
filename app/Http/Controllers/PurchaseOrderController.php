@@ -3003,4 +3003,85 @@ class PurchaseOrderController extends Controller
 		$string = str_replace(' ', '-', $barcode); // Replaces all spaces with hyphens.
 		return preg_replace('/[^A-Za-z0-9\-]/', '', $barcode); // Removes special chars.
 	  }
+
+
+	  public function list_order(Request $request){
+    //    echo "cadadas";exit;
+		try {
+			//$users = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
+			//echo '<pre>';print_r($users);exit;
+
+            if ($request->ajax()) {
+				$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+                return DataTables::of($purchase) 
+                    ->addColumn('invoice_no', function ($row) {
+                        return $row->invoice_no;
+                    })
+                    ->addColumn('purchase_date', function ($row) {
+						return date('d-m-Y', strtotime($row->purchase_date));
+                    })
+                    ->addColumn('total_qty', function ($row) {
+                        return $row->total_qty;
+                    }) 
+                    ->addColumn('sub_total', function ($row) {
+						return number_format($row->sub_total,2);
+                    })
+                    ->addColumn('action', function ($row) {
+						// <a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.store.delete', [base64_encode($row->id)]) . '">Delete</a>
+                        $dropdown = '<a class="dropdown-item" href="' . route('admin.purchase.inward_edit', [base64_encode($row->id)]) . '">Edit</a>
+                        ';
+                        $btn = '<div class="dropdown">
+                                    <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+
+                                    </div>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        ' . $dropdown . '
+                                    </div>
+                                </div>
+                                ';
+
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+
+            $data = [];
+            $data['heading'] = 'Purchase List';
+            $data['breadcrumb'] = ['Purchase', 'List'];
+            return view('admin.purchase_order.listing', compact('data'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+        }
+    }
+
+	public function edit_order(Request $request, $id){
+
+		$id = base64_decode($id);
+
+		try {
+			$branch_id=Auth::user()->id;
+            $data = [];
+            $data['heading'] 		= 'Update Purchase Order';
+            $data['breadcrumb'] 	= ['Purchase Order', 'Add'];
+            $data['product'] 		= Product::all();
+
+			$data['store']			= [];
+			if($branch_id==1){
+				$data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+			}
+
+			$purchaseInwardStock = PurchaseInwardStock::with(['inwardStockProducts'])->where('invoice_no','!=','')->where('id', $id)->first();
+			$data['purchaseInward'] = $purchaseInwardStock;
+			// dd($purchaseInwardStock);
+			//echo '<pre>';print_r($data['store']);exit;
+			
+            return view('admin.purchase_order.edit_order', compact('data'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+        }
+	}
+
+
 }
