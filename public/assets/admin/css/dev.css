@@ -896,11 +896,11 @@ hr {
 }
 
 .purcheseDetails table tr td span {
-    font-weight: normal;
+    font-weight: 700;
     color: #3c3a3a;
     text-align: center;
     display: block;
-    font-size: .8rem;
+    font-size: 1.5rem;
 }
 
 .noteAreaInner .btn {
@@ -2190,7 +2190,7 @@ a.downloadBtn {
     text-align: center;
     padding: 5px 10px;
     color: #1e1e1e;
-    font-size: .8rem;
+    font-size: 1rem;
     margin: 0 0 10px;
 }
 
@@ -2637,3 +2637,13 @@ a.downloadBtn {
     background: cadetblue;
     color: white;
 }
+/* 12.10.2023 End*/
+.inputSize {
+    background: #a8d8ff !important;
+    width: 100%;
+    box-shadow: none !important;
+    outline: none;
+    border: 1px solid #999999;
+    border-radius: 4px;
+}
+/* 12.10.2023 End*/

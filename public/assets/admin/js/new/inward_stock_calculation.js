@@ -25,12 +25,12 @@ function setProfitCalulation() {
         var product_price = Number(
             $(this)
             .find("#product_price_" + product_id)
-            .html()
+            .val()
         );
         var chronic_amount = Number(
             ($(this)
                 .find("#chronic_amount_" + product_id)
-                .html()).replace(/,/g, '')
+                .val()).replace(/,/g, '')
         );
         /* if (product_isChronic == 'Yes') {
             product_mrp = chronic_amount;
@@ -46,14 +46,14 @@ function setProfitCalulation() {
         var selling_price = Number(
             ($(this)
                 .find("#product_sellPrice_" + product_id)
-                .html()).replace(/,/g, '')
+                .val()).replace(/,/g, '')
         );
 
         gross_total_amount += Number(selling_price);
         var product_quantity = Number(
             $(this)
             .find("#product_quantity_" + product_id)
-            .html()
+            .val()
         );
         qty_total += Number(product_quantity);
 
@@ -65,7 +65,7 @@ function setProfitCalulation() {
         var bonous = Number(
             $(this)
             .find("#product_bonous_" + product_id)
-            .html()
+            .val()
         );
         qty_total += Number(bonous);
 
@@ -236,11 +236,13 @@ $(document).on("keyup", ".product_sellPrice", function() {
     var product_id = $(this).attr("id").split("product_sellPrice_")[1];
     var tbl_row = $(this).closest("tr").data("id");
     // format number
-    $(this).text(function(index, value) {
+    
+    $(this).val(function(index, value) {
         return value
             .replace(/\D/g, "")
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     });
+
     setProfitCalulation();
 });
 
@@ -270,7 +272,7 @@ $(document).on("keyup", ".product_discount", function() {
 
 $(document).on("keyup", ".chronic_amount", function() {
     // format number
-    $(this).text(function(index, value) {
+    $(this).val(function(index, value) {
         return value
             .replace(/\D/g, "")
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -411,4 +413,21 @@ function formatNumber(net_price) {
     // console.log(formattedNumber);
     //const roundNumber = Math.round(formattedNumber);
     return formattedNumber;
+}
+
+function setEndOfContenteditable(contentEditableElement) {
+    var range, selection;
+    if (document.createRange) {
+        range = document.createRange();
+        range.selectNodeContents(contentEditableElement);
+        range.collapse(false);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else if (document.selection) {
+        range = document.body.createTextRange();
+        range.moveToElementText(contentEditableElement);
+        range.collapse(false);
+        range.select();
+    }
 }
