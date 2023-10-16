@@ -1703,10 +1703,12 @@ function barcodeScanner(barcode) {
                 $(".loader_section").show();
                 $("#search_barcode_product").focus();
                 setRow('<li value="' + item_detail.product_id + '">' + item_detail.product_name + '</li>');
+                $("#inwardStockSubmitBtmSec").show();
             } else {
                 $("#search_barcode_product").focus();
                 toastr.error('Product not found');
             }
+            
 
         }
     });
