@@ -166,6 +166,9 @@ if($adminId!=1){
                 <li class="nav-item"> <a href="{{ route('admin.purchase.inward_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_stock') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Purchase Order</p>
                   </a> </li>
+                  <li class="nav-item"> <a href="{{ route('admin.purchase.inward_list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>Purchase List</p>
+                    </a> </li>
                 @endif
                 @if(in_array('admin-purchase-stock-transfer', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.purchase.stock.transfer') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.stock.transfer') active @endif"> <i class="fas fa-list nav-icon"></i>
