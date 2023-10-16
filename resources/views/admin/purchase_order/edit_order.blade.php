@@ -312,6 +312,9 @@ $adminRoll = Session::get('admin_type');
                         <input type="hidden" name="selling_type_{{$itemstock->product_id}}" id="selling_type_{{$itemstock->product_id}}" value="{{$itemstock->product->selling_by}}">
                         <input type="hidden" name="is_chronic_{{$itemstock->product_id}}" id="is_chronic_{{$itemstock->product_id}}" value="{{$itemstock->is_chronic}}">
                         <input type="hidden" name="stock_transfers_detail_id_{{$itemstock->product_id}}" id="stock_transfers_detail_id_{{$itemstock->product_id}}" value="">
+                        
+                        <input type="hidden" name="updateProductId_{{$itemstock->product_id}}" id="updateProductId_{{$itemstock->product_id}}" value="{{$itemstock->product_id}}">
+                        
                         <td>
                             <a href="javascript:;" onclick="removeUpdate({{($key+1)}}, {{$itemstock->id}})" ;=""><svg class="svg-inline--fa fa-times fa-w-11" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg=""><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg><!-- <i class="fa fa-times" aria-hidden="true"></i> Font Awesome fontawesome.com --></a>
                         </td>
@@ -335,8 +338,8 @@ $adminRoll = Session::get('admin_type');
                         <td onkeypress="return check_character(event);" class="number product_rate" style="display:none" id="product_rate_{{$itemstock->product_id}}"></td>
 
                         <td onkeypress="return check_character(event);" class="number input-product_totalQuantity" id="product_totalQuantity_{{$itemstock->product_id}}">{{$itemstock->total_qty}}</td>
-                        <td><input style="font-size: 12px;" type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_sellPrice text-bold" id="product_sellPrice_{{$itemstock->product_id}}" value="{{$itemstock->selling_price}}"></td>
-                        <td><input type="text" onkeypress="return check_character(event);" class="number inputSize text-bold  chronic_amount" style="font-size: 12px;@if($itemstock->is_chronic=='No')display:none @endif" id="chronic_amount_{{$itemstock->product_id}}" value="{{$itemstock->chronic_amount}}"></td>
+                        <td><input style="font-size: 12px;" type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_sellPrice text-bold" id="product_sellPrice_{{$itemstock->product_id}}" value="{{number_format($itemstock->selling_price)}}"></td>
+                        <td><input type="text" onkeypress="return check_character(event);" class="number inputSize text-bold  chronic_amount" style="font-size: 12px;@if($itemstock->is_chronic=='No')display:none @endif" id="chronic_amount_{{$itemstock->product_id}}" value="{{number_format($itemstock->chronic_amount)}}"></td>
                         <td onkeypress="return check_character(event);" class="number  product_profit" id="product_profit_{{$itemstock->product_id}}" style="color: rgb(201, 87, 27);">{{$itemstock->profit_amount}}</td>
                         <td onkeypress="return check_character(event);" class="number  product_profitPercent" id="product_profitPercent_{{$itemstock->product_id}}" style="color: rgb(201, 87, 27);">{{$itemstock->profit_percent}}%</td>
                         <td onkeypress="return check_character(event);" class="number chronic_amount_percentage" id="chronic_amount_percentage_{{$itemstock->product_id}}">{{$itemstock->chronic_amount_percentage}}%</td>
@@ -565,6 +568,30 @@ $adminRoll = Session::get('admin_type');
     });
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
+    });
+
+
+    $( document ).ready(function() {
+        var currency_type = $("#payment_currency_type").val();
+        var payment_currency_usd_rate = $(
+            "#payment_currency_usd_rate"
+        ).val();
+        var rate = payment_currency_usd_rate;
+
+        if (currency_type == "iqd") {
+            rate = 1;
+        }
+
+        //var no_of_items = 0;
+
+        var total_item = $("#product_record_sec tr").length;
+        $("#no_of_items").html(total_item);
+        if (total_item > 0) {
+            $(".product_rate").html(rate);
+            setTimeout(function() {
+                setProfitCalulation();
+            }, 500);
+        }
     });
 
   </script>

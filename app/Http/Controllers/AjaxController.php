@@ -1453,9 +1453,9 @@ class AjaxController extends Controller {
 
 		
 		
-		DB::beginTransaction();
+		// DB::beginTransaction();
 	
-		try {
+		// try {
 			//dd($request->all());
 			$branch_id=Auth::user()->id;
 			
@@ -1463,6 +1463,8 @@ class AjaxController extends Controller {
 			//echo '<pre>';print_r($inward_stock);exit;
 			
 			$purchaseId = $inward_stock['purchaseId'];
+
+			// echo $purchaseId;exit;
 			
 			if($inward_stock['invoice_no']!=''){
 				$invoice_no=$inward_stock['invoice_no'];
@@ -1539,10 +1541,16 @@ class AjaxController extends Controller {
 					);
 					//echo '<pre>';print_r($purchaseStockData);exit;
 					$purchaseInwardStock	= PurchaseInwardStock::where('id', $purchaseId)->update($purchaseStockData);
-					$purchaseInwardStockId	= $purchaseInwardStock->id;
+					// $purchaseInwardStockId	= $purchaseInwardStock->id;
 					//echo '<pre>';print_r($purchaseStockData);exit;
 	
 					//$purchaseInwardStockId=2;
+
+
+					
+					$checkoldinwardstock = InwardStockProducts::where('inward_stock_id', $purchaseId)->get();
+
+					// print_r($checkoldinwardstock->toArray());exit;
 	
 					
 					
@@ -1553,6 +1561,7 @@ class AjaxController extends Controller {
 							$qty_total_profit = 0;
 							for($i=0;count($inward_stock['product_detail'])>$i;$i++){
 								$product_id=$inward_stock['product_detail'][$i]['product_id'];
+
 								$product_info=Product::find($inward_stock['product_detail'][$i]['product_id']);
 	
 								$prev_stock=isset($product_info->stock_qty)?$product_info->stock_qty:0;
@@ -1596,18 +1605,21 @@ class AjaxController extends Controller {
 	
 								$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
 								
-								$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',$product_expiry_date)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
-								if(count($branchProductStockResult)>0){
-									$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
-	
-									$sell_price_t_qty = 0;
-									$sell_price_t_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
-									$sell_price_t_qty +=$product_qty;
-									BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $sell_price_t_qty]);
-								}else{
-									$sell_price_t_qty = 0;
-									$sell_price_t_qty +=$product_qty;
-	
+								$checkinwardstock = InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $product_id)->first();
+								if(!empty($checkinwardstock)){
+									
+									$oldstockcheck = BranchStockProducts::where('product_mrp',$checkinwardstock->product_mrp)->whereDate('product_expiry_date','=',$checkinwardstock->product_expiry_date)->where('branch_id',$checkinwardstock->branch_id)->where('product_id',$checkinwardstock->product_id)->first();
+									// print_r("$oldstockcheck");exit;
+									if($oldstockcheck->t_qty < $product_qty){
+										$qty = ($product_qty - $oldstockcheck->t_qty);
+										$sell_price_t_qty = ($oldstockcheck->t_qty + $qty);
+									}elseif($oldstockcheck->t_qty > $product_qty){
+										$qty = ($oldstockcheck->t_qty - $product_qty);
+										$sell_price_t_qty = ($oldstockcheck->t_qty - $qty);
+									}elseif($oldstockcheck->t_qty == $product_qty){
+										$sell_price_t_qty = $oldstockcheck->t_qty;
+									}
+
 									$branchProductStockSellPriceData=array(
 										'branch_id'			=> $branch_id,
 										'product_id'  		=> $product_id,
@@ -1616,14 +1628,48 @@ class AjaxController extends Controller {
 										'selling_price'		=> str_replace(',', '', $selling_price),
 										'product_mrp'  		=> $product_mrp,
 										'net_price'  		=> str_replace(',', '', $net_price),
-										'product_expiry_date'  		=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
+										'product_expiry_date'  	=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
 									);
-									BranchStockProducts::create($branchProductStockSellPriceData);
-									//echo '<pre>';print_r($branchProductStockSellPriceData);exit;
+									BranchStockProducts::where('id', $oldstockcheck->id)->update($branchProductStockSellPriceData);
+
+
+
+								}else{
+
+									$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',date("Y-d-m", strtotime('01/'.$product_expiry_date)))->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+									if(count($branchProductStockResult)>0){
+										$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+		
+										$sell_price_t_qty = 0;
+										$sell_price_t_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+										$sell_price_t_qty +=$product_qty;
+										BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $sell_price_t_qty]);
+									}else{
+										$sell_price_t_qty = 0;
+										$sell_price_t_qty +=$product_qty;
+		
+										$branchProductStockSellPriceData=array(
+											'branch_id'			=> $branch_id,
+											'product_id'  		=> $product_id,
+											'product_barcode'  	=> $product_barcode,
+											't_qty'  			=> $sell_price_t_qty,
+											'selling_price'		=> str_replace(',', '', $selling_price),
+											'product_mrp'  		=> $product_mrp,
+											'net_price'  		=> str_replace(',', '', $net_price),
+											'product_expiry_date'  		=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
+										);
+										BranchStockProducts::create($branchProductStockSellPriceData);
+
+										//echo '<pre>';print_r($branchProductStockSellPriceData);exit;
+									}
+
 								}
+
+
+								
 	
 								$inward_stock_product=array(
-									'inward_stock_id'	=> $purchaseInwardStockId,
+									'inward_stock_id'	=> $purchaseId,
 									'branch_id'  		=> $branch_id,
 									'product_id'  		=> $product_id,
 									'brand'  			=> $inward_stock['product_detail'][$i]['product_brand'],
@@ -1655,14 +1701,76 @@ class AjaxController extends Controller {
 									'qty_total_sell_price'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_sellPrice']),
 									'qty_total_profit'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'],
 								);
-								InwardStockProducts::create($inward_stock_product);
+
+								
+								if(!empty($checkinwardstock)){
+									InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $product_id)->update($inward_stock_product);
+								}else{
+									InwardStockProducts::create($inward_stock_product);
+								}
+
+								$newProductId[] = $inward_stock['product_detail'][$i]['product_id'];
+
+
+
+
+
+
 								//echo '<pre>';print_r($inward_stock_product);exit;
 								$qty_total_net_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_netPrice']);
 								$qty_total_sell_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_sellPrice']);
 								$qty_total_profit += $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'];
 							}
-							PurchaseInwardStock::where('id',$purchaseInwardStockId)->update(['qty_total_net_price' => $qty_total_net_price,'qty_total_sell_price' => $qty_total_sell_price,'qty_total_profit' => $qty_total_profit]);
+
+							$matchingProducts = [];
+							foreach ($checkoldinwardstock as $product) {
+								if (in_array($product['product_id'], $newProductId)) {
+									// $matchingProducts[] = $product['product_id'];
+								}else{
+									$matchingProducts[] = $product['product_id'];
+								}
+							}
+							if(count($matchingProducts)>0){
+								for ($i=0; $i < count($matchingProducts); $i++) { 
+
+									$checkinwardstockfetch = InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $matchingProducts[$i])->first();
+									
+									// print_r($checkinwardstockfetch);exit;
+									$oldstockcheck = BranchStockProducts::where('product_mrp',$checkinwardstockfetch->product_mrp)->whereDate('product_expiry_date','=',$checkinwardstockfetch->product_expiry_date)->where('branch_id',$checkinwardstockfetch->branch_id)->where('product_id',$checkinwardstockfetch->product_id)->first();
+									
+
+									$sell_price_t_qty = ($oldstockcheck->t_qty - $checkinwardstockfetch->total_qty);
+
+									$branchProductStockSellPriceData=array(
+										'branch_id'			=> $branch_id,
+										'product_id'  		=> $product_id,
+										'product_barcode'  	=> $product_barcode,
+										't_qty'  			=> $sell_price_t_qty,
+										'selling_price'		=> str_replace(',', '', $selling_price),
+										'product_mrp'  		=> $product_mrp,
+										'net_price'  		=> str_replace(',', '', $net_price),
+										'product_expiry_date'  	=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
+									);
+									if($sell_price_t_qty==0){
+										BranchStockProducts::where('id', $oldstockcheck->id)->delete();
+									}else{
+										BranchStockProducts::where('id', $oldstockcheck->id)->update($branchProductStockSellPriceData);
+									}
+									
+									InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $matchingProducts[$i])->delete();
+
+
+								}
+							}
+
+							PurchaseInwardStock::where('id',$purchaseId)->update(['qty_total_net_price' => $qty_total_net_price,'qty_total_sell_price' => $qty_total_sell_price,'qty_total_profit' => $qty_total_profit]);
 						}
+
+						
+						
+
+
+
 					}
 	
 	
@@ -1680,12 +1788,12 @@ class AjaxController extends Controller {
 			$return_data['status']	= 1;
 			echo json_encode($return_data);
 			
-		} catch (\Exception $e) {
-			DB::rollback();
-			$return_data['msg']		= 'Something went wrong';
-			$return_data['status']	= 0;
-			echo json_encode($e->getMessage());
-		}
+		// } catch (\Exception $e) {
+		// 	DB::rollback();
+		// 	$return_data['msg']		= 'Something went wrong';
+		// 	$return_data['status']	= 0;
+		// 	echo json_encode($e->getMessage());
+		// }
 	
 		}
 
