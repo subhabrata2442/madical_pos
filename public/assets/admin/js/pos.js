@@ -766,7 +766,7 @@ $(document).on('click', '.addTopSellingProduct', function() {
 
 $(document).on('click', '#applyChargeBtn', function() {
     var total_payble_amount = $('#total_payble_amount-input').val();
-    $("#charge_total_payable").html(Number(total_payble_amount).toFixed(2) + 'ع.د');
+    $("#charge_total_payable").html('$'+ Number(total_payble_amount).toFixed(2));
 
     var charge_amt = $('#charge_amt-input').val();
     $('#charge_amt').val(charge_amt);
@@ -802,7 +802,7 @@ $(document).ready(function() {
             var total_amount = Number(charge_amount);
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html(Number(total_amount).toFixed(2) + ' ع.د');
+            $("#total_payble_amount").html('$'+ Number(total_amount).toFixed(2));
             $('#charge_amt-input').val(charge_amt);
 
             $('#modal-applyCharges').modal('hide');
@@ -817,7 +817,7 @@ $(document).on('keyup', '#charge_amt', function() {
 
     if (Number(gross_total_amount) > 0) {
         var charge_amount = Number(gross_total_amount) + Number(charge_amt);
-        $("#charge_total_payable").html(Number(charge_amount).toFixed(2) + 'ع.د');
+        $("#charge_total_payable").html('$'+ Number(charge_amount).toFixed(2));
     } else {
         toastr.error("Something Error Occurs!");
         return false;
@@ -829,7 +829,7 @@ $(document).on('keyup', '#charge_amt', function() {
 $(document).on('click', '#applyDiscountBtn', function() {
 
     var total_payble_amount = $('#total_payble_amount-input').val();
-    $("#discount_total_payable").html(Number(total_payble_amount).toFixed(2) + 'ع.د');
+    $("#discount_total_payable").html('$'+ Number(total_payble_amount).toFixed(2));
 
     var discount_percent = $('#selling_special_discount_percent-input').val();
     var total_discount = $('#selling_special_discount_amt-input').val();
@@ -873,7 +873,7 @@ $(document).ready(function() {
             var total_amount = Number(discount_amount);
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html(Number(total_amount).toFixed(2) + 'ع.د');
+            $("#total_payble_amount").html('$'+ Number(total_amount).toFixed(2));
 
             $('#selling_special_discount_percent-input').val(discount_percent);
             $('#selling_special_discount_amt-input').val(total_discount);
@@ -900,7 +900,7 @@ $(document).on('keyup', '#special_discount_percent', function() {
             var total_amount = Number(discount_amount);
 
             $("#special_discount_amt").val(total_discount);
-            $("#discount_total_payable").html(Number(total_amount).toFixed(2) + 'ع.د');
+            $("#discount_total_payable").html('$'+ Number(total_amount).toFixed(2));
         }
 
     } else {
@@ -921,7 +921,7 @@ $(document).on('keyup', '#special_discount_amt', function() {
             var discount_amount = Number(gross_total_amount) - Number(total_discount);
             var total_amount = Number(discount_amount);
 
-            $("#discount_total_payable").html(Number(total_amount).toFixed(2) + 'ع.د');
+            $("#discount_total_payable").html('$'+ Number(total_amount).toFixed(2));
         } else {
             $("#special_discount_percent").val(0);
             toastr.error("Something Error Occurs!");
@@ -1797,12 +1797,12 @@ function discount_cal(product_id) {
 
 function total_cal() {
     $("#total_quantity").html('0');
-    $("#total_mrp").html('0 ع.د');
-    $("#total_discount_amount").html('0 ع.د');
-    $("#tax_amount").html('0 ع.د');
+    $("#total_mrp").html('$0');
+    $("#total_discount_amount").html('$0');
+    $("#tax_amount").html('$0');
     $('#round_off').val(0);
-    $("#sub_total_mrp").html('0 ع.د');
-    $("#total_payble_amount").html('0 ع.د');
+    $("#sub_total_mrp").html('$0');
+    $("#total_payble_amount").html('$0');
 
 
     $('#sub_total_mrp-input').val(0);
@@ -1814,7 +1814,7 @@ function total_cal() {
 
     $('#charge_amt-input').val(0);
     $('#charge_amt').val(0);
-    $("#charge_total_payable").html('0 ع.د');
+    $("#charge_total_payable").html('0');
 
     var total_quantity = 0;
     var total_mrp = 0;
@@ -1849,10 +1849,10 @@ function total_cal() {
         });
 
         $("#total_quantity").html(total_quantity);
-        $("#total_mrp").html(total_mrp + 'ع.د');
-        $("#total_discount_amount").html(total_discount_amount + 'ع.د');
-        $("#sub_total_mrp").html(sub_total_mrp + 'ع.د');
-        $("#total_payble_amount").html(sub_total_mrp + 'ع.د');
+        $("#total_mrp").html('$'+ total_mrp);
+        $("#total_discount_amount").html('$'+ total_discount_amount);
+        $("#sub_total_mrp").html('$'+ sub_total_mrp);
+        $("#total_payble_amount").html('$'+ sub_total_mrp);
 
 
         $('#sub_total_mrp-input').val(sub_total_mrp);
@@ -1870,13 +1870,13 @@ function total_cal() {
             var total_discount = Number(gross_total_amount) * Number(special_discount_percent) / 100;
             var discount_amount = Number(gross_total_amount) - Number(total_discount);
 
-            $("#total_payble_amount").html(discount_amount + 'ع.د');
+            $("#total_payble_amount").html('$'+ discount_amount);
             $('#total_payble_amount-input').val(discount_amount);
 
             $("#special_discount_amt").val(total_discount);
             $("#selling_special_discount_amt-input").val(total_discount);
 
-            $("#discount_total_payable").html(Number(discount_amount).toFixed(2) + 'ع.د');
+            $("#discount_total_payable").html('$'+ Number(discount_amount).toFixed(2));
         }
 
     }, 200);

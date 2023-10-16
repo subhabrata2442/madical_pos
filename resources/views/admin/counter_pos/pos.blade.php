@@ -75,22 +75,22 @@
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Total -</li>
-              <li class="atpinfo"><span id="total_mrp">0.00 ع.د</span> <small>(inclusive all taxes)</small></li>
+              <li class="atpinfo"><span id="total_mrp">$0.00</span> <small>(inclusive all taxes)</small></li>
               <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Discount -</li>
-              <li class="atpinfo" id="total_discount_amount">0.00 ع.د</li>
+              <li class="atpinfo" id="total_discount_amount">$0.00</li>
               <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Tax -</li>
-              <li class="atpinfo" id="tax_amount">0.00 ع.د</li>
+              <li class="atpinfo" id="tax_amount">$0.00</li>
               <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100 subTotal">
               <li class="atpVall">Sub Total-</li>
-              <li class="atpinfo" id="sub_total_mrp">0.00 ع.د</li>
+              <li class="atpinfo" id="sub_total_mrp">$0.00</li>
               <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
             </ul>
             <ul class="d-flex w-100">
@@ -110,7 +110,7 @@
         <div class="atpRight d-flex justify-content-center align-items-center">
           <div class="text-center">
             <h6>Amount to pay</h6>
-            <h3 id="total_payble_amount">0.00 ع.د</h3>
+            <h3 id="total_payble_amount">$0.00</h3>
             <input type="hidden" name="gross_total_amount" id="gross_total_amount-input" value="0">
             <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
             <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
@@ -166,7 +166,7 @@
             <div class="customerDetailsBtm">
                 <ul class="d-flex">
                 <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                <li>Bill Amount - <span>{{$data['last_bill_amount']}} ع.د</span></li>
+                <li>Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
                 <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
                 </ul>
             </div>
