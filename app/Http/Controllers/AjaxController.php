@@ -1410,10 +1410,11 @@ class AjaxController extends Controller {
 					'product_barcode'			=> $branchStockProduct->product->product_barcode,
 					'brand_name'				=> $branchStockProduct->product->brand,
 					'product_name'				=> $branchStockProduct->product->product_name,
-					'selling_by_name'				=> $branchStockProduct->product->selling_by_name,
+					'selling_by_name'			=> $branchStockProduct->product->selling_by_name,
 					'selling_price'				=> $branchStockProduct->selling_price,
 					'product_mrp'				=> $branchStockProduct->product_mrp,
 					't_qty'						=> $branchStockProduct->t_qty,
+					'net_price'					=> $branchStockProduct->net_price,
 				);
 				$return_data['product_result']	= $product_result;
 				$return_data['status']	= 1;

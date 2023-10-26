@@ -53,8 +53,8 @@
                 <th width="6%">Stock</th>
                 <th width="11%">MRP</th>
                 <th width="9%">Qty.</th>
-                <th width="8%">Disc%</th>
-                <th width="11%">Disc Amt.</th>
+                {{-- <th width="8%">Disc%</th> --}}
+                {{-- <th width="11%">Disc Amt.</th> --}}
                 <th width="8%">Unit Price</th>
                 <th width="7%">Total</th>
                 <th width="1%">&nbsp;</th>
@@ -84,8 +84,8 @@
               <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100">
-              <li class="atpVall">Tax -</li>
-              <li class="atpinfo" id="tax_amount">$0.00</li>
+              {{-- <li class="atpVall">Tax -</li>
+              <li class="atpinfo" id="tax_amount">$0.00</li> --}}
               <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100 subTotal">
@@ -124,12 +124,22 @@
       <div class="note_coin_count_sec" style="display:none"> </div>
       <div class="upi_payment_sec" style="display:none"> </div>
       <div class="card_details_payment_sec" style="display:none"> </div>
-      <input type="hidden" name="customer_id" id="selected_customer_id" value="">
+      <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
     </form>
   </div>
   <div class="col-lg-4 col-md-4">
     <div class="d-flex flex-column justify-content-between h-100">
-        <div class="data-sales-head">
+      <div class="data-sales-head">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
+          </label>
+          <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
+          </label>
+        </div>
+      </div>
+        <div class="data-sales-head customeSearch" style="display: none;">
             <div class="srcArea relative">
                 <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
                 <div class="custom-list">
@@ -151,22 +161,18 @@
             </ul>
             </div>
             <div class="customerDetails">
-            <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
-            <div class="customerDetailsMid">
+            {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
+            <div class="customerDetailsMid" style="display: none;">
+              <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
                 <ul>
                 <li id="cd_customer_name">Customer Name : <span></span></li>
                 <li id="cd_customer_number">Contact Number : <span></span></li>
-                <!-- <li>Total Purchase : <span>0</span></li>
-                <li>Loyalty Points : <span>0</span></li>
-                <li>Member Ship : <span>Gold</span></li>
-                <li>Member Ship Discount : <span> CONGRATS22 (50%)
-                <li>Coupon : <span>GH569RT66</span></li> -->
                 </ul>
             </div>
             <div class="customerDetailsBtm">
                 <ul class="d-flex">
                 <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                <li>Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
                 <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
                 </ul>
             </div>

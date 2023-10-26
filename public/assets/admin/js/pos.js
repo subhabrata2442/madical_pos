@@ -187,12 +187,18 @@ function print() {
 
 $(document).ready(function() {
     $(".payBtn").on('click', function(e) {
-        var customer_id = $('#selected_customer_id').val();
+        
         //console.log(customer_id);
-        if (customer_id == '') {
-            toastr.error("Select/Add Customer Details!");
-            return false;
+
+        var selectedValue = $("input[name='customertype']:checked").val();
+        if (selectedValue=='regular') {
+            var customer_id = $('#selected_customer_id').val();
+            if (customer_id == '0') {
+                toastr.error("Select/Add Customer Details!");
+                return false;
+            }
         }
+
         $('.payWrapLeft').show();
         $('.payWrapRight').removeClass('tabMenuHideWrapRight');
 
@@ -1282,6 +1288,7 @@ function setProductRow(element) {
                 var product_mrp = 0;
                 var product_price_id = 0;
                 var selling_by_name = '';
+                
 
                 var option_html = '';
 
@@ -1293,18 +1300,20 @@ function setProductRow(element) {
                     product_price_id = item_detail.item_prices[0].price_id; */
                     var price_modal_html = '';
                     for (var p = 0; item_detail.item_prices.length > p; p++) {
-                        option_html += '<option value="' + item_detail.item_prices[p].selling_price + '" data-stock_product_id="' + item_detail.item_prices[p].price_id + '">' + item_detail.item_prices[p].selling_price + '</option>';
-                        //option_html += '<option value="' + item_detail.item_prices[p].product_mrp + '">' + item_detail.item_prices[p].product_mrp + '</option>';
-                        price_modal_html += `<tr>
-                        <td>${item_detail.item_prices[p].brand_name}</td>
-                        <td>${item_detail.item_prices[p].product_name}</td>
-                        <td>${item_detail.item_prices[p].product_barcode}</td>
-                        <td>${item_detail.item_prices[p].selling_by_name}</td>
-                        <td>${item_detail.item_prices[p].t_qty}</td>
-                        <td>${item_detail.item_prices[p].selling_price}</td>
-                        <td>${item_detail.item_prices[p].product_expiry_date}</td>
-                        <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
-                    </tr>`;
+                        if(item_detail.item_prices[p].t_qty!=0){
+                            option_html += '<option value="' + item_detail.item_prices[p].selling_price + '" data-stock_product_id="' + item_detail.item_prices[p].price_id + '">' + item_detail.item_prices[p].selling_price + '</option>';
+                            //option_html += '<option value="' + item_detail.item_prices[p].product_mrp + '">' + item_detail.item_prices[p].product_mrp + '</option>';
+                            price_modal_html += `<tr>
+                                <td>${item_detail.item_prices[p].brand_name}</td>
+                                <td>${item_detail.item_prices[p].product_name}</td>
+                                <td>${item_detail.item_prices[p].product_barcode}</td>
+                                <td>${item_detail.item_prices[p].selling_by_name}</td>
+                                <td>${item_detail.item_prices[p].t_qty}</td>
+                                <td>${item_detail.item_prices[p].selling_price}</td>
+                                <td>${item_detail.item_prices[p].product_expiry_date}</td>
+                                <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
+                            </tr>`;
+                        }
                     }
                     $('#price_item_table tbody').html(price_modal_html);
                     $('#modal_multiple_price_list').modal('show');
@@ -1381,12 +1390,14 @@ function setProductRow(element) {
                                         
                                         <td id="product_unit_price_${product_id}">${product_mrp}</td>
                                         <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
-                                        <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
-                                        <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
+                                        <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
+                                        <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                         <td id="product_mrp_${product_id}">${product_mrp}</td>
                                         <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                         <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                         <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
+                                        
+                                        
                                     </tr>`;
                             $("#product_sell_record_sec").prepend(html);
                             total_cal();
@@ -1448,6 +1459,9 @@ $(document).on('click', '.select_product_item', function() {
                 product_price_id = item_detail.price_id;
                 selling_by_name = item_detail.selling_by_name;
                 option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
+
+                var product_net_price = 0;
+                product_net_price = item_detail.net_price;
 
                 var item_row = 0;
                 if ($('#product_sell_record_sec tr').length == 0) {
@@ -1513,12 +1527,13 @@ $(document).on('click', '.select_product_item', function() {
                                     <td id="product_stock_td_${product_id}">${stock}</td>
                                     <td id="product_unit_price_${product_id}">${product_mrp}</td>
                                     <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
-                                    <td><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
-                                    <td><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
+                                    <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
+                                    <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                     <td id="product_mrp_${product_id}">${product_mrp}</td>
                                     <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                     <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                     <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
+                                    <input type="hidden" name="product_net_price[]" id="product_net_price_${product_id}" class="input-3" value="${product_net_price}">
                                 </tr>`;
                         $("#product_sell_record_sec").prepend(html);
                         total_cal();
@@ -1824,6 +1839,10 @@ function total_cal() {
     var sub_total_mrp = 0;
     var total_payble_amount = 0;
 
+    var product_net_price = 0
+    var subNetPrice = 0;
+    var totalNetPrice = 0;
+
     setTimeout(function() {
 
         $("#product_sell_record_sec tr").each(function(index, e) {
@@ -1846,7 +1865,16 @@ function total_cal() {
             var total_amount = $("#product_total_amount_" + product_id).html();
             sub_total_mrp += (Number(total_amount));
 
+            product_net_price = $("#product_net_price_" + product_id).val();
+
+            subNetPrice = (Number(product_net_price)*product_qty);
+
+            totalNetPrice += subNetPrice;
+
+
         });
+
+        console.log("totalNetPrice -- "+totalNetPrice);
 
         $("#total_quantity").html(total_quantity);
         $("#total_mrp").html('$'+ total_mrp);
@@ -2003,4 +2031,17 @@ $(document).on("keyup", "#search_customer", function() {
             },
         });
     }
+});
+
+$(document).ready(function() {
+    $("input[name='customertype']").on('click', function() {
+        var selectedValue = $("input[name='customertype']:checked").val();
+        if (selectedValue=='regular') {
+            $(".customeSearch").show();
+            $(".customerDetailsMid").show();
+        } else {
+            $(".customeSearch").hide();
+            $(".customerDetailsMid").hide();
+        }
+    });
 });

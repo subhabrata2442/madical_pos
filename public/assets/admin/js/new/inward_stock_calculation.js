@@ -138,7 +138,7 @@ function setProfitCalulation() {
 
         //$("#product_netPrice_" + product_id).html(Number(net_price).toFixed(2));
         $("#product_netPrice_" + product_id).html(formatNumber(0 + parseFloat(net_price)));
-        sub_total += Number(net_price);
+        
 
         var profitAmount = 0;
         if (product_isChronic == 'Yes') {
@@ -155,7 +155,16 @@ function setProfitCalulation() {
             $("#product_profit_" + product_id).css("color", "black");
         }
         $("#product_profit_" + product_id).html(profitAmount);
-        total_profit += Number(profitAmount);
+        
+        var finalTotalProfit = (Number(profitAmount)*total_quantity);
+        var finalSubTotal = (Number(net_price)*total_quantity);
+
+        // total_profit += Number(profitAmount);
+        total_profit += finalTotalProfit;
+
+        // sub_total += Number(net_price);
+        sub_total += finalSubTotal;
+
         var profitPercent = 0;
         if (profitAmount > 0 && product_quantity > 0) {
 
