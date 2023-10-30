@@ -310,7 +310,10 @@ class PosController extends Controller
 			
 			$bill_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
 			
-			$mpdf->Output('uploads/'.$bill_no.'-invoice.pdf', 'F');
+			// $mpdf->Output('uploads/'.$bill_no.'-invoice.pdf', 'F');
+			// $mpdf->Output(public_path('uploads/' . $bill_no . '-invoice.pdf'), 'F');
+			$mpdf->Output(storage_path('app/public/uploads/' . $bill_no . '-invoice.pdf'), 'F');
+
 			
 			//$invoice_url=asset('uploads/off_counter/'.$invoice_no.'-invoice.pdf?v='.time());
 			//$return_data['invoice_url']	= $invoice_url;
@@ -383,7 +386,9 @@ class PosController extends Controller
 				
 				
 				$pdf_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
-				$invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+				// $invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+
+				$invoice_url = $pdf_no.'-invoice.pdf?v='.time();
 				
 			}
 			

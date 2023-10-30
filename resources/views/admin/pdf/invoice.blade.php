@@ -55,7 +55,7 @@ html, body {
   </tr>
   <tr>
     <td colspan="2" style="padding:6px 3px; text-align: left;">Date: <span>{{$invoice_details['invoice_date']}}</span></td>
-    <td colspan="2" style="padding:6px 3px; text-align: left;">Time: <span>{{$invoice_details['invoice_time']}}</span></td>
+    {{-- <td colspan="2" style="padding:6px 3px; text-align: left;">Time: <span>{{$invoice_details['invoice_time']}}</span></td> --}}
   </tr>
   <!--<tr>
     <td colspan="4" style="padding:6px 3px 20px; text-align: left;">GST NO: <span>25ADSX199D2</span></td>
@@ -78,10 +78,10 @@ html, body {
   @endforelse
   @endif
   <tr>
-    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>{{$total['total_price']}} ع.د</span></td>
+    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>${{$total['total_price']}}</span></td>
   </tr>
   <tr>
-    <td colspan="4"  style="padding:6px 3px; text-align: center;"><strong>{{$total_amt_in_word}}</strong></td>
+    {{-- <td colspan="4"  style="padding:6px 3px; text-align: center;"><strong>{{$total_amt_in_word}}</strong></td> --}}
   </tr>
   <tr>
     <td colspan="4"  style="padding:6px 3px; text-align: center;">Rate Exclusive all taxes</td>

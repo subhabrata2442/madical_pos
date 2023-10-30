@@ -116,7 +116,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// Route::match(['POST'], '/bar_create', [PurchaseOrderController::class, 'bar_create'])->name('bar_create');
 		
 		
-		//Route::match(['GET'], '/print_invoice', [PurchaseOrderController::class, 'print_invoice'])->name('print_invoice');
+		Route::match(['GET'], '/print_invoice', [PurchaseOrderController::class, 'print_invoice'])->name('print_invoice');
         //Route::match(['GET'], '/today-sales-product/download', [PurchaseOrderController::class, 'todaySalesProductDownload']);
         /*Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
         Route::match(['GET', 'POST'], '/edit/{id}', [CustomerController::class, 'edit'])->name('edit');

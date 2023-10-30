@@ -337,6 +337,8 @@ class PurchaseOrderController extends Controller
 	public function print_invoice(){
 		
 		$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
+
+		// dd($lastSellInwardStock);
 		
 		if(count($lastSellInwardStock)>0){
 			 $data=[];
@@ -380,6 +382,7 @@ class PurchaseOrderController extends Controller
 			$data['invoice_details'] = [
 				'invoice_no'	=> $invoice_no,
 				'invoice_date'	=> $invoice_date,
+				// 'invoice_date'	=> $invoice_date,
 				'gstin'			=> '',
 				'place'			=> 'West Bengal',
 				'branch'		=> 'K.P.Shaw Bottling Pvt.Ltd.',
@@ -430,7 +433,7 @@ class PurchaseOrderController extends Controller
           'orientation' => 'L'
         ]);*/
 			
-			//$customPaper = array(0,0,567.00,283.80);
+			$customPaper = array(0,0,567.00,283.80);
 			$pdf = PDF::loadView('admin.pdf.invoice', $data)->setPaper($customPaper, 'landscape');
 			
 			return $pdf->stream($invoice_no.'-invoice.pdf');
