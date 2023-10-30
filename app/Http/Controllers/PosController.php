@@ -386,7 +386,9 @@ class PosController extends Controller
 				
 				
 				$pdf_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
-				$invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+				// $invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+
+				$invoice_url = $pdf_no.'-invoice.pdf?v='.time();
 				
 			}
 			

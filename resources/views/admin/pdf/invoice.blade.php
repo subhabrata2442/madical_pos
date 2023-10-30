@@ -50,7 +50,7 @@ html, body {
     <td colspan="4" style="padding:10px 3px;font-weight:bold; text-align:center;">CASH MEMO</td>
   </tr>
   <tr>
-    {{-- <td colspan="4" style="padding:2px 3px; text-align: left;">Bill No: <span>#{{$invoice_details['bill_no']}}</span></td> --}}
+    <td colspan="4" style="padding:2px 3px; text-align: left;">Bill No: <span>#{{$invoice_details['bill_no']}}</span></td>
     <!--<td colspan="2" style="padding:2px 3px; text-align: left;">Table No: <span>4</span></td>--> 
   </tr>
   <tr>
@@ -78,10 +78,10 @@ html, body {
   @endforelse
   @endif
   <tr>
-    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>{{$total['total_price']}} ع.د</span></td>
+    <td colspan="4"  style="padding:20px 3px;font-weight:bold;text-align: center;">NET: <span>${{$total['total_price']}}</span></td>
   </tr>
   <tr>
-    <td colspan="4"  style="padding:6px 3px; text-align: center;"><strong>{{$total_amt_in_word}}</strong></td>
+    {{-- <td colspan="4"  style="padding:6px 3px; text-align: center;"><strong>{{$total_amt_in_word}}</strong></td> --}}
   </tr>
   <tr>
     <td colspan="4"  style="padding:6px 3px; text-align: center;">Rate Exclusive all taxes</td>

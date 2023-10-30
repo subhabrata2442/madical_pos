@@ -797,7 +797,9 @@
     </div>
   </div>
 </section>
-<iframe src="{{$data['invoice_url']}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe>
+{{-- <iframe src="{{$data['invoice_url']}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe> --}}
+<iframe src="{{asset('storage/uploads/'.$data['invoice_url'])}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe>
+
 @endsection
 
 @section('scripts')
