@@ -208,7 +208,7 @@ class PosController extends Controller
 			 $special_discount	= isset($lastSellInwardStock[0]->special_discount_amt)?$lastSellInwardStock[0]->special_discount_amt:'';
 			 $pay_amount		= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
 			 
-			 $gross_total_amount= isset($lastSellInwardStock[0]->gross_total_amount)?$lastSellInwardStock[0]->gross_total_amount:'';
+			 $gross_total_amount= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
 			 
 			 $total_discount_amount=0;
 			 if($discount_amount!=''){
@@ -471,6 +471,7 @@ class PosController extends Controller
 			'tendered_change_amount' 	=> $request->tendered_change_amount,
 			'payment_method' 			=> $request->payment_method_type,
 			'payment_date' 				=> date('Y-m-d'),
+			'charge_amount' 			=> $request->charge_amt,
 			//'created_at'				=> date('Y-m-d')
 		);
 		
