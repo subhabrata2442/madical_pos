@@ -1345,14 +1345,6 @@ function setProductRow(element) {
                     selling_by_name = item_detail.item_prices[0].selling_by_name;
                     option_html += '<option value="' + product_mrp + '" data-stock_product_id="' + product_price_id + '">' + product_mrp + '</option>';
 
-
-                    var product_net_price = 0;
-                    product_net_price = item_detail.item_prices[0].net_price;
-                    var is_chronic = item_detail.item_prices[0].is_chronic;
-                    var product_chronic_amount = 0;
-                    product_chronic_amount = item_detail.item_prices[0].chronic_amount;
-
-
                     var item_row = 0;
                     if ($('#product_sell_record_sec tr').length == 0) {
                         item_row++;
@@ -1414,21 +1406,9 @@ function setProductRow(element) {
                                         <td class="">${brand_name}</td>
                                         <td class="">${product_name}</td>
                                         <td class="">${selling_by_name}</td>
-                                        <td id="product_stock_td_${product_id}">${stock}</td>`;
-
-                                if(is_chronic=='Yes'){
-                                    html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
-                                                    <option value="sellprice">Sell price: ${product_mrp}</option>
-                                                    <option value="cronicprice">Cronic price: ${product_chronic_amount}</option>
-                                                </select>
-                                            </td>
-                                            <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
-                                }else{
-                                    html += `<td>No</td>`;
-                                }
-
+                                        <td id="product_stock_td_${product_id}">${stock}</td>
                                         
-                                html += `<td id="product_unit_price_${product_id}">${product_mrp}</td>
+                                        <td id="product_unit_price_${product_id}">${product_mrp}</td>
                                         <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                         <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                         <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
@@ -1437,7 +1417,6 @@ function setProductRow(element) {
                                         <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                         <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
                                         
-                                        <input type="hidden" name="product_net_price[]" id="product_net_price_${product_id}" class="input-3" value="${product_net_price}">
                                         
                                     </tr>`;
                             $("#product_sell_record_sec").prepend(html);
@@ -1504,12 +1483,6 @@ $(document).on('click', '.select_product_item', function() {
                 var product_net_price = 0;
                 product_net_price = item_detail.net_price;
 
-                
-                var is_chronic = item_detail.is_chronic;
-                // console.log("is_chronic"+is_chronic);
-                var product_chronic_amount = 0;
-                product_chronic_amount = item_detail.chronic_amount;
-
                 var item_row = 0;
                 if ($('#product_sell_record_sec tr').length == 0) {
                     item_row++;
@@ -1571,26 +1544,12 @@ $(document).on('click', '.select_product_item', function() {
                                     <td class="">${brand_name}</td>
                                     <td class="">${product_name}</td>
                                     <td class="">${selling_by_name}</td>
-                                    <td id="product_stock_td_${product_id}">${stock}</td>`;
-
-                            if(is_chronic=='Yes'){
-                                html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
-                                                <option value="sellprice">Sell price: ${product_mrp}</option>
-                                                <option value="cronicprice">Cronic price: ${product_chronic_amount}</option>
-                                            </select>
-                                        </td>
-                                        <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
-                            }else{
-                                html += `<td>No</td>`;
-                            }      
-                            
-
-                            html += `<td id="product_unit_price_${product_id}">${product_mrp}</td>
+                                    <td id="product_stock_td_${product_id}">${stock}</td>
+                                    <td id="product_unit_price_${product_id}">${product_mrp}</td>
                                     <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                     <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                     <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
                                     <td id="product_mrp_${product_id}">${product_mrp}</td>
-                                    <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_${product_id}" value="${product_mrp}">
                                     <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                     <td id="product_total_amount_${product_id}">${product_mrp}</td>
                                     <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
@@ -1609,77 +1568,6 @@ $(document).on('click', '.select_product_item', function() {
     });
 
 });
-
-
-function changeiscronic(pricetype, product_id){
-    var product_unit_price_amount = 0;
-    var product_cronic_amount = 0;
-    var newMrp = 0;
-
-    if(pricetype=='sellprice'){
-        console.log("sellprice");
-        newMrp = $("#product_unit_price_amount_old_"+product_id).val();
-    }else if(pricetype=='cronicprice'){
-        newMrp = $("#product_cronic_amount_"+product_id).val();
-    }
-
-    console.log("newMrp " +newMrp);
-    
-    $("#product_unit_price_"+product_id).html(newMrp);
-
-    $("#product_unit_price_amount_"+product_id).val(newMrp);
-    $("#product_mrp_"+product_id).html(newMrp);
-
-
-
-    var qty = $('#product_qty_' + product_id).val();
-    //var w_stock = $('#product_w_stock_' + product_id).val();
-    //var c_stock = $('#product_c_stock_' + product_id).val();
-    var stock = $('#product_stock_' + product_id).val();
-
-    if (qty == 0) {
-        $(this).select();
-        toastr.error("Entered Qty should not be greater than Stock");
-        return false;
-    }
-    if (Number(qty) > Number(stock)) {
-
-        toastr.error("Entered Qty should not be greater than Stock");
-        $('#product_qty_' + product_id).val(stock);
-        var qty = $('#product_qty_' + product_id).val();
-        var unit_price = $("#product_unit_price_amount_" + product_id).val();
-        var discount_percent = $("#product_disc_percent_" + product_id).val();
-        var total_discount = (Number(unit_price) * Number(qty)) * Number(discount_percent) / 100;
-        console.log(unit_price);
-        if (Number(discount_percent) != 0 || discount_percent != '') {
-            $("#product_disc_amount_" + product_id).val(total_discount.toFixed(2));
-        }
-        var total_selling_cost = Number(unit_price) * Number(qty);
-        var discount_amount = Number(total_selling_cost) - Number(total_discount);
-        var total_amount = Number(discount_amount)
-        $("#product_total_amount_" + product_id).html(Number(total_amount).toFixed(2));
-        $("#input-product_total_amount_" + product_id).val(Number(total_amount).toFixed(2));
-        return false;
-    } else {
-        var unit_price = $("#product_unit_price_amount_" + product_id).val();
-        var discount_percent = $("#product_disc_percent_" + product_id).val();
-        var total_discount = (Number(unit_price) * Number(qty)) * Number(discount_percent) / 100;
-        console.log(unit_price);
-        if (Number(discount_percent) != 0 || discount_percent != '') {
-            $("#product_disc_amount_" + product_id).val(total_discount.toFixed(2));
-        }
-        var total_selling_cost = Number(unit_price) * Number(qty);
-        var discount_amount = Number(total_selling_cost) - Number(total_discount);
-        var total_amount = Number(discount_amount)
-        $("#product_total_amount_" + product_id).html(Number(total_amount).toFixed(2));
-        $("#input-product_total_amount_" + product_id).val(Number(total_amount).toFixed(2));
-
-    }
-
-    total_cal();
-    
-
-}
 
 
 

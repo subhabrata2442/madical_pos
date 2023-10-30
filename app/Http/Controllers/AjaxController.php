@@ -493,6 +493,9 @@ class AjaxController extends Controller {
 								'selling_by_name'	=> $row->product->selling_by_name,
 								'product_expiry_date'	=> $row->product_expiry_date,
 								//'c_qty'			=> $row->c_qty,
+								'net_price'					=> $row->net_price,
+								'is_chronic'				=> $row->is_chronic,
+								'chronic_amount'			=> $row->chronic_amount,
 							);
 						}
 
@@ -1073,6 +1076,8 @@ class AjaxController extends Controller {
 									'product_mrp'  		=> $product_mrp,
 									'net_price'  		=> str_replace(',', '', $net_price),
 									'product_expiry_date'  		=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
+									'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
+									'chronic_amount'  	=> str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) ? str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) : 0,
 								);
 								BranchStockProducts::create($branchProductStockSellPriceData);
 								//echo '<pre>';print_r($branchProductStockSellPriceData);exit;
@@ -1415,6 +1420,8 @@ class AjaxController extends Controller {
 					'product_mrp'				=> $branchStockProduct->product_mrp,
 					't_qty'						=> $branchStockProduct->t_qty,
 					'net_price'					=> $branchStockProduct->net_price,
+					'is_chronic'				=> $branchStockProduct->is_chronic,
+					'chronic_amount'			=> $branchStockProduct->chronic_amount,
 				);
 				$return_data['product_result']	= $product_result;
 				$return_data['status']	= 1;

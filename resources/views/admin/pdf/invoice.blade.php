@@ -50,12 +50,12 @@ html, body {
     <td colspan="4" style="padding:10px 3px;font-weight:bold; text-align:center;">CASH MEMO</td>
   </tr>
   <tr>
-    <td colspan="4" style="padding:2px 3px; text-align: left;">Bill No: <span>#{{$invoice_details['bill_no']}}</span></td>
+    {{-- <td colspan="4" style="padding:2px 3px; text-align: left;">Bill No: <span>#{{$invoice_details['bill_no']}}</span></td> --}}
     <!--<td colspan="2" style="padding:2px 3px; text-align: left;">Table No: <span>4</span></td>--> 
   </tr>
   <tr>
     <td colspan="2" style="padding:6px 3px; text-align: left;">Date: <span>{{$invoice_details['invoice_date']}}</span></td>
-    <td colspan="2" style="padding:6px 3px; text-align: left;">Time: <span>{{$invoice_details['invoice_time']}}</span></td>
+    {{-- <td colspan="2" style="padding:6px 3px; text-align: left;">Time: <span>{{$invoice_details['invoice_time']}}</span></td> --}}
   </tr>
   <!--<tr>
     <td colspan="4" style="padding:6px 3px 20px; text-align: left;">GST NO: <span>25ADSX199D2</span></td>

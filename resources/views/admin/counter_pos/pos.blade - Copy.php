@@ -51,7 +51,6 @@
                 <th width="19%">Product</th>
                 <th width="4%">Selling by</th>
                 <th width="6%">Stock</th>
-                <th width="19%">Is cronic</th>
                 <th width="11%">MRP</th>
                 <th width="9%">Qty.</th>
                 {{-- <th width="8%">Disc%</th> --}}
@@ -142,13 +141,11 @@
   </div>
   <div class="col-lg-4 col-md-4">
     <div class="d-flex flex-column justify-content-between h-100">
-      <div class="data-sales-head radio-list">
+      <div class="data-sales-head">
         <div class="form-check">
           <label class="form-check-label">
             <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
           </label>
-        </div>
-        <div class="form-check">
           <label class="form-check-label">
             <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
           </label>
