@@ -84,7 +84,7 @@
               <li class="atpinfo"><span id="total_mrp">$0.00</span> <small>(inclusive all taxes)</small></li>
               <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
             </ul>
-            
+
             <ul class="d-flex w-100">
               <li class="atpVall">Discount -</li>
               <li class="atpinfo" id="total_discount_amount">$0.00</li>
@@ -140,79 +140,102 @@
       <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
     </form>
   </div>
-  <div class="col-lg-4 col-md-4">
-    <div class="d-flex flex-column justify-content-between h-100">
-      <div class="data-sales-head radio-list">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
-          </label>
-        </div>
-      </div>
-        <div class="data-sales-head customeSearch" style="display: none;">
-            <div class="srcArea relative">
-                <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
-                <div class="custom-list">
-                    <ul id="customer_search_result">
-                    </ul>
+    <div class="col-lg-4 col-md-4">
+        <div class="d-flex flex-column justify-content-between h-100">
+            <div class="report-wrap h-100">
+                <div class="report-wrap-lft">
+                    <div class="d-flex flex-column justify-content-between h-100">
+                        <div class="data-sales-head radio-list">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
+                            </label>
+                        </div>
+                        </div>
+                        <div class="data-sales-head customeSearch" style="display: none;">
+                            <div class="srcArea relative">
+                                <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
+                                <div class="custom-list">
+                                    <ul id="customer_search_result">
+                                    </ul>
+                                </div>
+                                <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="data-sales-body d-flex flex-column justify-content-start h-100">
+                            <div class="dateSales">
+                            <ul class="d-flex flex-wrap justify-content-between align-items-center">
+                                <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
+                                <li class="d-flex align-items-center">
+                                <p>Date:</p>
+                                <?php echo date('d-m-Y');?>
+                                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                                </li>
+                            </ul>
+                            </div>
+                            <div class="customerDetails">
+                            {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
+                            <div class="customerDetailsMid" style="display: none;">
+                            <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
+                                <ul>
+                                <li id="cd_customer_name">Customer Name : <span></span></li>
+                                <li id="cd_customer_number">Contact Number : <span></span></li>
+                                </ul>
+                            </div>
+                            <div class="customerDetailsBtm">
+                                <ul class="d-flex flex-wrap">
+                                <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                                <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                                <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span>
+                <div class="report-wrap-rgt">
+                    <div class="top-product-head"><h3>top seling product</h3></div>
+                    <div class="top-product-src">
+                        <input type="text" class="top-product-src-input" name="" placeholder="Enter Barcode/Enter Product Name" value="">
+                        <ul id="" class="top-product-src-list" style="display: none;">
+                            <li>dfgrfg</li>
+                        </ul>
+                    </div>
+                    <div class="top-product">
+                        <ul class="top-product-list">
+                            <li>top product 1</li>
+                            <li>top product </li>
+                            <li>top product 5</li>
+                            <li>top product 7</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="data-sales-body d-flex flex-column justify-content-start h-100">
-            <div class="dateSales">
-            <ul class="d-flex justify-content-between align-items-center">
-                <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
-                <li class="d-flex align-items-center">
-                <p>Date:</p>
-                <?php echo date('d-m-Y');?>
-                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
-                </li>
-            </ul>
-            </div>
-            <div class="customerDetails">
-            {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
-            <div class="customerDetailsMid" style="display: none;">
-              <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
-                <ul>
-                <li id="cd_customer_name">Customer Name : <span></span></li>
-                <li id="cd_customer_number">Contact Number : <span></span></li>
+            <div class="data-sales-ftr">
+                <div class="sidebar-widget text-center">
+                <ul class="row">
+                    {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
+                    Coupon</a></li>
+                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
+                    Membership</a></li>
+                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
+                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
+                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
+                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
+                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
+                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
+                    <li class="payPrint col-6"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                    <li class="payPrint col-6"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
                 </ul>
-            </div>
-            <div class="customerDetailsBtm">
-                <ul class="d-flex">
-                <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
-                <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
-                </ul>
-            </div>
-            </div>
-        </div>
-        <div class="data-sales-ftr">
-            <div class="sidebar-widget text-center">
-            <ul class="row">
-                {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
-                Coupon</a></li>
-                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
-                Membership</a></li>
-                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
-                <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
-                <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
-                <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
-                <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
-                <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
-                <li class="payPrint col-6"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
-                <li class="payPrint col-6"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
-            </ul>
+                </div>
             </div>
         </div>
     </div>
-  </div>
   {{-- <div class="col-12">
     <div class="topsellingProduct">
       <h4>Top Selling Products</h4>

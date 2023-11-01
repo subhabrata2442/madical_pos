@@ -1182,11 +1182,11 @@ p {
     font-weight: normal;
 }
 
-.customerDetailsBtm ul li:first-child {
+/* .customerDetailsBtm ul li:first-child {
     margin-right: 1vw;
     border-right: #ddd 1px solid;
     padding-right: 1vw;
-}
+} */
 
 .enterProduct input {
     -ms-flex-preferred-size: 0;

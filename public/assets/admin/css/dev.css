@@ -2651,6 +2651,8 @@ a.downloadBtn {
 
 .radio-list{
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
 }
 .radio-list .form-check:not(:last-child){
     margin-right: 1rem;
@@ -2663,4 +2665,65 @@ a.downloadBtn {
     padding: 0 0.4vw;
     border-radius: 4px;
     font-family: 'Open Sans', sans-serif !important;
+}
+.report-wrap{
+    display: flex;
+}
+.report-wrap-lft,
+.report-wrap-rgt{
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+.report-wrap-lft{
+    padding-right: 8px;
+}
+.report-wrap-rgt {
+    padding-left: 8px;
+    border-left: #e1e1e1 1px solid;
+}
+.top-product-src-input{
+    background: #fff;
+    box-shadow: 0px 3px 7.68px 0.32px rgba(74, 75, 75, 0.2);
+    border: #e1e1e1 1px solid;
+    padding: 0 1vw;
+    border-radius: 6px;
+    height: 40px;
+    width: 100%;
+}
+.top-product-src{
+    position: relative;
+}
+.top-product-src-list{
+    list-style: none;
+    padding: 0px;
+    width: 100%;
+    position: absolute;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 99999;
+    top: 100%;
+    background: #cfcff0;
+}
+.top-product-src-list li {
+    background: lavender;
+    padding: 7px 15px;
+    margin-bottom: 1px;
+    font-size: 13px;
+}
+.top-product{
+    margin-top: 1rem;
+}
+.top-product-head h3{
+    font-weight: 700;
+    text-transform: capitalize;
+    margin-bottom: 1rem;
+}
+.top-product-list li{
+    cursor: pointer;
+    padding: 4px 8px;
+}
+.top-product-list li:not(:last-child){
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #e1e1e1;
 }
