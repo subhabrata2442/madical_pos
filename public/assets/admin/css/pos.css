@@ -342,11 +342,16 @@ td.wdel:hover a i {
 }
 
 .sidebar-widget ul li {
-    flex: 0 0 50%;
-    width: 50%;
+    /* flex: 0 0 50%;
+    width: 50%; */
+    flex: 0 0 100%;
+    width: 100%;
     display: table;
     padding: 0 .2vw;
-    margin: .2vw 0;
+    /* margin: .2vw 0; */
+}
+.sidebar-widget ul li:not(:last-child){
+    margin-bottom: 0.2vw;
 }
 
 
@@ -358,7 +363,8 @@ td.wdel:hover a i {
     display: table-cell;
     vertical-align: middle;
     font-size: .8vw;
-    height: 8.55vw;
+    height: 6.30vw;
+    /* height: 8.55vw; */
     width: 100%;
     transition: all ease-in-out .4s;
     border-radius: 6px;
@@ -1169,13 +1175,14 @@ p {
 }
 
 .customerDetailsBtm {
-    border-top: #e1e1e1 1px solid;
+    /* border-top: #e1e1e1 1px solid; */
     padding-top: .5vw;
 }
 
 .customerDetailsBtm ul li {
     font-size: .96vw;
     font-weight: bold;
+    color: #fff;
 }
 
 .customerDetailsBtm ul li span {
@@ -1299,7 +1306,7 @@ p {
 }
 
 .atpMid ul li:not(:last-child) {
-    margin-bottom: .8vw;
+    margin-bottom: .2vw;
 }
 
 .atpMid ul li a {

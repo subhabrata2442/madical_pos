@@ -112,11 +112,19 @@
             </ul>
           </div>
         </div>
-        <div class="atpMid d-flex justify-content-center align-items-center">
+        {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
+            <div class="atpMid">
           <ul>
             <li><a href="javascript:;" class="applyCharge" id="applyChargeBtn">Apply Charge</a></li>
             <li><a href="javascript:;" class="applyDiscount" id="applyDiscountBtn">Apply Discount </a></li>
           </ul>
+            <div class="customerDetailsBtm">
+                <ul class="d-flex flex-wrap">
+                    <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                    <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill p-0"><i class="fas fa-print"></i></a></li>
+                </ul>
+            </div>
         </div>
         <div class="atpRight d-flex justify-content-center align-items-center">
           <div class="text-center">
@@ -167,33 +175,53 @@
                                 <span class="plusCircle create_customer_btn"><i class="fas fa-plus-circle"></i></span>
                             </div>
                         </div>
-                        <div class="data-sales-body d-flex flex-column justify-content-start h-100">
-                            <div class="dateSales">
-                            <ul class="d-flex flex-wrap justify-content-between align-items-center">
-                                <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
-                                <li class="d-flex align-items-center">
-                                <p>Date:</p>
-                                <?php echo date('d-m-Y');?>
-                                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
-                                </li>
-                            </ul>
+                        <div class="d-flex flex-column justify-content-start h-100">
+                            <div class="data-sales-body d-flex flex-column justify-content-start h-100">
+                                <div class="dateSales">
+                                    <ul class="d-flex flex-wrap justify-content-between align-items-center">
+                                        <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
+                                        <li class="d-flex align-items-center">
+                                        <p>Date:</p>
+                                        <?php echo date('d-m-Y');?>
+                                        <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="customerDetails">
+                                {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
+                                <div class="customerDetailsMid" style="display: none;">
+                                <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
+                                    <ul>
+                                    <li id="cd_customer_name">Customer Name : <span></span></li>
+                                    <li id="cd_customer_number">Contact Number : <span></span></li>
+                                    </ul>
+                                </div>
+                                {{-- <div class="customerDetailsBtm">
+                                    <ul class="d-flex flex-wrap">
+                                    <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                                    <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
+                                    </ul>
+                                </div> --}}
+                                </div>
                             </div>
-                            <div class="customerDetails">
-                            {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
-                            <div class="customerDetailsMid" style="display: none;">
-                            <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
-                                <ul>
-                                <li id="cd_customer_name">Customer Name : <span></span></li>
-                                <li id="cd_customer_number">Contact Number : <span></span></li>
+                            <div class="data-sales-ftr">
+                                <div class="sidebar-widget text-center">
+                                <ul class="row">
+                                    {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
+                                    Coupon</a></li>
+                                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
+                                    Membership</a></li>
+                                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
+                                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
+                                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
+                                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
+                                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
+                                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
+                                    <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                                    <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
                                 </ul>
-                            </div>
-                            <div class="customerDetailsBtm">
-                                <ul class="d-flex flex-wrap">
-                                <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                                <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
-                                <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill"><i class="fas fa-print"></i></a></li>
-                                </ul>
-                            </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,34 +231,20 @@
                     <div class="top-product-src">
                         <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Product Name" value="">
                         <ul id="product_search_result_top" class="top-product-src-list">
-                            
+
                         </ul>
                     </div>
                     <div class="top-product">
+                        <ul class="top-heading-qty">
+                            <li>Name</li>
+                            <li>In Stock</li>
+                        </ul>
                         <ul class="top-product-list">
                           @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
-                            <li value="{{$topitem->id}}" class="topSellProductItem">{{($keystop+1)}}. {{$topitem->product_name}}</li>
+                            <li value="{{$topitem->id}}" class="topSellProductItem">{{$topitem->product_name}}<span class="total-qty">780</span></li>
                           @endforeach
                         </ul>
                     </div>
-                </div>
-            </div>
-            <div class="data-sales-ftr">
-                <div class="sidebar-widget text-center">
-                <ul class="row">
-                    {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
-                    Coupon</a></li>
-                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-user-check"></i></span>Apply<br>
-                    Membership</a></li>
-                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-calculator"></i></span>Calculator</a></li>
-                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-2"><span><i class="fas fa-credit-card"></i></span>Reedem Credit</a></li>
-                    <li class="col-3 disabled_btn"><a href="#"><span><i class="fas fa-hand-paper"></i></span>Hold</a></li>
-                    <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
-                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
-                    <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
-                    <li class="payPrint col-6"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
-                    <li class="payPrint col-6"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
-                </ul>
                 </div>
             </div>
         </div>
