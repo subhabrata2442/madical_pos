@@ -1163,11 +1163,14 @@ span .loader {
 }
 
 .dateSales ul li {
-    font-size: 1.3vw;
+    font-size: .8vw;
 }
 
 .dateSales ul li p {
     margin-right: .5vw;
+}
+.radio-list .form-check-label{
+    font-size: .8vw;
 }
 
 p {
@@ -1183,6 +1186,10 @@ p {
     font-size: .96vw;
     font-weight: bold;
     color: #fff;
+}
+.customerDetailsBtm ul li a{
+    padding: 0 !important;
+    line-height: 26px;
 }
 
 .customerDetailsBtm ul li span {
