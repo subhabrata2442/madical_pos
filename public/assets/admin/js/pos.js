@@ -808,14 +808,14 @@ $(document).ready(function() {
             var total_amount = Number(charge_amount);
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html('$'+ Number(total_amount).toFixed(2));
+            $("#total_payble_amount").html('$'+ formatNumber(total_amount));
             $('#charge_amt-input').val(charge_amt);
 
             $('#gross_total_amount-input').val(total_amount);
 
-            $("#extraCharge").html('$'+ charge_amt);
+            $("#extraCharge").html('$'+ formatNumber(0 + parseFloat(charge_amt)));
 
-            $("#sub_total_mrp").html('$'+ total_amount);
+            $("#sub_total_mrp").html('$'+ formatNumber(total_amount));
             $("#sub_total_mrp-input").val(total_amount);
 
             $('#modal-applyCharges').modal('hide');
@@ -890,15 +890,15 @@ $(document).ready(function() {
             total_amount = (total_amount+Number(charge_amt));
 
             $('#total_payble_amount-input').val(total_amount);
-            $("#total_payble_amount").html('$'+ Number(total_amount).toFixed(2));
+            $("#total_payble_amount").html('$'+ formatNumber(total_amount));
 
             $('#selling_special_discount_percent-input').val(discount_percent);
             $('#selling_special_discount_amt-input').val(total_discount);
 
-            $("#total_discount_amount").html('$'+total_discount);
+            $("#total_discount_amount").html('$'+ formatNumber(0 + parseFloat(total_discount)));
             $("#total_discount_amount-input").html(total_discount);
 
-            $("#sub_total_mrp").html('$'+ total_amount);
+            $("#sub_total_mrp").html('$'+ formatNumber(total_amount));
             $("#sub_total_mrp-input").val(total_amount);
 
             $('#gross_total_amount-input').val(discount_amount);
@@ -1267,6 +1267,8 @@ function setProductRow(element) {
     //console.log(element);
     $("#search_product").val('');
     $("#product_search_result").empty();
+    $("#product_search_result_top").empty();
+    $(".top-product-src-input").val('');
 
     // Request User Details
     $.ajax({
@@ -1329,7 +1331,7 @@ function setProductRow(element) {
                                 <td>${item_detail.item_prices[p].product_barcode}</td>
                                 <td>${item_detail.item_prices[p].selling_by_name}</td>
                                 <td>${item_detail.item_prices[p].t_qty}</td>
-                                <td>${item_detail.item_prices[p].selling_price}</td>
+                                <td>${formatNumber(0 + parseFloat(item_detail.item_prices[p].selling_price))}</td>
                                 <td>${item_detail.item_prices[p].product_expiry_date}</td>
                                 <td><button type="button" class="product-select select_product_item" data-item_id="${item_detail.item_prices[p].price_id}">select</button></td>
                             </tr>`;
@@ -1418,8 +1420,8 @@ function setProductRow(element) {
 
                                 if(is_chronic=='Yes'){
                                     html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
-                                                    <option value="sellprice">Sell price: ${product_mrp}</option>
-                                                    <option value="cronicprice">Cronic price: ${product_chronic_amount}</option>
+                                                    <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
+                                                    <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                                 </select>
                                             </td>
                                             <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
@@ -1428,13 +1430,13 @@ function setProductRow(element) {
                                 }
 
                                         
-                                html += `<td id="product_unit_price_${product_id}">${product_mrp}</td>
+                                html += `<td id="product_unit_price_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                         <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                         <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                         <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
-                                        <td id="product_mrp_${product_id}">${product_mrp}</td>
+                                        <td id="product_mrp_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                         <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
-                                        <td id="product_total_amount_${product_id}">${product_mrp}</td>
+                                        <td id="product_total_amount_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                         <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
                                         
                                         <input type="hidden" name="product_net_price[]" id="product_net_price_${product_id}" class="input-3" value="${product_net_price}">
@@ -1575,8 +1577,8 @@ $(document).on('click', '.select_product_item', function() {
 
                             if(is_chronic=='Yes'){
                                 html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
-                                                <option value="sellprice">Sell price: ${product_mrp}</option>
-                                                <option value="cronicprice">Cronic price: ${product_chronic_amount}</option>
+                                                <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
+                                                <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                             </select>
                                         </td>
                                         <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
@@ -1585,14 +1587,14 @@ $(document).on('click', '.select_product_item', function() {
                             }      
                             
 
-                            html += `<td id="product_unit_price_${product_id}">${product_mrp}</td>
+                            html += `<td id="product_unit_price_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                     <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                     <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
                                     <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_${product_id}" class="input-3 product_disc_amount" value="0"></td>
-                                    <td id="product_mrp_${product_id}">${product_mrp}</td>
+                                    <td id="product_mrp_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                     <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_${product_id}" value="${product_mrp}">
                                     <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
-                                    <td id="product_total_amount_${product_id}">${product_mrp}</td>
+                                    <td id="product_total_amount_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                     <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
                                     <input type="hidden" name="product_net_price[]" id="product_net_price_${product_id}" class="input-3" value="${product_net_price}">
                                 </tr>`;
@@ -1995,6 +1997,7 @@ function total_cal() {
             total_discount_amount += (Number(disc_amount));
 
             var total_amount = $("#product_total_amount_" + product_id).html();
+            total_amount = removeComma(total_amount);
             sub_total_mrp += (Number(total_amount));
 
             product_net_price = $("#product_net_price_" + product_id).val();
@@ -2007,13 +2010,13 @@ function total_cal() {
         });
 
         // console.log("totalNetPrice -- "+totalNetPrice);
-        $("#total_net_price").html('$'+ totalNetPrice);
+        $("#total_net_price").html('$'+ formatNumber(totalNetPrice));
 
         $("#total_quantity").html(total_quantity);
-        $("#total_mrp").html('$'+ total_mrp);
+        $("#total_mrp").html('$'+ formatNumber(total_mrp));
         // $("#total_discount_amount").html('$'+ total_discount_amount);
-        $("#sub_total_mrp").html('$'+ sub_total_mrp);
-        $("#total_payble_amount").html('$'+ sub_total_mrp);
+        $("#sub_total_mrp").html('$'+ formatNumber(sub_total_mrp));
+        $("#total_payble_amount").html('$'+ formatNumber(sub_total_mrp));
 
 
         $('#sub_total_mrp-input').val(sub_total_mrp);
@@ -2039,13 +2042,13 @@ function total_cal() {
             var charge_amt = $("#charge_amt-input").val();
             discount_amount = (discount_amount+Number(charge_amt));
 
-            $("#total_discount_amount").html('$'+ total_discount);
+            $("#total_discount_amount").html('$'+ formatNumber(total_discount));
             $("#total_discount_amount-input").val(total_discount);
 
-            $("#sub_total_mrp").html('$'+ discount_amount);
+            $("#sub_total_mrp").html('$'+ formatNumber(discount_amount));
             $("#sub_total_mrp-input").val(discount_amount);
 
-            $("#total_payble_amount").html('$'+ discount_amount);
+            $("#total_payble_amount").html('$'+ formatNumber(discount_amount));
             $('#total_payble_amount-input').val(discount_amount);
 
             $("#special_discount_amt").val(total_discount);
@@ -2094,7 +2097,7 @@ $(document).on('keyup', '#round_off', function() {
 
             var total_payble_amount = (parseFloat(discount_amount) + parseFloat(roundoff)).toFixed(2);
 
-            $("#total_payble_amount").html(total_payble_amount + 'ع.د');
+            $("#total_payble_amount").html('$'+ formatNumber(total_payble_amount));
             $('#total_payble_amount-input').val(total_payble_amount);
 
             $("#special_discount_amt").val(total_discount);
@@ -2103,7 +2106,7 @@ $(document).on('keyup', '#round_off', function() {
             $("#discount_total_payable").html(Number(discount_amount).toFixed(2) + 'ع.د');
         } else {
             var total_payble_amount = (parseFloat($("#sub_total_mrp-input").val()) + parseFloat(roundoff)).toFixed(2);
-            $("#total_payble_amount").text(total_payble_amount);
+            $("#total_payble_amount").text(formatNumber(total_payble_amount));
             $('#total_payble_amount-input').val(total_payble_amount);
         }
 
@@ -2196,3 +2199,61 @@ $(document).ready(function() {
         }
     });
 });
+
+function formatNumber(net_price) {
+    //const options = { style: 'decimal', minimumFractionDigits: 2 };
+    const formattedNumber = net_price.toLocaleString('en-US');
+    // console.log(formattedNumber);
+    //const roundNumber = Math.round(formattedNumber);
+    return formattedNumber;
+}
+
+$(document).ready(function() {
+    $(".topSellProductItem").bind("click", function() {
+        console.log(this);
+        setProductRow(this);
+    });
+});
+
+$(document).ready(function() {
+    $("#top_search_product").keyup(function() {
+        var search = $(this).val();
+        if (search != "") {
+            $.ajax({
+                url: prop.ajaxurl,
+                type: 'post',
+                data: {
+                    search: search,
+                    action: 'get_top_sell_product_search',
+                    _token: prop.csrf_token
+                },
+                dataType: 'json',
+                success: function(response) {
+                    var len = response.result.length;
+
+                    $("#product_search_result_top").empty();
+                    for (var i = 0; i < len; i++) {
+                        //response.result[i]['product_barcode'] + '-' + 
+                        var id = response.result[i]['id'];
+                        var name = response.result[i]['product_name'] + ' / ' + response.result[i]['product_barcode'];
+                        $("#product_search_result_top").append("<li value='" + id + "'>" + name + "</li>");
+                    }
+                    // binding click event to li
+                    $("#product_search_result_top li").bind("click", function() {
+                        setProductRow(this);
+                    });
+                }
+            });
+        } else {
+            $("#product_search_result_top").empty();
+        }
+    });
+
+   
+});
+
+function removeComma(price){
+    var stringWithComma = price;
+    var stringWithoutComma = stringWithComma.replace(/,/g, '');
+    return stringWithoutComma;
+}

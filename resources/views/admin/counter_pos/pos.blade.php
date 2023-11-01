@@ -76,23 +76,23 @@
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Net Price -</li>
-              <li class="atpinfo"><span id="total_net_price">$0.00</span></li>
+              <li class="atpinfo"><span id="total_net_price">$0</span></li>
               {{-- <input type="hidden" name="total_mrp" id="total_mrp-input" value="0"> --}}
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Total -</li>
-              <li class="atpinfo"><span id="total_mrp">$0.00</span> <small>(inclusive all taxes)</small></li>
+              <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
               <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
             </ul>
 
             <ul class="d-flex w-100">
               <li class="atpVall">Discount -</li>
-              <li class="atpinfo" id="total_discount_amount">$0.00</li>
+              <li class="atpinfo" id="total_discount_amount">$0</li>
               <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Charge -</li>
-              <li class="atpinfo" id="extraCharge">$0.00</li>
+              <li class="atpinfo" id="extraCharge">$0</li>
             </ul>
             <ul class="d-flex w-100">
               {{-- <li class="atpVall">Tax -</li>
@@ -101,7 +101,7 @@
             </ul>
             <ul class="d-flex w-100 subTotal">
               <li class="atpVall">Sub Total-</li>
-              <li class="atpinfo" id="sub_total_mrp">$0.00</li>
+              <li class="atpinfo" id="sub_total_mrp">$0</li>
               <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
             </ul>
             <ul class="d-flex w-100">
@@ -121,7 +121,7 @@
         <div class="atpRight d-flex justify-content-center align-items-center">
           <div class="text-center">
             <h6>Amount to pay</h6>
-            <h3 id="total_payble_amount">$0.00</h3>
+            <h3 id="total_payble_amount">$0</h3>
             <input type="hidden" name="actual_amount" id="actual_amount" value="0">
             <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
             <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
@@ -201,17 +201,16 @@
                 <div class="report-wrap-rgt">
                     <div class="top-product-head"><h3>top seling product</h3></div>
                     <div class="top-product-src">
-                        <input type="text" class="top-product-src-input" name="" placeholder="Enter Barcode/Enter Product Name" value="">
-                        <ul id="" class="top-product-src-list" style="display: none;">
-                            <li>dfgrfg</li>
+                        <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Product Name" value="">
+                        <ul id="product_search_result_top" class="top-product-src-list">
+                            
                         </ul>
                     </div>
                     <div class="top-product">
                         <ul class="top-product-list">
-                            <li>top product 1</li>
-                            <li>top product </li>
-                            <li>top product 5</li>
-                            <li>top product 7</li>
+                          @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
+                            <li value="{{$topitem->id}}" class="topSellProductItem">{{($keystop+1)}}. {{$topitem->product_name}}</li>
+                          @endforeach
                         </ul>
                     </div>
                 </div>

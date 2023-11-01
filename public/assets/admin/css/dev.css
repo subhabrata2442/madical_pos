@@ -534,6 +534,39 @@ hr {
     color: white;
 }
 
+#product_search_result_top {
+    list-style: none;
+    padding: 0px;
+    width: 80%;
+    position: absolute;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 99999;
+    top: 100%;
+    background: #cfcff0;
+}
+
+#product_search_result_top li {
+    background: lavender;
+    padding: 7px 15px;
+    margin-bottom: 1px;
+    font-size: 13px;
+}
+
+
+/*#product_search_result_top li:nth-child(even){
+	background: cadetblue;
+	color: white;
+}
+*/
+
+#product_search_result_top li:hover {
+    cursor: pointer;
+    background: cadetblue;
+    color: white;
+}
+
 .commonBox {
     border: #eeeeee 1px solid;
     border-radius: 10px;
@@ -2718,6 +2751,7 @@ a.downloadBtn {
     font-weight: 700;
     text-transform: capitalize;
     margin-bottom: 1rem;
+    font-size: 1.25rem;
 }
 .top-product-list li{
     cursor: pointer;
