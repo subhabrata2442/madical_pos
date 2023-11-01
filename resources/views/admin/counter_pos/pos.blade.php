@@ -122,7 +122,7 @@
                 <ul class="d-flex flex-wrap">
                     <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
                     <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
-                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill p-0"><i class="fas fa-print"></i></a></li>
+                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
                 </ul>
             </div>
         </div>
@@ -153,17 +153,27 @@
             <div class="report-wrap h-100">
                 <div class="report-wrap-lft">
                     <div class="d-flex flex-column justify-content-between h-100">
+                        <div class="dateSales">
+                            <ul class="d-flex flex-wrap justify-content-between align-items-center">
+                                <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
+                                <li class="d-flex align-items-center">
+                                <p>Date:</p>
+                                <?php echo date('d-m-Y');?>
+                                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                                </li>
+                            </ul>
+                        </div>
                         <div class="data-sales-head radio-list">
-                        <div class="form-check">
-                            <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
-                            </label>
-                        </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
+                                </label>
+                            </div>
                         </div>
                         <div class="data-sales-head customeSearch" style="display: none;">
                             <div class="srcArea relative">
@@ -177,16 +187,16 @@
                         </div>
                         <div class="d-flex flex-column justify-content-start h-100">
                             <div class="data-sales-body d-flex flex-column justify-content-start h-100">
-                                <div class="dateSales">
+                                {{-- <div class="dateSales">
                                     <ul class="d-flex flex-wrap justify-content-between align-items-center">
                                         <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
                                         <li class="d-flex align-items-center">
                                         <p>Date:</p>
-                                        <?php echo date('d-m-Y');?>
+                                        <?php //echo date('d-m-Y');?>
                                         <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
                                         </li>
                                     </ul>
-                                </div>
+                                </div> --}}
                                 <div class="customerDetails">
                                 {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
                                 <div class="customerDetailsMid" style="display: none;">
