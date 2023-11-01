@@ -409,6 +409,20 @@ class PosController extends Controller
 			//echo '<pre>';print_r($data['top_selling_product_result']);exit;
 			
 			//print_r($invoice_url);exit;
+			$store_id	= Session::get('store_id');
+
+			// echo $store_id;exit;
+			
+			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+					->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+					->where('sell_stock_products.branch_id', $store_id)
+					->groupBy('products.id', 'products.product_name')
+					->orderBy('sales_count', 'desc')
+					->limit(10)
+					->get();
+
+			// dd($topSellingProducts);
+			$data['topSellingProducts']=$topSellingProducts;
 			
             return view('admin.counter_pos.pos', compact('data'));
         } catch (\Exception $e) {
@@ -561,7 +575,7 @@ class PosController extends Controller
 					'unit_price'  		=> $unit_price,
 					'offer_price'  		=> $unit_price,
 					'total_cost'		=> $total_amount,
-					//'created_at'		=> date('Y-m-d')
+					//'created_at'		=> date('Y-m-d'),
 				);
 				//print_r($sellStockproductData);exit;
 				SellStockProducts::create($sellStockproductData);

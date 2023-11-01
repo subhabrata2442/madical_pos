@@ -1805,4 +1805,52 @@ class AjaxController extends Controller {
 	
 		}
 
+
+		public function ajaxpost_get_top_sell_product_search($request) {
+			$search				= $request->search;
+			$searchTerm 		= $search;
+			$reservedSymbols 	= ['-', '+', '<', '>', '@', '(', ')', '~'];
+			$searchTerm 		= str_replace($reservedSymbols, ' ', $searchTerm);
+			$searchValues 		= preg_split('/\s+/', $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
+	
+			//print_r($searchValues);exit;
+			$store_id	= Session::get('store_id');
+
+			$res = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+					->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+					->where('sell_stock_products.branch_id', $store_id)
+					->where('products.product_name', 'like', "%{$search}%")
+					->orWhere('products.product_barcode', 'like', '%' . $search . '%')
+					->groupBy('products.id', 'products.product_name')
+					->orderBy('sales_count', 'desc')
+					->limit(10)
+					->get();
+
+			// dd($res);
+
+			$result=[];
+	
+			if(count($res) > 0){
+				foreach($res as $row){
+					
+					$result[]=array(
+						//'id'				=> $row->id,
+						'id'				=> @$row->id,
+						'product_barcode'	=> @$row->product_barcode,
+						'product_name'		=> @$row->product_name,
+						//'product_size'		=> $row->size->name,
+					);
+					
+				}
+			}
+			
+	
+			//print_r($result);exit;
+	
+			$return_data['result']	= $result;
+			$return_data['status']	= 1;
+	
+			echo json_encode($return_data);
+		}
+
 }
