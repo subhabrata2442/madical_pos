@@ -250,9 +250,11 @@
                             <li>In Stock</li>
                         </ul>
                         <ul class="top-product-list">
-                          @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
-                            <li value="{{$topitem->id}}" class="topSellProductItem">{{$topitem->product_name}}<span class="total-qty">780</span></li>
-                          @endforeach
+                          @if (count($data['topSellingProducts'])>0)
+                            @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
+                              <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['product_name']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
+                            @endforeach
+                          @endif
                         </ul>
                     </div>
                 </div>

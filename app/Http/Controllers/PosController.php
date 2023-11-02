@@ -421,8 +421,22 @@ class PosController extends Controller
 					->limit(10)
 					->get();
 
-			// dd($topSellingProducts);
-			$data['topSellingProducts']=$topSellingProducts;
+			$result=[];
+			if(count($topSellingProducts) > 0){
+				foreach($topSellingProducts as $row){
+					$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+					$result[]=array(
+						'id'				=> $row->id,
+						'product_barcode'	=> $row->product_barcode,
+						'product_name'		=> $row->product_name,
+						't_qty'				=> $t_qty,
+					);
+					
+				}
+			}
+
+			// dd($result);
+			$data['topSellingProducts']=$result;
 			
             return view('admin.counter_pos.pos', compact('data'));
         } catch (\Exception $e) {
