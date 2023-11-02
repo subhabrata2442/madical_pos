@@ -279,6 +279,18 @@ if($adminId!=1){
                 </li> --}}
               </ul>
             </li>
+            <li class="nav-item"> <a href="{{ route('admin.report.top_selling_products') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.top_selling_products') active @endif"> <i class="fas fa-list nav-icon"></i>
+              <p>Top selling products</p>
+              </a> 
+            </li>
+            <li class="nav-item"> <a href="{{ route('admin.report.low_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.low_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
+              <p>Low stock product</p>
+              </a> 
+            </li>
+            <li class="nav-item"> <a href="{{ route('admin.report.zero_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.zero_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
+              <p>Zero stock product</p>
+              </a> 
+            </li>
           </ul>
         </li>
       </ul>

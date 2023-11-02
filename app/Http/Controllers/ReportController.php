@@ -3470,4 +3470,91 @@ class ReportController extends Controller
          //echo "<pre>";print_r($items);die;
 		return $pdf->stream(now().'-invoice.pdf');
     }
+
+	public function top_selling_products(){
+
+		$admin_type = Session::get('admin_type');
+		// echo $admin_type;exit;
+		if($admin_type==1){
+			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+				->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+				->groupBy('products.id', 'products.product_name')
+				->orderBy('sales_count', 'desc')
+				->limit(50)
+				->get();
+		}else{
+			$store_id	= Session::get('store_id');
+			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+				->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+				->where('sell_stock_products.branch_id', $store_id)
+				->groupBy('products.id', 'products.product_name')
+				->orderBy('sales_count', 'desc')
+				->limit(50)
+				->get();
+		}
+
+		
+		
+
+		$result=[];
+		if(count($topSellingProducts) > 0){
+			foreach($topSellingProducts as $row){
+				if($admin_type==1){
+					$t_qty = BranchStockProducts::where('product_id', $row->id)->sum('t_qty');
+				}else{
+					$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+				}
+				$result[]=array(
+					'id'				=> $row->id,
+					'product_barcode'	=> $row->product_barcode,
+					'product_name'		=> $row->product_name,
+					't_qty'				=> $t_qty,
+				);
+				
+			}
+		}
+
+		// print_r($result);exit;
+
+		$data = [];
+		$data['top_products'] = $result;
+		$data['heading'] = 'Invoice Wise Purchase List';
+		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+
+		return view('admin.report.top_selling_products', compact('data'));
+	}
+
+	public function low_stock_product(){
+		$admin_type = Session::get('admin_type');
+		if($admin_type==1){
+			$low_stock = BranchStockProducts::with('product')->get();
+		}else{
+			$store_id	= Session::get('store_id');
+			$low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
+		}
+		// dd($low_stock);
+		$data = [];
+		$data['low_stock'] = $low_stock;
+		$data['heading'] = 'Invoice Wise Purchase List';
+		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+
+		return view('admin.report.low_stock_product', compact('data'));
+	}
+
+	public function zero_stock_product(){
+		$admin_type = Session::get('admin_type');
+		if($admin_type==1){
+			$zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
+		}else{
+			$store_id	= Session::get('store_id');
+			$zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->where('branch_id', $store_id)->get();
+		}
+
+		$data = [];
+		$data['zero_stock'] = $zero_stock;
+		$data['heading'] = 'Invoice Wise Purchase List';
+		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+
+		return view('admin.report.zero_stock_product', compact('data'));
+	}
 }

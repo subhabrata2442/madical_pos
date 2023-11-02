@@ -231,6 +231,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         //Route::match(['GET', 'POST'], '/list', [ProductController::class, 'list'])->name('list');
         //Route::match(['GET', 'POST'], '/edit/{id}', [ProductController::class, 'edit'])->name('edit');
         //Route::match(['GET', 'POST'], '/delete/{id}', [ProductController::class, 'delete'])->name('delete');
+
+		Route::match(['GET'], '/top_selling_products', [ReportController::class, 'top_selling_products'])->name('top_selling_products');
+		Route::match(['GET'], '/low_stock_product', [ReportController::class, 'low_stock_product'])->name('low_stock_product');
+		Route::match(['GET'], '/zero_stock_product', [ReportController::class, 'zero_stock_product'])->name('zero_stock_product');
 	});
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
