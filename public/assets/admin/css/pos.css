@@ -1131,7 +1131,7 @@ span .loader {
 }
 
 .customerDetails h4 {
-    font-size: 1.2vw;
+    font-size: 1vw;
     border-bottom: #e1e1e1 1px solid;
     font-weight: bold;
     padding-bottom: .3vw;
@@ -1144,7 +1144,7 @@ span .loader {
 }
 
 .customerDetailsMid ul li {
-    font-size: .94vw;
+    font-size: .8vw;
     color: #3c3c3c;
     font-weight: bold;
     margin: .7vw 0;

@@ -1146,6 +1146,7 @@ hr {
     padding: 18px 15px;
     font-weight: bold;
     text-transform: uppercase;
+    font-size: 1vw;
 }
 
 .pmMenu ul li a.active,
@@ -1278,7 +1279,7 @@ hr {
     border-radius: 14px;
     text-align: center;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem !important;
     display: block;
     padding: 10px 0;
     width: 100%;
@@ -1297,6 +1298,7 @@ hr {
     color: #281919;
     background: #fff;
     text-align: center;
+    font-size: 1.75vw;
 }
 
 .saveBtn-2 {
@@ -1355,7 +1357,8 @@ hr {
     -moz-transition: all ease-in-out .4s;
     -webkit-transition: all ease-in-out .4s;
     transition: all ease-in-out .4s;
-    max-width: 900px;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .payWrapLeft {

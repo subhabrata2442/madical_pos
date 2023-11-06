@@ -2030,6 +2030,10 @@ function total_cal() {
         $("#gross_total_input").val(sub_total_mrp);
         $("#actual_amount").val(sub_total_mrp);
 
+
+        var total_profit = ((total_mrp-totalNetPrice)*100);
+        $("#total_profit").html('$'+ formatNumber(total_profit));
+
         var special_discount_percent = $('#selling_special_discount_percent-input').val();
         console.log("special_discount_percent"+special_discount_percent);
         if (special_discount_percent > 0) {

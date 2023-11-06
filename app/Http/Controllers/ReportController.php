@@ -3476,7 +3476,7 @@ class ReportController extends Controller
 		$admin_type = Session::get('admin_type');
 		// echo $admin_type;exit;
 		if($admin_type==1){
-			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
 				->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
 				->groupBy('products.id', 'products.product_name')
 				->orderBy('sales_count', 'desc')
@@ -3484,7 +3484,7 @@ class ReportController extends Controller
 				->get();
 		}else{
 			$store_id	= Session::get('store_id');
-			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
 				->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
 				->where('sell_stock_products.branch_id', $store_id)
 				->groupBy('products.id', 'products.product_name')
@@ -3509,6 +3509,9 @@ class ReportController extends Controller
 					'product_barcode'	=> $row->product_barcode,
 					'product_name'		=> $row->product_name,
 					't_qty'				=> $t_qty,
+					'brand'				=>  $row->brand,
+					'dosage_name'		=>  $row->dosage_name,
+					'selling_by_name'	=>  $row->selling_by_name,
 				);
 				
 			}

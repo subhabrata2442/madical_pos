@@ -60,6 +60,10 @@
 				<th scope="col">Sl NO.</th>
 				<th scope="col">Product Name</th>
 				<th scope="col">In Stock</th>
+				<th scope="col">Brand Name</th>
+				<th scope="col">Product Barcode</th>
+				<th scope="col">Dosage</th>
+				<th scope="col">Selling By</th>
 			</thead>
 			<tbody>
 				@forelse ($data['zero_stock'] as $key=>$purchase)
@@ -67,9 +71,13 @@
                         <td>{{($key+1)}}</td>
                         <td>{{$purchase->product->product_name}}</td>
                         <td>{{$purchase->t_qty}}</td>
-                    </tr>
+						<td>{{$purchase->product->brand}}</td>
+						<td>{{$purchase->product->product_barcode}}</td>
+						<td>{{$purchase->product->dosage_name}}</td>
+						<td>{{$purchase->product->selling_by_name}}</td>
+					</tr>
 				@empty
-					<tr ><td colspan="3"> No data found </td></tr>
+					<tr ><td colspan="7"> No data found </td></tr>
 				@endforelse
 				
 			</tbody>
