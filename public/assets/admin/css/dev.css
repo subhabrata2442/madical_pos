@@ -1292,8 +1292,8 @@ hr {
 
 .cashOptionBtm .table tr td a {
     display: block;
-    height: 78px;
-    line-height: 78px;
+    height: 7vw;
+    line-height: 7vw;
     font-weight: bold;
     color: #281919;
     background: #fff;
