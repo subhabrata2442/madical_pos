@@ -75,12 +75,12 @@
               <input type="hidden" name="total_quantity" id="total_quantity-input" value="0">
             </ul>
             <ul class="d-flex w-100">
-              <li class="atpVall">Net Price -</li>
+              <li class="atpVall">Total Net Price -</li>
               <li class="atpinfo"><span id="total_net_price">$0</span></li>
               {{-- <input type="hidden" name="total_mrp" id="total_mrp-input" value="0"> --}}
             </ul>
             <ul class="d-flex w-100">
-              <li class="atpVall">Total -</li>
+              <li class="atpVall">Total Sale Price -</li>
               <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
               <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
             </ul>
@@ -104,12 +104,17 @@
               <li class="atpinfo" id="sub_total_mrp">$0</li>
               <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
             </ul>
-            <ul class="d-flex w-100">
+            {{-- <ul class="d-flex w-100">
               <li class="atpVall">Round Off -</li>
               <li class="atpinfo">
                 <input type="text" name="round_off" id="round_off" class="small-input" placeholder="0" onkeydown="checkforroundoff(event,this)">
               </li>
+            </ul> --}}
+            <ul class="d-flex w-100 subTotal">
+              <li class="atpVall">Total profit-</li>
+              <li class="atpinfo" id="total_profit">$0</li>
             </ul>
+
           </div>
         </div>
         {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
