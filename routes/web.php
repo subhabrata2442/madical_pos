@@ -88,7 +88,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
 
 
-
+		
 
 
 
@@ -312,3 +312,5 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']);
 Route::post('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']);
+
+Route::match(['GET'], '/print', [PosController::class, 'print_invoice'])->name('print');

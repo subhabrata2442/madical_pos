@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
 use Hash;
+use App\Models\Site_settings;
 
 class StoreController extends Controller
 {
@@ -242,6 +243,21 @@ class StoreController extends Controller
                     }
                 }
 
+
+                $settingsData['company_name'] = $request->full_name;
+                $settingsData['company_address'] = $request->address;
+                $settingsData['phone'] = $request->phone;
+                $settingsData['email'] = $request->email;
+
+                foreach ($settingsData as $key => $value) {
+                    $data = [
+                        'company_id'=>$store_id,
+                        'option_name'=>$key,
+                        'option_value'=>$value,
+                    ];
+            		Site_settings::create($data);
+            	}
+
 				
 				return redirect()->back()->with('success', 'Store Added successfully');
             }
@@ -339,6 +355,10 @@ class StoreController extends Controller
             $data['store_role'] = $store_role;
             
 			//echo '<pre>';print_r($data['store_role']);exit;
+
+
+
+
 			
             return view('admin.store.add', compact('data'));
         } catch (\Exception $e) {
@@ -517,6 +537,28 @@ class StoreController extends Controller
 			}
 
 			User::find($store_id)->update($array);
+
+            $settingsData['company_name'] = $request->full_name;
+            $settingsData['company_address'] = $request->address;
+            $settingsData['phone'] = $request->phone;
+            $settingsData['email'] = $request->email;
+
+            foreach ($settingsData as $key => $value) {
+                $check =Site_settings::where('company_id', $store_id)->where('option_name', $key)->first();
+                
+                $data = [
+                    'company_id'=>$store_id,
+                    'option_name'=>$key,
+                    'option_value'=>$value,
+                ];
+                if(!empty($check)){
+                    Site_settings::where('company_id', $store_id)->where('option_name', $key)->update($data);
+                }else{
+                    Site_settings::create($data);
+                }
+                
+            }
+
             
 			return redirect()->back()->with('success', 'Store Updated successfully');
         }
@@ -651,6 +693,9 @@ class StoreController extends Controller
             }
 
             $data['store_role'] = $store_role;
+
+
+            $data['site_settings'] = Site_settings::where('company_id', $store_id)->get();
 
 			//echo '<pre>';print_r($data['store_role']);exit;
 						
