@@ -18,6 +18,7 @@ use App\Http\Controllers\ManageTableController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\DosageController;
+use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -304,6 +305,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::get('/get-sale-invoice-by-name',[ReportController::class,'getSaleInvoiceByKeyup'])->name('ajax.sale-invoice-list');
 	Route::get('/get-purchase-invoice-by-name',[ReportController::class,'getPurchaseInvoiceByKeyup'])->name('ajax.purchase-invoice-list');
 	Route::get('/get-product-by-name',[ReportController::class,'getProductByKeyup'])->name('ajax.sale-product');
+
+
+
+	Route::prefix('expense')->name('expense.')->middleware('checkPermission:3')->group(function () {
+		Route::match(['GET', 'POST'], '/add', [ExpenseController::class, 'add'])->name('add');
+        Route::match(['GET', 'POST'], '/category', [ExpenseController::class, 'category'])->name('category');
+	});
 	
 });
 
