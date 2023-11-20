@@ -49,7 +49,25 @@ function setProfitCalulation() {
                 .val()).replace(/,/g, '')
         );
 
-        gross_total_amount += Number(selling_price);
+        var totalSellPrice = 0;
+        if (product_isChronic == 'Yes') {
+            totalSellPrice = Number(
+                ($(this)
+                    .find("#chronic_amount_" + product_id)
+                    .val()).replace(/,/g, '')
+            );
+        }else{
+            totalSellPrice = Number(
+                ($(this)
+                    .find("#product_sellPrice_" + product_id)
+                    .val()).replace(/,/g, '')
+            );
+        }
+
+
+
+        // gross_total_amount += Number(selling_price);
+        gross_total_amount += Number(totalSellPrice);
         var product_quantity = Number(
             $(this)
             .find("#product_quantity_" + product_id)

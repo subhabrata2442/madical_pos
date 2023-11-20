@@ -8,8 +8,8 @@
                     <table id="user-table" class="table table-bordered">
                         <thead>
                             
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th>Sl No.</th>
+                            <th>Category</th>
                             <th>Phone No.</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -32,7 +32,7 @@
                 processing: true,
                 serverSide: true,
                 searchDelay: 350,
-                ajax: "{{ route('admin.store.list') }}",
+                ajax: "{{ route('admin.expense.category') }}",
                 columns: [
                     {
                         data: 'name',
