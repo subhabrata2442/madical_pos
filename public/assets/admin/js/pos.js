@@ -359,12 +359,24 @@ $(document).ready(function() {
                 data: formData,
                 success: function(data) {
                     $(".payWrap").removeClass('active');
+                    // console.log(data.invoicePdf);
+                    $("#off_counter_invoice-frame").attr("src", data.invoicePdf);
+                    
+
                 },
                 beforeSend: function() {
                     $('#ajax_loader').fadeIn();
                 },
                 complete: function() {
                     $('#ajax_loader').fadeOut();
+
+                    setTimeout(function() {
+                        var frame = document.getElementById('off_counter_invoice-frame');
+                        frame.contentWindow.focus();
+                        frame.contentWindow.print();
+                    }, 500);
+
+
                     Swal.fire({
                         title: 'Order successfully submitted.',
                         icon: 'success',

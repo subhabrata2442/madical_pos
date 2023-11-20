@@ -293,6 +293,21 @@ if($adminId!=1){
             </li>
           </ul>
         </li>
+
+
+        {{-- <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) parent-active @endif"><i class="nav-icon fas money-bill"></i>
+          <p>Expense  <i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item"> <a href="{{ route('admin.expense.category') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.category') active @endif"> <i class="fas fa-list nav-icon"></i>
+              <p>Category</p>
+              </a> </li>
+            
+          </ul>
+        </li> --}}
+
+
+
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

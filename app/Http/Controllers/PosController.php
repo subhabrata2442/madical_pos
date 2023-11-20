@@ -190,8 +190,10 @@ class PosController extends Controller
 	public function print_invoice(){
 		
 		$branch_id 			= Session::get('store_id');
+		
 		$lastSellInwardStock=SellInwardStock::where('branch_id',$branch_id)->orderBy('id','DESC')->take(1)->get();
 		$invoice_url='';
+		
 		if(count($lastSellInwardStock)>0){
 			 $data=[];
 			 
@@ -205,10 +207,16 @@ class PosController extends Controller
 			 
 			 $total_qty			= isset($lastSellInwardStock[0]->total_qty)?$lastSellInwardStock[0]->total_qty:'';
 			 $discount_amount	= isset($lastSellInwardStock[0]->discount_amount)?$lastSellInwardStock[0]->discount_amount:'';
-			 $special_discount	= isset($lastSellInwardStock[0]->special_discount_amt)?$lastSellInwardStock[0]->special_discount_amt:'';
+			 $special_discount	= isset($lastSellInwardStock[0]->special_discount_amt)?$lastSellInwardStock[0]->special_discount_amt:'0.00';
 			 $pay_amount		= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
 			 
 			 $gross_total_amount= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
+
+			 $charge_amount	= isset($lastSellInwardStock[0]->charge_amount)?$lastSellInwardStock[0]->charge_amount:'0.00';
+			 $gross_amount	= isset($lastSellInwardStock[0]->gross_amount)?$lastSellInwardStock[0]->gross_amount:'0.00';
+
+			 $tendered_amount	= isset($lastSellInwardStock[0]->tendered_amount)?$lastSellInwardStock[0]->tendered_amount:'0.00';
+			 $tendered_change_amount	= isset($lastSellInwardStock[0]->tendered_change_amount)?$lastSellInwardStock[0]->tendered_change_amount:'0.00';
 			 
 			 $total_discount_amount=0;
 			 if($discount_amount!=''){
@@ -228,6 +236,7 @@ class PosController extends Controller
 			 $company_address	= Common::get_user_settings($where=['option_name'=>'company_address'],$branch_id);
 			 $address2			= Common::get_user_settings($where=['option_name'=>'company_address2'],$branch_id);
 			 $phone				= Common::get_user_settings($where=['option_name'=>'phone'],$branch_id);
+			 $company_email		= Common::get_user_settings($where=['option_name'=>'email'],$branch_id);
 			 
 			 $supplier_id	= Session::get('adminId');
 			 $supplier		= User::find($supplier_id);
@@ -241,9 +250,11 @@ class PosController extends Controller
 			 $data['shop_details'] = [
 				'name' 		=> $company_name,
 				'address1'	=> $company_address,
-				'address2' 	=> $address2,
+				'email' 	=> $company_email,
 				'phone'		=> $phone,
 			];
+
+			// dd($data['shop_details']);
 			
 			$data['customer_details'] = [
 				'name'		=> '',
@@ -280,10 +291,32 @@ class PosController extends Controller
 			
 			
 			$data['total'] =[
-				'total_qty'		=> number_format($total_qty,2),
-            	'total_disc'	=> number_format($discount_amount,2),
-            	'total_price'	=> number_format($gross_total_amount,2)
+				'total_qty'		=> $total_qty,
+            	'total_disc'	=> number_format($special_discount,2),
+            	'total_price'	=> number_format($gross_total_amount,2),
+				'total_charge'	=> number_format($charge_amount,2),
+				'gross_amount'	=> number_format($gross_amount,2),
 			]; 
+
+			$data['tender'] =[
+				'tendered_amount'	=> number_format($tendered_amount,2),
+				'tendered_change_amount'	=> number_format($tendered_change_amount,2),
+			]; 
+
+			if($lastSellInwardStock[0]->customer_id!='0'){
+				$data['customerdetails'] =[
+					'name'	=> $lastSellInwardStock[0]->customer->customer_name,
+					'phone'	=> $lastSellInwardStock[0]->customer->customer_mobile,
+				]; 
+			}else{
+				$data['customerdetails'] =[
+					'name'	=> 'Walk in customer',
+					'phone'	=> '',
+				];
+			}
+
+
+			// dd($data['customerdetails']);
 			
 			$data['gst'] =[
 				'gst_val' =>'0',
@@ -296,23 +329,26 @@ class PosController extends Controller
 			];
 			
 			//echo '<pre>';print_r($data);exit;
-			$data['total_amt_in_word']		= ucwords(Media::getIndianCurrency($pay_amount));
+			$data['total_amt_in_word']		= ucwords(Media::getIndianCurrency($gross_total_amount));
 			$data['total_discount_amount']	= number_format($total_discount_amount,2);
 			$data['payment_method'] 		= 'Cash';
 			
-			
+			// return view('admin.pdf.invoice', $data);exit;
 			
 			
 			$mpdf = new \Mpdf\Mpdf();
 			$mpdf->WriteHTML((string)view('admin.pdf.invoice', $data));
 			//$mpdf->Output();
 			//exit;
+
 			
 			$bill_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
 			
 			// $mpdf->Output('uploads/'.$bill_no.'-invoice.pdf', 'F');
 			// $mpdf->Output(public_path('uploads/' . $bill_no . '-invoice.pdf'), 'F');
 			$mpdf->Output(storage_path('app/public/uploads/' . $bill_no . '-invoice.pdf'), 'F');
+
+			return asset('storage/uploads/'.$bill_no. '-invoice.pdf?v='.time());
 
 			
 			//$invoice_url=asset('uploads/off_counter/'.$invoice_no.'-invoice.pdf?v='.time());
@@ -635,7 +671,9 @@ class PosController extends Controller
 		
 		//$this->daily_product_sell_history();
 		
-		$this->print_invoice();
+		$invoicePdf = $this->print_invoice();
+
+		$return_data['invoicePdf']=$invoicePdf;
 		
 		
 		$return_data['success']	= 1;

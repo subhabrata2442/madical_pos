@@ -9,7 +9,7 @@
       <div class="card">
         <div class="row">
           <x-alert />
-          <div class="col-md-4 plusBoxWrap relative">
+          <div class="col-md-6 plusBoxWrap relative">
             <div class="form-group">
               <label for="brand" class="form-label">Brand Name</label>
               <select name="brand" id="brand" class="form-control form-inputtext" required>
@@ -25,7 +25,7 @@
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="brand" data-title="Brand"><i class="fas fa-plus"></i></a></div>
           </div>
-          <div class="col-md-4 plusBoxWrap relative">
+          {{-- <div class="col-md-4 plusBoxWrap relative">
             <div class="form-group">
               <label for="product_name" class="form-label">Product Name</label>
               <div id="product_name_div">
@@ -35,7 +35,7 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
             <div class="plusBox" id="add_product_name_btn" style="display: none;"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="product" data-title="Product Name"><i class="fas fa-plus"></i></a></div>
-          </div>
+          </div> --}}
           {{-- <div class="col-md-4">
             <div class="form-group">
               <label for="product_name" class="form-label">Product Name</label>
@@ -44,7 +44,7 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div> --}}
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="product_barcode" class="form-label">Product Barcode</label>
               <input type="text" class="form-control admin-input" id="product_barcode" name="product_barcode" value="{{ $data['products']->product_barcode }}" required  autocomplete="off">
@@ -106,12 +106,14 @@
           <div class="col-md-3 plusBoxWrap relative">
             <div class="form-group">
               <label for="no_package" class="form-label">No per package</label>
-              <select name="no_package" id="no_package" class="form-control form-inputtext" required>
+              {{-- <select name="no_package" id="no_package" class="form-control form-inputtext" required>
                 <option value="">Select No per package</option>
                 @for($i=1;10>$i;$i++)
                 <option value="{{$i}}" {{ ($data['products']->no_package == $i ? "selected":"") }}> {{$i}}</option>
                 @endfor
-              </select>
+              </select> --}}
+              <input type="text" class="form-control admin-input isnumber" id="no_package" name="no_package" value="{{ $data['products']->no_package }}"  autocomplete="off" placeholder="No per package" maxlength="5">
+
               @error('no_package')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>

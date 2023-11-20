@@ -102,7 +102,7 @@ class ProductController extends Controller
 				//dd($request->all());
                 $validator = Validator::make($request->all(), [
                     'brand' 		=> 'required',
-                    'product_name' 		=> 'required',
+                    // 'product_name' 		=> 'required',
 					'product_barcode' 	=> 'required',
 					'selling_by' 		=> 'required',
 					'no_package' 		=> 'required',
@@ -189,17 +189,19 @@ class ProductController extends Controller
 				$check_brand_product_name=Product::where('product_name',$product_name)->where('brand_id',$brand_id)->get();
 				if(count($product_result)>0){
 					return redirect()->back()->with('error', 'This barcode already exists!');
-				}else if(count($check_brand_product_name)>0){
-					return redirect()->back()->with('error', 'This brand and product name already exists!');
+				// }else if(count($check_brand_product_name)>0){
+				// 	return redirect()->back()->with('error', 'This brand and product name already exists!');
+				// }
 				}else{
+					
 					$insert_data=array(
 						//'sku_code'				=> $sku_code,
 						'uqc_id'  				=> $uqc_id,
 						'product_barcode'  		=> $product_barcode,
 						'brand'  				=> $brand_name,
-						'product_name'  		=> $product_name,
+						// 'product_name'  		=> $product_name,
 						'brand_id'  			=> $brand_id,
-						'slug'  				=> $product_slug,
+						// 'slug'  				=> $product_slug,
 						'is_chronic'  			=> $is_chronic,
 						'dosage_name'  			=> $dosage_name,
 						'dosage_id'  			=> $dosage_id,
@@ -266,7 +268,7 @@ class ProductController extends Controller
                 $validator = Validator::make($request->all(), [
                     'product_barcode' 	=> 'required|unique:products,product_barcode,' . $product_id,
 					'brand' 		=> 'required',
-                    'product_name' 		=> 'required',
+                    // 'product_name' 		=> 'required',
 					'selling_by' 		=> 'required',
 					'no_package' 		=> 'required',
                 ]);

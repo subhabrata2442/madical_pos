@@ -44,6 +44,15 @@
                      <div class="error admin-error">{{ $message }}</div>
                      @enderror </div>
                </div>
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <label for="password" class="form-label">Address</label>
+                     <input type="text" class="form-control admin-input" id="address" name="address"
+                        autocomplete="off" required>
+                     @error('address')
+                     <div class="error admin-error">{{ $message }}</div>
+                     @enderror </div>
+               </div>
 
             </div>
 

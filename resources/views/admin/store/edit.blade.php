@@ -52,6 +52,17 @@ $selected_permission=array();
               @enderror </div>
           </div>
 
+
+          <div class="col-md-12">
+            <div class="form-group">
+               <label for="password" class="form-label">Address</label>
+               <input type="text" class="form-control admin-input" id="address" name="address"
+                  autocomplete="off" value="@if(!empty($data['site_settings']))@if(!empty($data['site_settings'][1])){{$data['site_settings'][1]->option_value}}@endif @endif" required>
+               @error('address')
+               <div class="error admin-error">{{ $message }}</div>
+               @enderror </div>
+         </div>
+
         </div>
 
         <div class="row">
