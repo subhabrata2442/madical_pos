@@ -190,7 +190,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/update-inward-stock/{id}', [PurchaseOrderController::class, 'updateInwardStock'])->name('inward_stock.update');
         Route::match(['GET', 'POST'], '/update-inward-stock/delete/{id}', [PurchaseOrderController::class, 'deleteInwardStock'])->name('inward-stock.delete');
         Route::match(['GET'], '/ajax-get', [PurchaseOrderController::class, 'ajaxPurchaseById'])->name('list.ajax');
-
+		
         Route::match(['GET', 'POST'], '/stock-transfer', [PurchaseOrderController::class, 'stockTranfer'])->name('stock.transfer');
 		Route::match(['GET', 'POST'], '/stock-transfer-request', [PurchaseOrderController::class, 'stockTranferRequest'])->name('stock.transferRequest');
 		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
@@ -237,6 +237,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/low_stock_product', [ReportController::class, 'low_stock_product'])->name('low_stock_product');
 		Route::match(['GET'], '/zero_stock_product', [ReportController::class, 'zero_stock_product'])->name('zero_stock_product');
 	});
+	
+	
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [StoreController::class, 'add'])->name('add');
@@ -307,11 +309,18 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::get('/get-product-by-name',[ReportController::class,'getProductByKeyup'])->name('ajax.sale-product');
 
 
-
-	Route::prefix('expense')->name('expense.')->middleware('checkPermission:3')->group(function () {
+	Route::prefix('expense')->name('expense.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [ExpenseController::class, 'add'])->name('add');
         Route::match(['GET', 'POST'], '/category', [ExpenseController::class, 'category'])->name('category');
+		Route::match(['GET', 'POST'], '/delete/{id}', [ExpenseController::class, 'delete'])->name('category.delete');
+        Route::match(['GET', 'POST'], '/expenselist', [ExpenseController::class, 'expenselist'])->name('expenselist');
+		Route::match(['GET', 'POST'], '/addexpense', [ExpenseController::class, 'addexpense'])->name('addexpense');
+
+		Route::match(['GET', 'POST'], '/expenseedit/{id}', [ExpenseController::class, 'expenseedit'])->name('expenseedit');
+		Route::match(['GET', 'POST'], '/expensdelete/{id}', [ExpenseController::class, 'expensdelete'])->name('expensdelete');
+
 	});
+	
 	
 });
 

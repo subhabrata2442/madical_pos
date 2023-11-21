@@ -401,6 +401,8 @@ $(document).ready(function() {
 $(document).on('click', '#calculate_cash_payment_btn', function() {
     //alert('cash');
     //return false;
+
+    
     var due_amount_tendering = $('#due_amount_tendering').val();
     var tendered_change_amount = $('#tendered_change_amount').val();
     var tendered_amount = $('#tendered_amount').val();
@@ -1433,7 +1435,7 @@ function setProductRow(element) {
                                 if(is_chronic=='Yes'){
                                     html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
                                                     <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
-                                                    <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
+                                                    <option value="cronicprice">CP: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                                 </select>
                                             </td>
                                             <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
@@ -1590,7 +1592,7 @@ $(document).on('click', '.select_product_item', function() {
                             if(is_chronic=='Yes'){
                                 html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
                                                 <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
-                                                <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
+                                                <option value="cronicprice">CP: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                             </select>
                                         </td>
                                         <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
