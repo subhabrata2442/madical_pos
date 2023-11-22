@@ -215,6 +215,7 @@ class ProductController extends Controller
 						'no_package'			=> $no_package,
 						'selling_by'			=> $selling_by,
 						'selling_by_name'		=> $selling_by_name,
+						'common_items'		=> $request->common_items,
 					);
 					$data_insert=Product::create($insert_data);
 					$product_id=$data_insert->id;
@@ -353,7 +354,7 @@ class ProductController extends Controller
 					$update_data=array(
 						//'sku_code'				=> $sku_code,
 						'brand'  				=> $brand_name,
-						'product_name'  		=> $product_name,
+						// 'product_name'  		=> $product_name,
 						'brand_id'  			=> $brand_id,
 						'product_barcode'  		=> $product_barcode,
 						'slug'  				=> $product_slug,
@@ -368,6 +369,7 @@ class ProductController extends Controller
 						'no_package'			=> $no_package,
 						'selling_by'			=> $selling_by,
 						'selling_by_name'		=> $selling_by_name,
+						'common_items'		=> $request->common_items,
 						
 					);
 					Product::where('id',$product_id)->update($update_data);

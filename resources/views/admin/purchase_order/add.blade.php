@@ -293,7 +293,7 @@ $adminRoll = Session::get('admin_type');
                     {{-- <th id="th_rate_title">US/IQ rate</th> --}}
                     <th>Total Quantity</th>
                     <th style="width: 80px;">Sell Price</th>
-                    <th style="width: 80px;">Chronic Price</th>
+                    <th style="width: 80px;">CP</th>
                     <th>Profit</th>
                     <th>% Profit</th>
                     <th>Chronic %</th>

@@ -400,7 +400,29 @@ $(document).ready(function() {
 
 $(document).on('click', '#calculate_cash_payment_btn', function() {
     //alert('cash');
+
+    // finalsubmitpayment();
     //return false;
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            finalsubmitpayment();
+        }
+    });
+    
+   
+});
+
+function finalsubmitpayment(){
+
     var due_amount_tendering = $('#due_amount_tendering').val();
     var tendered_change_amount = $('#tendered_change_amount').val();
     var tendered_amount = $('#tendered_amount').val();
@@ -440,7 +462,7 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
             $("#pos_create_order-form").submit();
         }
     }
-});
+}
 
 $(document).on('click', '#calculate_gPay_payment_btn', function() {
     //alert('gPay');
@@ -1433,7 +1455,7 @@ function setProductRow(element) {
                                 if(is_chronic=='Yes'){
                                     html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
                                                     <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
-                                                    <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
+                                                    <option value="cronicprice">CP: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                                 </select>
                                             </td>
                                             <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
@@ -1590,7 +1612,7 @@ $(document).on('click', '.select_product_item', function() {
                             if(is_chronic=='Yes'){
                                 html += `<td><select class="select-3" name="" onchange="changeiscronic(this.value, ${product_id})">
                                                 <option value="sellprice">Sell price: ${formatNumber(0 + parseFloat(product_mrp))}</option>
-                                                <option value="cronicprice">Cronic price: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
+                                                <option value="cronicprice">CP: ${formatNumber(0 + parseFloat(product_chronic_amount))}</option>
                                             </select>
                                         </td>
                                         <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
@@ -1988,6 +2010,7 @@ function total_cal() {
     var product_net_price = 0
     var subNetPrice = 0;
     var totalNetPrice = 0;
+    var profitpersent = 0;
 
     setTimeout(function() {
 
@@ -2045,6 +2068,11 @@ function total_cal() {
 
         var total_profit = ((total_mrp-totalNetPrice)*100);
         $("#total_profit").html('$'+ formatNumber(total_profit));
+
+
+        profitpersent = (((total_mrp - totalNetPrice)/totalNetPrice)*100);
+        $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
+
 
         var special_discount_percent = $('#selling_special_discount_percent-input').val();
         console.log("special_discount_percent"+special_discount_percent);
@@ -2273,3 +2301,11 @@ function removeComma(price){
     var stringWithoutComma = stringWithComma.replace(/,/g, '');
     return stringWithoutComma;
 }
+
+function checkformatPercentage(value) {
+    if (Number.isInteger(value)) {
+      return value;
+    } else {
+      return (value.toFixed(2));
+    }
+  }

@@ -92,6 +92,18 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="common_items" class="form-label">Common Items</label>
+              <select name="common_items" id="common_items" class="form-control form-inputtext" required>
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              @error('common_items')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
         </div>
       </div>
 
