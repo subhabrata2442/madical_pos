@@ -4,6 +4,7 @@ function setProfitCalulation() {
     var gross_total_amount = 0;
     var total_profit = 0;
     var total_profit_percent = 0;
+    
     var payment_discount = $('#payment_discount').val();
     //console.log($('#payment_discount').val());
     //console.log("total_profit-", total_profit);
@@ -49,31 +50,14 @@ function setProfitCalulation() {
                 .val()).replace(/,/g, '')
         );
 
-        var totalSellPrice = 0;
-        if (product_isChronic == 'Yes') {
-            totalSellPrice = Number(
-                ($(this)
-                    .find("#chronic_amount_" + product_id)
-                    .val()).replace(/,/g, '')
-            );
-        }else{
-            totalSellPrice = Number(
-                ($(this)
-                    .find("#product_sellPrice_" + product_id)
-                    .val()).replace(/,/g, '')
-            );
-        }
-
-
-
-        // gross_total_amount += Number(selling_price);
-        gross_total_amount += Number(totalSellPrice);
+        
         var product_quantity = Number(
             $(this)
             .find("#product_quantity_" + product_id)
             .val()
         );
         qty_total += Number(product_quantity);
+
 
         var noper_package = Number(
             $(this)
@@ -94,6 +78,24 @@ function setProfitCalulation() {
         } else {
             total_quantity = (product_quantity + bonous) * noper_package;
         }
+
+
+        var totalSellPrice = 0;
+        if (product_isChronic == 'Yes') {
+            totalSellPrice = Number(
+                ($(this)
+                    .find("#chronic_amount_" + product_id)
+                    .val()).replace(/,/g, '')
+            );
+        }else{
+            totalSellPrice = Number(
+                ($(this)
+                    .find("#product_sellPrice_" + product_id)
+                    .val()).replace(/,/g, '')
+            );
+        }
+        // gross_total_amount += Number(selling_price);
+        gross_total_amount += Number(totalSellPrice*total_quantity);
 
 
         var product_discount = Number(

@@ -2066,7 +2066,8 @@ function total_cal() {
         $("#actual_amount").val(sub_total_mrp);
 
 
-        var total_profit = ((total_mrp-totalNetPrice)*100);
+        // var total_profit = ((total_mrp-totalNetPrice)*100);
+        var total_profit = (total_mrp-totalNetPrice);
         $("#total_profit").html('$'+ formatNumber(total_profit));
 
 
