@@ -51,7 +51,7 @@
         {{$shop_details['name']}}</td>
     </tr>
     <tr>
-      <td colspan="4" style="padding:6px 3px; text-align: center;  border-bottom: #000 1px solid">A/12. Shrenik Park,
+      <td colspan="4" style="padding:6px 3px; text-align: center;  border-bottom: #000 1px solid">
         {{$shop_details['address1']}}<br />
         Ph. {{$shop_details['phone']}}<br />
         E Mail: {{$shop_details['email']}}
