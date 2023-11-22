@@ -17,7 +17,7 @@
       }
 
       html {
-        direction: rtl;
+        direction: ltr;
       }
 
       html,
@@ -27,7 +27,7 @@
       }
 
       #printContainer {
-        width: 250px;
+        width: 300px;
         margin: auto;
         text-align: justify;
       }
@@ -40,7 +40,7 @@
 </head>
 
 <body>
-  <table border="0" cellspacing="0" cellpadding="0" style="font-size:12px; color:#000">
+  <table border="0" cellspacing="0" align="center" cellpadding="0" style="font-size:12px; color:#000;margin:0 auto;padding: 0 15px;">
     <tr>
       <td colspan="4" style="padding:2px 3px;font-weight:bold;text-align: center;">
         Sales Invoice</td>

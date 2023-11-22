@@ -295,7 +295,7 @@ if($adminId!=1){
         </li>
 
 
-        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) parent-active @endif"><i class="nav-icon fas money-bill"></i>
+        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) parent-active @endif"><i class="fas fa-money-bill nav-icon"></i>
           <p>Expense  <i class="fas fa-angle-left right"></i></p>
           </a>
           <ul class="nav nav-treeview">
@@ -312,7 +312,7 @@ if($adminId!=1){
               </a>
             </li>
             <li class="nav-item"> 
-              <a href="{{ route('admin.expense.addexpense') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.addexpense') active @endif"> <i class="fas fa-list nav-icon"></i>
+              <a href="{{ route('admin.expense.addexpense') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.addexpense') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                 <p>Add Expense</p>
               </a>
             </li>

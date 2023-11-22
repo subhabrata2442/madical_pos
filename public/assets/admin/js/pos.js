@@ -400,9 +400,29 @@ $(document).ready(function() {
 
 $(document).on('click', '#calculate_cash_payment_btn', function() {
     //alert('cash');
+
+    // finalsubmitpayment();
     //return false;
 
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            finalsubmitpayment();
+        }
+    });
     
+   
+});
+
+function finalsubmitpayment(){
+
     var due_amount_tendering = $('#due_amount_tendering').val();
     var tendered_change_amount = $('#tendered_change_amount').val();
     var tendered_amount = $('#tendered_amount').val();
@@ -442,7 +462,7 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
             $("#pos_create_order-form").submit();
         }
     }
-});
+}
 
 $(document).on('click', '#calculate_gPay_payment_btn', function() {
     //alert('gPay');
@@ -1990,6 +2010,7 @@ function total_cal() {
     var product_net_price = 0
     var subNetPrice = 0;
     var totalNetPrice = 0;
+    var profitpersent = 0;
 
     setTimeout(function() {
 
@@ -2047,6 +2068,11 @@ function total_cal() {
 
         var total_profit = ((total_mrp-totalNetPrice)*100);
         $("#total_profit").html('$'+ formatNumber(total_profit));
+
+
+        profitpersent = (((total_mrp - totalNetPrice)/totalNetPrice)*100);
+        $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
+
 
         var special_discount_percent = $('#selling_special_discount_percent-input').val();
         console.log("special_discount_percent"+special_discount_percent);
@@ -2275,3 +2301,11 @@ function removeComma(price){
     var stringWithoutComma = stringWithComma.replace(/,/g, '');
     return stringWithoutComma;
 }
+
+function checkformatPercentage(value) {
+    if (Number.isInteger(value)) {
+      return value;
+    } else {
+      return (value.toFixed(2));
+    }
+  }

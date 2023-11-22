@@ -114,6 +114,10 @@
               <li class="atpVall">Total profit-</li>
               <li class="atpinfo" id="total_profit">$0</li>
             </ul>
+            <ul class="d-flex w-100 subTotal">
+              <li class="atpVall">Profit-</li>
+              <li class="atpinfo" id="profitpersent">0%</li>
+            </ul>
 
           </div>
         </div>
@@ -234,7 +238,7 @@
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
                                     <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
-                                    <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li>
+                                    {{-- <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li> --}}
                                 </ul>
                                 </div>
                             </div>
@@ -257,7 +261,9 @@
                         <ul class="top-product-list">
                           @if (count($data['topSellingProducts'])>0)
                             @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
-                              <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['product_name']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
+                              @if ($topitem['t_qty']!=0)
+                                <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['product_name']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
+                              @endif
                             @endforeach
                           @endif
                         </ul>

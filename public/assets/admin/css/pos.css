@@ -363,7 +363,8 @@ td.wdel:hover a i {
     display: table-cell;
     vertical-align: middle;
     font-size: .8vw;
-    height: 6.30vw;
+    /* height: 6.30vw; */
+    height: 13.3vw;
     /* height: 8.55vw; */
     width: 100%;
     transition: all ease-in-out .4s;
@@ -1272,6 +1273,7 @@ p {
 
 .tableFixHead td a {
     color: #3b8ccf;
+    font-size: 18px;
 }
 
 .productTable .tableFixHead {

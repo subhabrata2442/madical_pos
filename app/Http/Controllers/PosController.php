@@ -449,13 +449,17 @@ class PosController extends Controller
 
 			// echo $store_id;exit;
 			
-			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-					->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-					->where('sell_stock_products.branch_id', $store_id)
-					->groupBy('products.id', 'products.product_name')
-					->orderBy('sales_count', 'desc')
-					->limit(10)
-					->get();
+			// $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+			// 		->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+			// 		->where('sell_stock_products.branch_id', $store_id)
+			// 		->groupBy('products.id', 'products.product_name')
+			// 		->orderBy('sales_count', 'desc')
+			// 		->limit(10)
+			// 		->get();
+
+
+			$topSellingProducts = Product::where('common_items', 'yes')->get();
+					
 
 			$result=[];
 			if(count($topSellingProducts) > 0){

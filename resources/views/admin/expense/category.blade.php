@@ -1,10 +1,8 @@
 @extends('layouts.admin')
 @section('admin-content')
     <div class="row">
-        <div class="col-12">
             <div class="card">
-                <x-alert />
-                <div class="mb-12">
+                <div class="">
                     <form method="post" action="{{ route('admin.expense.add') }}" class="needs-validation" novalidate enctype="multipart/form-data">
                         @csrf
                         <div class="col-md-6">
@@ -23,6 +21,8 @@
                         </div>
                     </form>
                 </div>
+            </div>
+            <div class="card">
                 <div class="table-responsive dataTable-design">
                     <table id="user-table" class="table table-bordered">
                         <thead>
@@ -70,7 +70,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        
     </div>
 @endsection
 
