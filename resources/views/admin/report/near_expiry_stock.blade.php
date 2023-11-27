@@ -45,7 +45,7 @@
 	<div class="card">
 		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Low stock product</h4>
+				<h4>Stock Near Expiry</h4>
 			</div>
 		</div>
 	</div>
@@ -59,27 +59,27 @@
 			<thead>
 				<th scope="col">Sl NO.</th>
 				<th scope="col">Product Name</th>
-				<th scope="col">In Stock</th>
 				<th scope="col">Brand Name</th>
 				<th scope="col">Product Barcode</th>
 				<th scope="col">Dosage</th>
 				<th scope="col">Selling By</th>
+				<th scope="col">Expiry Date</th>
 			</thead>
 			<tbody>
-				@forelse ($data['low_stock'] as $key=>$purchase)
+				@forelse ($data['nearExpiryStock'] as $key=>$purchase)
                     @if($purchase->t_qty <= $purchase->product->alert_product_qty)
                         <tr>
                             <td>{{($key+1)}}</td>
                             <td>{{$purchase->product->product_name}}</td>
-                            <td>{{$purchase->t_qty}}</td>
                             <td>{{$purchase->product->brand}}</td>
                             <td>{{$purchase->product->product_barcode}}</td>
                             <td>{{$purchase->product->dosage_name}}</td>
                             <td>{{$purchase->product->selling_by_name}}</td>
+                            <td>{{date('Y-m', strtotime(str_replace('.', '/', $purchase->product_expiry_date)))}}</td>
                         </tr>
                     @endif
 				@empty
-					<tr ><td colspan="3"> No data found </td></tr>
+					<tr><td colspan="7"> No data found </td></tr>
 				@endforelse
 
 			</tbody>

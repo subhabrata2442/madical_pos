@@ -222,7 +222,7 @@ if($adminId!=1){
                   </a> </li>
                 @endif
                 @if(in_array('admin-report-inventory', $page_permission))
-                  
+
                 @endif
               </ul>
             </li>
@@ -241,15 +241,15 @@ if($adminId!=1){
                   </p>
               </a>
               <ul class="nav nav-treeview" >
-                <li class="nav-item"> 
+                <li class="nav-item">
                   <a href="{{ route('admin.report.purchase.invoice_wise') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.purchase.invoice_wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Invoice Wise</p>
-                  </a> 
+                  </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{ route('admin.report.purchase.product_wise') }}" class="nav-link  @if (\Route::currentRouteName() == 'admin.report.purchase.product_wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Product Wise</p>
-                  </a> 
+                  </a>
                 </li>
               </ul>
             </li>
@@ -262,34 +262,38 @@ if($adminId!=1){
                   </p>
               </a>
               <ul class="nav nav-treeview" >
-                <li class="nav-item"> 
+                <li class="nav-item">
                   <a href="{{ route('admin.report.sales.item') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.item') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Invoice Wise Sales</p>
-                  </a> 
+                  </a>
                 </li>
-                <li class="nav-item"> 
+                <li class="nav-item">
                   <a href="{{ route('admin.report.sales.report.product.wise') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.report.product.wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Product Wise Sales</p>
-                  </a> 
+                  </a>
                 </li>
-                {{-- <li class="nav-item"> 
+                {{-- <li class="nav-item">
                   <a href="{{ route('admin.report.sales.product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.product') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Sales Product</p>
-                  </a> 
+                  </a>
                 </li> --}}
               </ul>
             </li>
             <li class="nav-item"> <a href="{{ route('admin.report.top_selling_products') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.top_selling_products') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Top selling products</p>
-              </a> 
+              </a>
             </li>
             <li class="nav-item"> <a href="{{ route('admin.report.low_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.low_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Low stock product</p>
-              </a> 
+              </a>
             </li>
             <li class="nav-item"> <a href="{{ route('admin.report.zero_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.zero_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Zero stock product</p>
-              </a> 
+              </a>
+            </li>
+            <li class="nav-item"> <a href="{{ route('admin.report.near_expiry_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.near_expiry_stock') active @endif"> <i class="fas fa-list nav-icon"></i>
+                <p>Stock near expiry</p>
+                </a>
             </li>
           </ul>
         </li>
@@ -300,23 +304,23 @@ if($adminId!=1){
           </a>
           <ul class="nav nav-treeview">
             @if ($adminRoll == 1)
-              <li class="nav-item"> 
+              <li class="nav-item">
                 <a href="{{ route('admin.expense.category') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.category') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Category</p>
                 </a>
               </li>
             @endif
-            <li class="nav-item"> 
+            <li class="nav-item">
               <a href="{{ route('admin.expense.expenselist') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.expenselist') active @endif"> <i class="fas fa-list nav-icon"></i>
                 <p>Expense List</p>
               </a>
             </li>
-            <li class="nav-item"> 
+            <li class="nav-item">
               <a href="{{ route('admin.expense.addexpense') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.addexpense') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                 <p>Add Expense</p>
               </a>
             </li>
-            
+
           </ul>
         </li>
 

@@ -7,7 +7,7 @@
                 <div class="table-responsive dataTable-design">
                     <table id="user-table" class="table table-bordered">
                         <thead>
-                            
+
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone No.</th>

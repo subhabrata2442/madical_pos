@@ -19,6 +19,7 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\DosageController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -58,7 +59,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	Route::match(['GET'], '/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-	
+
     // Route::get('/dashboard', function () {
     //     $data = [];
     //     $data['heading'] = 'Dashboard';
@@ -78,10 +79,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['GET'], '/setting', [UserController::class, 'profile'])->name('setting')->middleware('role:all,normal_user');
     Route::match(['GET'], '/profile', [UserController::class, 'profile'])->name('profile')->middleware('role:all,normal_user');
     Route::match(['GET', 'POST'], '/profile/edit', [UserController::class, 'profile_edit'])->name('profile.edit')->middleware('role:all,normal_user');
-	
-	
+
+
 	Route::match(['GET'], '/check_counter_sell', [ReportController::class, 'check_counter_sell'])->name('ReportController');
-	
+
 	Route::prefix('pos')->name('pos.')->middleware('checkPermission:18')->group(function () {
 
 		Route::match(['GET'], '/create_order', [PosController::class, 'pos_create'])->name('pos_create');
@@ -89,34 +90,34 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
 
 
-		
+
 
 
 
 
 		// Route::match(['GET'], '/pos_type', [PurchaseOrderController::class, 'pos_type'])->name('pos_type');
-		
+
 		// Route::match(['GET'], '/demo_page_1', [PurchaseOrderController::class, 'demo_page_1'])->name('demo_page_1');
 		// Route::match(['GET'], '/demo_page_2', [PurchaseOrderController::class, 'demo_page_2'])->name('demo_page_2');
 		// Route::match(['GET'], '/demo_page_3', [PurchaseOrderController::class, 'demo_page_3'])->name('demo_page_3');
 		// Route::match(['GET'], '/demo_page_4', [PurchaseOrderController::class, 'demo_page_4'])->name('demo_page_4');
 		// Route::match(['GET'], '/demo_page_5', [PurchaseOrderController::class, 'demo_page_5'])->name('demo_page_5');
-		
-		
+
+
 		//Route::match(['GET'], '/pos_payment_method', [PurchaseOrderController::class, 'pos_payment_method'])->name('pos_payment_method');
-		
-		
-		
-		
+
+
+
+
 		// Route::match(['GET'], '/bar_dine_in_table_booking', [PurchaseOrderController::class, 'bar_dine_in_table_booking'])->name('bar_dine_in_table_booking');
 		// Route::match(['GET'], '/bar_dine_in_table_booking/create_order/{id}', [PurchaseOrderController::class, 'bar_dine_in_table_booking_create_order'])->name('bar_dine_in_table_booking_create_order');
-		
+
 		// Route::match(['GET', 'POST'], '/print_ko_products', [PurchaseOrderController::class, 'print_ko_product'])->name('print_ko_product');
 		// Route::match(['GET'], '/print_ko_products/download', [PurchaseOrderController::class, 'download_print_ko_product']);
 		// Route::match(['GET'], '/print_bar_invoice/download', [PurchaseOrderController::class, 'print_bar_invoice']);
 		// Route::match(['POST'], '/bar_create', [PurchaseOrderController::class, 'bar_create'])->name('bar_create');
-		
-		
+
+
 		Route::match(['GET'], '/print_invoice', [PurchaseOrderController::class, 'print_invoice'])->name('print_invoice');
         //Route::match(['GET'], '/today-sales-product/download', [PurchaseOrderController::class, 'todaySalesProductDownload']);
         /*Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
@@ -128,45 +129,45 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         // Route::match(['GET'], '/item-wise-sales-report', [PurchaseOrderController::class, 'pdfItemWiseSalesReport'])->name('pdf3');
         // Route::match(['GET'], '/e-report', [PurchaseOrderController::class, 'pdfEReport'])->name('pdf4');
 	});
-	
+
 	Route::prefix('customer')->name('customer.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [CustomerController::class, 'add'])->name('add');
         Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
         Route::match(['GET', 'POST'], '/edit/{id}', [CustomerController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [CustomerController::class, 'delete'])->name('delete');
 	});
-	
+
 	Route::prefix('user')->name('user.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [UserController::class, 'add'])->name('add');
         Route::match(['GET', 'POST'], '/list', [UserController::class, 'list'])->name('list');
         Route::match(['GET', 'POST'], '/edit/{id}', [UserController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [UserController::class, 'delete'])->name('delete');
-		
+
 		Route::match(['GET'], '/manage-user-role/{id}', [UserController::class, 'manage_user_role'])->name('manageUserRole');
 		Route::match(['GET'], '/set-role/{id}/{role_id}', [UserController::class, 'set_role'])->name('setRole');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [UserController::class, 'change_status'])->name('changeStatus');
-		
-		
-		
+
+
+
 		Route::match(['GET'], '/manage-role', [UserController::class, 'manage_role'])->name('manageRole');
 		Route::match(['GET'], '/role_update/{id}', [UserController::class, 'role_update'])->name('roleUpdate');
 		Route::match(['POST'], '/role_update/', [UserController::class, 'role_save_update'])->name('role_save_update');
-		
+
 		//Route::match(['GET'], '/users/change-status/{id}/{status}', [UserController::class, 'change_status'])->name('users.changeStatus')->middleware('role:admin');
-		
+
 		//Route::match(['GET'], '/manage-role/{id}', [UserController::class, 'manage_role'])->name('users.manageRole')->middleware('role:admin');
         //Route::match(['GET'], '/set-role/{id}/{role_id}', [UserController::class, 'set_role'])->name('users.setRole')->middleware('role:admin');
-		
+
 	});
-	
+
 	Route::prefix('supplier')->name('supplier.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [SupplierController::class, 'add'])->name('add');
         Route::match(['GET', 'POST'], '/list', [SupplierController::class, 'list'])->name('list');
         Route::match(['GET', 'POST'], '/edit/{id}', [SupplierController::class, 'edit'])->name('edit');
         Route::match(['GET', 'POST'], '/delete/{id}', [SupplierController::class, 'delete'])->name('delete');
-		
+
 	});
-	
+
 	Route::prefix('product')->name('product.')->middleware('checkPermission:1')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [ProductController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/product_upload', [ProductController::class, 'product_upload'])->name('product_upload');
@@ -179,7 +180,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	Route::prefix('purchase')->name('purchase.')->middleware('checkPermission:2')->group(function () {
 		Route::match(['GET', 'POST'], '/invoice_upload', [PurchaseOrderController::class, 'invoice_upload'])->name('invoice_upload');
-		
+
 		Route::match(['GET', 'POST'], '/inward_stock', [PurchaseOrderController::class, 'create_order'])->name('inward_stock');
 		Route::match(['GET', 'POST'], '/inward_list', [PurchaseOrderController::class, 'list_order'])->name('inward_list');
 		Route::match(['GET', 'POST'], '/inward_edit/{id}', [PurchaseOrderController::class, 'edit_order'])->name('inward_edit');
@@ -190,13 +191,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/update-inward-stock/{id}', [PurchaseOrderController::class, 'updateInwardStock'])->name('inward_stock.update');
         Route::match(['GET', 'POST'], '/update-inward-stock/delete/{id}', [PurchaseOrderController::class, 'deleteInwardStock'])->name('inward-stock.delete');
         Route::match(['GET'], '/ajax-get', [PurchaseOrderController::class, 'ajaxPurchaseById'])->name('list.ajax');
-		
+
         Route::match(['GET', 'POST'], '/stock-transfer', [PurchaseOrderController::class, 'stockTranfer'])->name('stock.transfer');
 		Route::match(['GET', 'POST'], '/stock-transfer-request', [PurchaseOrderController::class, 'stockTranferRequest'])->name('stock.transferRequest');
 		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
-		
+
 		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
-        
+
 	});
 
 	Route::prefix('report')->name('report.')->middleware('checkPermission:3')->group(function () {
@@ -210,7 +211,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// });
         Route::match(['GET'], '/sales/sales-product', [ReportController::class, 'salesProduct'])->name('sales.product');
         // Route::match(['GET'], '/sales-product/download', [ReportController::class, 'salesProductDownload'])->name('sales.product.download');
-        
+
 		Route::match(['GET'], '/purchase', [ReportController::class, 'purchase'])->name('purchase');
 		Route::match(['GET'], '/purchase/invoice-wise', [ReportController::class, 'invoiceWisePurchaseReport'])->name('purchase.invoice_wise');
         Route::match(['GET'], '/stock-product-list/{slug}', [ReportController::class, 'stockProductList'])->name('stock_product.list');
@@ -236,9 +237,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/top_selling_products', [ReportController::class, 'top_selling_products'])->name('top_selling_products');
 		Route::match(['GET'], '/low_stock_product', [ReportController::class, 'low_stock_product'])->name('low_stock_product');
 		Route::match(['GET'], '/zero_stock_product', [ReportController::class, 'zero_stock_product'])->name('zero_stock_product');
+        Route::match(['GET'], '/near_expiry_stock', [ReportController::class, 'near_expiry_stock'])->name('near_expiry_stock');
 	});
-	
-	
+
+
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [StoreController::class, 'add'])->name('add');
@@ -276,7 +278,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET', 'POST'], '/delete/{id}', [EmbloyeesController::class, 'delete'])->name('delete');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [EmbloyeesController::class, 'change_status'])->name('changeStatus');
 	});
-	
+
     Route::prefix('restaurant')->name('restaurant.')->group(function () {
         Route::prefix('waiter')->name('waiter.')->group(function () {
             Route::match(['GET', 'POST'], '/add', [WaiterController::class, 'add'])->name('add');
@@ -285,7 +287,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             Route::match(['GET', 'POST'], '/delete/{id}', [WaiterController::class, 'delete'])->name('delete');
 
         });
-		
+
         Route::prefix('table')->name('table.')->group(function () {
             Route::match(['GET', 'POST'], '/add', [ManageTableController::class, 'add'])->name('add');
             Route::match(['GET', 'POST'], '/list', [ManageTableController::class, 'list'])->name('list');
@@ -299,7 +301,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             Route::match(['GET', 'POST'], '/delete/{id}', [ManageTableController::class, 'delete'])->name('delete'); */
         });
     });
-	
+
 	Route::get('/invoice',[ReportController::class,'invoicePdf'])->name('sale_pdf');
 
     //Ajax get customer by name type
@@ -320,8 +322,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET', 'POST'], '/expensdelete/{id}', [ExpenseController::class, 'expensdelete'])->name('expensdelete');
 
 	});
-	
-	
+
+
 });
 
 
@@ -331,3 +333,15 @@ Route::get('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']
 Route::post('/ajaxpost', [App\Http\Controllers\AjaxController::class, 'ajaxpost']);
 
 Route::match(['GET'], '/print', [PosController::class, 'print_invoice'])->name('print');
+
+Route::match(['GET'], '/pushertest', [NotificationController::class, 'pushertest'])->name('pushertest');
+Route::match(['GET'], '/test', [NotificationController::class, 'test'])->name('test');
+
+// Route::get('test', function () {
+//     event(new App\Events\StockAlert('Someone'));
+//     return "Event has been sent!";
+// });
+
+
+
+
