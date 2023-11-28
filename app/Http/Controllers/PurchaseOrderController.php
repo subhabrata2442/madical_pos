@@ -74,12 +74,14 @@ use Carbon\Carbon;
 use Smalot\PdfParser\Parser;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
+use Pusher\Pusher;
+use App\Models\Notification;
 
 class PurchaseOrderController extends Controller
 {
 	public function create_order(Request $request)
     {
-		
+
         DB::beginTransaction();
         try {
 			$branch_id=Auth::user()->id;
@@ -94,7 +96,7 @@ class PurchaseOrderController extends Controller
 			}
 
 			//echo '<pre>';print_r($data['store']);exit;
-			
+
             return view('admin.purchase_order.add', compact('data'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -114,7 +116,7 @@ class PurchaseOrderController extends Controller
 
 			//print_r($tempPath);exit;
 			$excel_data=[];
-			
+
 			$inward_stock_data=Excel::toArray(new PurchaseProductImport, $request->file('inward_stock_file')->store('temp'));
 
 			$total_items=0;
@@ -132,7 +134,7 @@ class PurchaseOrderController extends Controller
 					if($barcode!=''){
 						$product_barcode 	= $this->get_product_barcode($barcode);
 					}
-					
+
 					$brand_name		= $row[1];
 					$dosage_name	= $row[2];
 					$company_name	= $row[3];
@@ -149,7 +151,7 @@ class PurchaseOrderController extends Controller
 					$profit_percent	= 0;
 					$stock_qty		= $row[11];
 					$total_qty		= $row[11];
-					
+
 
 					if($profit_amount!='' && $netProfit!=''){
 						if($profit_amount>0 && $netProfit>0){
@@ -157,7 +159,7 @@ class PurchaseOrderController extends Controller
 							$profit_percent=number_format((float)$profit_percent, 2, '.', '');
 						}
 					}
-					
+
 					if($stock_qty!=''){
 						$total_quantity +=$stock_qty;
 					}
@@ -237,7 +239,7 @@ class PurchaseOrderController extends Controller
 					}else{
 						$product_result=Product::where('product_barcode',$product_barcode)->get();
 					}
-					
+
 					if(count($product_result)>0){
 						$product_id=$product_result[0]->id;
 					}else{
@@ -274,7 +276,7 @@ class PurchaseOrderController extends Controller
 						//echo '<pre>';print_r($insert_data);exit;
 						$data_insert=Product::create($insert_data);
 						$product_id=$data_insert->id;
-						
+
 					}
 
 
@@ -297,7 +299,7 @@ class PurchaseOrderController extends Controller
 						'profit'			=> $row[13],
 						'profit_percent'	=> $profit_percent,
 					);
-					
+
 					//echo '<pre>';print_r($excel_data);exit;
 				}
 			$i++;}
@@ -307,7 +309,7 @@ class PurchaseOrderController extends Controller
 			$return_data=[];
 
 			if(count($excel_data)>0){
-			
+
 				$return_data['result']				= $excel_data;
 				$return_data['total_items']			= count($excel_data);
 				$return_data['total_quantity']		= $total_quantity;
@@ -319,12 +321,12 @@ class PurchaseOrderController extends Controller
 				$return_data['success']	= 0;
 			}
 			//echo '<pre>';print_r($return_data);exit;
-			
-			
+
+
 		}
-		
+
 		echo json_encode($return_data);
-		
+
 	}
 
 
@@ -333,26 +335,26 @@ class PurchaseOrderController extends Controller
 
 
 
-	
+
 	public function print_invoice(){
-		
+
 		$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
 
 		// dd($lastSellInwardStock);
-		
+
 		if(count($lastSellInwardStock)>0){
 			 $data=[];
-			 
+
 			 $invoice_no=isset($lastSellInwardStock[0]->invoice_no)?$lastSellInwardStock[0]->invoice_no:'';
 			 $invoice_date=isset($lastSellInwardStock[0]->sell_date)?$lastSellInwardStock[0]->sell_date:'';
-			 
+
 			 $total_qty			= isset($lastSellInwardStock[0]->total_qty)?$lastSellInwardStock[0]->total_qty:'';
 			 $discount_amount	= isset($lastSellInwardStock[0]->discount_amount)?$lastSellInwardStock[0]->discount_amount:'';
 			 $special_discount	= isset($lastSellInwardStock[0]->special_discount_amt)?$lastSellInwardStock[0]->special_discount_amt:'';
 			 $pay_amount		= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
-			 
+
 			 $gross_total_amount= isset($lastSellInwardStock[0]->gross_total_amount)?$lastSellInwardStock[0]->gross_total_amount:'';
-			 
+
 			 $total_discount_amount=0;
 			 if($discount_amount!=''){
 				 $total_discount_amount +=$discount_amount;
@@ -360,25 +362,25 @@ class PurchaseOrderController extends Controller
 			 if($special_discount!=''){
 				 $total_discount_amount +=$special_discount;
 			 }
-			 
+
 			 $sellStockProducts=SellStockProducts::where('inward_stock_id',$lastSellInwardStock[0]->id)->get();
-			 
+
 			// echo '<pre>';print_r($sellStockProducts);exit;
-			 
-			 
+
+
 			 $data['shop_details'] = [
 				'name' 		=> 'BAZIMAT F.L.(OFF) SHOP',
 				'address1'	=> 'West Chowbaga , Kolkata-700105',
 				'address2' 	=> 'West Bengal India',
 				'phone'		=> '8770663036',
 			];
-			
+
 			$data['customer_details'] = [
 				'name'		=> 'Subha',
             	'mobile'	=> '7003923969',
             	'address'	=> 'India',
         	];
-			
+
 			$data['invoice_details'] = [
 				'invoice_no'	=> $invoice_no,
 				'invoice_date'	=> $invoice_date,
@@ -389,7 +391,7 @@ class PurchaseOrderController extends Controller
 				'cashier_name'	=> 'Mrs Roy Suchandra',
 			];
 			$data['items']=[];
-			
+
 			if(count($sellStockProducts)>0){
 				foreach($sellStockProducts as $row){
 					$data['items'][] = array(
@@ -402,13 +404,13 @@ class PurchaseOrderController extends Controller
 					);
 				}
 			}
-			
+
 			$data['total'] =[
 				'total_qty'		=> number_format($total_qty,2),
             	'total_disc'	=> number_format($discount_amount,2),
             	'total_price'	=> number_format($gross_total_amount,2)
-			]; 
-			
+			];
+
 			$data['gst'] =[
 				'gst_val' =>'0',
 				'taxable_amt'=> '0',
@@ -417,51 +419,51 @@ class PurchaseOrderController extends Controller
 				'sgst_rate'=> '0',
 				'sgst_amt'=> '0',
 				'total_amt'=> number_format($pay_amount,2),
-			]; 
+			];
 			//echo '<pre>';print_r($data);exit;
 			$data['total_amt_in_word']	= ucwords(Media::getIndianCurrency($pay_amount));
 			$data['total_discount_amount']	= number_format($total_discount_amount,2);
 			$data['payment_method'] 	= 'Cash';
 			$pdf = PDF::loadView('admin.pdf.invoice', $data);
-			
-			/*$pdf = PDF::loadView('admin.pdf.invoice', 
-        $data, 
-        [], 
-        [ 
-          'title' => 'Certificate', 
+
+			/*$pdf = PDF::loadView('admin.pdf.invoice',
+        $data,
+        [],
+        [
+          'title' => 'Certificate',
           'format' => 'A4-L',
           'orientation' => 'L'
         ]);*/
-			
+
 			$customPaper = array(0,0,567.00,283.80);
 			$pdf = PDF::loadView('admin.pdf.invoice', $data)->setPaper($customPaper, 'landscape');
-			
+
 			return $pdf->stream($invoice_no.'-invoice.pdf');
 			//return $pdf->download($invoice_no.'-invoice.pdf');
-			
+
 			//echo '<pre>';print_r($data['total_amt_in_word']);exit;
-			
+
 		}
     }
-	
+
 	public function bar_dine_in_table_booking(Request $request)
     {
-        
+
         try {
             $data = [];
 			$branch_id=Session::get('branch_id');
-			
+
             $data['heading'] 		= 'Purchase Order';
             $data['breadcrumb'] 	= ['Purchase Order', 'Add'];
             $data['floor_list'] 	= RestaurantFloor::where('branch_id',$branch_id)->get();
 			$data['waiter_list'] 	= Waiter::where('branch_id',$branch_id)->get();
-			
-			
+
+
 			$floor_id=isset($data['floor_list'][0]->id)?$data['floor_list'][0]->id:'';
 			$tables=[];
 			if($floor_id!=''){
 				$table_result	= FloorWiseTable::where('floor_id',$floor_id)->where('status',1)->orderBy('id', 'ASC')->get();
-				
+
 				foreach($table_result as $key=>$row){
 					$booking_history_id	='';
 					$waiter_id		= '';
@@ -473,9 +475,9 @@ class PurchaseOrderController extends Controller
 					$customer_id	= '';
 					$customer_name	= '';
 					$customer_phone	= '';
-					
-					
-					
+
+
+
 					if($row->booking_status==2){
 						$table_info	= TableBookingHistory::where('floor_id',$floor_id)->where('table_id',$row->id)->orderBy('id', 'DESC')->first();
 						$booking_history_id	= isset($table_info->id)?$table_info->id:'';
@@ -488,23 +490,23 @@ class PurchaseOrderController extends Controller
 						$customer_id	= isset($table_info->customer_id)?$table_info->customer_id:'';
 						$customer_name	= isset($table_info->customer_name)?$table_info->customer_name:'';
 						$customer_phone	= isset($table_info->customer_phone)?$table_info->customer_phone:'';
-						
-						
+
+
 						//echo '<pre>';print_r($customer_phone);exit;
-						
-						
-      
-						
-						
-						
+
+
+
+
+
+
 						//$barInwardStockResult	= BarInwardStock::where('table_booking_id',$booking_history_id)->where('branch_id',$branch_id)->first();
 						//$waiter_id		= isset($table_info->waiter_id)?$table_info->waiter_id:'';
-						
-						
-						
-						
+
+
+
+
 					}
-					
+
 					$tables[]=array(
 						'booking_history_id' => $booking_history_id,
 						'floor_id'			=> $row->floor_id,
@@ -520,44 +522,44 @@ class PurchaseOrderController extends Controller
 						'customer_id'		=> $customer_id,
 						'customer_name'		=> $customer_name,
 						'customer_phone'	=> $customer_phone,
-						
+
 					);
-					
+
 				}
 			}
-			
+
 			$data['tables'] 	= $tables;
-			
+
 			//phpinfo();exit;
 			//echo '<pre>';print_r($data);exit;
-			
+
             return view('admin.bar_pos.dine_in_pos_tbl_booking', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
     }
-	
+
 	public function bar_dine_in_table_booking_create_order(Request $request, $id)
     {
         try {
             $data = [];
 			$branch_id=Session::get('branch_id');
-			
+
             $data['heading'] 		= 'Purchase Order';
             $data['breadcrumb'] 	= ['Purchase Order', 'Add'];
             $data['floor_list'] 	= RestaurantFloor::where('branch_id',$branch_id)->get();
 			$data['waiter_list'] 	= Waiter::where('branch_id',$branch_id)->get();
-			
-			$table_booking_id 		= base64_decode($id);	
+
+			$table_booking_id 		= base64_decode($id);
 			$table_booking_info		= TableBookingHistory::where('id',$table_booking_id)->first();
 			$data['booking_info']	= $table_booking_info;
-			
+
 			//echo '<pre>';print_r($data['booking_info']);exit;
-			
+
 			$subcategory_result		= Subcategory::where('food_type',1)->where('status',1)->orderBy('name', 'ASC')->get();
-			
+
 			$data['subcategory']	= [];
-			
+
 			if(count($subcategory_result)>0){
 				foreach($subcategory_result as $row){
 					$product_count=Product::select('*')->leftJoin('branch_stock_products', 'products.id', '=', 'branch_stock_products.product_id')->where('branch_stock_products.stock_type','bar')->where('products.subcategory_id',$row->id)->count();
@@ -567,33 +569,33 @@ class PurchaseOrderController extends Controller
 							'name'	=> $row->name,
 							'product_count'=>$product_count
 						);
-					}	
+					}
 				}
 			}
-			
+
 			$data['table_booking_cart_items']	= [];
 			$data['barInwardStockResult']	= [];
-			
+
 			if(isset($table_booking_info)){
 				$sell_date=date('Y-m-d');
 				$barInwardStockResult	= BarInwardStock::where('table_booking_id',$table_booking_id)->where('branch_id',$branch_id)->where('floor_id',$table_booking_info->floor_id)->where('table_id',$table_booking_info->table_id)->where('waiter_id',$table_booking_info->waiter_id)->where('sell_date',$sell_date)->where('status',1)->orderBy('id', 'DESC')->first();
 				$data['barInwardStockResult']	= $barInwardStockResult;
-				
+
 				$bar_inward_stock_id	= isset($barInwardStockResult->id)?$barInwardStockResult->id:'';
-				
+
 				if($bar_inward_stock_id!=''){
 					$data['table_booking_cart_items']	= BarInwardStockProducts::where('inward_stock_id',$bar_inward_stock_id)->get();
-				}	
-				
+				}
+
 			}
-			
-			
-			
-			
+
+
+
+
 			//echo '<pre>';print_r($data['booking_info']);exit;
 
 			//echo '<pre>';print_r($data['subcategory']);exit;
-			
+
 			$stock_type				= Common::get_user_settings($where=['option_name'=>'stock_type'],$branch_id);
 			$data['stock_type'] 	= isset($stock_type)?$stock_type:'w';
             return view('admin.bar_pos.dine_in_pos_tbl_booking_create_order', compact('data'));
@@ -601,11 +603,11 @@ class PurchaseOrderController extends Controller
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
     }
-	
+
 	public function bar_create(Request $request){
-		
+
 		//print_r($_POST);exit;
-		
+
 		$product_ids				= $request->product_id;
 		$size_price_ids				= $request->size_price_id;
 		$branch_stock_product_ids	= $request->branch_stock_product_id;
@@ -614,18 +616,18 @@ class PurchaseOrderController extends Controller
 		$product_total_amount		= $request->product_total_amount;
 		$product_price_id			= $request->product_price_id;
 		$product_qty				= $request->product_qty;
-		
+
 		$floor_id			= $request->floor_id;
 		$table_id			= $request->table_id;
 		$waiter_id			= $request->waiter_id;
 		$table_booking_id	= $request->table_booking_id;
-		
-		
+
+
 		$total_quantity			= $request->total_quantity;
 		$total_mrp				= $request->total_mrp;
 		$tendered_amount		= $request->tendered_amount;
 		$tendered_change_amount	= $request->tendered_change_amount;
-		
+
 		$branch_id=Session::get('branch_id');
 		$customer_id	= $request->customer_id;
 		$customer_info	= Customer::find($customer_id);
@@ -633,13 +635,13 @@ class PurchaseOrderController extends Controller
 		$customer_name	.= isset($customer_info->customer_last_name)?' '.$customer_info->customer_last_name:'';
 		$customer_phone	= isset($customer_info->customer_mobile)?$customer_info->customer_mobile:'';
 		$sell_date		= date('Y-m-d');
-		
-		
+
+
 		$barInwardStockResult	= BarInwardStock::where('table_booking_id',$table_booking_id)->where('branch_id',$branch_id)->where('floor_id',$floor_id)->where('table_id',$table_id)->where('waiter_id',$waiter_id)->where('customer_id',$customer_id)->where('sell_date',$sell_date)->where('status',1)->orderBy('id', 'DESC')->first();
-		
+
 		//echo '<pre>';print_r($barInwardStockResult);exit;
-		
-		
+
+
 		$bar_inward_stock_id	= isset($barInwardStockResult->id)?$barInwardStockResult->id:'';
 		if($bar_inward_stock_id!=''){
 			$barInwardStockData=array(
@@ -654,12 +656,12 @@ class PurchaseOrderController extends Controller
 				'payment_status'		=> 2,
 				'status'				=> 2,
 			);
-			
+
 			BarInwardStock::where('id',$bar_inward_stock_id)->update($barInwardStockData);
-			
+
 			TableBookingHistory::where('id',$table_booking_id)->update(['status' => 1]);
 			FloorWiseTable::where('id',$table_id)->where('floor_id',$floor_id)->update(['booking_status' => 1]);
-			
+
 			for($i=0;count($product_ids)>$i;$i++){
 				/*$product_id 	= isset($product_ids['product_id'])?$product_ids['product_id']:0;
 				$product_qty 	= isset($product_qty['product_qty'])?$product_qty['product_qty']:0;
@@ -670,25 +672,25 @@ class PurchaseOrderController extends Controller
 				$size_price_id 	= isset($row['size_price_id'])?$row['size_price_id']:0;*/
 			}
 		}
-		
+
 		$return_data['success']	= 1;
 		echo json_encode($return_data);
-		
-		
+
+
 	}
-	
-	
+
+
 	public function download_print_ko_product(){
 		$print_ko_items=Session::get('print_ko_items');
-		
+
 		//echo '<pre>';print_r($print_ko_items);exit;
-		
-		
+
+
 		$data=[];
 		$data['items']=[];
 		$total_qty=0;
 		if(isset($print_ko_items)){
-			
+
 			foreach($print_ko_items['items'] as $row){
 				$qty = isset($row['product_qty'])?$row['product_qty']:0;
 				if($qty>0){
@@ -699,13 +701,13 @@ class PurchaseOrderController extends Controller
 						'product_size'	=> isset($row['product_size'])?$row['product_size']:'',
 						'product_type'	=> isset($row['product_type'])?$row['product_type']:'',
 					);
-				}	
+				}
 			}
 		}
-		
+
 		//echo '<pre>';print_r($data);exit;
-		
-		
+
+
 		if(count($data['items'])>0){
 			$data['shop_details'] = [
 				'name' 		=> 'BAZIMAT F.L.(OFF) SHOP',
@@ -728,13 +730,13 @@ class PurchaseOrderController extends Controller
 				'branch'		=> 'K.P.Shaw Bottling Pvt.Ltd.',
 				'cashier_name'	=> 'Mrs Roy Suchandra',
 			];
-			
+
 			$data['total'] =[
 				'total_qty'		=> $total_qty,
             	'total_disc'	=> 0,
             	'total_price'	=> 0
-			]; 
-			
+			];
+
 			$data['gst'] =[
 				'gst_val' =>'0',
 				'taxable_amt'=> '0',
@@ -743,61 +745,61 @@ class PurchaseOrderController extends Controller
 				'sgst_rate'=> '0',
 				'sgst_amt'=> '0',
 				'total_amt'=> 0,
-			]; 
-			
+			];
+
 			//echo '<pre>';print_r($data);exit;
 			$data['total_amt_in_word']		= '';;
 			$data['total_discount_amount']	= 0;
 			$data['payment_method'] 		= 'Cash';
 			$pdf = PDF::loadView('admin.pdf.ko_print_invoice', $data);
-			//$pdf->Output($invoice_no.'-invoice.pdf','D'); 
+			//$pdf->Output($invoice_no.'-invoice.pdf','D');
 			return $pdf->stream($invoice_no.'-invoice.pdf');
 		}
 		exit;
     }
 	public function print_bar_invoice(){
-		
+
 		$lastSellInwardStock=BarInwardStock::orderBy('id','DESC')->take(1)->get();
-		
+
 		//echo '<pre>';print_r($lastSellInwardStock);exit;
-		
-		
-		
+
+
+
 		if(count($lastSellInwardStock)>0){
 			 $data=[];
-			 
+
 			 $invoice_no=isset($lastSellInwardStock[0]->invoice_no)?$lastSellInwardStock[0]->invoice_no:'';
 			 $invoice_date		= isset($lastSellInwardStock[0]->sell_date)?$lastSellInwardStock[0]->sell_date:'';
 			 $total_qty			= isset($lastSellInwardStock[0]->total_qty)?$lastSellInwardStock[0]->total_qty:'';
 			 $pay_amount		= isset($lastSellInwardStock[0]->pay_amount)?$lastSellInwardStock[0]->pay_amount:'';
 			 $table_booking_id	= isset($lastSellInwardStock[0]->table_booking_id)?$lastSellInwardStock[0]->table_booking_id:'';
-			 
+
 			 $tableBookingHistoryResult=TableBookingHistory::where('id',$table_booking_id)->first();
-			 
+
 			 //echo '<pre>';print_r($tableBookingHistoryResult);exit;
-			 
-			 
+
+
 			 $sellStockProducts	= BarInwardStockProducts::where('inward_stock_id',$lastSellInwardStock[0]->id)->get();
-			 
+
 			$customer_info	= Customer::find($lastSellInwardStock[0]->customer_id);
 			$customer_name	= isset($customer_info->customer_fname)?$customer_info->customer_fname:'';
 			$customer_name	.= isset($customer_info->customer_last_name)?' '.$customer_info->customer_last_name:'';
 			$customer_phone	= isset($customer_info->customer_mobile)?$customer_info->customer_mobile:'';
-			
-			
+
+
 			 $data['shop_details'] = [
 				'name' 		=> 'BAZIMAT F.L.(OFF) SHOP',
 				'address1'	=> 'West Chowbaga , Kolkata-700105',
 				'address2' 	=> 'West Bengal India',
 				'phone'		=> '8770663036',
 			];
-			
+
 			$data['customer_details'] = [
 				'name'		=> $customer_name,
             	'mobile'	=> $customer_phone,
             	'address'	=> 'Kolkata, West Bengal, India',
         	];
-			
+
 			$data['invoice_details'] = [
 				'invoice_no'	=> $invoice_no,
 				'invoice_date'	=> $invoice_date,
@@ -811,10 +813,10 @@ class PurchaseOrderController extends Controller
 				'booking_time'	=> date("h:i A",strtotime($tableBookingHistoryResult->booking_time)),
 			];
 			$data['items']=[];
-			
+
 			//echo '<pre>';print_r($data);exit;
-			
-			
+
+
 			if(count($sellStockProducts)>0){
 				foreach($sellStockProducts as $row){
 					$total_cost=$row->items_qty*$row->product_mrp;
@@ -827,16 +829,16 @@ class PurchaseOrderController extends Controller
 					);
 				}
 			}
-			
-			
-			
+
+
+
 			$data['total'] =[
 				'total_qty'		=> $total_qty,
             	'total_price'	=> number_format($pay_amount,2)
-			]; 
-			
-			
-			
+			];
+
+
+
 			$data['gst'] =[
 				'gst_val' =>'0',
 				'taxable_amt'=> '0',
@@ -845,7 +847,7 @@ class PurchaseOrderController extends Controller
 				'sgst_rate'=> '0',
 				'sgst_amt'=> '0',
 				'total_amt'=> number_format($pay_amount,2),
-			]; 
+			];
 			//echo '<pre>';print_r($data);exit;
 			$data['total_amt_in_word']	= ucwords(Media::getIndianCurrency($pay_amount));
 			$data['payment_method'] 	= 'Cash';
@@ -853,14 +855,14 @@ class PurchaseOrderController extends Controller
 			$pdf = PDF::loadView('admin.pdf.bar_invoice', $data);
 			return $pdf->stream($invoice_no.'-invoice.pdf');
 			//return $pdf->download($invoice_no.'-invoice.pdf');
-			
+
 			//echo '<pre>';print_r($data['total_amt_in_word']);exit;
-			
+
 		}
     }
-	
-	
-	
+
+
+
 	public function print_ko_product(Request $request){
 		$product_ids	= $request->product_id;
 		$product_qty	= $request->product_qty;
@@ -870,22 +872,22 @@ class PurchaseOrderController extends Controller
 		$product_mrp	= $request->product_mrp;
 		$branch_stock_product_ids	= $request->branch_stock_product_id;
 		$size_price_ids	= $request->size_price_id;
-		
+
 		$floor_id			= $request->floor_id;
 		$table_id			= $request->table_id;
 		$waiter_id			= $request->waiter_id;
 		$table_booking_id	= $request->table_booking_id;
-		
-		
+
+
 		$customer_id	= $request->customer_id;
-		
-		
-		
-		
+
+
+
+
 		//print_r($_POST);exit;
-		
-		
-		
+
+
+
 		$data=[];
 		$data['items']=[];
 		$total_qty=0;
@@ -898,7 +900,7 @@ class PurchaseOrderController extends Controller
 					$total_qty +=$qty;
 					$gross_amount +=$amount;
 					$data['items'][] = array(
-					
+
 						'product_id'	=> isset($product_ids[$i])?$product_ids[$i]:'',
 						'product_name'	=> isset($product_name[$i])?$product_name[$i]:'',
 						'product_qty'	=> $qty,
@@ -908,42 +910,42 @@ class PurchaseOrderController extends Controller
 						'branch_stock_product_id'	=> isset($branch_stock_product_ids[$i])?$branch_stock_product_ids[$i]:'',
 						'size_price_id'	=> isset($size_price_ids[$i])?$size_price_ids[$i]:'',
 					);
-				}	
+				}
 			}
 		}
-		
-		
-		
+
+
+
 		//print_r($data);exit;
-		
-		
-		
+
+
+
 		if(count($data['items'])>0){
 			$branch_id=Session::get('branch_id');
-			
+
 			$customer_info	= Customer::find($customer_id);
 			$customer_name	= isset($customer_info->customer_fname)?$customer_info->customer_fname:'';
 			$customer_name	.= isset($customer_info->customer_last_name)?' '.$customer_info->customer_last_name:'';
 			$customer_phone	= isset($customer_info->customer_mobile)?$customer_info->customer_mobile:'';
-			
+
 			$sell_date		= date('Y-m-d');
-			
+
 			$barInwardStockResult	= BarInwardStock::where('table_booking_id',$table_booking_id)->where('branch_id',$branch_id)->where('floor_id',$floor_id)->where('table_id',$table_id)->where('waiter_id',$waiter_id)->where('customer_id',$customer_id)->where('sell_date',$sell_date)->where('status',1)->orderBy('id', 'DESC')->first();
 			$bar_inward_stock_id	= isset($barInwardStockResult->id)?$barInwardStockResult->id:'';
-			
+
 			//print_r($bar_inward_stock_id);exit;
-			
+
 			if($bar_inward_stock_id!=''){
-				
+
 				$bar_items_qty	=0;
 				$bar_items_qty	+= isset($barInwardStockResult->total_qty)?$barInwardStockResult->total_qty:0;
 				$bar_items_qty	+= $total_qty;
-				
+
 				$bar_gross_amount		=0;
 				$bar_gross_amount		+= isset($barInwardStockResult->gross_amount)?$barInwardStockResult->gross_amount:0;
 				$bar_gross_amount		+= $gross_amount;
-				
-				
+
+
 				$barInwardStockData=array(
 					'sell_date' 			=> date('Y-m-d'),
 					'sell_time' 			=> date('H:i:s'),
@@ -951,11 +953,11 @@ class PurchaseOrderController extends Controller
 					'gross_amount' 			=> $bar_gross_amount,
 					'pay_amount' 			=> $bar_gross_amount
 				);
-				
+
 				TableBookingHistory::where('id',$table_booking_id)->update(['items_qty' => $bar_items_qty,'total_amount' => $bar_gross_amount]);
-				
+
 				//print_r($barInwardStockData);exit;
-				
+
 				BarInwardStock::where('id',$bar_inward_stock_id)->update($barInwardStockData);
 			}else{
 				$invoice_no='';
@@ -964,11 +966,11 @@ class PurchaseOrderController extends Controller
 				$invoice_no .='/'.date('Y');
 				$invoice_no .='/'.str_pad($n + 1, 4, 0, STR_PAD_LEFT);
 				$invoice_no .='|'.date('d/m/Y');
-				
+
 				$barInwardStockData=array(
 					'branch_id' 			=> $branch_id,
 					'table_booking_id'		=> $table_booking_id,
-					'floor_id' 				=> $floor_id,	
+					'floor_id' 				=> $floor_id,
 					'table_id' 				=> $table_id,
 					'waiter_id' 			=> $waiter_id,
 					'customer_id' 			=> $customer_id,
@@ -982,13 +984,13 @@ class PurchaseOrderController extends Controller
 					'payment_status' 		=> 1,
 					'created_at'			=> date('Y-m-d')
 				);
-				
+
 				$sellStock		= BarInwardStock::create($barInwardStockData);
 				$bar_inward_stock_id = $sellStock->id;
-				
+
 				TableBookingHistory::where('id',$table_booking_id)->update(['items_qty' => $total_qty,'total_amount' => $gross_amount]);
 			}
-			
+
 			//print_r($data['items']);exit;
 			foreach($data['items'] as $row){
 				$product_id 	= isset($row['product_id'])?$row['product_id']:0;
@@ -998,27 +1000,27 @@ class PurchaseOrderController extends Controller
 				$product_mrp 	= isset($row['product_mrp'])?$row['product_mrp']:0;
 				$branch_stock_product_id 	= isset($row['branch_stock_product_id'])?$row['branch_stock_product_id']:0;
 				$size_price_id 	= isset($row['size_price_id'])?$row['size_price_id']:0;
-				
+
 				$ml=0;
 				if($size_price_id>0){
 					$product_size_arr=explode(' ',$product_size);
 					$ml=$product_size_arr[0];
 				}
-				
+
 				$barInwardStockResult	= BarInwardStockProducts::where('inward_stock_id',$bar_inward_stock_id)->where('product_id',$product_id)->where('size_price_id',$size_price_id)->first();
 				$bar_inward_stock_product_id	= isset($barInwardStockResult->id)?$barInwardStockResult->id:'';
-				
+
 				//print_r($barInwardStockResult);exit;
-				
+
 				if($bar_inward_stock_product_id!=''){
 					$items_qty	=0;
 					$items_qty	+= isset($barInwardStockResult->items_qty)?$barInwardStockResult->items_qty:0;
 					$items_qty	+= 1;
-					
+
 					$barInwardStockProductData=array(
 						'items_qty' => $items_qty
 					);
-					
+
 					BarInwardStockProducts::where('id',$bar_inward_stock_product_id)->update($barInwardStockProductData);
 				}else{
 					$barInwardStockProductData=array(
@@ -1036,15 +1038,15 @@ class PurchaseOrderController extends Controller
 					BarInwardStockProducts::create($barInwardStockProductData);
 				}
 			}
-			
+
 			$n=TableBookingKoPrintInvoice::where('branch_id',$branch_id)->count();
 			$order_no=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
-			
+
 			$barKoInwardStockData=array(
 				'table_booking_id'		=> $table_booking_id,
 				'branch_id' 			=> $branch_id,
 				'order_no' 				=> $order_no,
-				'floor_id' 				=> $floor_id,	
+				'floor_id' 				=> $floor_id,
 				'table_id' 				=> $table_id,
 				'waiter_id' 			=> $waiter_id,
 				'customer_id' 			=> $customer_id,
@@ -1055,51 +1057,51 @@ class PurchaseOrderController extends Controller
 				'total_qty' 			=> $total_qty,
 				'total_amount' 			=> $gross_amount,
 			);
-			
+
 			$koSellStock	= TableBookingKoPrintInvoice::create($barKoInwardStockData);
 			$ko_invoice_id 	= $koSellStock->id;
-			
+
 			//$ko_invoice_id = 1;
-			
-			foreach($data['items'] as $row){	
+
+			foreach($data['items'] as $row){
 				$product_id 	= isset($row['product_id'])?$row['product_id']:0;
 				$product_qty 	= isset($row['product_qty'])?$row['product_qty']:0;
 				$product_size 	= isset($row['product_size'])?$row['product_size']:0;
 				$product_type 	= isset($row['product_type'])?$row['product_type']:0;
 				$product_mrp 	= isset($row['product_mrp'])?$row['product_mrp']:0;
-				
+
 				$koPrintItemsData=array(
 					'ko_invoice_id' 		=> $ko_invoice_id,
-					'product_id' 			=> $product_id,	
+					'product_id' 			=> $product_id,
 					'items_qty' 			=> $product_qty,
 					'size' 					=> $product_size,
 					'product_type' 			=> $product_type,
 					'product_mrp' 			=> $product_mrp,
 				);
-				
+
 				TableBookingKoPrintItems::insert($koPrintItemsData);
 			}
-			
+
 			//print_r($data);exit;
-			
+
 			$return_data['status']	= 1;
 			//Session::set('print_ko_items', $data);
 			session(['print_ko_items' => $data]);
 		}else{
 			$return_data['status']	= 0;
 		}
-		
+
 		echo json_encode($return_data);
     }
-	
+
 	public function pos_type()
     {
 		$data['heading'] 		= 'Purchase Order';
 		$data['breadcrumb'] 	= ['Stock', 'Purchase Order', 'Add'];
 		return view('admin.purchase_order.type', compact('data'));
 	}
-	
-	
+
+
 	public function demo_page_1()
     {
 		$data['heading'] 		= 'Purchase Order';
@@ -1130,26 +1132,26 @@ class PurchaseOrderController extends Controller
 		$data['breadcrumb'] 	= ['Stock', 'Purchase Order', 'Add'];
 		return view('admin.purchase_order.demo_page_5', compact('data'));
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	public function pos_payment_method()
     {
-		
+
 		$data['heading'] 		= 'Payment';
         $data['breadcrumb'] 	= ['Payment'];
-            
+
 		return view('admin.purchase_order.payment_method', compact('data'));
 	}
-	
+
 	public function create(Request $request){
-		
+
 		$branch_id=Session::get('branch_id');
 		$supplier_id	= 17;
 		$customer_id	= 2;
-		
+
 		$validator = Validator::make($request->all(), [
 			'total_quantity' => 'required',
 			'total_mrp' => 'required'
@@ -1159,17 +1161,17 @@ class PurchaseOrderController extends Controller
 			$return_data['msg']		= 'Product should not be empty';
 			echo json_encode($return_data);
 		}
-		
+
 		//print_r($_POST);exit;
-		
-		
+
+
 		$invoice_no='';
 		$n=SellInwardStock::count();
 		$invoice_no .=date('d');
 		$invoice_no .='/'.date('Y');
 		$invoice_no .='/'.str_pad($n + 1, 4, 0, STR_PAD_LEFT);
 		$invoice_no .='|'.date('d/m/Y');
-		
+
 		$sellStockData=array(
 			'branch_id' 				=> $branch_id,
 			'supplier_id' 				=> $supplier_id,
@@ -1195,13 +1197,13 @@ class PurchaseOrderController extends Controller
 			'payment_date' 				=> date('Y-m-d'),
 			'created_at'				=> date('Y-m-d')
 		);
-		
+
 		//print_r($sellStockData);exit;
-		
+
 		$sellStock		= SellInwardStock::create($sellStockData);
 		$sellStockId	= $sellStock->id;
 		//$sellStockId	= 1;
-		
+
 		$product_ids			= $request->product_id;
 		$product_total_amount	= $request->product_total_amount;
 		$product_barcode		= $request->product_barcode;
@@ -1211,17 +1213,17 @@ class PurchaseOrderController extends Controller
 		$product_disc_amount	= $request->product_disc_amount;
 		$product_unit_price		= $request->product_unit_price;
 		$product_price_id		= $request->product_price_id;
-		
-		
+
+
 		for($i=0;count($product_ids)>$i;$i++){
 			$product_stock_id			= $product_ids[$i];
 			$branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->get();
-			
+
 			$product_id 		= isset($branch_product_stock_info[0]->product_id)?$branch_product_stock_info[0]->product_id:'';
 			$product_size_id 	= isset($branch_product_stock_info[0]->size_id)?$branch_product_stock_info[0]->size_id:'0';
-			
-			
-			
+
+
+
 			if($product_id!=''){
 				$total_amount	= isset($product_total_amount[$i])?$product_total_amount[$i]:'0';
 				$barcode		= isset($product_barcode[$i])?$product_barcode[$i]:'';
@@ -1231,18 +1233,18 @@ class PurchaseOrderController extends Controller
 				$disc_amount	= isset($product_disc_amount[$i])?$product_disc_amount[$i]:0;
 				$unit_price		= isset($product_unit_price[$i])?$product_unit_price[$i]:0;
 				$price_id		= isset($product_price_id[$i])?$product_price_id[$i]:0;
-				
+
 				$productInfo	= Product::where('id',$product_id)->get();
 				$category_id	= isset($productInfo[0]->category_id)?$productInfo[0]->category_id:0;
 				$subcategory_id	= isset($productInfo[0]->subcategory_id)?$productInfo[0]->subcategory_id:0;
-				
+
 				$productSizeInfo= Size::where('id',$product_size_id)->get();
 				$size	= isset($productSizeInfo[0]->name)?$productSizeInfo[0]->name:0;
-								
+
 				$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('id',$price_id)->where('stock_type','counter')->get();
-				
+
 				$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
-				
+
 				$sell_price_w_qty = 0;
 				$sell_price_c_qty = 0;
 				if($request->stock_type=='s'){
@@ -1254,7 +1256,7 @@ class PurchaseOrderController extends Controller
 					$sell_price_w_qty -=$qty;
 					BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type','counter')->update(['w_qty' => $sell_price_w_qty]);
 				}
-				
+
 				$sellStockproductData=array(
 					'inward_stock_id'	=> $sellStockId,
 					'product_id'  		=> $product_id,
@@ -1279,17 +1281,17 @@ class PurchaseOrderController extends Controller
 				SellStockProducts::create($sellStockproductData);
 			}
 		}
-		
+
 		$rupee_type 	= $request->rupee_type;
 		$rupee_val 		= $request->note;
 		$rupee_qty 		= $request->note_qty;
-		
+
 		for($r=0;count($rupee_type)>$r;$r++){
 			$note_type	= isset($rupee_type[$r])?$rupee_type[$r]:'note';
 			$note_val	= isset($rupee_val[$r])?$rupee_val[$r]:0;
 			$note_qty	= isset($rupee_qty[$r])?$rupee_qty[$r]:0;
 			$total_note_amount	= $note_val*$note_qty;
-			
+
 			$tenderedChangeAmount=array(
 				'sell_inward_stock_id'	=> $sellStockId,
 				'type'  				=> $note_type,
@@ -1301,44 +1303,44 @@ class PurchaseOrderController extends Controller
 			//print_r($tenderedChangeAmount);exit;
 			SellInwardTenderedChangeAmount::create($tenderedChangeAmount);
 		}
-		
-		
+
+
 		$return_data['success']	= 1;
 		echo json_encode($return_data);
-		
-		
+
+
 	}
 
 
-	
-	
+
+
 	public function invoice_upload_test(Request $request){
 		$file = $request->file('upload_invoice_pdf');
 		/*$request->validate([
 			'file' => 'required|mimes:pdf',
         ]);*/
 		$fileName = $file->getClientOriginalName();
-		
+
 		error_reporting(0);
 		//include '../pdf_parser/vendor/autoload.php';
-			
+
 		$pdfParser = new Parser();
         $pdf = $pdfParser->parseFile($file->path());
-		
+
 		$metaData = $pdf->getDetails();
-		
+
 		$product_result=[];
 		$new_product_result=[];
-		
+
 		$tp_no='';
 		$tp_no_row_id='';
 		$data = $pdf->getPages()[0]->getDataTm();
-		
+
 		//echo '<pre>';print_r($data);exit;
-		
+
 		for($i=0; count($data)>$i; $i++){
 			$th_head	= trim($data[$i][1]);
-			
+
 			if (stripos($th_head, "Transport Pass No") !== false) {
 				$tp_no_row_id	= $i;
 				break;
@@ -1347,10 +1349,10 @@ class PurchaseOrderController extends Controller
 		if(isset($data[$tp_no_row_id][1])){
 			if($data[$tp_no_row_id][1]!=''){
 				$tp_no_arr	= explode(':',$data[$tp_no_row_id][1]);
-				$tp_no		= isset($tp_no_arr[1])?$tp_no_arr[1]:'';	
+				$tp_no		= isset($tp_no_arr[1])?$tp_no_arr[1]:'';
 			}
 		}
-		
+
 		$invoice_date_row_id='';
 		for($i=0; count($data)>$i; $i++){
 			$th_head	= trim($data[$i][1]);
@@ -1359,58 +1361,58 @@ class PurchaseOrderController extends Controller
 				break;
 			}
 		}
-		
+
 		$invoice_date='';
 		if(isset($data[$invoice_date_row_id][1])){
 			if($data[$invoice_date_row_id][1]!=''){
 				$invoice_date_arr	= explode(':',$data[$invoice_date_row_id][1]);
 				$invoice_date_arr	= isset($invoice_date_arr[1])?trim($invoice_date_arr[1]):'';
 				$invoice_date_arr2	= explode(' ',$invoice_date_arr);
-				
+
 				$invoice_date_arr3	= explode('/',$invoice_date_arr2[0]);
-				$invoice_date		= $invoice_date_arr3[0].'-'.$invoice_date_arr3[1].'-'.$invoice_date_arr3[2];	
+				$invoice_date		= $invoice_date_arr3[0].'-'.$invoice_date_arr3[1].'-'.$invoice_date_arr3[2];
 				$invoice_date		= date('Y-m-d',strtotime($invoice_date));
 			}
 		}
-		
-		
+
+
 		//print_r($invoice_date);exit;
-		
-		
-		
-		
+
+
+
+
 		if(isset($metaData['Pages'])){
 			if($metaData['Pages']>0){
 				for($p=10;$metaData['Pages']>$p;$p++){
 					$data = $pdf->getPages()[$p]->getDataTm();
-					
+
 					$start_product_row_id	= '';
 					$remove_row_ids=[];
 					$product_cat_ids=[];
 					$product_size_ids=[];
 					$product_inCases_ids=[];
-					
+
 					for($i=0; count($data)>$i; $i++){
 						$th_head	= str_replace(' ','',$data[$i][1]);
 						if($th_head==''){
 							$remove_row_ids[]	= $i;
 						}
 					}
-					
+
 					for($i=0; count($remove_row_ids)>$i; $i++){
 						unset($data[$remove_row_ids[$i]]);
 					}
-					
+
 					$brand_liquor_data=[];
 					foreach($data as $key=>$val){
 						$index_val	= trim($val[1]);
 						$brand_liquor_data[]=$index_val;
 					}
-					
-					
+
+
 					//echo '<pre>';print_r($brand_liquor_data);exit;
-					
-					
+
+
 					for($i=0; count($brand_liquor_data)>$i; $i++){
 						$th_head	= str_replace(' ','',$brand_liquor_data[$i]);
 						if (preg_match('/\BrandName\b/', $th_head)) {
@@ -1418,18 +1420,18 @@ class PurchaseOrderController extends Controller
 							break;
 						}
 					}
-					
+
 					//echo '<pre>';print_r($start_product_row_id);exit;
-					
-					
+
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= str_replace(' ','',$brand_liquor_data[$i]);
 						//$th_head	= trim($brand_liquor_data[$i]);
-						
+
 						if (preg_match('/\IMFL\b/', $th_head)) {
 							$product_cat_ids[]	= $i;
 						}
-						
+
 						/*if (preg_match('/\OS\b/', $th_head)) {
 							$product_cat_ids[]	= $i;
 						}
@@ -1443,27 +1445,27 @@ class PurchaseOrderController extends Controller
 							$product_cat_ids[]	= $i;
 						}*/
 					}
-					
+
 					//echo '<pre>';print_r($product_cat_ids);exit;
-					
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= $brand_liquor_data[$i];
 						if (stripos($th_head, "Ml.") !== false) {
 							$product_size_ids[]	= $i;
 						}
 					}
-					
+
 					//echo '<pre>';print_r($product_size_ids);exit;
-					
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= $brand_liquor_data[$i];
 						if (stripos($th_head, "- 0") !== false) {
 							$product_inCases_ids[]	= $i;
 						}
 					}
-					
+
 					//echo '<pre>';print_r($product_inCases_ids);exit;
-					
+
 					for($i=0; count($product_cat_ids)>$i; $i++){
 						$index_1=$product_cat_ids[$i];
 						$index_2=($index_1+1);
@@ -1472,11 +1474,11 @@ class PurchaseOrderController extends Controller
 						$index_5=($product_inCases_ids[$i]+2);
 						$index_6=($product_inCases_ids[$i]+3);
 						$index_7=($product_inCases_ids[$i]+4);
-						
+
 						//echo '<pre>';print_r($index_4);exit;
-						
+
 						$brand_name_length=($product_size_ids[$i]-$index_2);
-						
+
 						$brand_name='';
 						for($j=1; $brand_name_length>$j; $j++){
 							$p_index=$index_2+$j;
@@ -1484,45 +1486,45 @@ class PurchaseOrderController extends Controller
 						}
 						//$brand_name_arr = explode('[',$brand_name);
 						//$brand_name		= isset($brand_name_arr[0])?trim($brand_name_arr[0]):'';
-						
+
 						//echo '<pre>';print_r($brand_name);exit;
-						
+
 						$current_year=date('Y');
-						
+
 						$batch_no_length=($product_inCases_ids[$i]-1);
-						
+
 						if (stripos($brand_liquor_data[$batch_no_length], $current_year) !== false) {
 							$batch_index_count=2;
 						}else{
 							$batch_index_count=3;
 						}
-						
+
 						//$batch_index_count=2;
-						
+
 						$batch_length=($product_inCases_ids[$i]-$batch_index_count);
-						
+
 						$batch_no='';
 						for($b=0; $batch_index_count>$b; $b++){
 							$b_index=$batch_length+$b;
 							$batch_no .= trim($brand_liquor_data[$b_index]).' ';
 						}
-						
+
 						$brand_slug	= Media::create_slug(trim($brand_name));
 						$category_title=trim($brand_liquor_data[$index_1]);
 						$sub_category_title=trim($brand_liquor_data[$index_2]);
-						
-						
-						
-						
-						
+
+
+
+
+
 							$total_cost	= trim($brand_liquor_data[$index_7]);
 							$total_qty	= trim($brand_liquor_data[$index_4]);
 							$unit_mrp	= $total_cost/$total_qty;
-							
+
 							$new_product_result[]=array(
 								'category'			=> $category_title,
 								'sub_category'		=> $sub_category_title,
-								'brand_name'		=> trim($brand_name),	 
+								'brand_name'		=> trim($brand_name),
 								'measure'			=> $size_title,
 								'batch_no'			=> trim($batch_no),
 								'strength'			=> '',
@@ -1536,66 +1538,66 @@ class PurchaseOrderController extends Controller
 								'unit_cost'			=> trim($unit_mrp),
 								'total_cost'		=> trim($brand_liquor_data[$index_7])
 							);
-						
-					}	
+
+					}
 				}
 			}
 		}
-		
+
 		echo '<pre>';
 		print_r($product_result);
 		print_r($new_product_result);
 		exit;
-		
+
 		if(count($product_result)>0){
 			$return_data['result']			= $product_result;
 			$return_data['new_result']		= $new_product_result;
 			$return_data['tp_no']			= $tp_no;
 			$return_data['invoice_date']	= $invoice_date;
-			
+
 			$return_data['success']	= 1;
 		}else{
 			$return_data['success']	= 0;
 		}
-		
+
 		echo json_encode($return_data);
-		
-		//echo '<pre>';print_r($return_data);exit;		
+
+		//echo '<pre>';print_r($return_data);exit;
 	}
-	
+
 	public function invoice_upload(Request $request){
 		$stock_type=$request->upload_invoice_stock_type;
-		
+
 		$file = $request->file('upload_invoice_pdf');
 		/*$request->validate([
 			'file' => 'required|mimes:pdf',
         ]);*/
 		$fileName = $file->getClientOriginalName();
-		
+
 		error_reporting(0);
 		//include '../pdf_parser/vendor/autoload.php';
-			
+
 		$pdfParser = new Parser();
         $pdf = $pdfParser->parseFile($file->path());
-		
+
 		$metaData = $pdf->getDetails();
-		
+
 		$product_result=[];
 		$new_product_result=[];
 		$invoice_product_result=[];
-		
+
 		$product_ids=[];
 		$product_slugs=[];
-		
+
 		$tp_no='';
 		$tp_no_row_id='';
 		$data = $pdf->getPages()[0]->getDataTm();
-		
+
 		//echo '<pre>';print_r($data);exit;
-		
+
 		for($i=0; count($data)>$i; $i++){
 			$th_head	= trim($data[$i][1]);
-			
+
 			if (stripos($th_head, "Transport Pass No") !== false) {
 				$tp_no_row_id	= $i;
 				break;
@@ -1604,10 +1606,10 @@ class PurchaseOrderController extends Controller
 		if(isset($data[$tp_no_row_id][1])){
 			if($data[$tp_no_row_id][1]!=''){
 				$tp_no_arr	= explode(':',$data[$tp_no_row_id][1]);
-				$tp_no		= isset($tp_no_arr[1])?trim($tp_no_arr[1]):'';	
+				$tp_no		= isset($tp_no_arr[1])?trim($tp_no_arr[1]):'';
 			}
 		}
-		
+
 		if($tp_no!=''){
 			$check_tp_no=PurchaseInwardStock::where('tp_no', $tp_no)->where('invoice_stock', $stock_type)->get();
 			if(count($check_tp_no)>0){
@@ -1616,7 +1618,7 @@ class PurchaseOrderController extends Controller
 				echo json_encode($return_data);exit;
 			}
 		}
-		
+
 		$invoice_date_row_id='';
 		for($i=0; count($data)>$i; $i++){
 			$th_head	= trim($data[$i][1]);
@@ -1625,22 +1627,22 @@ class PurchaseOrderController extends Controller
 				break;
 			}
 		}
-		
-		
-		
+
+
+
 		$invoice_date='';
 		if(isset($data[$invoice_date_row_id][1])){
 			if($data[$invoice_date_row_id][1]!=''){
 				$invoice_date_arr	= explode(':',$data[$invoice_date_row_id][1]);
 				$invoice_date_arr	= isset($invoice_date_arr[1])?trim($invoice_date_arr[1]):'';
 				$invoice_date_arr2	= explode(' ',$invoice_date_arr);
-				
+
 				$invoice_date_arr3	= explode('/',$invoice_date_arr2[0]);
-				$invoice_date		= $invoice_date_arr3[0].'-'.$invoice_date_arr3[1].'-'.$invoice_date_arr3[2];	
+				$invoice_date		= $invoice_date_arr3[0].'-'.$invoice_date_arr3[1].'-'.$invoice_date_arr3[2];
 				$invoice_date		= date('Y-m-d',strtotime($invoice_date));
 			}
 		}
-		
+
 		//print_r($invoice_date);exit;
 		$invoice_no_row=[];
 		for($i=0; count($data)>$i; $i++){
@@ -1660,7 +1662,7 @@ class PurchaseOrderController extends Controller
 				}
 			}
 		}
-		
+
 		//print_r($invoice_date);exit;
 		$warehouse_row_id='';
 		for($i=0; count($data)>$i; $i++){
@@ -1670,7 +1672,7 @@ class PurchaseOrderController extends Controller
 				break;
 			}
 		}
-		
+
 		$warehouse_info=[];
 		$warehouse_name='';
 		if($warehouse_row_id!=''){
@@ -1678,20 +1680,20 @@ class PurchaseOrderController extends Controller
 				$warehouse_index=$warehouse_row_id+$j;
 				$warehouse_name .= ' '.trim($data[$warehouse_index][1]);
 				$warehouse_name = str_replace( ',', '', $warehouse_name);
-			}	
+			}
 		}
-		
+
 		if($warehouse_name!=''){
 			$reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~'];
 			$searchTerm = str_replace($reservedSymbols, ' ', $warehouse_name);
 			$searchValues = preg_split('/\s+/', $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
-			
+
 			$warehouse_res = Warehouse::where(function ($q) use ($searchValues) {
 				foreach ($searchValues as $value) {
 					$q->orWhere('company_name', 'like', "%{$value}%");
 				}
 				})->take(1)->get();
-				
+
 			foreach($warehouse_res as $row){
 				$warehouse_info=array(
 					'id'=>$row->id,
@@ -1703,46 +1705,46 @@ class PurchaseOrderController extends Controller
 					'address'=>$row->address,
 					'area'=>$row->area,
 				);
-			}				
+			}
 		}
-		
+
 		//print_r($warehouse_info);exit;
-		
-		
-		
-		
+
+
+
+
 		if(isset($metaData['Pages'])){
 			if($metaData['Pages']>0){
 				for($p=0;$metaData['Pages']>$p;$p++){
 					$data = $pdf->getPages()[$p]->getDataTm();
-					
+
 					$start_product_row_id	= '';
 					$remove_row_ids=[];
 					$product_cat_ids=[];
 					$product_size_ids=[];
 					$product_inCases_ids=[];
-					
+
 					for($i=0; count($data)>$i; $i++){
 						$th_head	= str_replace(' ','',$data[$i][1]);
 						if($th_head==''){
 							$remove_row_ids[]	= $i;
 						}
 					}
-					
+
 					for($i=0; count($remove_row_ids)>$i; $i++){
 						unset($data[$remove_row_ids[$i]]);
 					}
-					
+
 					$brand_liquor_data=[];
 					foreach($data as $key=>$val){
 						$index_val	= trim($val[1]);
 						$brand_liquor_data[]=$index_val;
 					}
-					
-					
+
+
 					//echo '<pre>';print_r($brand_liquor_data);exit;
-					
-					
+
+
 					for($i=0; count($brand_liquor_data)>$i; $i++){
 						$th_head	= str_replace(' ','',$brand_liquor_data[$i]);
 						if (preg_match('/\BrandName\b/', $th_head)) {
@@ -1750,10 +1752,10 @@ class PurchaseOrderController extends Controller
 							break;
 						}
 					}
-					
+
 					//$th_head	= str_replace(' ','',$brand_liquor_data[$i]);
-					
-					
+
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= str_replace(' ','',$brand_liquor_data[$i]);
 						//echo '<pre>';print_r($th_head);exit;
@@ -1782,21 +1784,21 @@ class PurchaseOrderController extends Controller
 							$product_cat_ids[]	= $i;
 						}*/
 					}
-					
+
 					//echo '<pre>';print_r($product_cat_ids);exit;
-					
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= $brand_liquor_data[$i];
 						if (stripos($th_head, "Ml.") !== false) {
 							$product_size_ids[]	= $i;
 						}
 					}
-					
+
 					//echo '<pre>';print_r($product_size_ids);exit;
-					
+
 					for($i=$start_product_row_id; count($brand_liquor_data)>$i; $i++){
 						$th_head	= $brand_liquor_data[$i];
-						
+
 						for($n=0;100>$n;$n++){
 							$match_in_case="- ".$n;
 							if (stripos($th_head, $match_in_case) !== false) {
@@ -1805,8 +1807,8 @@ class PurchaseOrderController extends Controller
 								}
 							}
 						}
-						
-						
+
+
 						/*if (stripos($th_head, "- 1") !== false) {
 							$product_inCases_ids[]	= $i;
 						}
@@ -1825,12 +1827,12 @@ class PurchaseOrderController extends Controller
 					}
 					/*if(count($product_inCases_ids)>0){
 						$product_inCases_ids = array_unique($product_inCases_ids);
-						
+
 						for()
 					}*/
-					
+
 					//echo '<pre>';print_r($product_inCases_ids);exit;
-					
+
 					for($i=0; count($product_cat_ids)>$i; $i++){
 						$index_1=$product_cat_ids[$i];
 						$index_2=($index_1+1);
@@ -1839,20 +1841,20 @@ class PurchaseOrderController extends Controller
 						$index_5=($product_inCases_ids[$i]+2);
 						$index_6=($product_inCases_ids[$i]+3);
 						$index_7=($product_inCases_ids[$i]+4);
-						
+
 						$index_8=$product_size_ids[$i]+1;
-						
-						
-						
-						
+
+
+
+
 						/*if($i==1){
 							break;
 						}*/
-						
+
 						//echo '<pre>';print_r($size_title);exit;
-						
+
 						$brand_name_length=($product_size_ids[$i]-$index_2);
-						
+
 						$brand_name='';
 						for($j=1; $brand_name_length>$j; $j++){
 							$p_index=$index_2+$j;
@@ -1863,10 +1865,10 @@ class PurchaseOrderController extends Controller
 						if($brand_name!=''){
 							$brand_name = rtrim($brand_name, " .");
 						}
-						
+
 						//print_r($brand_name);exit;
-						
-						
+
+
 						$category_title2='';
 						if (stripos($brand_name, "Spirit") !== false) {
 							$brand_name	= str_replace("Spirit", "", $brand_name);
@@ -1874,64 +1876,64 @@ class PurchaseOrderController extends Controller
 						}
 						//print_r($brand_name);exit;
 						//category_title
-						
+
 						//$brand_name_arr = explode('[',$brand_name);
 						//$brand_name		= isset($brand_name_arr[0])?trim($brand_name_arr[0]):'';
 						//echo str_replace("[Pet Bottle]", "", $brand_name);
 						//echo '<pre>';print_r($brand_name);exit;
-						
+
 						$current_year=date('Y');
-						
+
 						$batch_no_length=($product_inCases_ids[$i]-1);
-						
+
 						if (stripos($brand_liquor_data[$batch_no_length], $current_year) !== false) {
 							$batch_index_count=2;
 						}else{
 							$batch_index_count=3;
 						}
-						
+
 						//$batch_index_count=2;
-						
+
 						$batch_length=($product_inCases_ids[$i]-$batch_index_count);
-						
+
 						$batch_no='';
 						for($b=0; $batch_index_count>$b; $b++){
 							$b_index=$batch_length+$b;
 							$batch_no .= trim($brand_liquor_data[$b_index]).' ';
 						}
 						$brand_slug	= Media::create_slug(trim($brand_name));
-						
+
 						$in_cases_info	= trim($brand_liquor_data[$product_inCases_ids[$i]]);
 						//echo $product_inCases_ids[$i].'</br>';
 						$in_cases_arr	= explode('-',$in_cases_info);
 						$total_cases	= isset($in_cases_arr[0])?trim($in_cases_arr[0]):0;
 						$loose_qty		= isset($in_cases_arr[1])?trim($in_cases_arr[1]):0;
 						//print_r($in_cases);exit;
-						
-						
-						
+
+
+
 						$category_title =trim($brand_liquor_data[$index_1]);
 						$category_result=Category::where('name',$category_title)->get();
 						$category_id=isset($category_result[0]->id)?$category_result[0]->id:0;
-						
-						
+
+
 						if($category_title=='CS'){
 							$strength_title=trim($brand_liquor_data[$index_8]);
 							$strength_title=preg_replace('/[^0-9]/', '', $strength_title);
-							
-							$sub_category_title=trim($brand_liquor_data[$index_2].' '.$category_title2.' '.$strength_title);		
+
+							$sub_category_title=trim($brand_liquor_data[$index_2].' '.$category_title2.' '.$strength_title);
 						}else{
-							$sub_category_title=trim($brand_liquor_data[$index_2].' '.$category_title2);	
+							$sub_category_title=trim($brand_liquor_data[$index_2].' '.$category_title2);
 						}
-						
-						
-							
-						
+
+
+
+
 						//print_r($sub_category_title);exit;
 						$sub_category_result=Subcategory::where('name',$sub_category_title)->get();
 						$subcategory_id=isset($sub_category_result[0]->id)?$sub_category_result[0]->id:0;
 						//print_r($sub_category_result);exit;
-						
+
 						$size_title=trim($brand_liquor_data[$index_3]);
 						/*$size_id=0;
 						if($size_title!=''){
@@ -1939,8 +1941,8 @@ class PurchaseOrderController extends Controller
 							$size_result=Size::query()->where('name', 'LIKE', "%{$size_arr[0]}%")->get();
 							$size_id=isset($size_result[0]->id)?$size_result[0]->id:0;
 						}*/
-						
-						
+
+
 						$size_id=0;
 						if($size_title!=''){
 							$size_arr=explode(' ',$size_title);
@@ -1950,22 +1952,22 @@ class PurchaseOrderController extends Controller
 								$size_id=isset($size_result[0]->id)?$size_result[0]->id:0;
 							}
 						}
-						
-						
-						
+
+
+
 						$product_slug	= Media::create_slug(trim($brand_slug.' '.$category_title.' '.$sub_category_title.' '.$size_title.' '.$batch_no));
 						if(!in_array($product_slug, $product_slugs)){
 							$product_slugs[]=$product_slug;
 							$item_result = Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
 							$product_id	 = isset($item_result[0]->id)?$item_result[0]->id:'';
 							if($product_id!=''){
-								
+
 								$item_bottle_case_qty_nfo = MasterProducts::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->first();
 								$item_bottle_case_qty=isset($item_bottle_case_qty_nfo->qty)?$item_bottle_case_qty_nfo->qty:'0';
-								
+
 								//echo 'slug='.$brand_slug.' category_id='.$category_id.' subcategory_id='.$subcategory_id.' product_id='.$product_id.'</br>';
-								
-								
+
+
 								//echo 'slug='.$brand_slug.' category_id='.$category_id.' subcategory_id='.$subcategory_id.' product_id='.$product_id.'</br>';
 								$item_size_result=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
 								$strength	 		= isset($item_size_result[0]->strength)?$item_size_result[0]->strength:0;
@@ -1973,12 +1975,12 @@ class PurchaseOrderController extends Controller
 								$round_off	 		= isset($item_size_result[0]->round_off)?$item_size_result[0]->round_off:0;
 								$sp_fee	 			= isset($item_size_result[0]->special_purpose_fee)?$item_size_result[0]->special_purpose_fee:0;
 								$product_mrp	 	= isset($item_size_result[0]->product_mrp)?$item_size_result[0]->product_mrp:0;
-								
+
 								$total_cost	= trim($brand_liquor_data[$index_7]);
 								$total_qty	= trim($brand_liquor_data[$index_4]);
 								$unit_mrp	= $total_cost/$total_qty;
 								$in_cases	= $total_qty/$total_cases;
-								
+
 								if($in_cases!=''){
 									$in_cases=round(trim($in_cases));
 								}
@@ -1986,17 +1988,17 @@ class PurchaseOrderController extends Controller
 								$retail_item_val	= $product_mrp-$rrs_amt;
 								$total_cost			= $retail_item_val*$total_qty;
 								$unit_mrp			= $product_mrp-$retailer_margin;
-								
-								
+
+
 								//echo $total_cases.'-'.$item_bottle_case_qty.'-'.$loose_qty;exit;
-								
+
 								//(($total_cases*$item_bottle_case_qty)+$loose_qty)
-								
-								
-								
-								
-								
-								
+
+
+
+
+
+
 								$invoice_product_result[]=array(
 									'product_id'		=> $product_id,
 									'product_barcode'	=> $item_result[0]->product_barcode,
@@ -2005,7 +2007,7 @@ class PurchaseOrderController extends Controller
 									'sub_category'		=> $sub_category_title,
 									'subcategory_id'	=> $subcategory_id,
 									'brand_name'		=> trim($brand_name),
-									'brand_slug'		=> $brand_slug,	 
+									'brand_slug'		=> $brand_slug,
 									'measure'			=> $size_title,
 									'size_id'			=> $size_id,
 									'batch_no'			=> trim($batch_no),
@@ -2026,23 +2028,23 @@ class PurchaseOrderController extends Controller
 									'retail_item_val'	=> trim($retail_item_val),
 									'total_cost'		=> trim($total_cost)
 								);
-								
-								
+
+
 								//echo '<pre>';print_r($invoice_product_result);exit;
-								
-								
+
+
 							}else{
 								$product_slugs[]=$product_slug;
 								$total_cost	= trim($brand_liquor_data[$index_7]);
 								$total_qty	= trim($brand_liquor_data[$index_4]);
 								$unit_mrp	= $total_cost/$total_qty;
 								$in_cases	= $total_qty/$total_cases;
-								
+
 								$new_product_result[]=array(
 									//'brand_slug'		=> $brand_slug,
 									'category'			=> $category_title,
 									'sub_category'		=> $sub_category_title,
-									'brand_name'		=> trim($brand_name),	 
+									'brand_name'		=> trim($brand_name),
 									'measure'			=> $size_title,
 									'batch_no'			=> trim($batch_no),
 									'strength'			=> '',
@@ -2060,13 +2062,13 @@ class PurchaseOrderController extends Controller
 								);
 							}
 						}
-					}	
+					}
 				}
 			}
 		}
-		
-		
-		
+
+
+
 		$gross_total_amount=0;
 		$gross_sp_fee_amount=0;
 		$gross_round_off_amount=0;
@@ -2077,53 +2079,53 @@ class PurchaseOrderController extends Controller
 				$gross_round_off_amount+= $row['round_off']*$row['qty'];
 			}
 		}
-		
+
 		$tcs_amt = ($gross_total_amount / 100) * 1;
 		$total_amount = ($gross_total_amount + $tcs_amt + $gross_sp_fee_amount + $gross_round_off_amount );
-		
-		
+
+
 		/*echo '<pre>';
 		print_r($gross_total_amount);
 		print_r($product_slugs);
 		print_r($invoice_product_result);
 		print_r($new_product_result);
 		exit;*/
-		
-		
-		
+
+
+
 		if(count($invoice_product_result)>0 || count($new_product_result)>0){
-			
+
 			$return_data['result']			= $invoice_product_result;
-			
+
 			$return_data['new_result']		= $new_product_result;
 			$return_data['warehouse']		= $warehouse_info;
 			$return_data['tp_no']			= $tp_no;
 			$return_data['invoice_no']		= $invoice_no;
 			$return_data['invoice_date']	= $invoice_date;
 			$return_data['tcs_amt']			= $tcs_amt;
-			
+
 			$return_data['gross_total_amount']		= $gross_total_amount;
 			$return_data['gross_sp_fee_amount']		= $gross_sp_fee_amount;
 			$return_data['gross_round_off_amount']	= $gross_round_off_amount;
 			$return_data['total_amount']			= round($total_amount);
-			
-			
-			
+
+
+
 			$return_data['success']	= 1;
 		}else{
 			$return_data['msg']		= 'This invoice is already uploaded!';
 			$return_data['success']	= 0;
 		}
 		//echo '<pre>';print_r($return_data);exit;
-		
+
 		echo json_encode($return_data);
-		
-		//echo '<pre>';print_r($return_data);exit;		
+
+		//echo '<pre>';print_r($return_data);exit;
 	}
-	
+
     public function pos_create(Request $request)
     {
-		
+
         DB::beginTransaction();
         try {
             if ($request->isMethod('post')) {
@@ -2187,27 +2189,27 @@ class PurchaseOrderController extends Controller
                 DB::commit();
                 return redirect()->route('admin.stock.purchase-order.edit', [base64_encode($purchase->id)])->with('success', 'Purchase order placed successfully');
             }
-			
-			
+
+
             $data = [];
-			
+
 			$branch_id=Session::get('branch_id');
 			$stock_type	= Common::get_user_settings($where=['option_name'=>'stock_type'],$branch_id);
-			
+
 			$data['stock_type'] 	= isset($stock_type)?$stock_type:'w';
             $data['heading'] 		= 'Add Order';
             $data['breadcrumb'] 	= ['Stock', 'Purchase Order', 'Add'];
             $data['supplier'] 		= Supplier::all();
             $data['product'] 		= Product::all();
-			
+
             return view('admin.purchase_order.pos', compact('data'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
     }
-	
-	
+
+
 
 	//added by palash
 	public function updateInwardStock(Request $request,$inward_stock_id){
@@ -2216,14 +2218,14 @@ class PurchaseOrderController extends Controller
         try {
 			$data = [];
 			$spplier_code='bevco-17';
-			
+
             $data['heading'] 		= 'Purchase Order';
             $data['breadcrumb'] 	= ['Purchase Order', 'Edit'];
             $data['supplier'] 		= Supplier::where('sup_code',$spplier_code)->first();
             $data['product'] 		= Product::all();
             $data['inward_stock_id'] = $inward_stock_id;
             $data['inward_stock_type'] = 'edit';
-			
+
             return view('admin.purchase_order.add', compact('data'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -2247,7 +2249,7 @@ class PurchaseOrderController extends Controller
         $return_data['invoice_stock_type']	= $purchase_inward_stock->invoice_stock_type;
 
         $return_data['purchase_inward_stock']	= $purchase_inward_stock;
-		
+
 		$return_data['warehouse']		= $purchase_inward_stock->warehouse;
 		//$return_data['stock_products']	= $invoice_product_result;
 		$invoice_product_result = [];
@@ -2261,7 +2263,7 @@ class PurchaseOrderController extends Controller
 					'sub_category'		=> $inwardStockProducts->product->subcategory->name,
 					'subcategory_id'	=> $inwardStockProducts->product->subcategory->id,
 					'brand_name'		=> $inwardStockProducts->product->brand->name,
-					'brand_slug'		=> $inwardStockProducts->product->brand->slug,	 
+					'brand_slug'		=> $inwardStockProducts->product->brand->slug,
 					'measure'			=> $inwardStockProducts->size->name,
 					'size_id'			=> $inwardStockProducts->size_id,
 					'batch_no'			=> $inwardStockProducts->batch_no,
@@ -2295,7 +2297,7 @@ class PurchaseOrderController extends Controller
 			$inward_stock_result 	= PurchaseInwardStock::where('id',$id)->first();
 			$inward_stock_products 	= InwardStockProducts::where('inward_stock_id',$id)->get();
 			//echo '<pre>';print_r($inward_stock_products);exit;
-			
+
 			if(count($inward_stock_products) > 0){
 				foreach($inward_stock_products as $product){
 					$branch_stock_product = BranchStockProducts::where('product_id',$product->product_id)->where('branch_id',$product->branch_id)->first();
@@ -2305,10 +2307,10 @@ class PurchaseOrderController extends Controller
 						$branch_stock_product->t_qty = $branch_stock_product->t_qty - $product->total_qty;
 						$branch_stock_product->updated_at = Carbon::now();
 						$branch_stock_product->save();
-					}	
+					}
 				}
 			}
-			
+
             InwardStockProducts::where('inward_stock_id',$id)->delete();
 			PurchaseInwardStock::find($id)->delete();
             return redirect()->back()->with('success', 'Purchase Order deleted successfully');
@@ -2319,8 +2321,8 @@ class PurchaseOrderController extends Controller
 
 	public function pdfBrandRegister(){
 			$data = [];
-			$pdf = PDF::loadView('admin.pdf.brand-register', $data,[], 
-			[ 
+			$pdf = PDF::loadView('admin.pdf.brand-register', $data,[],
+			[
 				'format' => [250, 580],
 				//'format' => 'A4-L',
 			  	'orientation' => 'L'
@@ -2356,7 +2358,7 @@ class PurchaseOrderController extends Controller
 
         // use headers in order to generate the download
         $headers = [
-        'Content-type' => 'text/plain', 
+        'Content-type' => 'text/plain',
         'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
         //'Content-Length' => sizeof($content)
         ];
@@ -2372,7 +2374,7 @@ class PurchaseOrderController extends Controller
 				//print_r($_POST);exit;
 
 				$return_data=[];
-				
+
 				$store_id		= $request->store_id;
 				$req_store_id	= $request->req_store_id;
 				$stock_id		= $request->stock_id;
@@ -2380,7 +2382,7 @@ class PurchaseOrderController extends Controller
 				$r_qty			= $request->t_qty;
 
 				$branchStockResult	=	BranchStockProducts::where('id', $stock_id)->get();
-				
+
 				if(count($branchStockResult)>0){
 					$product_id			= $branchStockResult[0]->product_id;
 					$product_barcode	= $branchStockResult[0]->product_barcode;
@@ -2398,7 +2400,7 @@ class PurchaseOrderController extends Controller
 					}else{
 						$storeAvaibleStock -=$r_qty;
 						BranchStockProducts::where('id', $stock_id)->update(['t_qty' => $storeAvaibleStock]);
-						
+
 						$stocktransferData=array(
 							'stock_id'		=> $stock_id,
 							'branch_id'  	=> $store_id,
@@ -2426,11 +2428,64 @@ class PurchaseOrderController extends Controller
 							'selling_price'  	=> $selling_price,
 							'status'			=> 1,
 						);
-	
+
 						//print_r($branchStockRequestData);exit;
-						
+
 						BranchStockRequest::create($branchStockRequestData);
-						
+
+                        // pusher notification
+
+                        $productInfo	= Product::where('id',$product_id)->first();
+                        $from_store = User::where('id', $store_id)->first();
+                        $to_store = User::where('id', $req_store_id)->first();
+
+                        $message = 'Stock transfer '.$productInfo->product_name. ', '.$from_store->name. ' to '.$to_store->name;
+                        $urls = 'admin/purchase/stock-transfer';
+
+                        $options = array(
+                            'cluster' => env('PUSHER_APP_CLUSTER'),
+                            'encrypted' => true
+                        );
+                        $pusher = new Pusher(
+                            env('PUSHER_APP_KEY'),
+                            env('PUSHER_APP_SECRET'),
+                            env('PUSHER_APP_ID'),
+                            $options
+                        );
+                        $data =[
+                            'message' => $message,
+                            'store_id'=>$store_id,
+                            'urls'=>$urls,
+                        ];
+                        $notify = 'stockalert-channel';
+                        $pusher->trigger($notify, 'stockalert-event-send-meesages', $data);
+
+                        $data_one =[
+                            'message' => $message,
+                            'store_id'=>$req_store_id,
+                            'urls'=>$urls,
+                        ];
+                        $notify_one = 'stockalert-channel';
+                        $pusher->trigger($notify_one, 'stockalert-event-send-meesages', $data_one);
+
+                        $datainsert = [
+                            'type'=> 'stock-transfer',
+                            'store_id'=>$store_id,
+                            'msg'=> $message,
+                            'product_id'=> $productInfo->id,
+                            'urls'=>$urls,
+                        ];
+                        Notification::create($datainsert);
+
+                        $datainsert_one = [
+                            'type'=> 'stock-transfer',
+                            'store_id'=>$req_store_id,
+                            'msg'=> $message,
+                            'product_id'=> $productInfo->id,
+                            'urls'=>$urls,
+                        ];
+                        Notification::create($datainsert_one);
+
 					}
 					$return_data['status']	= 1;
 					echo json_encode($return_data);exit;
@@ -2438,12 +2493,12 @@ class PurchaseOrderController extends Controller
 				$return_data['status']	= 0;
 				echo json_encode($return_data);exit;
 			}
-			
+
 			$store_id		= Session::get('store_id');
 			$admin_type		= Session::get('admin_type');
-			
+
 			//$stock_product = BranchStockProducts::where('branch_id',$branch_id)->where('stock_type','counter');
-			
+
 			// $stock_product = BranchStockProducts::with('stockProduct')->whereHas('stockProduct', function($q){
 			// 	$q->where('w_qty','!=','0');
 			// })->where('branch_id',$branch_id);
@@ -2460,7 +2515,7 @@ class PurchaseOrderController extends Controller
 					$stock_product=$stock_product->paginate(20);
 
 					//echo '<pre>';print_r($stock_product);exit;
-					
+
 				}
 			}else{
 				//echo 'ss';exit;
@@ -2473,7 +2528,7 @@ class PurchaseOrderController extends Controller
 			}
 
 			//echo '<pre>';print_r($stock_product);exit;
-			
+
 			$data = [];
 			$data['heading'] 		= 'Stock Tranfer';
             $data['breadcrumb'] 	= ['Stock Tranfer', 'List'];
@@ -2483,13 +2538,13 @@ class PurchaseOrderController extends Controller
 			if($admin_type==1){
 				$data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
 			}else{
-				
+
 				$data['store'] 		= User::where('id','!=',$store_id)->where('role',2)->where('parent_id',0)->where('status',1)->get();
 			}
 
 			//echo '<pre>';print_r($data['store']);exit;
-			
-			return view('admin.stock_transfer.list', compact('data'));				
+
+			return view('admin.stock_transfer.list', compact('data'));
 		} catch (\Exception $e) {
 			echo $e;die;
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -2500,7 +2555,7 @@ class PurchaseOrderController extends Controller
 		try{
 			$store_id		= Session::get('store_id');
 			$admin_type		= Session::get('admin_type');
-			
+
 			$stock_product=[];
 
 
@@ -2524,43 +2579,43 @@ class PurchaseOrderController extends Controller
 			}
 
 			//echo '<pre>';print_r($stock_product);exit;
-			
+
 			$data = [];
 			$data['heading'] 		= 'Stock Tranfer Request';
             $data['breadcrumb'] 	= ['Stock Tranfer Request', 'List'];
 			$data['stock_product'] 	= $stock_product;
 
-			
+
 			//echo '<pre>';print_r($data);exit;
-			
-			return view('admin.stock_transfer.request_list', compact('data'));				
+
+			return view('admin.stock_transfer.request_list', compact('data'));
 		} catch (\Exception $e) {
 			echo $e;die;
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
 	}
-	
-	
+
+
 	public function daily_stock_transfer_sell_history(){
 		$branch_id				= Session::get('branch_id');
 		$sell_date_result 	= StockTransferHistory::where('branch_id',$branch_id)->where('is_new','Y')->orderBy('id', 'asc')->first();
 		$start_date			= isset($sell_date_result->created_at)?date('Y-m-d',strtotime($sell_date_result->created_at)):'';
-		
+
 		if($start_date!=''){
 			$current_date=date('Y-m-d');
 			$diff 		= strtotime($current_date) - strtotime($start_date);
 			$total_day	= round($diff / 86400);
-			
+
 			for($i=0;$total_day>=$i;$i++){
 				$sell_date	= date('Y-m-d', strtotime("+".$i." day", strtotime($start_date)));
 				//echo $sell_date.'</br>';exit;
-				
+
 				$category_result 		= StockTransferHistory::select('category_id')->whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->where('is_new','Y')->distinct()->get();
 				$sub_category_result 	= StockTransferHistory::select('subcategory_id')->whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->where('is_new','Y')->distinct()->get();
 				$size_result 			= StockTransferHistory::select('size_id')->whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->distinct()->where('is_new','Y')->get();
 				$product_result 		= StockTransferHistory::select('product_id')->whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->where('is_new','Y')->distinct()->get();
 				//echo '<pre>';print_r($product_result);exit;
-				
+
 				foreach($category_result as $cat_row){
 					$category_id=$cat_row->category_id;
 					foreach($sub_category_result as $sub_cat_row){
@@ -2570,100 +2625,100 @@ class PurchaseOrderController extends Controller
 							foreach($product_result as $product_row){
 								$product_id=$product_row->product_id;
 								//echo $category_id.'-'.$subcategory_id.'-'.$size_id.'-'.$product_id;exit;
-								
+
 								$dateWise_sell_result = StockTransferHistory::selectRaw('sum(total_ml) as total_ml,sum(c_qty) as total_qty,price_id,stock_id')->whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->where('is_new','Y')->get();
 								$total_total_qty = isset($dateWise_sell_result[0]->total_qty)?$dateWise_sell_result[0]->total_qty:'0';
 								$product_mrp = isset($dateWise_sell_result[0]->price->selling_price)?$dateWise_sell_result[0]->price->selling_price:'0';
 								$product_barcode = isset($dateWise_sell_result[0]->stock_info->product_barcode)?$dateWise_sell_result[0]->stock_info->product_barcode:'0';
-								
+
 								//echo '<pre>';print_r($total_total_qty);exit;
-								
+
 								if($total_total_qty>0){
 									$openingStockProductResult = OpeningStockProducts::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->first();
 									$start_opening_stock_ml	= isset($openingStockProductResult->total_ml)?$openingStockProductResult->total_ml:'0';
 									$start_opening_stock	= isset($openingStockProductResult->product_qty)?$openingStockProductResult->product_qty:'0';
-									
+
 									$purchase_history_result 	= DailyProductPurchaseHistory::select('id', 'total_qty', 'total_ml', 'closing_stock', 'closing_stock_ml')->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->first();
-									
+
 									$purchase_stock_ml = isset($purchase_history_result->closing_stock_ml)?$purchase_history_result->closing_stock_ml:'0';
 									$purchase_stock	   = isset($purchase_history_result->closing_stock)?$purchase_history_result->closing_stock:'0';
-									
+
 									$gross_opening_stock_ml	= $start_opening_stock_ml+$purchase_stock_ml;
 									$gross_opening_stock	= $start_opening_stock+$purchase_stock;
-									
-									
+
+
 									$prev_sell_date		= date('Y-m-d', strtotime("-1 day", strtotime($sell_date)));
-									
+
 									$prev_datewise_sell_result = DailyStockTransferHistory::whereBetween('created_at', [$prev_sell_date." 00:00:00", $prev_sell_date." 23:59:59"])->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->first();
 									$prev_closing_stock	  =isset($prev_datewise_sell_result->closing_stock)?$prev_datewise_sell_result->closing_stock:'';
 									$prev_closing_stock_ml=isset($prev_datewise_sell_result->closing_stock_ml)?$prev_datewise_sell_result->closing_stock_ml:'';
-								
+
 									$prev_opening_stock	  =isset($prev_datewise_sell_result->opening_stock)?$prev_datewise_sell_result->opening_stock:'';
 									$prev_opening_stock_ml=isset($prev_datewise_sell_result->opening_stock_ml)?$prev_datewise_sell_result->opening_stock_ml:'';
-									
+
 									$opening_stock_ml	= $gross_opening_stock_ml;
 									$opening_stock 		= $gross_opening_stock;
-									
+
 									$total_datewise_sell_count = DailyStockTransferHistory::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->count();
-									
-									
-									
+
+
+
 									if($prev_closing_stock_ml!=''){
 										if($total_datewise_sell_count>=1){
 											$today_purchase_history_result 	= DailyStockTransferHistory::whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->select('id', 'total_qty', 'total_ml', 'closing_stock', 'closing_stock_ml')->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->first();
-										
+
 										$today_purchase_stock_ml	= isset($today_purchase_history_result->total_ml)?$today_purchase_history_result->total_ml:'0';
 										$today_purchase_stock		= isset($today_purchase_history_result->total_qty)?$today_purchase_history_result->total_qty:'0';
 										$opening_stock_ml 			= $prev_closing_stock_ml+$today_purchase_stock_ml;
-										$opening_stock 				= $prev_closing_stock+$today_purchase_stock;	
-									}	
+										$opening_stock 				= $prev_closing_stock+$today_purchase_stock;
+									}
 								}
-								
-								
-								
-								
-								
+
+
+
+
+
 								$total_sell		= isset($dateWise_sell_result[0]->total_ml)?$dateWise_sell_result[0]->total_ml:'0';
 								$total_qty_sell	= isset($dateWise_sell_result[0]->total_qty)?$dateWise_sell_result[0]->total_qty:'0';
-								
+
 								$closing_stock_ml	= $opening_stock_ml-$total_sell;
 								$closing_stock		= $opening_stock-$total_qty_sell;
-								
+
 								$date_wise_total_sell_ml	= $total_sell;
 								$date_wise_total_sell_qty	= $total_qty_sell;
-								
-								
+
+
 								//echo '<pre>';print_r($date_wise_total_sell_ml);exit;
-								
+
 								$check_datewise_sell_result = DailyStockTransferHistory::whereBetween('created_at', [$sell_date." 00:00:00", $sell_date." 23:59:59"])->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->first();
 								$check_sell_id		  = isset($check_datewise_sell_result->id)?$check_datewise_sell_result->id:'';
-								
+
 								$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
 								$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
-								
+
 								$strength=$strength_no;
 								if($strength_no==''){
 									$strength=0;
 								}
-								
+
 								//echo '<pre>';print_r($strength);exit;
-								
+
 								if($check_sell_id!=''){
 									//echo '<pre>';print_r($date_wise_total_sell_ml);exit;
 									$total_qty	= $date_wise_total_sell_qty+$check_datewise_sell_result->total_qty;
 									$total_ml	= $date_wise_total_sell_ml+$check_datewise_sell_result->total_ml;
-									
+
 									$closing_stock		= $opening_stock-$total_qty;
 									$closing_stock_ml	= $opening_stock_ml-$total_ml;
-									
+
 									//print_r($closing_stock_ml);exit;
-									
-									
-									
+
+
+
 									DailyStockTransferHistory::where('id',$check_sell_id)->update(['total_ml' => $total_ml,'total_qty' => $total_qty,'opening_stock' => $opening_stock,'closing_stock' => $closing_stock,'opening_stock_ml' => $opening_stock_ml,'closing_stock_ml' => $closing_stock_ml,'strength' => $strength]);
-									
+
 									StockTransferHistory::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->update(['is_new' => 'N']);
-									
+
 								}else{
 									$size_cost_data=array(
 										'branch_id'  		=> $branch_id,
@@ -2683,7 +2738,7 @@ class PurchaseOrderController extends Controller
 										'created_at' 		=> $sell_date." ".date('H:i:s'),
 										'updated_at' 		=> $sell_date." ".date('H:i:s'),
 									);
-									
+
 									//echo '<pre>';print_r($size_cost_data);exit;
 									DailyStockTransferHistory::create($size_cost_data);
 									StockTransferHistory::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->update(['is_new' => 'N']);
@@ -2692,11 +2747,11 @@ class PurchaseOrderController extends Controller
 						}
 					}
 				}
-			}	
+			}
 		}
 	}
 }
-	
+
 	public function product_stock_upload_old(Request $request){
 		$file = $request->file('product_upload_file');
 		if($file){
@@ -2704,14 +2759,14 @@ class PurchaseOrderController extends Controller
 			$extension = $file->getClientOriginalExtension();
 			$tempPath = $file->getRealPath();
 			$fileSize = $file->getSize();
-			
+
 			if($extension!='csv'){
 				return redirect()->back()->with('error', 'Something error occurs!');
 			}
 			$location = 'uploads';
 			$file->move($location, $filename);
 			$filepath = public_path($location . "/" . $filename);
-			
+
 			$file = fopen($filepath, "r");
 			$importData_arr = array();
 			$i = 0;
@@ -2725,11 +2780,11 @@ class PurchaseOrderController extends Controller
 					$importData_arr[$i][] = $filedata[$c];
 				}
 				$i++;
-			} 
-			
-			
+			}
+
+
 			//echo '<pre>';print_r($importData_arr);exit;
-			
+
 			$j = 0;
 			$stockData=[];
 			foreach ($importData_arr as $importData) {
@@ -2740,12 +2795,12 @@ class PurchaseOrderController extends Controller
 				$brand_name 			= $importData[3];
 				$size 					= $importData[4];
 				$opening_stock 			= $importData[5];
-				
+
 				$product_barcode		= '';
-				
+
 				if($category!=''){
 					$brand_slug 	= $this->create_slug($brand_name);
-					
+
 					$category_title=trim($category);
 					$category_result=Category::where('name',$category_title)->where('food_type',1)->get();
 					if(count($category_result)>0){
@@ -2759,8 +2814,8 @@ class PurchaseOrderController extends Controller
 						$feature=Category::create($feature_data);
 						$category_id=$feature->id;
 					}
-					
-					
+
+
 					$type_result=Subcategory::where('name',$type)->where('food_type',1)->get();
 					if(count($type_result)>0){
 						$subcategory_id=isset($type_result[0]->id)?$type_result[0]->id:0;
@@ -2773,17 +2828,17 @@ class PurchaseOrderController extends Controller
 						$feature=Subcategory::create($feature_data);
 						$subcategory_id=$feature->id;
 					}
-					
+
 					$size_id=0;
 					$size_ml=0;
 					if($size!=''){
 						$size_arr=explode(' ',$size);
 						$size_ml=isset($size_arr[0])?trim($size_arr[0]):0;
-						
+
 						$size_result=Size::where('ml',$size_ml)->get();
-						
+
 						//echo '<pre>';print_r($size_result);exit;
-						
+
 						if(count($size_result)>0){
 							$size_id=isset($size_result[0]->id)?$size_result[0]->id:0;
 							$size_ml=isset($size_result[0]->ml)?$size_result[0]->ml:0;
@@ -2798,23 +2853,23 @@ class PurchaseOrderController extends Controller
 							$size_id=$feature->id;
 						}
 					}
-					
+
 					if($size_id!=0){
 						$product_result=Product::where('slug',$brand_slug)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-						
+
 						//echo '<pre>';print_r($product_barcode);exit;
-						
+
 						if(count($product_result)>0){
 							$product_id=$product_result[0]->id;
-							
+
 							$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
 							$product_mrp=isset($productRelationshipSizeResult[0]->cost_rate)?$productRelationshipSizeResult[0]->cost_rate:'';
 							$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
-							
+
 							$barcode=isset($productRelationshipSizeResult[0]->product_barcode)?$productRelationshipSizeResult[0]->product_barcode:'';
 							$barcode2=isset($productRelationshipSizeResult[0]->barcode2)?$productRelationshipSizeResult[0]->barcode2:'';
 							$barcode3=isset($productRelationshipSizeResult[0]->barcode3)?$productRelationshipSizeResult[0]->barcode3:'';
-							
+
 							$product_barcode='';
 							if($barcode!=''){
 								$product_barcode=$barcode;
@@ -2825,22 +2880,22 @@ class PurchaseOrderController extends Controller
 							if($barcode3!=''){
 								$product_barcode=$barcode3;
 							}
-							
+
 							$branch_id=Session::get('branch_id');
-							
+
 							$branch_product_stock_info=OpeningStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('size_id',$size_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->get();
-							
+
 							//$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
 							//$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
-							
+
 							$strength=$strength_no;
 							if($strength_no==''){
 								$strength=0;
 							}
-							
+
 							//echo '<pre>';print_r($product_barcode);exit;
-							
-							
+
+
 							if(count($branch_product_stock_info)>0){
 								$total_ml=0;
 								$opening_stock_qty=0;
@@ -2848,10 +2903,10 @@ class PurchaseOrderController extends Controller
 									$total_ml=$size_ml*$opening_stock;
 									$opening_stock_qty=$opening_stock;
 								}
-								
+
 								//echo '<pre>';print_r($total_ml);exit;
-								
-								
+
+
 								OpeningStockProducts::where('branch_id', $branch_id)->where('product_id', $product_id)->where('size_id', $size_id)->update(['total_ml' => $total_ml,'product_qty' => $opening_stock_qty,'strength' => $strength]);
 							}else{
 								$total_ml=0;
@@ -2860,7 +2915,7 @@ class PurchaseOrderController extends Controller
 									$total_ml=$size_ml*$opening_stock;
 									$opening_stock_qty=$opening_stock;
 								}
-								
+
 								$stockData=array(
 									'branch_id'			=> $branch_id,
 									'category_id'		=> $category_id,
@@ -2874,23 +2929,23 @@ class PurchaseOrderController extends Controller
 									'product_mrp'  		=> $product_mrp,
 									'strength'			=> $strength
 								);
-								
+
 								//echo '<pre>';print_r($stockData);exit;
-								
-								OpeningStockProducts::create($stockData);	
+
+								OpeningStockProducts::create($stockData);
 							}
-							
+
 							//exit;
-							
+
 							$branch_product_stock_info=BranchStockProducts::where('branch_id',$branch_id)->where('product_id',$product_id)->where('size_id',$size_id)->get();
 							if(count($branch_product_stock_info)>0){
 								$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('stock_id',$branch_product_stock_info[0]->id)->where('selling_price',$product_mrp)->where('stock_type','counter')->get();
-								
+
 								//echo '<pre>';print_r($product_mrp);exit;
 								$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
-								
+
 								if($sell_price_id!=''){
-									
+
 									BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type', 'counter')->update(['c_qty' => 0,'w_qty' => $opening_stock]);
 								}else{
 									$branchProductStockSellPriceData=array(
@@ -2914,10 +2969,10 @@ class PurchaseOrderController extends Controller
 									'size_id'  			=> $size_id,
 									'created_at'		=> date('Y-m-d')
 								);
-								
+
 								$branchStockProducts=BranchStockProducts::create($branchProductStockData);
 								$stock_id=$branchStockProducts->id;
-								
+
 								$branchProductStockSellPriceData=array(
 									'stock_id'		=> $stock_id,
 									'w_qty'  		=> $opening_stock,
@@ -2929,59 +2984,59 @@ class PurchaseOrderController extends Controller
 									'created_at'	=> date('Y-m-d')
 								);
 								BranchStockProductSellPrice::create($branchProductStockSellPriceData);
-									
+
 							}
-							
-						}	
-					}	
+
+						}
+					}
 				}
 			$j++;}
-			
+
 			echo '<pre>';print_r($stockData);exit;
 		}
-		
+
 		return redirect()->back()->with('success', 'Opening Stock updated successfully');
-		
+
 	}
-	
+
 	public function setOpeningStock(Request $request){
 		try{
 			$branch_id		= Session::get('branch_id');
 			//echo $branch_id;die;
 			$stock_product = OpeningStockProducts::where('branch_id',$branch_id);
-			
+
 			if(!empty($request->get('product_id'))){
 				$stock_product->where('product_id', $request->get('product_id'));
 			}
-				
+
 			$stock_product=$stock_product->paginate(20);
 			$data = [];
 			$data['heading'] 		= 'Opening Stock';
             $data['breadcrumb'] 	= ['Opening Stock', 'List'];
 			$data['stock_product'] 	= $stock_product;
-			
+
 			//echo '<pre>';print_r($data);exit;
-			
-			
-			
-			
-			
+
+
+
+
+
 			//$data['counter'] = Counter::where('branch_id',$branch_id)->get();
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
 			//dd($data);
-			return view('admin.stock_transfer.opening_stock', compact('data'));				
+			return view('admin.stock_transfer.opening_stock', compact('data'));
 		} catch (\Exception $e) {
 			echo $e;die;
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
 	}
-	
+
 	public function create_slug($string){
 		$replace = '-';
 	   	$string = strtolower($string);
@@ -2991,13 +3046,13 @@ class PurchaseOrderController extends Controller
 
 	   //remove multiple dashes or whitespaces
 	   	$string = preg_replace("/[\s-]+/", " ", $string);
-	   
+
 	   //convert whitespaces and underscore to $replace
 	  	 $string = preg_replace("/[\s_]/", $replace, $string);
 
 	   //limit the slug size
 	  	 $string = substr($string, 0, 100);
-	   
+
 	   //slug is generated
 	  	 return $string;
 	  }
@@ -3016,7 +3071,7 @@ class PurchaseOrderController extends Controller
 
             if ($request->ajax()) {
 				$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->orderBy('id', 'desc')->get();
-                return DataTables::of($purchase) 
+                return DataTables::of($purchase)
                     ->addColumn('invoice_no', function ($row) {
                         return $row->invoice_no;
                     })
@@ -3025,7 +3080,7 @@ class PurchaseOrderController extends Controller
                     })
                     ->addColumn('total_qty', function ($row) {
                         return $row->total_qty;
-                    }) 
+                    })
                     ->addColumn('sub_total', function ($row) {
 						return number_format($row->sub_total,2);
                     })
@@ -3079,7 +3134,7 @@ class PurchaseOrderController extends Controller
 			$data['purchaseInward'] = $purchaseInwardStock;
 			// dd($purchaseInwardStock);
 			//echo '<pre>';print_r($data['store']);exit;
-			
+
             return view('admin.purchase_order.edit_order', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());

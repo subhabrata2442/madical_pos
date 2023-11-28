@@ -337,6 +337,8 @@ Route::match(['GET'], '/print', [PosController::class, 'print_invoice'])->name('
 Route::match(['GET'], '/pushertest', [NotificationController::class, 'pushertest'])->name('pushertest');
 Route::match(['GET'], '/test', [NotificationController::class, 'test'])->name('test');
 
+Route::match(['GET'], '/product_expiry_notification', [NotificationController::class, 'product_expiry_notification'])->name('product_expiry_notification');
+
 // Route::get('test', function () {
 //     event(new App\Events\StockAlert('Someone'));
 //     return "Event has been sent!";

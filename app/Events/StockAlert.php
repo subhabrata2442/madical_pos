@@ -15,15 +15,19 @@ class StockAlert
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $store_id;
+    public $urls;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $store_id)
     {
         $this->message = $message;
+        $this->store_id = $store_id;
+        $this->urls = $urls;
     }
 
     /**
@@ -33,7 +37,6 @@ class StockAlert
      */
     public function broadcastOn()
     {
-        echo 1;exit;
         return new PrivateChannel('stockalert-channel');
 
     }
