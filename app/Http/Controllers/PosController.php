@@ -543,7 +543,9 @@ class PosController extends Controller
 			'payment_method' 			=> $request->payment_method_type,
 			'payment_date' 				=> date('Y-m-d'),
 			'charge_amount' 			=> $request->charge_amt,
-			//'created_at'				=> date('Y-m-d')
+			//'created_at'				=> date('Y-m-d'),
+            'net_price' 			=> $request->net_price,
+            'profit_price' 			=> $request->profit_price,
 		);
 
 		//print_r($sellStockData);exit;

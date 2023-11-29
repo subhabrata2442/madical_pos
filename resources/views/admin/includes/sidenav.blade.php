@@ -115,7 +115,7 @@ if($adminId!=1){
           @if(isset($permission))
           @if(in_array(6, $permission))
             <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.embloyees') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.embloyees') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
-              <p>Manage Embloyees <i class="fas fa-angle-left right"></i></p>
+              <p>Manage Employees <i class="fas fa-angle-left right"></i></p>
               </a>
               <ul class="nav nav-treeview">
                 @if(in_array('admin-embloyees-list', $page_permission))

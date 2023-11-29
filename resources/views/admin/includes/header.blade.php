@@ -59,7 +59,7 @@ $adminRoll 		= Session::get('admin_type');
                     }
                 @endphp
 
-                    <a href="{{$urls}}" class="dropdown-item">
+                    <a href="{{$urls}}" onclick="seenNotification('{{$itempending_s_result->id}}')" class="dropdown-item">
                         <i class="fas fa-envelope mr-2"></i> {{$itempending_s_result->msg}}
                         {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
                     </a>

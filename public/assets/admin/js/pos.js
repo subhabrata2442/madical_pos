@@ -187,7 +187,7 @@ function print() {
 
 $(document).ready(function() {
     $(".payBtn").on('click', function(e) {
-        
+
         //console.log(customer_id);
 
         var selectedValue = $("input[name='customertype']:checked").val();
@@ -361,7 +361,7 @@ $(document).ready(function() {
                     $(".payWrap").removeClass('active');
                     // console.log(data.invoicePdf);
                     $("#off_counter_invoice-frame").attr("src", data.invoicePdf);
-                    
+
 
                 },
                 beforeSend: function() {
@@ -417,8 +417,8 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
             finalsubmitpayment();
         }
     });
-    
-   
+
+
 });
 
 function finalsubmitpayment(){
@@ -616,20 +616,20 @@ function final_payment_submit(type) {
 }
 
 /*$('.note_coin_count_sec').html('');
-	
+
 $(".rupee_count_input").each(function(index, e) {
         var rupee_type	= $(this).data('type');
 		var rupee_qty	= $(this).val();
 		var rupee_id	= '';
 		var rupee_val	= '';
-		
+
 		if(rupee_qty!=''){
 			if(rupee_qty>0){
 				if(rupee_type=='note'){
 					rupee_id	= $(this).attr('id').split('rupee_')[1];
 					rupee_val	= rupee_id.split('-')[0];
 					$('.note_coin_count_sec').append('<input type="hidden" name="note[]" value="'+rupee_val+'"><input type="hidden" name="note_qty[]" value="'+rupee_qty+'">');
-					
+
 					//console.log(rupee_val);
 				}else{
 					rupee_id	= $(this).attr('id').split('coin_')[1];
@@ -1260,7 +1260,7 @@ $(document).ready(function() {
 
                     $("#product_search_result").empty();
                     for (var i = 0; i < len; i++) {
-                        //response.result[i]['product_barcode'] + '-' + 
+                        //response.result[i]['product_barcode'] + '-' +
                         var id = response.result[i]['id'];
                         var name = response.result[i]['product_name'] + ' / ' + response.result[i]['product_barcode'];
                         $("#product_search_result").append("<li value='" + id + "'>" + name + "</li>");
@@ -1283,14 +1283,14 @@ $(document).ready(function() {
     });*/
 
     /*$("#search_barcode_product").input(function() {
-    	
+
     	console.log('d');
     });*/
 
     /*$('#search_barcode_product').on('input', function(){ alert('d'); });*/
 
     /*$('#search_barcode_product').on('input', function(){
-    	
+
     });*/
 });
 
@@ -1344,7 +1344,7 @@ function setProductRow(element) {
                 var product_mrp = 0;
                 var product_price_id = 0;
                 var selling_by_name = '';
-                
+
 
                 var option_html = '';
 
@@ -1463,7 +1463,7 @@ function setProductRow(element) {
                                     html += `<td>No</td>`;
                                 }
 
-                                        
+
                                 html += `<td id="product_unit_price_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                         <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
                                         <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_${product_id}" class="input-3 product_disc_percent" value="0"></td>
@@ -1472,9 +1472,9 @@ function setProductRow(element) {
                                         <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_${product_id}" value="${product_mrp}">
                                         <td id="product_total_amount_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                         <td><a href="javascript:;" onclick="remove_sell_item(${item_row});"><i class="fas fa-times-circle"></i></a></td>
-                                        
+
                                         <input type="hidden" name="product_net_price[]" id="product_net_price_${product_id}" class="input-3" value="${product_net_price}">
-                                        
+
                                     </tr>`;
                             $("#product_sell_record_sec").prepend(html);
                             total_cal();
@@ -1540,7 +1540,7 @@ $(document).on('click', '.select_product_item', function() {
                 var product_net_price = 0;
                 product_net_price = item_detail.net_price;
 
-                
+
                 var is_chronic = item_detail.is_chronic;
                 // console.log("is_chronic"+is_chronic);
                 var product_chronic_amount = 0;
@@ -1618,8 +1618,8 @@ $(document).on('click', '.select_product_item', function() {
                                         <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_${product_id}" value="${product_chronic_amount}">`;
                             }else{
                                 html += `<td>No</td>`;
-                            }      
-                            
+                            }
+
 
                             html += `<td id="product_unit_price_${product_id}">${formatNumber(0 + parseFloat(product_mrp))}</td>
                                     <td><input type="number" name="product_qty[]" id="product_qty_${product_id}" class="input-3 product_qty" value="1"></td>
@@ -1660,7 +1660,7 @@ function changeiscronic(pricetype, product_id){
     }
 
     console.log("newMrp " +newMrp);
-    
+
     $("#product_unit_price_"+product_id).html(newMrp);
 
     $("#product_unit_price_amount_"+product_id).val(newMrp);
@@ -1713,7 +1713,7 @@ function changeiscronic(pricetype, product_id){
     }
 
     total_cal();
-    
+
 
 }
 
@@ -2046,6 +2046,7 @@ function total_cal() {
 
         // console.log("totalNetPrice -- "+totalNetPrice);
         $("#total_net_price").html('$'+ formatNumber(totalNetPrice));
+        $("#net_price").val(totalNetPrice);
 
         $("#total_quantity").html(total_quantity);
         $("#total_mrp").html('$'+ formatNumber(total_mrp));
@@ -2069,6 +2070,7 @@ function total_cal() {
         // var total_profit = ((total_mrp-totalNetPrice)*100);
         var total_profit = (total_mrp-totalNetPrice);
         $("#total_profit").html('$'+ formatNumber(total_profit));
+        $("#profit_price").val(total_profit);
 
 
         profitpersent = (((total_mrp - totalNetPrice)/totalNetPrice)*100);
@@ -2099,9 +2101,9 @@ function total_cal() {
             $("#special_discount_amt").val(total_discount);
             $("#selling_special_discount_amt-input").val(total_discount);
 
-            
 
-            
+
+
 
             $("#discount_total_payable").html('$'+ Number(discount_amount).toFixed(2));
         }
@@ -2278,7 +2280,7 @@ $(document).ready(function() {
 
                     $("#product_search_result_top").empty();
                     for (var i = 0; i < len; i++) {
-                        //response.result[i]['product_barcode'] + '-' + 
+                        //response.result[i]['product_barcode'] + '-' +
                         var id = response.result[i]['id'];
                         var name = response.result[i]['product_name'] + ' / ' + response.result[i]['product_barcode'];
                         $("#product_search_result_top").append("<li value='" + id + "'>" + name + "</li>");
@@ -2294,7 +2296,7 @@ $(document).ready(function() {
         }
     });
 
-   
+
 });
 
 function removeComma(price){

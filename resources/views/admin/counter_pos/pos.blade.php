@@ -77,7 +77,7 @@
             <ul class="d-flex w-100">
               <li class="atpVall">Total Net Price -</li>
               <li class="atpinfo"><span id="total_net_price">$0</span></li>
-              {{-- <input type="hidden" name="total_mrp" id="total_mrp-input" value="0"> --}}
+              <input type="hidden" name="net_price" id="net_price" value="0">
             </ul>
             <ul class="d-flex w-100">
               <li class="atpVall">Total Sale Price -</li>
@@ -113,6 +113,7 @@
             <ul class="d-flex w-100 subTotal">
               <li class="atpVall">Total profit-</li>
               <li class="atpinfo" id="total_profit">$0</li>
+              <input type="hidden" name="profit_price" id="profit_price" value="0">
             </ul>
             <ul class="d-flex w-100 subTotal">
               <li class="atpVall">Profit-</li>

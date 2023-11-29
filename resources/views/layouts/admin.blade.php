@@ -122,6 +122,26 @@
             });
         });
 
+        function seenNotification(ids){
+            console.log(ids);
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '{{url('/seenNotification')}}',
+                dataType: 'html',
+                data: {'ids':ids},
+                success: function(data) {
+
+                },
+                beforeSend: function() {
+
+                },
+                complete: function() {
+
+                }
+            });
+
+        }
 
 
     </script>
