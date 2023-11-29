@@ -68,7 +68,7 @@
 			<tbody>
 				@forelse ($data['top_products'] as $key=>$purchase)
 				<tr>
-					
+
 					<td>{{($key+1)}}</td>
 					<td>{{$purchase['product_name']}}</td>
 					<td>{{$purchase['t_qty']}}</td>
@@ -80,10 +80,10 @@
 				@empty
 					<tr ><td colspan="3"> No data found </td></tr>
 				@endforelse
-				
+
 			</tbody>
         </table>
-		
+
       </div>
     </div>
   </div>
@@ -91,11 +91,11 @@
 
 @endsection
 
-@section('scripts') 
+@section('scripts')
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
 	</script>
 @endif
 
-@endsection 
+@endsection

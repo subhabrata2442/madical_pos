@@ -2,21 +2,11 @@
 $adminId 			= Session::get('adminId');
 $adminRoll 		= Session::get('admin_type');
 
-// $total_notification=0;
-// $pending_s_count =\App\Models\BranchStockRequest::where('to_store_id',$adminId)->where('status',1)->count();
-// $pending_s_result=\App\Models\BranchStockRequest::where('status',1)->where('to_store_id',$adminId)->groupBy('from_store_id')->selectRaw('sum(r_qty) as t_qty, from_store_id, product_id')->get();
-// $total_notification +=$pending_s_count;
+$total_notification=0;
+$pending_s_count =\App\Models\BranchStockRequest::where('to_store_id',$adminId)->where('status',1)->count();
+$pending_s_result=\App\Models\BranchStockRequest::where('status',1)->where('to_store_id',$adminId)->groupBy('from_store_id')->selectRaw('sum(r_qty) as t_qty, from_store_id, product_id')->get();
+$total_notification +=$pending_s_count;
 
-    $admin_type = Session::get('admin_type');
-    $store_id	= Session::get('store_id');
-
-    if($admin_type==1){
-        $pending_s_count =\App\Models\Notification::where('is_seen','0')->count();
-        $pending_s_result=\App\Models\Notification::where('is_seen','0')->get();
-    }else if($admin_type=2){
-        $pending_s_count =\App\Models\Notification::where('store_id',$store_id)->where('is_seen','0')->count();
-        $pending_s_result=\App\Models\Notification::where('store_id',$store_id)->where('is_seen','0')->get();
-    }
 
 
 ?>
@@ -34,41 +24,19 @@ $adminRoll 		= Session::get('admin_type');
     <li class="nav-item dropdown">
       <a class="nav-link noti-nav-link" data-toggle="dropdown" href="javascript:;" aria-expanded="false">
         <i class="far fa-bell"></i>
-        <span class="badge badge-danger navbar-badge totalNoti">{{$pending_s_count}}</span>
+        <span class="badge badge-danger navbar-badge">{{$total_notification}}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-        {{-- <span class="dropdown-item dropdown-header">0 Notifications</span> --}}
+        <span class="dropdown-item dropdown-header">{{$total_notification}} Notifications</span>
         <div class="dropdown-divider"></div>
-
-        {{-- <a href="" class="dropdown-item">
-          <i class="fas fa-envelope mr-2"></i> asdasdasdasd
+        @if(count($pending_s_result)>0)
+        @foreach($pending_s_result as $srrow)
+        <a href="{{ route('admin.purchase.stock.transferRequest') }}" class="dropdown-item">
+          <i class="fas fa-envelope mr-2"></i> {{$srrow->t_qty}} New Stock request from {{ Str::limit($srrow->store->name, 5) }}
           <span class="float-right text-muted text-sm">3 mins</span>
-        </a> --}}
-        <input type="hidden" id="totalunreadnotification" value="{{$pending_s_count}}">
-        <div class="appendnotification">
-            @if (count($pending_s_result)>0)
-                @foreach ($pending_s_result as $itempending_s_result)
-                @php
-                    $urls = '';
-                    if($itempending_s_result->type=='stock-alert'){
-                        $urls = url('/').'/admin/report/low_stock_product?id='.$itempending_s_result->branch_stock_id;
-                    }else if($itempending_s_result->type=='product-expiry'){
-                        $urls = url('/').'/admin/report/near_expiry_stock?id='.$itempending_s_result->id;
-                    }else if($itempending_s_result->type=='stock-transfer'){
-                        $urls = url('/').'/admin/purchase/stock-transfer';
-                    }
-                @endphp
-
-                    <a href="{{$urls}}" onclick="seenNotification('{{$itempending_s_result->id}}')" class="dropdown-item">
-                        <i class="fas fa-envelope mr-2"></i> {{$itempending_s_result->msg}}
-                        {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
-                    </a>
-                @endforeach
-            @else
-                <span class="dropdown-item dropdown-header zeronoti">0 Notifications</span>
-            @endif
-        </div>
-
+        </a>
+        @endforeach
+        @endif
         {{-- <div class="dropdown-divider"></div>
         <a href="#" class="dropdown-item">
           <i class="fas fa-users mr-2"></i> 8 friend requests
@@ -133,5 +101,5 @@ $adminRoll 		= Session::get('admin_type');
   $(document).on('click','.noti-nav-link',function(){
     $(this).parent().toggleClass("show").find(".dropdown-menu").toggleClass("show");
   });
-</script>
+</script> 
 

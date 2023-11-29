@@ -543,7 +543,9 @@ class PosController extends Controller
 			'payment_method' 			=> $request->payment_method_type,
 			'payment_date' 				=> date('Y-m-d'),
 			'charge_amount' 			=> $request->charge_amt,
-			//'created_at'				=> date('Y-m-d')
+			//'created_at'				=> date('Y-m-d'),
+            'net_price' 			=> $request->net_price,
+            'profit_price' 			=> $request->profit_price,
 		);
 
 		//print_r($sellStockData);exit;
@@ -648,7 +650,7 @@ class PosController extends Controller
 
                 if($low_stock->t_qty <= $low_stock->product->alert_product_qty){
 
-                    echo "asd";
+                    // echo "asd";
 
                     $options = array(
                         'cluster' => env('PUSHER_APP_CLUSTER'),
@@ -662,9 +664,12 @@ class PosController extends Controller
                     );
 
                     $message = $low_stock->product->product_name. ' Stock low';
+                    $urls = 'admin/report/low_stock_product?id='.$product_stock_id;
 
                     $data =[
                         'message' => $message,
+                        'store_id'=>$branch_id,
+                        'urls'=>$urls,
                     ];
 
                     $notify = 'stockalert-channel';
@@ -672,11 +677,12 @@ class PosController extends Controller
 
                     $datainsert = [
                         'type'=> 'stock-alert',
+                        'store_id'=>$branch_id,
                         'msg'=> $message,
                         'product_id'=> $low_stock->product->id,
                         'branch_stock_id'=>$product_stock_id,
+                        'urls'=>$urls,
                     ];
-
                     Notification::create($datainsert);
 
                 }

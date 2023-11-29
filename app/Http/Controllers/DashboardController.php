@@ -15,7 +15,10 @@ use App\Models\User;
 
 use App\Models\PurchaseInwardStock;
 use App\Models\SellInwardStock;
+use App\Models\BranchStockProducts;
+use App\Models\Product;
 use DataTables;
+use DB;
 
 use Hash;
 use Auth;
@@ -33,32 +36,117 @@ class DashboardController extends Controller
             $data['breadcrumb'] = ['Dashboard'];
             //$data['breadcrumb'] = ['Dashboard'];
 
+            // if($admin_type==1){
+            //     $total_sales= SellInwardStock::sum('pay_amount');
+            //     $total_purchases=PurchaseInwardStock::sum('total_amount');
+            //     $total_profit=PurchaseInwardStock::sum('qty_total_profit');
+            //     $total_net_price=PurchaseInwardStock::sum('qty_total_net_price');
+            //     $total_sell_return=0;
+
+            // }else{
+            //     $total_sales=SellInwardStock::where('branch_id',$store_id)->sum('pay_amount');
+            //     $total_purchases=PurchaseInwardStock::where('branch_id',$store_id)->sum('total_amount');
+            //     $total_profit=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_profit');
+            //     $total_net_price=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_net_price');
+            //     $total_sell_return=0;
+            // }
+            // $data['total_sales']=$total_sales;
+            // $data['total_purchases']=$total_purchases;
+            // $data['total_profit']=$total_profit;
+            // $data['total_net_price']=$total_net_price;
+            // $data['total_sell_return']=$total_sell_return;
+
+
             if($admin_type==1){
-                $total_sales= SellInwardStock::sum('pay_amount');
-                $total_purchases=PurchaseInwardStock::sum('total_amount');
-                $total_profit=PurchaseInwardStock::sum('qty_total_profit');
-                $total_net_price=PurchaseInwardStock::sum('qty_total_net_price'); 
-                $total_sell_return=0;
+                $low_stock = BranchStockProducts::with('product')->get();
+            }else{
+                $store_id	= Session::get('store_id');
+                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
+            }
+
+            $data['low_stock']=$low_stock;
+
+
+            if($admin_type==1){
+                $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+                    ->groupBy('products.id', 'products.product_name')
+                    ->orderBy('sales_count', 'desc')
+                    ->limit(10)
+                    ->get();
+            }else{
+                $store_id	= Session::get('store_id');
+                $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+                    ->where('sell_stock_products.branch_id', $store_id)
+                    ->groupBy('products.id', 'products.product_name')
+                    ->orderBy('sales_count', 'desc')
+                    ->limit(10)
+                    ->get();
+            }
+
+            $result=[];
+            if(count($topSellingProducts) > 0){
+                foreach($topSellingProducts as $row){
+                    if($admin_type==1){
+                        $t_qty = BranchStockProducts::where('product_id', $row->id)->sum('t_qty');
+                    }else{
+                        $t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+                    }
+                    $result[]=array(
+                        'id'				=> $row->id,
+                        'product_barcode'	=> $row->product_barcode,
+                        'product_name'		=> $row->product_name,
+                        't_qty'				=> $t_qty,
+                        'brand'				=>  $row->brand,
+                        'dosage_name'		=>  $row->dosage_name,
+                        'selling_by_name'	=>  $row->selling_by_name,
+                    );
+
+                }
+            }
+
+            $data['top_products'] = $result;
+
+
+            if($admin_type==1){
+                $latestBill = SellInwardStock::with('customer')->orderBy('id', 'DESC')->limit(10)->get();
+            }else{
+                $latestBill = SellInwardStock::with('customer')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(10)->get();
+            }
+
+            $data['latestBill'] = $latestBill;
+
+            if($admin_type==1){
+                $totalSalesToday = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'))->sum('sub_total');
+                $totalProfitToday = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'))->sum('profit_price');
+            }else{
+                $totalSalesToday = SellInwardStock::where('branch_id', $store_id)->whereDate('payment_date', now()->format('Y-m-d'))->sum('sub_total');
+                $totalProfitToday = SellInwardStock::where('branch_id', $store_id)->whereDate('payment_date', now()->format('Y-m-d'))->sum('profit_price');
+            }
+
+            $data['totalSalesToday'] = $totalSalesToday;
+            $data['totalProfitToday'] = $totalProfitToday;
+
+            $currentMonth = now()->format('m');
+            $currentYear = now()->format('Y');
+            if($admin_type==1){
+                $totalSalesthismonth = SellInwardStock::whereYear('payment_date', $currentYear)->sum('sub_total');
+                $totalProfitthismonth = SellInwardStock::whereMonth('payment_date', $currentMonth)->sum('profit_price');
 
             }else{
-                $total_sales=SellInwardStock::where('branch_id',$store_id)->sum('pay_amount');
-                $total_purchases=PurchaseInwardStock::where('branch_id',$store_id)->sum('total_amount');
-                $total_profit=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_profit');
-                $total_net_price=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_net_price');
-                $total_sell_return=0;
+                $totalSalesthismonth = SellInwardStock::where('branch_id', $store_id)->whereYear('payment_date', $currentYear)->sum('sub_total');
+                $totalProfitthismonth = SellInwardStock::where('branch_id', $store_id)->whereYear('payment_date', $currentYear)->sum('profit_price');
             }
-            $data['total_sales']=$total_sales;
-            $data['total_purchases']=$total_purchases;
-            $data['total_profit']=$total_profit;
-            $data['total_net_price']=$total_net_price;
-            $data['total_sell_return']=$total_sell_return;
 
+            $data['totalSalesthismonth'] = $totalSalesthismonth;
+            $data['totalProfitthismonth'] = $totalProfitthismonth;
 
 
 
 
             //echo '<pre>';print_r($admin_type);exit;
-            
+
             return view('admin.dashboard', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -92,7 +180,7 @@ class DashboardController extends Controller
 					'status'		=> 1,
 				);
 				//echo '<pre>';print_r($store_data);exit;
-				
+
 				$store=User::create($store_data);
 				$store_id=$store->id;
 
@@ -103,7 +191,7 @@ class DashboardController extends Controller
 					'contact_mobile'    => $request->phone,
                     'whatsapp_no'       => $request->phone,
 				);
-                
+
                 StoreDetails::create($store_details_data);
 
 				$roll_ids           = $request->roll_ids;
@@ -115,8 +203,8 @@ class DashboardController extends Controller
                 $roll_print_ids     = $request->print;
                 $roll_upload_ids    = $request->upload;
                 $role_permission_id = $request->employee_role_permission_id;
-                
-    
+
+
                 $rollPermision=[];
                 if(isset($roll_ids)){
                     if(count($roll_ids)>0){
@@ -127,7 +215,7 @@ class DashboardController extends Controller
                             for($i=0;count($role_wise_permission_ids)>$i;$i++){
                                 $subRollPermisionType=[];
                                 $subRollPermisionTypeIds=[];
-                                
+
                                 $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -138,7 +226,7 @@ class DashboardController extends Controller
                                     $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                     $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                     $subRollPermisionTypeIds[]=$subRolltypeId;
-                                    
+
                                 }
                                 $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                                 if($isAddPermision!=''){
@@ -196,7 +284,7 @@ class DashboardController extends Controller
                                     );
                                 }
                             }
-                            
+
                             //echo '<pre>';print_r($role_wise_permission_ids);
 
                             $rollPermision[]=array(
@@ -220,7 +308,7 @@ class DashboardController extends Controller
                         );
                         //echo '<pre>';print_r($userRolePermission);exit;
                         UserRolePermission::create($userRolePermission);
-                        
+
                         foreach($row['subRollPermision'] as $sRow){
                             $sub_roll_id=$sRow['sub_roll_id'];
                             foreach($sRow['permisionType'] as $key=>$val){
@@ -239,7 +327,7 @@ class DashboardController extends Controller
                         }
                     }
                 }
-                
+
 				return redirect()->back()->with('success', 'Store Added successfully');
             }
             $data = [];
@@ -262,14 +350,14 @@ class DashboardController extends Controller
             $store_role=[];
             foreach($rolePermission as $row){
                 $sub_roll=[];
-                
+
                 $storeRoleWisePermission= RoleWisePermission::where('branch_id',$parent_id)->where('role_id',$row->id)->select('permission_id')->distinct()->orderBy('id', 'asc')->get();
                 $storeSubRolePermissionIds=[];
                 foreach($storeRoleWisePermission as $sprow){
                     $storeSubRolePermissionIds[]=$sprow->permission_id;
                 }
                 //echo '<pre>';print_r($storeSubRolePermissionIds);exit;
-                
+
                 $subRolePermission= RolePermission::where('parent_id',$row->id)->whereIn('id', $storeSubRolePermissionIds)->where('status',1)->orderBy('id', 'asc')->get();
                 $is_checked='N';
 
@@ -292,7 +380,7 @@ class DashboardController extends Controller
                     $is_print_chk   = 'N';
                     $is_upload_chk  = 'N';
 
-                    
+
 
                     $viewCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',1)->count();
                     if($viewCount>0){
@@ -302,32 +390,32 @@ class DashboardController extends Controller
                     if($addCount>0){
                         $is_add    = 'Y';
                     }
-                    
+
                     $editCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',3)->count();
                     if($editCount>0){
                         $is_edit    = 'Y';
                     }
-                    
+
                     $deleteCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',4)->count();
                     if($deleteCount>0){
                         $is_delete    = 'Y';
                     }
-                    
+
                     $downloadCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',5)->count();
                     if($downloadCount>0){
                         $is_download    = 'Y';
                     }
-                    
+
                     $printCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',6)->count();
                     if($printCount>0){
                         $is_print    = 'Y';
                     }
-                    
+
                     $uploadCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',7)->count();
                     if($uploadCount>0){
                         $is_upload    = 'Y';
                     }
-                    
+
                     //echo '<pre>';print_r($is_view);exit;
 
 
@@ -351,7 +439,7 @@ class DashboardController extends Controller
                         'is_upload_chk'   => $is_upload_chk,
                     );
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -363,27 +451,27 @@ class DashboardController extends Controller
             $data['store_role'] = $store_role;
 
 			//echo '<pre>';print_r($data['store_role']);exit;
-			
+
             return view('admin.embloyees.add', compact('data'));
         } catch (\Exception $e) {
             $return_data['success'] = 0;
 			$return_data['error_message'] = 'Something went wrong. Please try later. ' . $e->getMessage();
         }
     }
-    
+
     public function edit(Request $request, $id)
     {
         try {
             $parent_id=Auth::user()->id;
             $store_id = base64_decode($id);
 			if ($request->isMethod('post')) {
-				
+
 			$validator = Validator::make($request->all(), [
 				'email' 	=> 'required|email|unique:users,email,' . $store_id,
 				'phone' 	=> 'required|numeric|unique:users,phone,' . $store_id,
 				'full_name' => 'required',
 			]);
-			
+
 			if($request->password!=''){
 				$validator = Validator::make($request->all(), [
 				'password' => 'min:6|required_with:password_confirm|same:password_confirm',
@@ -392,7 +480,7 @@ class DashboardController extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-			
+
 			$array = [
 				'name' 	=> $request->full_name,
 				'email' => $request->email,
@@ -401,7 +489,7 @@ class DashboardController extends Controller
 
 			//print_r($array);exit;
 
-			
+
 			if($request->password!=''){
 				$array['password']=Hash::make($request->password_confirm);
 			}
@@ -425,7 +513,7 @@ class DashboardController extends Controller
             $roll_print_ids     = $request->print;
             $roll_upload_ids    = $request->upload;
             $role_permission_id = $request->employee_role_permission_id;
-            
+
 
             $rollPermision=[];
             if(isset($roll_ids)){
@@ -437,7 +525,7 @@ class DashboardController extends Controller
                         for($i=0;count($role_wise_permission_ids)>$i;$i++){
                             $subRollPermisionType=[];
                             $subRollPermisionTypeIds=[];
-                            
+
                             $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -448,7 +536,7 @@ class DashboardController extends Controller
                                 $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                 $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                 $subRollPermisionTypeIds[]=$subRolltypeId;
-                                
+
                             }
                             $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                             if($isAddPermision!=''){
@@ -506,7 +594,7 @@ class DashboardController extends Controller
                                 );
                             }
                         }
-                        
+
                         //echo '<pre>';print_r($role_wise_permission_ids);
 
                         $rollPermision[]=array(
@@ -530,7 +618,7 @@ class DashboardController extends Controller
                     );
                     //echo '<pre>';print_r($userRolePermission);exit;
                     UserRolePermission::create($userRolePermission);
-                    
+
                     foreach($row['subRollPermision'] as $sRow){
                         $sub_roll_id=$sRow['sub_roll_id'];
                         foreach($sRow['permisionType'] as $key=>$val){
@@ -551,18 +639,18 @@ class DashboardController extends Controller
             }
 
             //echo '<pre>';print_r($rollPermision);exit;
-            
-			
+
+
 			return redirect()->back()->with('success', 'Store Updated successfully');
         }
-            
+
             $data = [];
             $data['heading'] 	= 'Embloyees Edit';
             $data['breadcrumb'] = ['Embloyees', 'Edit'];
             $data['store'] 	= User::find($store_id);
 			$data['role']= RolePermission::where('status',1)->orderBy('id', 'asc')->get();
 			$data['roleWisePermission']= RoleWisePermission::where('branch_id',$store_id)->orderBy('id', 'asc')->get();
-            
+
             $storeRolePermission= UserRolePermission::where('user_id',$parent_id)->whereNotIn('role_id', [6])->orderBy('id', 'asc')->get();
             $storeRolePermissionIds=[];
             foreach($storeRolePermission as $row){
@@ -575,7 +663,7 @@ class DashboardController extends Controller
             $store_role=[];
             foreach($rolePermission as $row){
                 $sub_roll=[];
-                
+
                 $storeRoleWisePermission= RoleWisePermission::where('branch_id',$parent_id)->where('role_id',$row->id)->select('permission_id')->distinct()->orderBy('id', 'asc')->get();
                 $storeSubRolePermissionIds=[];
                 foreach($storeRoleWisePermission as $sprow){
@@ -594,7 +682,7 @@ class DashboardController extends Controller
                 if($userRolePermissionCount>0){
                     $is_checked='Y';
                 }
-                
+
                 foreach($subRolePermission as $srow){
                     $is_view    = 'N';
                     $is_add     = 'N';
@@ -612,18 +700,18 @@ class DashboardController extends Controller
                     $is_print_chk   = 'N';
                     $is_upload_chk  = 'N';
 
-                    
+
 
                     $viewCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',1)->count();
                     if($viewCount>0){
                         $is_view    = 'Y';
                     }
-                    
+
                     $viewchkCount= RoleWisePermission::where('branch_id',$store_id)->where('role_id',$row->id)->where('permission_id',$srow->id)->where('type_id',1)->count();
                     if($viewchkCount>0){
                         $is_view_chk    = 'Y';
                     }
-                    
+
                     $addCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',2)->count();
                     if($addCount>0){
                         $is_add    = 'Y';
@@ -695,7 +783,7 @@ class DashboardController extends Controller
                         'is_upload_chk'   => $is_upload_chk,
                     );
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -705,9 +793,9 @@ class DashboardController extends Controller
             }
 
             $data['store_role'] = $store_role;
-            
+
             //echo '<pre>';print_r($data['store_role']);exit;
-						
+
             return view('admin.embloyees.edit', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -722,7 +810,7 @@ class DashboardController extends Controller
 			// SupplierBank::where('supplier_id',$id)->delete();
 			// SupplierGst::where('supplier_id',$id)->delete();
 			// SupplierContactDetails::where('supplier_id',$id)->delete();
-			
+
             return redirect()->back()->with('success', 'Supplier deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());

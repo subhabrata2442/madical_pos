@@ -5349,7 +5349,7 @@ to {
 	position: absolute;
 	bottom: 1vw;
 	left: 0;
-	font-size: 1vw;
+	font-size: .80vw;
 	text-align: left;
 	text-shadow: rgba(0, 0, 0, 0.3) 1px 1px;
 	-webkit-transition: all .3s ease-in-out;
@@ -5359,7 +5359,7 @@ to {
 	padding: 0 .5vw;
 }
 .metroBox img {
-	width: 3vw;
+	width: 2vw;
 	display: block;
 }
 .metroBox:hover {
@@ -5995,7 +5995,7 @@ to {
 
 @media only screen and (max-width: 1366px) {
 	.metroBox {
-		height: 12.2vw;
+		height: 10vw;
 	}
 }
 

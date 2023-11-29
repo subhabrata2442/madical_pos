@@ -69,6 +69,83 @@
 
     </div>
     @yield('scripts')
+
+
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
+    <script>
+
+        var admin_type = {{Session::get('admin_type')}};
+        var store_id	= {{Session::get('store_id')}};
+        var mainUrl = '{{url('/')}}';
+
+
+
+
+        $(document).ready(function() {
+
+            // alert(mainUrl);
+
+
+            Pusher.logToConsole = true;
+            var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+                cluster: "{{ env('PUSHER_APP_CLUSTER') }}"
+            });
+            var channel = pusher.subscribe('stockalert-channel');
+            channel.bind('stockalert-event-send-meesages', function(data) {
+                console.log(data);
+                var totalunreadnotification = $("#totalunreadnotification").val();
+                var total = (parseFloat(totalunreadnotification)+1)
+                $("#totalunreadnotification").val(total);
+
+                var urls = mainUrl+'/'+data.urls;
+                var htmls = '<a href="'+urls+'" class="dropdown-item"><i class="fas fa-envelope mr-2"></i>'+data.message+'</a>';
+
+                if(admin_type==1){
+                    if(data.message!=''){
+                        $(".zeronoti").hide();
+                        $(".appendnotification").append(htmls);
+                        $(".totalNoti").html(total);
+                        toastr.success(data.message);
+                    }
+                }else if(admin_type==2){
+                    if(data.store_id==store_id){
+                        if(data.message!=''){
+                            $(".zeronoti").hide();
+                            $(".appendnotification").append(htmls);
+                            $(".totalNoti").html(total);
+                            toastr.success(data.message);
+                        }
+                    }
+                }
+
+            });
+        });
+
+        function seenNotification(ids){
+            console.log(ids);
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '{{url('/seenNotification')}}',
+                dataType: 'html',
+                data: {'ids':ids},
+                success: function(data) {
+
+                },
+                beforeSend: function() {
+
+                },
+                complete: function() {
+
+                }
+            });
+
+        }
+
+
+    </script>
+
 </body>
 
 </html>
