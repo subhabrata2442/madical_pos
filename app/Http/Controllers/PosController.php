@@ -686,7 +686,7 @@ class PosController extends Controller
                     Notification::create($datainsert);
 
                 }
-                exit;
+
 
 			}
 		}
