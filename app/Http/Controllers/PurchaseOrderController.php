@@ -3070,8 +3070,18 @@ class PurchaseOrderController extends Controller
 			//echo '<pre>';print_r($users);exit;
 
             if ($request->ajax()) {
-				$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+				$purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+
+
                 return DataTables::of($purchase)
+                    ->addColumn('store_name', function ($row) {
+                        if(!empty($row->user->name)){
+                            return $row->user->name;
+                        }else{
+                            return '';
+                        }
+
+                    })
                     ->addColumn('invoice_no', function ($row) {
                         return $row->invoice_no;
                     })

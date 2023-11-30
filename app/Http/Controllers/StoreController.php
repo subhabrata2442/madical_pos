@@ -25,7 +25,7 @@ class StoreController extends Controller
 
             if ($request->ajax()) {
                 $users = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
-                return DataTables::of($users) 
+                return DataTables::of($users)
                     ->addColumn('name', function ($row) {
                         return $row->name;
                     })
@@ -34,7 +34,7 @@ class StoreController extends Controller
                     })
                     ->addColumn('ph_no', function ($row) {
                         return $row->phone;
-                    }) 
+                    })
                     ->addColumn('status', function ($row) {
                         $status = '';
                         if ($row->status == 0) {
@@ -103,9 +103,9 @@ class StoreController extends Controller
 					'role'   		=> 2,
 					'status'		=> 1,
 				);
-                
+
 				//echo '<pre>';print_r($_POST);exit;
-				
+
 				$store=User::create($store_data);
 				$store_id=$store->id;
 
@@ -118,8 +118,8 @@ class StoreController extends Controller
                 $roll_print_ids     = $request->print;
                 $roll_upload_ids    = $request->upload;
                 $role_permission_id = $request->employee_role_permission_id;
-                
-    
+
+
                 $rollPermision=[];
                 if(isset($roll_ids)){
                     if(count($roll_ids)>0){
@@ -130,7 +130,7 @@ class StoreController extends Controller
                             for($i=0;count($role_wise_permission_ids)>$i;$i++){
                                 $subRollPermisionType=[];
                                 $subRollPermisionTypeIds=[];
-                                
+
                                 $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -141,7 +141,7 @@ class StoreController extends Controller
                                     $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                     $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                     $subRollPermisionTypeIds[]=$subRolltypeId;
-                                    
+
                                 }
                                 $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                                 if($isAddPermision!=''){
@@ -199,7 +199,7 @@ class StoreController extends Controller
                                     );
                                 }
                             }
-                            
+
                             //echo '<pre>';print_r($role_wise_permission_ids);
 
                             $rollPermision[]=array(
@@ -223,7 +223,7 @@ class StoreController extends Controller
                         );
                         //echo '<pre>';print_r($userRolePermission);exit;
                         UserRolePermission::create($userRolePermission);
-                        
+
                         foreach($row['subRollPermision'] as $sRow){
                             $sub_roll_id=$sRow['sub_roll_id'];
                             foreach($sRow['permisionType'] as $key=>$val){
@@ -258,7 +258,7 @@ class StoreController extends Controller
             		Site_settings::create($data);
             	}
 
-				
+
 				return redirect()->back()->with('success', 'Store Added successfully');
             }
             $data = [];
@@ -282,7 +282,7 @@ class StoreController extends Controller
                     $is_download= 'N';
                     $is_print   = 'N';
                     $is_upload  = 'N';
-                    
+
                     $is_view_chk    = 'N';
                     $is_add_chk     = 'N';
                     $is_edit_chk    = 'N';
@@ -319,9 +319,9 @@ class StoreController extends Controller
                     if($uploadCount>0){
                         $is_upload    = 'Y';
                     }
-                    
+
                     //echo '<pre>';print_r($is_view);exit;
-                    
+
                     $sub_roll[]=array(
                         'roll_id'           => $srow->id,
                         'parent_id'         => $srow->parent_id,
@@ -343,7 +343,7 @@ class StoreController extends Controller
                     );
                     //echo '<pre>';print_r($sub_roll);exit;
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -353,13 +353,13 @@ class StoreController extends Controller
             }
 
             $data['store_role'] = $store_role;
-            
+
 			//echo '<pre>';print_r($data['store_role']);exit;
 
 
 
 
-			
+
             return view('admin.store.add', compact('data'));
         } catch (\Exception $e) {
             $return_data['success'] = 0;
@@ -371,22 +371,23 @@ class StoreController extends Controller
         try {
             $store_id = base64_decode($id);
 			if ($request->isMethod('post')) {
-				
+
 			$validator = Validator::make($request->all(), [
 				'email' 	=> 'required|email|unique:users,email,' . $store_id,
 				'phone' 	=> 'required|numeric|unique:users,phone,' . $store_id,
 				'full_name' => 'required',
 			]);
-			
+
 			if($request->password!=''){
 				$validator = Validator::make($request->all(), [
-				'password' => 'min:6|required_with:password_confirm|same:password_confirm',
+				'password' => 'min:6',
 				]);
+
 			}
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-            
+
             $roll_ids           = $request->roll_ids;
             $roll_view_ids      = $request->view;
             $roll_add_ids       = $request->add;
@@ -396,7 +397,7 @@ class StoreController extends Controller
             $roll_print_ids     = $request->print;
             $roll_upload_ids    = $request->upload;
             $role_permission_id = $request->employee_role_permission_id;
-            
+
 
             $rollPermision=[];
             if(isset($roll_ids)){
@@ -408,7 +409,7 @@ class StoreController extends Controller
                         for($i=0;count($role_wise_permission_ids)>$i;$i++){
                             $subRollPermisionType=[];
                             $subRollPermisionTypeIds=[];
-                            
+
                             $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -419,7 +420,7 @@ class StoreController extends Controller
                                 $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                 $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                 $subRollPermisionTypeIds[]=$subRolltypeId;
-                                
+
                             }
                             $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                             if($isAddPermision!=''){
@@ -477,7 +478,7 @@ class StoreController extends Controller
                                 );
                             }
                         }
-                        
+
                         //echo '<pre>';print_r($role_wise_permission_ids);
 
                         $rollPermision[]=array(
@@ -503,7 +504,7 @@ class StoreController extends Controller
                     );
                     //echo '<pre>';print_r($userRolePermission);exit;
                     UserRolePermission::create($userRolePermission);
-                    
+
                     foreach($row['subRollPermision'] as $sRow){
                         $sub_roll_id=$sRow['sub_roll_id'];
                         foreach($sRow['permisionType'] as $key=>$val){
@@ -526,14 +527,14 @@ class StoreController extends Controller
 			$array = [
 				'name' 	=> $request->full_name,
 				'email' => $request->email,
-				'phone' => $request->phone
+				'phone' => $request->phone,
 			];
 
-			
 
-			
+
+
 			if($request->password!=''){
-				$array['password']=Hash::make($request->password_confirm);
+				$array['password']=Hash::make($request->password);
 			}
 
 			User::find($store_id)->update($array);
@@ -545,7 +546,7 @@ class StoreController extends Controller
 
             foreach ($settingsData as $key => $value) {
                 $check =Site_settings::where('company_id', $store_id)->where('option_name', $key)->first();
-                
+
                 $data = [
                     'company_id'=>$store_id,
                     'option_name'=>$key,
@@ -556,13 +557,13 @@ class StoreController extends Controller
                 }else{
                     Site_settings::create($data);
                 }
-                
+
             }
 
-            
+
 			return redirect()->back()->with('success', 'Store Updated successfully');
         }
-            
+
             $data = [];
             $data['heading'] 	= 'Store Edit';
             $data['breadcrumb'] = ['Store', 'Edit'];
@@ -582,7 +583,7 @@ class StoreController extends Controller
                 if($userRolePermissionCount>0){
                     $is_checked='Y';
                 }
-                
+
                 foreach($subRolePermission as $srow){
                     $is_view    = 'N';
                     $is_add     = 'N';
@@ -600,18 +601,18 @@ class StoreController extends Controller
                     $is_print_chk   = 'N';
                     $is_upload_chk  = 'N';
 
-                    
+
 
                     $viewCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',1)->count();
                     if($viewCount>0){
                         $is_view    = 'Y';
                     }
-                    
+
                     $viewchkCount= RoleWisePermission::where('branch_id',$store_id)->where('role_id',$row->id)->where('permission_id',$srow->id)->where('type_id',1)->count();
                     if($viewchkCount>0){
                         $is_view_chk    = 'Y';
                     }
-                    
+
                     $addCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',2)->count();
                     if($addCount>0){
                         $is_add    = 'Y';
@@ -683,7 +684,7 @@ class StoreController extends Controller
                         'is_upload_chk'   => $is_upload_chk,
                     );
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -698,7 +699,7 @@ class StoreController extends Controller
             $data['site_settings'] = Site_settings::where('company_id', $store_id)->get();
 
 			//echo '<pre>';print_r($data['store_role']);exit;
-						
+
             return view('admin.store.edit', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -713,7 +714,7 @@ class StoreController extends Controller
 			// SupplierBank::where('supplier_id',$id)->delete();
 			// SupplierGst::where('supplier_id',$id)->delete();
 			// SupplierContactDetails::where('supplier_id',$id)->delete();
-			
+
             return redirect()->back()->with('success', 'Supplier deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());

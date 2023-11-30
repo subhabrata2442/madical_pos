@@ -238,6 +238,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/low_stock_product', [ReportController::class, 'low_stock_product'])->name('low_stock_product');
 		Route::match(['GET'], '/zero_stock_product', [ReportController::class, 'zero_stock_product'])->name('zero_stock_product');
         Route::match(['GET'], '/near_expiry_stock', [ReportController::class, 'near_expiry_stock'])->name('near_expiry_stock');
+
+        Route::match(['GET'], '/near_expiry_stock_download', [ReportController::class, 'near_expiry_stock_download'])->name('near_expiry_stock_download');
+        Route::match(['GET'], '/top_selling_product_download', [ReportController::class, 'top_selling_product_download'])->name('top_selling_product_download');
+        Route::match(['GET'], '/low_stock_product_download', [ReportController::class, 'low_stock_product_download'])->name('low_stock_product_download');
+        Route::match(['GET'], '/purchase_invoice_wise_download', [ReportController::class, 'purchase_invoice_wise_download'])->name('purchase_invoice_wise_download');
+        Route::match(['GET'], '/purchase_product_wise_download', [ReportController::class, 'purchase_product_wise_download'])->name('purchase_product_wise_download');
+
 	});
 
 

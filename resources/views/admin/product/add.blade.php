@@ -167,7 +167,7 @@
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="company" data-title="Company"><i class="fas fa-plus"></i></a></div>
           </div>
-          
+
         </div>
       </div>
       <div class="card">
@@ -207,14 +207,26 @@
 </div>
 @endsection
 
-@section('scripts') 
-<script src="{{ url('assets/admin/js/product.js') }}"></script> 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
+@section('scripts')
+<script src="{{ url('assets/admin/js/product.js') }}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
 <script>
   $(document).ready(function(){
   $(".toggleBtn").click(function(){
     $(".toggleArea").slideToggle();
   });
+
+    $('#brand').select2( {
+        theme: 'bootstrap-5'
+    });
+
 });
-</script> 
-@endsection 
+</script>
+@endsection

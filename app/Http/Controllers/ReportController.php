@@ -48,6 +48,13 @@ use Illuminate\Support\Facades\Session;
 Use Illuminate\Support\Str;
 use Auth;
 
+use App\Exports\NearExpiryStockDownload;
+use App\Exports\TopSellingProductDownload;
+use App\Exports\LowStockProductDownload;
+use App\Exports\PurchaseInvoiceWiseDownload;
+use App\Exports\PurchaseProductWiseDownload;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 
 class ReportController extends Controller
@@ -3471,17 +3478,27 @@ class ReportController extends Controller
 		return $pdf->stream(now().'-invoice.pdf');
     }
 
-	public function top_selling_products(){
+	public function top_selling_products(Request $request){
 
 		$admin_type = Session::get('admin_type');
 		// echo $admin_type;exit;
 		if($admin_type==1){
-			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-				->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-				->groupBy('products.id', 'products.product_name')
-				->orderBy('sales_count', 'desc')
-				->limit(50)
-				->get();
+            if(!empty($request->get('branch_id'))){
+                $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+                    ->where('sell_stock_products.branch_id', $request->get('branch_id'))
+                    ->groupBy('products.id', 'products.product_name')
+                    ->orderBy('sales_count', 'desc')
+                    ->limit(50)
+                    ->get();
+            }else{
+                $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+                    ->groupBy('products.id', 'products.product_name')
+                    ->orderBy('sales_count', 'desc')
+                    ->limit(50)
+                    ->get();
+            }
 		}else{
 			$store_id	= Session::get('store_id');
 			$topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
@@ -3523,6 +3540,7 @@ class ReportController extends Controller
 		$data['top_products'] = $result;
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 
 		return view('admin.report.top_selling_products', compact('data'));
 	}
@@ -3540,7 +3558,11 @@ class ReportController extends Controller
             }
         }else{
             if($admin_type==1){
-                $low_stock = BranchStockProducts::with('product')->get();
+                if(!empty($request->get('branch_id'))){
+                    $low_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('branch_id'))->get();
+                }else{
+                    $low_stock = BranchStockProducts::with('product')->get();
+                }
             }else{
                 $store_id	= Session::get('store_id');
                 $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
@@ -3551,6 +3573,7 @@ class ReportController extends Controller
 		$data['low_stock'] = $low_stock;
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 
 		return view('admin.report.low_stock_product', compact('data'));
 	}
@@ -3611,6 +3634,41 @@ class ReportController extends Controller
 
 		return view('admin.report.near_expiry_stock', compact('data'));
 
+    }
+
+    public function near_expiry_stock_download(){
+        return Excel::download(new NearExpiryStockDownload, 'Stock-near-expiry.xlsx');
+    }
+
+    public function top_selling_product_download(Request $request){
+
+        $branch_id = $request->branch_id;
+
+        return Excel::download(new TopSellingProductDownload($branch_id), 'top-selling-products.xlsx');
+    }
+
+    public function low_stock_product_download(Request $request){
+        $branch_id = $request->branch_id;
+        return Excel::download(new LowStockProductDownload($branch_id), 'low-stock-product.xlsx');
+    }
+
+    public function purchase_invoice_wise_download(Request $request){
+        $invoice = $request->invoice;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        return Excel::download(new PurchaseInvoiceWiseDownload($invoice, $start_date, $end_date), 'purchase-invoice-wise-report.xlsx');
+    }
+
+
+    public function purchase_product_wise_download(Request $request){
+        $company = $request->company;
+        $dosage = $request->dosage;
+        $brand = $request->brand;
+
+        $invoice = $request->invoice;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        return Excel::download(new PurchaseProductWiseDownload($company, $dosage, $brand, $invoice, $start_date, $end_date), 'purchase-product-wise-report.xlsx');
     }
 
 

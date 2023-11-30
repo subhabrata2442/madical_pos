@@ -86,8 +86,8 @@ class AjaxController extends Controller {
 	public function ajaxpost_requested_stock($request) {
 		$stock_id	= trim($request->stock_id);
 		$store_id	= trim($request->store_id);
-		
-		
+
+
 		//$BranchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('from_store_id',$store_id)
 
 		$branchStockRequestResult=BranchStockRequest::where('stock_id',$stock_id)->where('status',1)->where('from_store_id',$store_id)->groupBy('to_store_id')->selectRaw('sum(r_qty) as t_qty, to_store_id, product_id')->get();
@@ -133,7 +133,7 @@ class AjaxController extends Controller {
 			$result = BranchStockRequest::where('id',$stock_id)->get();
 
 			//print_r($result);exit;
-			
+
 			if(count($result)>0){
 				$req_qty			= $result[0]->r_qty;
 				$product_id			= $result[0]->product_id;
@@ -182,7 +182,7 @@ class AjaxController extends Controller {
 
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;
-				
+
 			}
 
 		}
@@ -221,7 +221,7 @@ class AjaxController extends Controller {
 
 				BranchStockRequest::where('id', $stock_id)->update(['status' =>3]);
 				StockTransferHistory::where('product_mrp', $product_mrp)->where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>3]);
-				
+
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;
 			}
@@ -238,7 +238,7 @@ class AjaxController extends Controller {
 
 		if($stock_id!=''){
 			$result = BranchStockRequest::where('id',$stock_id)->get();
-			
+
 			if(count($result)>0){
 				$req_qty			= $result[0]->r_qty;
 				$product_id			= $result[0]->product_id;
@@ -253,7 +253,7 @@ class AjaxController extends Controller {
 					$avaibleStock +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
 					$prev_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
 				}
-				
+
 				if($avaibleStock<$req_qty){
 					$return_data['status']	= 0;
 					$return_data['msg']		= 'Stock qty is lower then req qty!';
@@ -271,7 +271,7 @@ class AjaxController extends Controller {
 					$sell_price_id=isset($fromBranchProductStockResult[0]->id)?$fromBranchProductStockResult[0]->id:'';
 					BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $storeAvaibleStock]);
 
-				
+
 					$deduct_stock_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
 					BranchStockProducts::where('id', $deduct_stock_id)->update(['t_qty' => $avaibleStock]);
 
@@ -284,12 +284,12 @@ class AjaxController extends Controller {
 						'transfer_to'  	=> $from_store_id,
 					);
 					//print_r($stocktransferData);exit;
-					
+
 					StockTransferHistory::create($stocktransferData);
 
 					BranchStockRequest::where('id', $stock_id)->update(['status' =>2]);
 
-					
+
 
 					$return_data['status']	= 1;
 					echo json_encode($return_data);exit;
@@ -300,7 +300,7 @@ class AjaxController extends Controller {
 
 		exit;
     }
-	
+
 	/*COUNTER POS*/
 	public function ajaxpost_update_stock_product_qty($request) {
 		$branch_id	= $request->branch_id;
@@ -308,24 +308,24 @@ class AjaxController extends Controller {
 		$size_id	= $request->size_id;
 		$stock_id	= $request->stock_id;
 		$qty		= $request->qty;
-		
-		
+
+
 		$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
-		$product_mrp=isset($productRelationshipSizeResult[0]->cost_rate)?$productRelationshipSizeResult[0]->cost_rate:'';						
+		$product_mrp=isset($productRelationshipSizeResult[0]->cost_rate)?$productRelationshipSizeResult[0]->cost_rate:'';
 		$barcode=isset($productRelationshipSizeResult[0]->product_barcode)?$productRelationshipSizeResult[0]->product_barcode:'';
 		$barcode2=isset($productRelationshipSizeResult[0]->barcode2)?$productRelationshipSizeResult[0]->barcode2:'';
 		$barcode3=isset($productRelationshipSizeResult[0]->barcode3)?$productRelationshipSizeResult[0]->barcode3:'';
-		
-		
-		
-		
-		
+
+
+
+
+
 		$branch_product_stock_info=BranchStockProducts::where('id',$stock_id)->get();
-		
+
 		if(count($branch_product_stock_info)>0){
 			$branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('stock_id',$branch_product_stock_info[0]->id)->where('selling_price',$product_mrp)->where('stock_type','counter')->get();
 			$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
-			
+
 			if($sell_price_id!=''){
 				BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type', 'counter')->update(['c_qty' => $qty]);
 			}else{
@@ -339,17 +339,17 @@ class AjaxController extends Controller {
 					'stock_type'  	=> 'counter',
 					'created_at'	=> date('Y-m-d')
 				);
-				
+
 				BranchStockProductSellPrice::create($branchProductStockSellPriceData);
 			}
 		}
-		
+
 		$return_data['status']	= 1;
 		echo json_encode($return_data);
-		
+
 	}
 	/*END COUNTER POS*/
-	
+
 	public function ajaxpost_set_update_stock($request) {
 		$prev_w_qty		= $request->prev_w_qty;
 		$prev_c_qty		= $request->prev_c_qty;
@@ -358,9 +358,9 @@ class AjaxController extends Controller {
 		$stock_id		= $request->stock_id;
 		$price_id		= $request->price_id;
 		$transfer_to	= $request->transfer_to;
-		
+
 		BranchStockProductSellPrice::where('id', $price_id)->where('stock_id', $stock_id)->where('stock_type', 'counter')->update(['w_qty' => $new_w_qty,'c_qty' => $new_c_qty]);
-		
+
 		$stocktransferData=array(
 			'stock_id'		=> $stock_id,
 			'price_id'  	=> $price_id,
@@ -372,14 +372,14 @@ class AjaxController extends Controller {
 		);
 		//print_r($stocktransferData);exit;
 		StockTransferHistory::create($stocktransferData);
-		
-		
+
+
 		$return_data['status']	= 1;
 		echo json_encode($return_data);exit;
 	}
-	
-	
-	
+
+
+
 
 
 	public function ajaxpost_get_sell_product_search($request) {
@@ -415,7 +415,7 @@ class AjaxController extends Controller {
 				}
 			}
 		}
-		
+
 
 		//print_r($result);exit;
 
@@ -424,7 +424,7 @@ class AjaxController extends Controller {
 
 		echo json_encode($return_data);
 	}
-	
+
 	public function ajaxpost_get_sell_product_barcode_search($request) {
 		$search				= $request->search;
 		$result=[];
@@ -446,7 +446,7 @@ class AjaxController extends Controller {
 				);
 			}
 		}
-		
+
 		$return_data['result']	= $result;
 		$return_data['status']	= 1;
 
@@ -572,7 +572,7 @@ class AjaxController extends Controller {
 		}else{
 			$status=0;
 		}
-		
+
 		$return_data['result']	= $product_result;
 		$return_data['status']	= $status;
 		echo json_encode($return_data);
@@ -581,7 +581,7 @@ class AjaxController extends Controller {
 	public function ajaxpost_get_product_byId($request) {
 		$product_id	= $request->product_id;
 		$res = Product::find($product_id);
-		
+
 		$product_result=[];
 		if(isset($res->id)){
 			if($res->id!=''){
@@ -917,11 +917,11 @@ class AjaxController extends Controller {
 	try {
 		//dd($request->all());
 		$branch_id=Auth::user()->id;
-		
+
 		$inward_stock	= $request->inward_stock;
 		//echo '<pre>';print_r($inward_stock);exit;
 
-		
+
 
 		if($inward_stock['invoice_no']!=''){
 			$invoice_no=$inward_stock['invoice_no'];
@@ -972,7 +972,7 @@ class AjaxController extends Controller {
 					$return_data['status']	= 0;
 					echo json_encode($return_data);exit;
 				}
-				
+
 				$branch_id=$inward_stock['store_id'];
 				$purchaseStockData=array(
 					'branch_id'  		=> $inward_stock['store_id'],
@@ -1003,8 +1003,8 @@ class AjaxController extends Controller {
 
 				//$purchaseInwardStockId=2;
 
-				
-				
+
+
 				if(isset($inward_stock['product_detail'])){
 					if(count($inward_stock['product_detail'])>0){
 						$qty_total_net_price = 0;
@@ -1032,7 +1032,7 @@ class AjaxController extends Controller {
 							}else{
 								$product_mrp		= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
 							}
-							
+
 							$product_bonous		= isset($inward_stock['product_detail'][$i]['product_bonous'])?$inward_stock['product_detail'][$i]['product_bonous']:0;
 							$product_qty		= isset($inward_stock['product_detail'][$i]['product_totalQuantity'])?$inward_stock['product_detail'][$i]['product_totalQuantity']:0;
 
@@ -1054,7 +1054,7 @@ class AjaxController extends Controller {
 							$product_profitPercent	= isset($inward_stock['product_detail'][$i]['product_profitPercent'])?$inward_stock['product_detail'][$i]['product_profitPercent']:0;
 
 							$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
-							
+
 							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',$product_expiry_date)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 							if(count($branchProductStockResult)>0){
 								$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
@@ -1127,20 +1127,20 @@ class AjaxController extends Controller {
 				}
 
 
-			
+
 
 
 
 
 			}
 		}
-		
+
 		DB::commit();
 
 		$return_data['msg']		= 'Successfully added';
 		$return_data['status']	= 1;
 		echo json_encode($return_data);
-		
+
 	} catch (\Exception $e) {
 		DB::rollback();
 		$return_data['msg']		= 'Something went wrong';
@@ -1149,54 +1149,54 @@ class AjaxController extends Controller {
 	}
 
 	}
-	
-	
+
+
 	public function daily_product_purchase_history(){
 		$branch_id				= Session::get('branch_id');
 		$purchase_date_result 	= InwardStockProducts::where('branch_id',$branch_id)->where('is_new','Y')->orderBy('id', 'asc')->first();
 		$purchase_start_date	= isset($purchase_date_result->created_at)?date('Y-m-d',strtotime($purchase_date_result->created_at)):'';
-		
+
 		//print_r($branch_id);exit;
-		
+
 		$items=[];
-		
+
 		if($purchase_start_date!=''){
 			$current_date=date('Y-m-d');
-			
+
 			$category_result		= InwardStockProducts::select('category_id')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->distinct()->get();
 			$sub_category_result 	= InwardStockProducts::select('subcategory_id')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->distinct()->get();
 			$size_result 			= InwardStockProducts::select('size_id')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->distinct()->get();
 			$product_result 		= InwardStockProducts::select('product_id')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->distinct()->get();
-			
+
 			//echo '<pre>';print_r($category_result);exit;
-			
+
 			foreach($category_result as $cat_row){
 				$category_id=$cat_row->category_id;
-				
+
 				foreach($sub_category_result as $sub_cat_row){
 					$subcategory_id=$sub_cat_row->subcategory_id;
 					foreach($size_result as $size_row){
 						$size_id=$size_row->size_id;
 						foreach($product_result as $product_row){
 							$product_id=$product_row->product_id;
-							
+
 							$purchase_result = InwardStockProducts::selectRaw('sum(total_ml) as total_ml,sum(product_qty) as product_qty,product_mrp')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->where('is_new','Y')->get();
-							
+
 							$date_wise_total_ml	  	= isset($purchase_result[0]->total_ml)?$purchase_result[0]->total_ml:0;
-							
+
 							//echo '<pre>';print_r($purchase_result);exit;
 							//echo $product_id.'-'.$date_wise_total_ml.'</br>';
-							
+
 							//$purchase_result=[];
-							
+
 							if($date_wise_total_ml>0){
 								$date_wise_total_ml	  	= isset($purchase_result[0]->total_ml)?$purchase_result[0]->total_ml:0;
 								$date_wise_total_qty	= isset($purchase_result[0]->product_qty)?$purchase_result[0]->product_qty:0;
 								$product_mrp			= isset($purchase_result[0]->product_mrp)?$purchase_result[0]->product_mrp:0;
-									
+
 								$closing_stock 		= $date_wise_total_qty;
 								$closing_stock_ml 	= $date_wise_total_ml;
-									
+
 								$last_purchase_history_result = DailyProductPurchaseHistory::select('closing_stock', 'closing_stock_ml')->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->first();
 								$last_purchase_total_ml	  	= isset($last_purchase_history_result->closing_stock_ml)?$last_purchase_history_result->closing_stock_ml:'';
 								$last_purchase_total_qty	= isset($last_purchase_history_result->closing_stock)?$last_purchase_history_result->closing_stock:'';
@@ -1205,21 +1205,21 @@ class AjaxController extends Controller {
 									$closing_stock_ml 	= $last_purchase_total_ml+$date_wise_total_ml;
 								}
 								$check_purchase_history_result = DailyProductPurchaseHistory::select('id', 'total_qty', 'total_ml', 'closing_stock', 'closing_stock_ml')->whereBetween('created_at', [$current_date." 00:00:00", $current_date." 23:59:59"])->where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->orderBy('id', 'DESC')->get();
-								
+
 								//echo '<pre>';print_r($check_purchase_history_result);exit;
-								
+
 								$productRelationshipSizeResult=ProductRelationshipSize::where('product_id',$product_id)->where('size_id',$size_id)->get();
 								$strength_no =isset($productRelationshipSizeResult[0]->strength)?$productRelationshipSizeResult[0]->strength:'';
 								$strength=$strength_no;
 								if($strength_no==''){
 									$strength=0;
 								}
-								
-								
+
+
 								if(count($check_purchase_history_result)>0){
 									$total_qty	= $date_wise_total_qty+$check_purchase_history_result[0]->total_qty;
 									$total_ml	= $date_wise_total_ml+$check_purchase_history_result[0]->total_ml;
-									
+
 									/*$items[]=array(
 										'is_new'			=>'update',
 										'branch_id'  		=> $branch_id,
@@ -1232,9 +1232,9 @@ class AjaxController extends Controller {
 										'closing_stock' 	=> $closing_stock,
 										'closing_stock_ml' 	=> $closing_stock_ml
 									);*/
-									
+
 									DailyProductPurchaseHistory::where('id',$check_purchase_history_result[0]->id)->update(['total_qty' => $total_qty,'total_ml' => $total_ml,'closing_stock' => $closing_stock,'closing_stock_ml' => $closing_stock_ml,'strength' => $strength]);
-										
+
 									InwardStockProducts::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->update(['is_new' => 'N']);
 								}else{
 									$purchase_data=array(
@@ -1252,8 +1252,8 @@ class AjaxController extends Controller {
 									);
 									DailyProductPurchaseHistory::create($purchase_data);
 									InwardStockProducts::where('branch_id',$branch_id)->where('category_id',$category_id)->where('subcategory_id',$subcategory_id)->where('size_id',$size_id)->where('product_id',$product_id)->update(['is_new' => 'N']);
-									
-									
+
+
 									/*$items[]=array(
 										'is_new'			=>'new',
 										'branch_id'  		=> $branch_id,
@@ -1267,29 +1267,29 @@ class AjaxController extends Controller {
 										'closing_stock_ml'  => $closing_stock_ml,
 										'product_mrp'		=> $product_mrp
 									);*/
-									
+
 								}
 							}
 						}
 					}
 				}
 			}
-			
-			//echo '<pre>';print_r($items);exit;	
-			//echo 'success';exit;	
+
+			//echo '<pre>';print_r($items);exit;
+			//echo 'success';exit;
 		}else{
 			//echo 'Not data found';exit;
-		}	
+		}
 	}
 
-	
+
 
 	public function ajaxpost_check_product_barcode($request) {
 		$product_barcode	= trim($request->product_barcode);
 		$product_id			= trim($request->product_id);
-		
+
 		$product_result=Product::where('product_barcode',$product_barcode)->get();
-		
+
 		if(count($product_result)>0){
 			if($product_id!=''){
 				if($product_result[0]->id!=$product_id){
@@ -1300,13 +1300,13 @@ class AjaxController extends Controller {
 				$return_data['msg']		= 'This barcode already exists!';
 				$return_data['status']	= 0;
 			}
-			
+
 		}else{
 			$return_data['status']	= 1;
 		}
 		echo json_encode($return_data);
 	}
-	
+
 	public function ajaxpost_set_feature_option($request) {
 		$product_type	= $request->product_type;
 		$feature_title	= $request->feature_title;
@@ -1428,7 +1428,7 @@ class AjaxController extends Controller {
 			}else{
 				$return_data['status']	= 0;
 			}
-			
+
 		}
 		echo json_encode($return_data);
 	}
@@ -1459,21 +1459,21 @@ class AjaxController extends Controller {
 
 	public function ajaxpost_update_inward_stock($request) {
 
-		
-		
+
+
 		// DB::beginTransaction();
-	
+
 		// try {
 			//dd($request->all());
 			$branch_id=Auth::user()->id;
-			
+
 			$inward_stock	= $request->inward_stock;
 			//echo '<pre>';print_r($inward_stock);exit;
-			
+
 			$purchaseId = $inward_stock['purchaseId'];
 
 			// echo $purchaseId;exit;
-			
+
 			if($inward_stock['invoice_no']!=''){
 				$invoice_no=$inward_stock['invoice_no'];
 				$count=PurchaseInwardStock::where('invoice_no',$invoice_no)->whereNotIn('id', [$purchaseId])->count();
@@ -1483,7 +1483,7 @@ class AjaxController extends Controller {
 					$return_data['status']	= 0;
 					echo json_encode($return_data);exit;
 				}else{
-					
+
 					$product_total_profit=0;
 					$productItemErrorMsg=[];
 					if(isset($inward_stock['product_detail'])){
@@ -1517,13 +1517,13 @@ class AjaxController extends Controller {
 						$return_data['status']	= 0;
 						echo json_encode($return_data);exit;
 					}
-	
+
 					if(count($productItemErrorMsg)>0){
 						$return_data['msg']		= $productItemErrorMsg[0];
 						$return_data['status']	= 0;
 						echo json_encode($return_data);exit;
 					}
-					
+
 					$branch_id=$inward_stock['store_id'];
 					$purchaseStockData=array(
 						'branch_id'  		=> $inward_stock['store_id'],
@@ -1551,17 +1551,17 @@ class AjaxController extends Controller {
 					$purchaseInwardStock	= PurchaseInwardStock::where('id', $purchaseId)->update($purchaseStockData);
 					// $purchaseInwardStockId	= $purchaseInwardStock->id;
 					//echo '<pre>';print_r($purchaseStockData);exit;
-	
+
 					//$purchaseInwardStockId=2;
 
 
-					
+
 					$checkoldinwardstock = InwardStockProducts::where('inward_stock_id', $purchaseId)->get();
 
 					// print_r($checkoldinwardstock->toArray());exit;
-	
-					
-					
+
+
+
 					if(isset($inward_stock['product_detail'])){
 						if(count($inward_stock['product_detail'])>0){
 							$qty_total_net_price = 0;
@@ -1571,18 +1571,18 @@ class AjaxController extends Controller {
 								$product_id=$inward_stock['product_detail'][$i]['product_id'];
 
 								$product_info=Product::find($inward_stock['product_detail'][$i]['product_id']);
-	
+
 								$prev_stock=isset($product_info->stock_qty)?$product_info->stock_qty:0;
 								$current_stock=0;
 								$current_stock += $prev_stock;
 								$current_stock += $inward_stock['product_detail'][$i]['product_totalQuantity'];
-	
+
 								$product_barcode=$inward_stock['product_detail'][$i]['product_barcode'];
-	
+
 								$product_expiry_date=$inward_stock['product_detail'][$i]['product_expiry_date'];
-	
-	
-	
+
+
+
 								$product_isChronic = $inward_stock['product_detail'][$i]['product_isChronic'];
 								$product_mrp = 0;
 								if($product_isChronic == 'Yes'){
@@ -1590,10 +1590,10 @@ class AjaxController extends Controller {
 								}else{
 									$product_mrp		= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
 								}
-								
+
 								$product_bonous		= isset($inward_stock['product_detail'][$i]['product_bonous'])?$inward_stock['product_detail'][$i]['product_bonous']:0;
 								$product_qty		= isset($inward_stock['product_detail'][$i]['product_totalQuantity'])?$inward_stock['product_detail'][$i]['product_totalQuantity']:0;
-	
+
 								$product_brand		= isset($inward_stock['product_detail'][$i]['product_brand'])?$inward_stock['product_detail'][$i]['product_brand']:0;
 								$product_brand_id	= isset($product_info->brand_id)?$product_info->brand_id:0;
 								$product_dosage		= isset($inward_stock['product_detail'][$i]['product_dosage'])?$inward_stock['product_detail'][$i]['product_dosage']:0;
@@ -1602,20 +1602,20 @@ class AjaxController extends Controller {
 								$product_company_id	= isset($product_info->company_id)?$product_info->company_id:0;
 								//$product_drugstore	= isset($inward_stock['product_detail'][$i]['product_drugstore'])?$inward_stock['product_detail'][$i]['product_drugstore']:0;
 								//$drugstore_id		= isset($product_info->drugstore_id)?$product_info->drugstore_id:0;
-	
+
 								$product_package	= isset($inward_stock['product_detail'][$i]['product_package'])?$inward_stock['product_detail'][$i]['product_package']:0;
 								$net_price			= isset($inward_stock['product_detail'][$i]['product_netPrice'])?$inward_stock['product_detail'][$i]['product_netPrice']:0;
 								$product_rate		= isset($inward_stock['product_detail'][$i]['product_rate'])?$inward_stock['product_detail'][$i]['product_rate']:0;
-	
+
 								$selling_price		= isset($inward_stock['product_detail'][$i]['product_sellPrice'])?$inward_stock['product_detail'][$i]['product_sellPrice']:0;
 								$product_profit		= isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
 								$product_profitPercent	= isset($inward_stock['product_detail'][$i]['product_profitPercent'])?$inward_stock['product_detail'][$i]['product_profitPercent']:0;
-	
+
 								$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
-								
+
 								$checkinwardstock = InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $product_id)->first();
 								if(!empty($checkinwardstock)){
-									
+
 									$oldstockcheck = BranchStockProducts::where('product_mrp',$checkinwardstock->product_mrp)->whereDate('product_expiry_date','=',$checkinwardstock->product_expiry_date)->where('branch_id',$checkinwardstock->branch_id)->where('product_id',$checkinwardstock->product_id)->first();
 									// print_r("$oldstockcheck");exit;
 									if($oldstockcheck->t_qty < $product_qty){
@@ -1647,7 +1647,7 @@ class AjaxController extends Controller {
 									$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',date("Y-d-m", strtotime('01/'.$product_expiry_date)))->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 									if(count($branchProductStockResult)>0){
 										$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
-		
+
 										$sell_price_t_qty = 0;
 										$sell_price_t_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
 										$sell_price_t_qty +=$product_qty;
@@ -1655,7 +1655,7 @@ class AjaxController extends Controller {
 									}else{
 										$sell_price_t_qty = 0;
 										$sell_price_t_qty +=$product_qty;
-		
+
 										$branchProductStockSellPriceData=array(
 											'branch_id'			=> $branch_id,
 											'product_id'  		=> $product_id,
@@ -1674,8 +1674,8 @@ class AjaxController extends Controller {
 								}
 
 
-								
-	
+
+
 								$inward_stock_product=array(
 									'inward_stock_id'	=> $purchaseId,
 									'branch_id'  		=> $branch_id,
@@ -1710,7 +1710,7 @@ class AjaxController extends Controller {
 									'qty_total_profit'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'],
 								);
 
-								
+
 								if(!empty($checkinwardstock)){
 									InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $product_id)->update($inward_stock_product);
 								}else{
@@ -1739,13 +1739,13 @@ class AjaxController extends Controller {
 								}
 							}
 							if(count($matchingProducts)>0){
-								for ($i=0; $i < count($matchingProducts); $i++) { 
+								for ($i=0; $i < count($matchingProducts); $i++) {
 
 									$checkinwardstockfetch = InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $matchingProducts[$i])->first();
-									
+
 									// print_r($checkinwardstockfetch);exit;
 									$oldstockcheck = BranchStockProducts::where('product_mrp',$checkinwardstockfetch->product_mrp)->whereDate('product_expiry_date','=',$checkinwardstockfetch->product_expiry_date)->where('branch_id',$checkinwardstockfetch->branch_id)->where('product_id',$checkinwardstockfetch->product_id)->first();
-									
+
 
 									$sell_price_t_qty = ($oldstockcheck->t_qty - $checkinwardstockfetch->total_qty);
 
@@ -1764,7 +1764,7 @@ class AjaxController extends Controller {
 									}else{
 										BranchStockProducts::where('id', $oldstockcheck->id)->update($branchProductStockSellPriceData);
 									}
-									
+
 									InwardStockProducts::where('inward_stock_id', $purchaseId)->where('product_id', $matchingProducts[$i])->delete();
 
 
@@ -1774,35 +1774,35 @@ class AjaxController extends Controller {
 							PurchaseInwardStock::where('id',$purchaseId)->update(['qty_total_net_price' => $qty_total_net_price,'qty_total_sell_price' => $qty_total_sell_price,'qty_total_profit' => $qty_total_profit]);
 						}
 
-						
-						
+
+
 
 
 
 					}
-	
-	
-				
-	
-	
-	
-	
+
+
+
+
+
+
+
 				}
 			}
-			
+
 			DB::commit();
-	
+
 			$return_data['msg']		= 'Successfully added';
 			$return_data['status']	= 1;
 			echo json_encode($return_data);
-			
+
 		// } catch (\Exception $e) {
 		// 	DB::rollback();
 		// 	$return_data['msg']		= 'Something went wrong';
 		// 	$return_data['status']	= 0;
 		// 	echo json_encode($e->getMessage());
 		// }
-	
+
 		}
 
 
@@ -1812,7 +1812,7 @@ class AjaxController extends Controller {
 			$reservedSymbols 	= ['-', '+', '<', '>', '@', '(', ')', '~'];
 			$searchTerm 		= str_replace($reservedSymbols, ' ', $searchTerm);
 			$searchValues 		= preg_split('/\s+/', $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
-	
+
 			//print_r($searchValues);exit;
 			$store_id	= Session::get('store_id');
 
@@ -1829,10 +1829,10 @@ class AjaxController extends Controller {
 			// dd($res);
 
 			$result=[];
-	
+
 			if(count($res) > 0){
 				foreach($res as $row){
-					
+
 					$result[]=array(
 						//'id'				=> $row->id,
 						'id'				=> @$row->id,
@@ -1840,16 +1840,16 @@ class AjaxController extends Controller {
 						'product_name'		=> @$row->product_name,
 						//'product_size'		=> $row->size->name,
 					);
-					
+
 				}
 			}
-			
-	
+
+
 			//print_r($result);exit;
-	
+
 			$return_data['result']	= $result;
 			$return_data['status']	= 1;
-	
+
 			echo json_encode($return_data);
 		}
 

@@ -52,14 +52,15 @@
 </div>
 <div class="row">
   <div class="col-12">
+    <a href="{{ route('admin.report.near_expiry_stock_download') }}" class="btn btn-primary">Download Excel</a>
     <div class="card">
       <x-alert />
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Sl NO.</th>
-				<th scope="col">Product Name</th>
-				<th scope="col">Brand Name</th>
+				{{-- <th scope="col">Product Name</th> --}}
+				<th scope="col">Brand</th>
 				<th scope="col">Product Barcode</th>
 				<th scope="col">Dosage</th>
 				<th scope="col">Selling By</th>
@@ -70,7 +71,7 @@
                     @if($purchase->t_qty <= $purchase->product->alert_product_qty)
                         <tr>
                             <td>{{($key+1)}}</td>
-                            <td>{{$purchase->product->product_name}}</td>
+                            {{-- <td>{{$purchase->product->product_name}}</td> --}}
                             <td>{{$purchase->product->brand}}</td>
                             <td>{{$purchase->product->product_barcode}}</td>
                             <td>{{$purchase->product->dosage_name}}</td>

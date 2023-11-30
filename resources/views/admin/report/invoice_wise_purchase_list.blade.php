@@ -111,6 +111,22 @@
 							<button type="button" id="download_report" class="srcBtnWrapGo"><i class="fas fa-download"></i></button>
 						</div>
 					</li> --}}
+
+                    <li>
+                        @php
+                            $invoice = '';
+                            $start_date = '';
+                            $end_date = '';
+                            if(isset($_GET['start_date']) && isset($_GET['end_date'])){
+                                $start_date =$_GET['start_date'];
+                                $end_date =$_GET['end_date'];
+                            }
+                            if (isset($_GET['invoice'])) {
+                                $invoice = $_GET['invoice'];
+                            }
+                        @endphp
+						<a href="{{ url('admin/report/purchase_invoice_wise_download?invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date) }}" class="btn btn-primary">Download Excel</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -129,7 +145,7 @@
 				<th scope="col">Total Qty</th>
 				<th scope="col">Total Cost</th>
 				<th scope="col" class="text-center">Action</th>
-				
+
 			</thead>
 			<tbody>
 				@forelse ($data['purchases'] as $purchase)
@@ -154,7 +170,7 @@
 				@empty
 					<tr ><td colspan="11"> No data found </td></tr>
 				@endforelse
-				
+
 			</tbody>
         </table>
 		{{ $data['purchases']->appends($_GET)->links() }}
@@ -165,7 +181,7 @@
 
 @endsection
 
-@section('scripts') 
+@section('scripts')
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -174,8 +190,8 @@
 <script type="text/javascript">
 
 $(function() {
-	
-	
+
+
 
 	$('#download_report').on("click",function(){
 		var report_type = $('#report_type').val();
@@ -202,8 +218,8 @@ $(function() {
 		    //$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
 			//window.location = window.location.href;
         }
-        
-		
+
+
 	})
 	//Start date range picker
 	/* var start = moment().subtract(29, 'days');
@@ -242,7 +258,7 @@ $(function() {
 	$('.searchDropBtn').on("click",function(){
 		$(".toggleCard").slideToggle();
 	})
-	
+
 	//Cusomer List
 	$("#search_customer").keyup(function() {
 		var search = $(this).val();
@@ -351,5 +367,5 @@ $(function() {
 	});
 });
 
-</script> 
-@endsection 
+</script>
+@endsection
