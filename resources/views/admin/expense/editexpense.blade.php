@@ -8,7 +8,7 @@
       <div class="card">
         <div class="row">
           <x-alert />
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
                 <label for="category_id" class="form-label">Select Category</label>
                 <select name="category_id" id="category_id" class="form-control form-inputtext" required>
@@ -20,15 +20,38 @@
 
                 @error('category_id')
                 <div class="error admin-error">{{ $message }}</div>
-                @enderror 
+                @enderror
             </div>
           </div>
 
-          <div class="col-md-6">
+            @if (Auth::user()->role == 1)
+                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label for="storelist" class="form-label">Select Store</label>
+                        <select name="branch_id" id="branch_id" class="form-control form-inputtext" required>
+                            <option value="">Select Store</option>
+                            @foreach ($data['storelist'] as $key=>$storeitem)
+                                <option value="{{$storeitem->id}}" @if($data['expances']->branch_id==$storeitem->id) selected @endif>{{$storeitem->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+			@endif
+
+          <div class="col-md-4">
             <div class="form-group">
               <label for="amount" class="form-label">Amount</label>
               <input type="text" class="form-control admin-input isnumber" id="amount" name="amount" value="{{ $data['expances']->amount }}" required  autocomplete="off" placeholder="Amount">
               @error('amount')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="expense_date" class="form-label">Date</label>
+              <input type="date" class="form-control admin-input" id="expense_date" name="expense_date" value="{{ $data['expances']->expense_date }}" required  autocomplete="off">
+              @error('expense_date')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
@@ -40,7 +63,7 @@
 
                 @error('category_id')
                 <div class="error admin-error">{{ $message }}</div>
-                @enderror 
+                @enderror
             </div>
           </div>
           <div class="col-12">
@@ -55,14 +78,14 @@
 
 @endsection
 
-@section('scripts') 
-<script src="{{ url('assets/admin/js/product.js') }}"></script> 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
+@section('scripts')
+<script src="{{ url('assets/admin/js/product.js') }}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script>
   $(document).ready(function(){
   $(".toggleBtn").click(function(){
     $(".toggleArea").slideToggle();
   });
 });
-</script> 
-@endsection 
+</script>
+@endsection

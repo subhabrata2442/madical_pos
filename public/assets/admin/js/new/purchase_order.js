@@ -644,7 +644,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(response) {
 					var len = response.result.length;
-					 
+
                     $("#supplier_search_result").empty();
                     for (var i = 0; i < len; i++) {
                         var id = response.result[i]['id'];
@@ -1364,7 +1364,7 @@ $(document).on("click", "#inwardStockSubmitBtm", function() {
     var inward_stock_info = {};
 
     inward_stock_info["total_profit_percent"] = $("#total_profit_percent").text();
-    
+
 
     inward_stock_info["total_qty"] = $("#input-supplier_qty_total").val();
     inward_stock_info["gross_amount"] = $("#input-supplier_gross_amount").val();
@@ -1547,7 +1547,7 @@ $(document).on("click", "#inwardStockSubmitBtmUpdate", function() {
     inward_stock_info["purchaseId"] = $("#purchaseId").val();
 
     inward_stock_info["total_profit_percent"] = $("#total_profit_percent").text();
-    
+
 
     inward_stock_info["total_qty"] = $("#input-supplier_qty_total").val();
     inward_stock_info["gross_amount"] = $("#input-supplier_gross_amount").val();
@@ -1708,7 +1708,7 @@ function barcodeScanner(barcode) {
                 $("#search_barcode_product").focus();
                 toastr.error('Product not found');
             }
-            
+
 
         }
     });
@@ -1852,7 +1852,7 @@ $(document).on('keyup', '#payment_debt_day', function() {
     var payment_debt_day = $(this).val();
     clearTimeout(timeout)
     timeout = setTimeout(function() {
-        // Do AJAX shit here      
+        // Do AJAX shit here
         if (payment_debt_day != '') {
             var selecte_date = moment().add(payment_debt_day, 'days').format('YYYY-MM-DD');
             console.log(selecte_date);
@@ -1870,7 +1870,7 @@ $(document).ready(function() {
 });
 
 function modifyInput(ele) {
-    if (ele.value.length === 2){ 
+    if (ele.value.length === 2){
         ele.value = ele.value + '/';
     }else if (ele.value.length === 3 && ele.value.charAt(2) === '/'){
         ele.value = ele.value.replace('/', '');

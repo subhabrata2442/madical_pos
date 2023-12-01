@@ -7,7 +7,7 @@
                 <div class="table-responsive dataTable-design">
                     <table id="user-table" class="table table-bordered">
                         <thead>
-                            
+                            <th>Store</th>
                             <th>Invoice No</th>
                             <th>Purchase date</th>
                             <th>Total Qty</th>
@@ -34,6 +34,10 @@
                 searchDelay: 350,
                 ajax: "{{ route('admin.purchase.inward_list') }}",
                 columns: [
+                    {
+                        data: 'store_name',
+                        name: 'store_name'
+                    },
                     {
                         data: 'invoice_no',
                         name: 'invoice_no'

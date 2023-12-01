@@ -9,7 +9,7 @@ class PurchaseInwardStock extends Model
 {
     use HasFactory;
     //use SoftDeletes;
-	
+
 	protected $table = 'purchase_inward_stock';
 	protected $guarded	= [];
 
@@ -23,6 +23,10 @@ class PurchaseInwardStock extends Model
 
     public function inwardStockProducts(){
         return $this->hasMany(InwardStockProducts::class,'inward_stock_id','id');
+    }
+
+    public function user(){
+        return $this->hasOne(User::class,'id', 'branch_id');
     }
 
 }

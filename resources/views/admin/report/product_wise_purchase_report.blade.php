@@ -92,16 +92,7 @@
 					<input type="hidden" id="invoice_id" name="invoice_id" value="{{request()->input('invoice_id')}}">
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="customer_last_name" class="form-label">Product Name / Barcode</label>
-					<div class="position-relative">
-						<input type="text" class="form-control" id="search_product" name="product" value="{{request()->input('product')}}" autocomplete="off">
-						<ul id="search_product_list" class="auto_search_result">
-					</div>
-					<input type="hidden" id="product_id" name="product_id" value="{{request()->input('product_id')}}">
-				</div>
-			</div>
+
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="" class="form-label">Select Brand</label>
@@ -110,7 +101,7 @@
 						@forelse ($data['brands'] as $brand)
 							<option value="{{$brand->id}}" {{request()->input('brand') == $brand->id ? 'selected' : ''}}>{{$brand->name}}</option>
 						@empty
-							
+
 						@endforelse
 					</select>
 				</div>
@@ -123,7 +114,7 @@
 						@forelse ($data['dosages'] as $dosage)
 							<option value="{{$dosage->id}}" {{request()->input('dosage') == $dosage->id ? 'selected' : ''}}>{{$dosage->name}}</option>
 						@empty
-							
+
 						@endforelse
 					</select>
 				</div>
@@ -136,11 +127,26 @@
 						@forelse ($data['companies'] as $company)
 							<option value="{{$company->id}}" {{request()->input('company') == $company->id ? 'selected' : ''}}>{{$company->name}}</option>
 						@empty
-							
+
 						@endforelse
 					</select>
 				</div>
 			</div>
+            @if (Auth::user()->role == 1)
+                <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label for="" class="form-label">Select Store</label>
+                        <select class="form-control custom-select form-control-select" id="" name="store_id">
+                            <option value="">Select Store</option>
+                            @forelse ($data['storeUsers'] as $store)
+                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                            @empty
+
+                            @endforelse
+                        </select>
+                    </div>
+                </div>
+            @endif
 			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="" class="form-label">Select Brand</label>
@@ -149,7 +155,7 @@
 					</select>
 				</div>
 			</div> --}}
-			
+
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -173,6 +179,42 @@
 							<button type="button" id="download_report" class="srcBtnWrapGo"><i class="fas fa-download"></i></button>
 						</div>
 					</li> --}}
+
+                    <li>
+                        @php
+                            $company = '';
+                            $dosage = '';
+                            $brand = '';
+                            $invoice = '';
+                            $start_date = '';
+                            $end_date = '';
+                            $store_id = '';
+
+                            if (isset($_GET['company'])) {
+                                $company = $_GET['company'];
+                            }
+                            if (isset($_GET['dosage'])) {
+                                $dosage = $_GET['dosage'];
+                            }
+                            if (isset($_GET['brand'])) {
+                                $brand = $_GET['brand'];
+                            }
+                            if (isset($_GET['invoice'])) {
+                                $invoice = $_GET['invoice'];
+                            }
+                            if (isset($_GET['start_date'])) {
+                                $start_date = $_GET['start_date'];
+                            }
+                            if (isset($_GET['end_date'])) {
+                                $end_date = $_GET['end_date'];
+                            }
+                            if (isset($_GET['store_id'])) {
+                                $store_id = $_GET['store_id'];
+                            }
+                        @endphp
+						<a href="{{ url('admin/report/purchase_product_wise_download?company='.$company.'&dosage='.$dosage.'&brand='.$brand.'&invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
+					</li>
+
 				</ul>
 			</div>
 		</div>
@@ -199,7 +241,7 @@
 		</form>
 		<a href="javascript:;" id="download" data-date="" class="downloadBtn"><i class="fas fa-download"></i> Download</a>
 	  </div> --}}
-	  
+
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
@@ -239,7 +281,7 @@
 			@empty
 				<tr ><td colspan="13"> No data found </td></tr>
 			@endforelse
-			
+
           </tbody>
         </table>
 		{{ $data['products']->appends($_GET)->links() }}
@@ -250,7 +292,7 @@
 
 @endsection
 
-@section('scripts') 
+@section('scripts')
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -259,10 +301,10 @@
 <script type="text/javascript">
 
 $(function() {
-	
-	
 
-	
+
+
+
 
     $('#reportrange').daterangepicker({
         //startDate: start,
@@ -289,7 +331,7 @@ $(function() {
 	$('.searchDropBtn').on("click",function(){
 		$(".toggleCard").slideToggle();
 	})
-	
+
 	//Cusomer List
 	$("#search_customer").keyup(function() {
 		var search = $(this).val();
@@ -398,5 +440,5 @@ $(function() {
 	});
 });
 
-</script> 
-@endsection 
+</script>
+@endsection

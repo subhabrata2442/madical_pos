@@ -10,12 +10,12 @@ class BranchStockProducts extends Model
 {
     use HasFactory;
     //use SoftDeletes;
-	
+
 	protected $table = 'branch_stock_products';
 	protected $guarded	= [];
-	
+
 	public function size(){
-    return $this->hasOne(Size::class,'id', 'size_id'); 
+    return $this->hasOne(Size::class,'id', 'size_id');
   }
   public function product(){
     return $this->hasOne(Product::class,'id','product_id');
@@ -26,5 +26,9 @@ class BranchStockProducts extends Model
   public function product_barcode(){
     return $this->hasOne(ProductRelationshipSize::class, 'product_id', 'product_id')->first();
   }
+
+  public function user(){
+        return $this->hasOne(User::class,'id', 'branch_id');
+    }
 
 }

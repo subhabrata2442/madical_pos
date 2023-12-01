@@ -255,7 +255,7 @@ if($adminId!=1){
 
           <div class="col-lg-2 col-md-2 col-sm-4 col-12"> <a href="{{ route('admin.report.top_selling_products') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #052d72;"><span>Top selling products</span><img src="{{ url('assets/admin/new/images/icon/top-selling-product.svg') }}" alt=""/></a> </div>
 
-          <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="{{ route('admin.report.low_stock_product') }}" class="check_url_permision metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #8ca32f;"><span>Low stock product</span><img src="{{ url('assets/admin/new/images/icon/low-stock-product.svg') }}" alt=""/></a> </div>
+          <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="{{ route('admin.report.low_stock_product') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #8ca32f;"><span>Low stock product</span><img src="{{ url('assets/admin/new/images/icon/low-stock-product.svg') }}" alt=""/></a> </div>
 
           <div class="col-lg-2 col-md-2 col-sm-4 col-12"> <a href="{{ route('admin.report.zero_stock_product') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #e77272;" ><span>Zero stock product</span><img src="{{ url('assets/admin/new/images/icon/zero-stock-product.svg') }}" alt=""/></a> </div>
           <div class="col-lg-2 col-md-2 col-sm-4 col-12"> <a href="{{ route('admin.report.near_expiry_stock') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #2e7fe6;" ><span>Stock near expiry</span><img src="{{ url('assets/admin/new/images/icon/11.svg') }}" alt=""/></a> </div>

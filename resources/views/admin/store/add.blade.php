@@ -38,8 +38,7 @@
                <div class="col-md-6">
                   <div class="form-group">
                      <label for="password" class="form-label">Password</label>
-                     <input type="text" class="form-control admin-input" id="password" name="password"
-                        autocomplete="off">
+                     <input type="text" class="form-control admin-input" id="password" name="password" autocomplete="off" required>
                      @error('password')
                      <div class="error admin-error">{{ $message }}</div>
                      @enderror </div>
@@ -73,7 +72,7 @@
                          <td width="10%" bgcolor="#f3f3f3" class="center bold">Upload</td>
                        </tr>
                      </tbody>
-     
+
                      <tbody id="sproduct_detail_record">
                        @php($count=0)
                        @foreach ($data['store_role'] as $value)
@@ -134,7 +133,7 @@
                            <input type="checkbox" class="per_delete_{{$count}}" name="delete[{{$count}}][{{$subRoll['roll_id']}}]"
                              id="del_chk_{{$subRoll['roll_id']}}" value="4" <?php if($subRoll['is_delete_chk']=='Y'){ echo 'checked';} ?>>
                            @endif
-     
+
                          </td>
                          <td class="center" onmouseover="checkboxOver({{$count}})" onmouseleave="checkboxleave({{$count}})"
                            id="exprt_{{$subRoll['roll_id']}}">
@@ -144,7 +143,7 @@
                            <input type="checkbox" class="per_export_{{$count}}" name="download[{{$count}}][{{$subRoll['roll_id']}}]"
                              id="export_chk_{{$subRoll['roll_id']}}" value="5" <?php if($subRoll['is_download_chk']=='Y'){ echo 'checked';} ?>>
                            @endif
-     
+
                          </td>
                          <td class="center" onmouseover="checkboxOver({{$count}})" onmouseleave="checkboxleave({{$count}})"
                            id="print_{{$subRoll['roll_id']}}">
@@ -154,7 +153,7 @@
                            <input type="checkbox" class="per_print_{{$count}}" name="print[{{$count}}][{{$subRoll['roll_id']}}]"
                              id="print_chk_{{$subRoll['roll_id']}}" value="6" <?php if($subRoll['is_print_chk']=='Y'){ echo 'checked';} ?>>
                            @endif
-     
+
                          </td>
                          <td class="center" onmouseover="checkboxOver({{$count}})" onmouseleave="checkboxleave({{$count}})"
                            id="upload_{{$subRoll['roll_id']}}">
@@ -164,17 +163,17 @@
                            <input type="checkbox" class="per_upload_{{$count}}" name="upload[{{$count}}][{{$subRoll['roll_id']}}]"
                              id="upload_chk_{{$subRoll['roll_id']}}" value="7" <?php if($subRoll['is_upload_chk']=='Y'){ echo 'checked';} ?>>
                            @endif
-     
+
                          </td>
                        </tr>
                        @endforeach
-     
+
                        @php($count++)
                        @endforeach
-     
+
                      </tbody>
                    </table>
-     
+
                  </div>
                </div>
              </div>
@@ -212,7 +211,7 @@
       });
       $('#manage-role-input-section').html(manage_role_input);
    });
- 
+
    function pagesCheck(value) {
       if ($('#ModuleName_' + value).prop("checked") == true) {
          $('.per_view_' + value).prop('checked', true);
@@ -234,17 +233,17 @@
          // $('.home_navigation_data_id_'+value).prop('disabled',true);
       }
    }
- 
+
    function checkboxOver(id) {
       //console.log('checkboxOver',id);
       $('.mouseover' + id).css('text-indent', '0px');
    }
- 
+
    function checkboxleave(id) {
       //console.log('checkboxleave',id);
       $('.mouseover' + id).css('text-indent', '-9999px');
    }
- 
+
    function indvCheck(data_id, id, parent) {
       if ($('#view_chk_' + data_id).prop("checked") == true) {
          $('#ModuleName_' + id).prop('checked', true);

@@ -83,7 +83,7 @@
                             @endforeach
                         </select>
 					</div>
-					
+
 				</div>
 			</div>
 			@endif
@@ -98,7 +98,7 @@
                             @endforeach
                         </select>
 					</div>
-					
+
 				</div>
 			</div>
 			<div class="col-12">
@@ -109,7 +109,7 @@
 					<li>
 						<button class="saveBtn-2" type="submit">Search <i class="fas fa-arrow-circle-right"></i></button>
 					</li>
-					
+
 				</ul>
 			</div>
 		</div>
@@ -123,7 +123,7 @@
                 <div class="table-responsive dataTable-design">
                     <table id="user-table" class="table table-bordered">
                         <thead>
-                            
+
                             <th>Sl No.</th>
                             <th>Store</th>
                             <th>Category</th>
@@ -140,7 +140,7 @@
                                     <td>{{$item->expensecategory->category_name}}</td>
                                     <td>{{number_format($item->amount)}}</td>
                                     <td>{{$item->notes}}</td>
-                                    <td>{{date('m-d-Y', strtotime(str_replace('.', '/', $item->created_at)))}}</td>
+                                    <td>{{date('m-d-Y', strtotime(str_replace('.', '/', $item->expense_date)))}}</td>
                                     <td>
                                         <div class="dropdown">
                                             <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -178,7 +178,7 @@
     </div>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -187,8 +187,8 @@
 <script type="text/javascript">
 
 $(function() {
-	
-	
+
+
 
 	$('#download_report').on("click",function(){
 		var report_type = $('#report_type').val();
@@ -215,8 +215,8 @@ $(function() {
 		    //$(this).attr('href',url+'?start_date='+start_date+'&end_date='+end_date);
 			//window.location = window.location.href;
         }
-        
-		
+
+
 	})
 	//Start date range picker
 	/* var start = moment().subtract(29, 'days');
@@ -255,7 +255,7 @@ $(function() {
 	$('.searchDropBtn').on("click",function(){
 		$(".toggleCard").slideToggle();
 	})
-	
+
 	//Cusomer List
 	$("#search_customer").keyup(function() {
 		var search = $(this).val();
@@ -364,5 +364,5 @@ $(function() {
 	});
 });
 
-</script> 
-@endsection 
+</script>
+@endsection

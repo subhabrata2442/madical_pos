@@ -20,11 +20,11 @@ class CheckPermission
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-		
+
         //dd($roles);
         if (!Auth::check())
             return redirect()->route('auth.login');
-			
+
         $user = Auth::user();
 
 		$is_store	= 'N';
@@ -35,7 +35,7 @@ class CheckPermission
 
 		$segments = request()->segments();
 		$slug=reset($segments).'-'.$segments[1].'-'.$segments[2];
-		//echo $slug;exit;
+		// echo $slug;exit;
 
 		if($is_store=='Y'){
 			$user_id	= $user->id;
@@ -53,15 +53,15 @@ class CheckPermission
 			$role_wise_permission_result = RoleSubPermission::where('slug',$slug)->first();
 
 			//echo '<pre>';print_r($role_wise_permission_result);exit;
-			
+
 			$current_page_permision_id		= isset($role_wise_permission_result->role_id)?$role_wise_permission_result->role_id:'0';
 			$current_page_permision_type_id	= isset($role_wise_permission_result->type_id)?$role_wise_permission_result->type_id:'0';
 
 			//echo '<pre>';print_r($roles);exit;
-			
+
 			$current_page_roll_id=isset($roles[0])?$roles[0]:'0';
 			$role_wise_permission_result = RoleWisePermission::where('branch_id',$user_id)->where('role_id',$current_page_roll_id)->where('permission_id',$current_page_permision_id)->where('type_id',$current_page_permision_type_id)->get();
-			
+
 			//echo '<pre>';print_r($role_wise_permission_result);exit;
 			if(count($role_wise_permission_result)>0){
 				return $next($request);
@@ -70,6 +70,6 @@ class CheckPermission
 			}
 		}else{
 			return $next($request);
-		} 
+		}
     }
 }
