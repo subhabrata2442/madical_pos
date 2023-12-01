@@ -17,12 +17,14 @@ class PurchaseInvoiceWiseDownload implements FromView
     protected $invoice;
     protected $start_date;
     protected $end_date;
+    protected $store_id;
 
-    public function __construct($invoice, $start_date, $end_date)
+    public function __construct($invoice, $start_date, $end_date, $store_id)
     {
         $this->invoice = $invoice;
         $this->start_date = $start_date;
         $this->end_date = $end_date;
+        $this->store_id = $store_id;
     }
 
     public function view(): View
@@ -46,6 +48,12 @@ class PurchaseInvoiceWiseDownload implements FromView
 		if($this->invoice!=''){
 
 			$purchase->where('invoice_no',  $this->invoice);
+
+		}
+
+        if($this->store_id!=''){
+
+			$purchase->where('branch_id', $this->store_id);
 
 		}
 

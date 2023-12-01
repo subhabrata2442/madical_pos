@@ -132,6 +132,21 @@
 					</select>
 				</div>
 			</div>
+            @if (Auth::user()->role == 1)
+                <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label for="" class="form-label">Select Store</label>
+                        <select class="form-control custom-select form-control-select" id="" name="store_id">
+                            <option value="">Select Store</option>
+                            @forelse ($data['storeUsers'] as $store)
+                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                            @empty
+
+                            @endforelse
+                        </select>
+                    </div>
+                </div>
+            @endif
 			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="" class="form-label">Select Brand</label>
@@ -173,6 +188,7 @@
                             $invoice = '';
                             $start_date = '';
                             $end_date = '';
+                            $store_id = '';
 
                             if (isset($_GET['company'])) {
                                 $company = $_GET['company'];
@@ -192,8 +208,11 @@
                             if (isset($_GET['end_date'])) {
                                 $end_date = $_GET['end_date'];
                             }
+                            if (isset($_GET['store_id'])) {
+                                $store_id = $_GET['store_id'];
+                            }
                         @endphp
-						<a href="{{ url('admin/report/purchase_product_wise_download?company='.$company.'&dosage='.$dosage.'&brand='.$brand.'&invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date) }}" class="btn btn-primary">Download Excel</a>
+						<a href="{{ url('admin/report/purchase_product_wise_download?company='.$company.'&dosage='.$dosage.'&brand='.$brand.'&invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
 					</li>
 
 				</ul>

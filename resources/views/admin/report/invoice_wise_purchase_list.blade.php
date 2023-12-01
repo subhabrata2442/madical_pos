@@ -92,6 +92,22 @@
 					<input type="hidden" id="invoice_id" name="invoice_id" value="{{request()->input('invoice_id')}}">
 				</div>
 			</div>
+            @if (Auth::user()->role == 1)
+                <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label for="" class="form-label">Select Store</label>
+                        <select class="form-control custom-select form-control-select" id="" name="store_id">
+                            <option value="">Select Store</option>
+                            @forelse ($data['storeUsers'] as $store)
+                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                            @empty
+
+                            @endforelse
+                        </select>
+                    </div>
+                </div>
+            @endif
+
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -117,6 +133,7 @@
                             $invoice = '';
                             $start_date = '';
                             $end_date = '';
+                            $store_id = '';
                             if(isset($_GET['start_date']) && isset($_GET['end_date'])){
                                 $start_date =$_GET['start_date'];
                                 $end_date =$_GET['end_date'];
@@ -124,8 +141,11 @@
                             if (isset($_GET['invoice'])) {
                                 $invoice = $_GET['invoice'];
                             }
+                            if (isset($_GET['store_id'])) {
+                                $store_id = $_GET['store_id'];
+                            }
                         @endphp
-						<a href="{{ url('admin/report/purchase_invoice_wise_download?invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date) }}" class="btn btn-primary">Download Excel</a>
+						<a href="{{ url('admin/report/purchase_invoice_wise_download?invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
 					</li>
 				</ul>
 			</div>
@@ -140,7 +160,9 @@
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Invoice No</th>
+                <th scope="col">Store Name</th>
 				<th scope="col">Inward date</th>
+
 				<th scope="col">Purchase date</th>
 				<th scope="col">Total Qty</th>
 				<th scope="col">Total Cost</th>
@@ -151,7 +173,8 @@
 				@forelse ($data['purchases'] as $purchase)
 				<tr>
 					<td><a class="td-anchor" href="{{route('admin.report.stock_product.list',[base64_encode($purchase->id)])}}" target="_blank">{{$purchase->invoice_no}}</a></td>
-					<td>{{date('d-m-Y', strtotime($purchase->inward_date))}}</td>
+					<th>{{@$purchase->user->name}}</th>
+                    <td>{{date('d-m-Y', strtotime($purchase->inward_date))}}</td>
 					<td>{{date('d-m-Y', strtotime($purchase->purchase_date))}}</td>
 					<td>{{$purchase->total_qty}}</td>
 					<td>{{number_format($purchase->sub_total,2)}}</td>

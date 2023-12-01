@@ -53,6 +53,9 @@ use App\Exports\TopSellingProductDownload;
 use App\Exports\LowStockProductDownload;
 use App\Exports\PurchaseInvoiceWiseDownload;
 use App\Exports\PurchaseProductWiseDownload;
+use App\Exports\InvoiceWiesSaleDownload;
+use App\Exports\ProductWiesSaleDownload;
+use App\Exports\ZeroStockProductDownload;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -142,6 +145,12 @@ class ReportController extends Controller
 
 		}
 
+        if(!empty($request->get('store_id'))){
+
+			$purchase->where('branch_id', $request->get('store_id'));
+
+		}
+
 		$purchase->orderBy('id', 'desc')->get();
 
 		$data = [];
@@ -151,6 +160,7 @@ class ReportController extends Controller
 		$data['purchases'] = $purchase->paginate(10);
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+        $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
 
 		return view('admin.report.invoice_wise_purchase_list', compact('data'));
    }
@@ -269,6 +279,11 @@ class ReportController extends Controller
 				return $q->where('company_id',$request['company']);
 			});
 		}
+
+        if(!is_null($request['store_id'])) {
+			$queryProduct->where('branch_id', $request['store_id']);
+		}
+
 		$total_qty =  $queryProduct->sum('product_qty');
 		$total_profit =  $queryProduct->sum('profit_amount');
 		//$total_cost =  0;
@@ -283,6 +298,7 @@ class ReportController extends Controller
 		$data['brands'] = Brand::all();
 		$data['dosages'] = Dosage::all();
 		$data['companies']      = Company::all();
+        $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
 		return view('admin.report.product_wise_purchase_report', compact('data'));
 	}
 	public function inventory(Request $request){
@@ -2862,6 +2878,10 @@ class ReportController extends Controller
                 });
             }
 
+            if(!is_null($request['store_id'])) {
+                $queryProduct->where('branch_id', $request['store_id']);
+            }
+
             $total_qty =  $queryProduct->sum('product_qty');
             $total_cost =  $queryProduct->sum('total_cost');
             $all_product = $queryProduct->get();
@@ -2875,6 +2895,7 @@ class ReportController extends Controller
             $data['brands'] = Brand::all();
 			$data['dosages'] = Dosage::all();
 			$data['companies']      = Company::all();
+            $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
             //$data['request'] = $request;
             return view('admin.report.product_wise_sales_report', compact('data'));
         } catch (\Exception $e) {
@@ -3578,10 +3599,14 @@ class ReportController extends Controller
 		return view('admin.report.low_stock_product', compact('data'));
 	}
 
-	public function zero_stock_product(){
+	public function zero_stock_product(Request $request){
 		$admin_type = Session::get('admin_type');
 		if($admin_type==1){
-			$zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
+            if(!empty($request->get('store_id'))){
+			    $zero_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->get();
+            }else{
+                $zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
+            }
 		}else{
 			$store_id	= Session::get('store_id');
 			$zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->where('branch_id', $store_id)->get();
@@ -3591,6 +3616,7 @@ class ReportController extends Controller
 		$data['zero_stock'] = $zero_stock;
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 
 		return view('admin.report.zero_stock_product', compact('data'));
 	}
@@ -3631,13 +3657,15 @@ class ReportController extends Controller
 		$data['nearExpiryStock'] = $nearExpiryStock;
 		$data['heading'] = 'Near Expiry Stock';
 		$data['breadcrumb'] = ['Near Expiry Stock', '', 'List'];
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 
 		return view('admin.report.near_expiry_stock', compact('data'));
 
     }
 
-    public function near_expiry_stock_download(){
-        return Excel::download(new NearExpiryStockDownload, 'Stock-near-expiry.xlsx');
+    public function near_expiry_stock_download(Request $request){
+        $store_id = $request->store_id;
+        return Excel::download(new NearExpiryStockDownload($store_id), 'Stock-near-expiry.xlsx');
     }
 
     public function top_selling_product_download(Request $request){
@@ -3656,7 +3684,8 @@ class ReportController extends Controller
         $invoice = $request->invoice;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        return Excel::download(new PurchaseInvoiceWiseDownload($invoice, $start_date, $end_date), 'purchase-invoice-wise-report.xlsx');
+        $store_id = $request->store_id;
+        return Excel::download(new PurchaseInvoiceWiseDownload($invoice, $start_date, $end_date, $store_id), 'purchase-invoice-wise-report.xlsx');
     }
 
 
@@ -3668,8 +3697,42 @@ class ReportController extends Controller
         $invoice = $request->invoice;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        return Excel::download(new PurchaseProductWiseDownload($company, $dosage, $brand, $invoice, $start_date, $end_date), 'purchase-product-wise-report.xlsx');
+        $store_id = $request->store_id;
+        return Excel::download(new PurchaseProductWiseDownload($company, $dosage, $brand, $invoice, $start_date, $end_date, $store_id), 'purchase-product-wise-report.xlsx');
     }
+
+    public function invoice_wies_sale_download(Request $request){
+
+        $invoice = $request->invoice;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $store_id = $request->store_id;
+
+        return Excel::download(new InvoiceWiesSaleDownload($invoice, $start_date, $end_date, $store_id), 'invoice-wise-sales-report.xlsx');
+    }
+
+    public function product_wise_sales_download(Request $request){
+
+        $company = $request->company;
+        $dosage = $request->dosage;
+        $brand = $request->brand;
+
+        $invoice = $request->invoice;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $store_id = $request->store_id;
+
+        return Excel::download(new ProductWiesSaleDownload($company, $dosage, $brand, $invoice, $start_date, $end_date, $store_id), 'product-wise-sales-report.xlsx');
+    }
+
+    public function zero_stock_product_download(Request $request){
+
+        $store_id = $request->store_id;
+
+        return Excel::download(new ZeroStockProductDownload($store_id), 'zero-stock-product-report.xlsx');
+    }
+
+
 
 
 }

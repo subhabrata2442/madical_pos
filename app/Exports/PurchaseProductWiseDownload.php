@@ -23,7 +23,9 @@ class PurchaseProductWiseDownload implements FromView
     protected $start_date;
     protected $end_date;
 
-    public function __construct($company, $dosage, $brand, $invoice, $start_date, $end_date)
+    protected $store_id;
+
+    public function __construct($company, $dosage, $brand, $invoice, $start_date, $end_date, $store_id)
     {
         $this->company = $company;
         $this->dosage = $dosage;
@@ -31,6 +33,8 @@ class PurchaseProductWiseDownload implements FromView
         $this->invoice = $invoice;
         $this->start_date = $start_date;
         $this->end_date = $end_date;
+
+        $this->store_id = $store_id;
     }
 
     public function view(): View
@@ -73,6 +77,10 @@ class PurchaseProductWiseDownload implements FromView
 			$queryProduct->whereHas('product',function($q) use ($request){
 				return $q->where('company_id',$this->company);
 			});
+		}
+
+        if($this->store_id!='') {
+			$queryProduct->where('branch_id', $this->store_id);
 		}
 
         // dd($queryProduct->paginate(10));

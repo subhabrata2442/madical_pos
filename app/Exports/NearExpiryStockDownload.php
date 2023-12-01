@@ -12,6 +12,15 @@ use App\Models\InwardStockProducts;
 
 class NearExpiryStockDownload implements FromView
 {
+
+
+    protected $store_id;
+
+    public function __construct($company, $dosage, $brand, $invoice, $start_date, $end_date, $store_id)
+    {
+        $this->store_id = $store_id;
+    }
+
     public function view(): View
     {
         $admin_type = Session::get('admin_type');
