@@ -120,7 +120,7 @@
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Sl NO.</th>
-				{{-- <th scope="col">Product Name</th> --}}
+				<th scope="col">Store</th>
 				<th scope="col">Brand</th>
 				<th scope="col">Product Barcode</th>
 				<th scope="col">Dosage</th>
@@ -132,7 +132,7 @@
                     @if($purchase->t_qty <= $purchase->product->alert_product_qty)
                         <tr>
                             <td>{{($key+1)}}</td>
-                            {{-- <td>{{$purchase->product->product_name}}</td> --}}
+                            <td>{{$purchase->user->name}}</td>
                             <td>{{$purchase->product->brand}}</td>
                             <td>{{$purchase->product->product_barcode}}</td>
                             <td>{{$purchase->product->dosage_name}}</td>
