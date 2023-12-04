@@ -3626,9 +3626,16 @@ class ReportController extends Controller
 
         if(isset($request->id)){
             if($admin_type==1){
-                $nearExpiryStock = InwardStockProducts::with('product')->where('id', $request->id)->whereDate('product_expiry_date', '>=', now())
-                ->whereDate('product_expiry_date', '<=', now()->addDays(60))
-                ->get();
+
+                if(!empty($request->get('store_id'))){
+                    $nearExpiryStock = InwardStockProducts::with('product')->where('branch_id', $request->get('store_id'))->where('id', $request->id)->whereDate('product_expiry_date', '>=', now())
+                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
+                    ->get();
+                }else{
+                    $nearExpiryStock = InwardStockProducts::with('product')->where('id', $request->id)->whereDate('product_expiry_date', '>=', now())
+                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
+                    ->get();
+                }
             }else{
                 $store_id	= Session::get('store_id');
                 $nearExpiryStock = InwardStockProducts::with('product')->where('id', $request->id)->where('branch_id', $store_id)->whereDate('product_expiry_date', '>=', now())
@@ -3637,9 +3644,15 @@ class ReportController extends Controller
             }
         }else{
             if($admin_type==1){
-                $nearExpiryStock = InwardStockProducts::with('product')->whereDate('product_expiry_date', '>=', now())
-                ->whereDate('product_expiry_date', '<=', now()->addDays(60))
-                ->get();
+                if(!empty($request->get('store_id'))){
+                    $nearExpiryStock = InwardStockProducts::with('product')->where('branch_id', $request->get('store_id'))->whereDate('product_expiry_date', '>=', now())
+                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
+                    ->get();
+                }else{
+                    $nearExpiryStock = InwardStockProducts::with('product')->whereDate('product_expiry_date', '>=', now())
+                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
+                    ->get();
+                }
             }else{
                 $store_id	= Session::get('store_id');
                 $nearExpiryStock = InwardStockProducts::with('product')->where('branch_id', $store_id)->whereDate('product_expiry_date', '>=', now())

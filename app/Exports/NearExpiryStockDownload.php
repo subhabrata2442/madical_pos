@@ -16,7 +16,7 @@ class NearExpiryStockDownload implements FromView
 
     protected $store_id;
 
-    public function __construct($company, $dosage, $brand, $invoice, $start_date, $end_date, $store_id)
+    public function __construct($store_id)
     {
         $this->store_id = $store_id;
     }
