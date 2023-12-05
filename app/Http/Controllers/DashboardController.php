@@ -58,10 +58,10 @@ class DashboardController extends Controller
 
 
             if($admin_type==1){
-                $low_stock = BranchStockProducts::with('product')->get();
+                $low_stock = BranchStockProducts::with('product')->limit(5)->get();
             }else{
                 $store_id	= Session::get('store_id');
-                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
+                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(5)->get();
             }
 
             $data['low_stock']=$low_stock;
@@ -72,7 +72,7 @@ class DashboardController extends Controller
                     ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
                     ->groupBy('products.id', 'products.product_name')
                     ->orderBy('sales_count', 'desc')
-                    ->limit(10)
+                    ->limit(5)
                     ->get();
             }else{
                 $store_id	= Session::get('store_id');
@@ -81,7 +81,7 @@ class DashboardController extends Controller
                     ->where('sell_stock_products.branch_id', $store_id)
                     ->groupBy('products.id', 'products.product_name')
                     ->orderBy('sales_count', 'desc')
-                    ->limit(10)
+                    ->limit(5)
                     ->get();
             }
 
@@ -110,9 +110,9 @@ class DashboardController extends Controller
 
 
             if($admin_type==1){
-                $latestBill = SellInwardStock::with('customer')->orderBy('id', 'DESC')->limit(10)->get();
+                $latestBill = SellInwardStock::with('customer')->orderBy('id', 'DESC')->limit(5)->get();
             }else{
-                $latestBill = SellInwardStock::with('customer')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(10)->get();
+                $latestBill = SellInwardStock::with('customer')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(5)->get();
             }
 
             $data['latestBill'] = $latestBill;
