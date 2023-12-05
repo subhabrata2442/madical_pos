@@ -66,7 +66,8 @@ class CheckPermission
 			if(count($role_wise_permission_result)>0){
 				return $next($request);
 			}else{
-				return redirect()->route('auth.permission_denied');
+				// return redirect()->route('auth.permission_denied');
+                return redirect()->back()->with('permissioncheck', "You don't have permission to access on this section!");
 			}
 		}else{
 			return $next($request);

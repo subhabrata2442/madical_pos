@@ -247,6 +247,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['GET'], '/invoice_wies_sale_download', [ReportController::class, 'invoice_wies_sale_download'])->name('invoice_wies_sale_download');
         Route::match(['GET'], '/product_wise_sales_download', [ReportController::class, 'product_wise_sales_download'])->name('product_wise_sales_download');
         Route::match(['GET'], '/zero_stock_product_download', [ReportController::class, 'zero_stock_product_download'])->name('zero_stock_product_download');
+        Route::match(['GET'], '/inventory_download', [ReportController::class, 'inventory_download'])->name('inventory_download');
+
 
 	});
 

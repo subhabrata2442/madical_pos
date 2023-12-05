@@ -52,6 +52,7 @@
 					<li>Total Invoice : <span>{{$data['total_invoice']}}</span></li>
 					<li>Total Qty : <span>{{$data['total_qty']}}</span></li>
 					<li>Total Amount : <span>{{number_format($data['total_ammount'],2)}}</span></li>
+					<li>Total Profit : <span>{{number_format($data['profitpersent'],2)}}%</span></li>
 					<!-- <li>advanced Search : <span>0</span></li> -->
 				</ul>
 			</div>
@@ -181,7 +182,7 @@
 					<td>{{date('d-m-Y', strtotime($sale->sell_date))}}</td>
 					<th>{{$sale->total_qty}}</th>
 					<th>{{number_format($sale->gross_amount,2)}}</th>
-					<th>{{number_format($sale->discount_amount,2)}}</th>
+					<th>{{number_format($sale->special_discount_amt,2)}}</th>
 					<th>{{number_format($sale->sub_total,2)}}</th>
 					<th>{{number_format($sale->pay_amount,2)}}</th>
 					<th>{{$sale->payment_method}}</th>
