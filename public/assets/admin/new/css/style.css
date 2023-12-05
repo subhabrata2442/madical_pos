@@ -5993,6 +5993,13 @@ to {
 	-webkit-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
+
+/* @media only screen and (max-width: 1366px) {
+	.metroBox {
+		height: 10vw;
+	}
+} */
+
 .disabled_home_btn {
     cursor: no-drop;
     opacity: .6;
@@ -6010,17 +6017,12 @@ to {
     opacity: 0.7;
 }
 .artReleases {
-    height: calc(100vh - 77px);
+    height: calc(100vh - 10vh);
 }
-.posCarouselArea {
-    height: calc(100vh - 77px);
+/* .posCarouselArea {
+    height: calc(100vh - 10vh);
     overflow-y: auto;
-}
-.metroBoxArea {
-    height: 100%;
-}
-/* @media only screen and (max-width: 1366px) {
-	.metroBox {
-		height: 10vw;
-	}
 } */
+.metroBoxArea {
+    height: calc(100vh - 10vh);
+}

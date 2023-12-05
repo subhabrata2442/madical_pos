@@ -26,7 +26,7 @@
         $(document).ready(function() {
           $('.posCarousel').owlCarousel({
             items: 1,
-            margin:10,
+            margin:20,
             autoHeight: true
           });
         })

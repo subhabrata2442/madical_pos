@@ -128,12 +128,14 @@ $(function() {
 
     // open in fullscreen
     $('#fullscreen .requestfullscreen').click(function() {
+        $('.content').addClass('full-mode');
         $('#fullscreen').fullscreen();
         return false;
     });
 
     // exit fullscreen
     $('#fullscreen .exitfullscreen').click(function() {
+        $('.content').removeClass('full-mode');
         $.fullscreen.exit();
         return false;
     });
