@@ -1228,14 +1228,13 @@ p {
 
 .tableFixHead {
     overflow: auto;
-    /* height: 28.28vw; */
-    height: calc(100vh - 40vh);
+    height: 28.28vw;
     margin-bottom: 1vw;
     border: #e1e1e1 1px solid;
     border-radius: 6px;
 }
 .full-mode .tableFixHead {
-    height: calc(100vh - 36vh);
+    height: 36vw;
 }
 
 .tableFixHead thead th {
@@ -1753,12 +1752,6 @@ p {
     box-shadow: none;
     border-radius: 5px;
 }
-/* .content-wrapper>.content {
-    height: 100%;
-} */
-/* #pos_create_order-form {
-    height: calc(100vh - 9vh);
-} */
 
 /* Only Media */
 @media only screen and (max-width: 1365px) {
@@ -1766,8 +1759,7 @@ p {
         display: none;
     }
     .tableFixHead {
-        /* height: 38.28vw; */
-        height: 43.28vw;
+        height: 38.28vw;
     }
     .customerDetails h4 {
         font-size: 1.4vw;
