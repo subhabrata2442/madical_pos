@@ -5334,7 +5334,8 @@ to {
 }
 
 .metroBox {
-	height: 12.3vw;
+	/* height: 10.5vw; */
+	height: 100%;
 	padding: 3vw;
 	text-align: center;
 	color: #fff;
@@ -5993,11 +5994,11 @@ to {
 	transform: translateX(-50%);
 }
 
-@media only screen and (max-width: 1366px) {
+/* @media only screen and (max-width: 1366px) {
 	.metroBox {
 		height: 10vw;
 	}
-}
+} */
 
 .disabled_home_btn {
     cursor: no-drop;
@@ -6014,4 +6015,14 @@ to {
     left: 0;
     content: '';
     opacity: 0.7;
+}
+.artReleases {
+    height: calc(100vh - 10vh);
+}
+/* .posCarouselArea {
+    height: calc(100vh - 10vh);
+    overflow-y: auto;
+} */
+.metroBoxArea {
+    height: calc(100vh - 10vh);
 }

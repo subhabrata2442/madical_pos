@@ -10,7 +10,7 @@ class SellInwardStock extends Model
 {
     use HasFactory;
     //use SoftDeletes;
-	
+
 	protected $table = 'sell_inward_stock';
 	protected $guarded	= [];
 
@@ -24,15 +24,15 @@ class SellInwardStock extends Model
     public function customer(){
         return $this->hasOne(Customer::class,'id','customer_id');
     }
-	
+
 	public function top_selling_products($branch_id){
 		print_r($branch_id);exit;
 	}
     public function storeUser(){
         return $this->hasOne(User::class,'id','branch_id');
     }
-	
-	
-	
+
+
+
 
 }

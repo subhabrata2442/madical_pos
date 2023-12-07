@@ -128,12 +128,14 @@ $(function() {
 
     // open in fullscreen
     $('#fullscreen .requestfullscreen').click(function() {
+        $('.content').addClass('full-mode');
         $('#fullscreen').fullscreen();
         return false;
     });
 
     // exit fullscreen
     $('#fullscreen .exitfullscreen').click(function() {
+        $('.content').removeClass('full-mode');
         $.fullscreen.exit();
         return false;
     });
@@ -817,7 +819,7 @@ $(document).on('click', '#applyChargeBtn', function() {
 $(document).ready(function() {
     $("#applyCharge-form").validate({
         rules: {
-            charge_amt: "required",
+            // charge_amt: "required",
         },
         messages: {
             //promo: "Required",
@@ -838,6 +840,10 @@ $(document).ready(function() {
             var gross_total_amount = $('#gross_total_input').val();
             var charge_amt = $('#charge_amt').val();
 
+            if(charge_amt==''){
+                charge_amt = 0;
+            }
+
             var charge_amount = Number(gross_total_amount) + Number(charge_amt);
             var total_amount = Number(charge_amount);
 
@@ -851,6 +857,13 @@ $(document).ready(function() {
 
             $("#sub_total_mrp").html('$'+ formatNumber(total_amount));
             $("#sub_total_mrp-input").val(total_amount);
+
+            var total_profit = (total_amount-$("#net_price").val());
+            $("#total_profit").html('$'+ formatNumber(total_profit));
+            $("#profit_price").val(total_profit);
+
+            var profitpersent = (((total_amount - $("#net_price").val())/$("#net_price").val())*100);
+            $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
 
             $('#modal-applyCharges').modal('hide');
 
@@ -891,8 +904,8 @@ $(document).on('click', '#applyDiscountBtn', function() {
 $(document).ready(function() {
     $("#applyDiscount-form").validate({
         rules: {
-            special_discount_percent: "required",
-            special_discount_amt: "required",
+            // special_discount_percent: "required",
+            // special_discount_amt: "required",
         },
         messages: {
             //promo: "Required",
@@ -913,6 +926,15 @@ $(document).ready(function() {
             var gross_total_amount = $('#actual_amount').val();
             var discount_percent = $('#special_discount_percent').val();
             var total_discount = $('#special_discount_amt').val();
+
+            if(discount_percent==''){
+                discount_percent = 0;
+            }
+
+            if(total_discount==''){
+                total_discount = 0;
+            }
+
 
             //var total_discount = Number(gross_total_amount) * Number(discount_percent) / 100;
 
@@ -937,6 +959,13 @@ $(document).ready(function() {
 
             $('#gross_total_amount-input').val(discount_amount);
             $('#gross_total_input').val(discount_amount);
+
+            var total_profit = (total_amount-$("#net_price").val());
+            $("#total_profit").html('$'+ formatNumber(total_profit));
+            $("#profit_price").val(total_profit);
+
+            var profitpersent = (((total_amount - $("#net_price").val())/$("#net_price").val())*100);
+            $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
 
             $('#modal-applyDiscount').modal('hide');
 

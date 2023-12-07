@@ -239,7 +239,7 @@
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
                                     <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
-                                    {{-- <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print</a></li> --}}
+                                    <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print Last Bill</a></li>
                                 </ul>
                                 </div>
                             </div>
@@ -263,7 +263,7 @@
                           @if (count($data['topSellingProducts'])>0)
                             @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
                               @if ($topitem['t_qty']!=0)
-                                <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['product_name']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
+                                <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['brand']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
                               @endif
                             @endforeach
                           @endif
@@ -876,5 +876,29 @@
 $(function () {
 	  $('[data-toggle="tooltip"]').tooltip();
 });
+
+
+$(document).keyup(function(e){
+   if(e.which==122){
+       e.preventDefault();
+
+       console.log($('.content').hasClass('full-mode'));
+
+        if ($('.content').hasClass('full-mode')==false) {
+
+            $('.content').addClass('full-mode');
+            $('#fullscreen .requestfullscreen').hide();
+            $('#fullscreen .exitfullscreen').show();
+
+        }else{
+            $('.content').removeClass('full-mode');
+            $('#fullscreen .requestfullscreen').show();
+            $('#fullscreen .exitfullscreen').hide();
+        }
+
+       return false;
+   }
+});
+
 </script>
 @endsection

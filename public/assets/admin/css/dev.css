@@ -2791,3 +2791,13 @@ a.downloadBtn {
     padding: 4px 8px;
     font-weight: 700;
 }
+.artReleases {
+    height: calc(100vh - 77px);
+}
+.posCarouselArea {
+    height: calc(100vh - 77px);
+    overflow-y: auto;
+}
+.metroBoxArea {
+    height: 100%;
+}

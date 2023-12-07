@@ -472,6 +472,7 @@ class PosController extends Controller
 						'id'				=> $row->id,
 						'product_barcode'	=> $row->product_barcode,
 						'product_name'		=> $row->product_name,
+                        'brand'		        => $row->brand,
 						't_qty'				=> $t_qty,
 					);
 

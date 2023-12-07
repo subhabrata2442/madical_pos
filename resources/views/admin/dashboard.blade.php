@@ -219,7 +219,7 @@ if($adminId!=1){
       </div>
       <div class="col-lg-7 col-md-7 col-sm-7 col-12">
         <div class="row metroBoxArea">
-          <div class="col-lg-3 col-md-3 col-sm-4 col-12 "> <a href="{{ route('admin.store.list') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #198699;"><span>Stores</span><img src="{{ url('assets/admin/new/images/icon/3.svg') }}" alt=""/></a> </div>
+          <div class="col-lg-3 col-md-3 col-sm-4 col-12 "> <a href="{{ route('admin.store.list') }}" data-href="{{ route('admin.store.list') }}" data-is_branch="{{$is_branch}}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #198699;"><span>Stores</span><img src="{{ url('assets/admin/new/images/icon/3.svg') }}" alt=""/></a> </div>
 
           <div class="col-lg-2 col-md-2 col-sm-4 col-12"> <a href="{{ route('admin.supplier.list') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #910b95;"><span>Supplier</span><img src="{{ url('assets/admin/new/images/icon/9.svg') }}" alt=""/></a> </div>
 
@@ -238,7 +238,7 @@ if($adminId!=1){
         @if ($adminRoll == 1)
           <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="javascript:void(0)" class="metroBox d-flex align-items-center justify-content-center wow zoomIn disabled_home_btn" style="background: #203966;"><span>POS</span><img src="{{ url('assets/admin/new/images/icon/8.svg') }}" alt=""/></a> </div>
         @else
-          <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="{{ route('admin.pos.pos_create') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #203966;"><span>POS</span><img src="{{ url('assets/admin/new/images/icon/8.svg') }}" alt=""/></a> </div>
+          <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="{{ route('admin.pos.pos_create') }}" data-href="{{ route('admin.pos.pos_create') }}" data-is_branch="{{$is_branch}}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #203966;"><span>POS</span><img src="{{ url('assets/admin/new/images/icon/8.svg') }}" alt=""/></a> </div>
         @endif
 
           <div class="col-lg-3 col-md-3 col-sm-4 col-12"> <a href="{{ route('admin.purchase.stock.transfer') }}" class="metroBox d-flex align-items-center justify-content-center wow zoomIn" style="background: #910b95;"><span>Stock Transfer</span><img src="{{ url('assets/admin/new/images/icon/stock-transer.svg') }}" alt=""/></a> </div>
@@ -295,10 +295,10 @@ $(document).on('click','.check_url_permision',function(){
 		window.location.href = href;
 	}else{
 		Swal.fire({
-  icon: 'error',
-  title: 'Oops...',
-  text: 'you don\'t have permission to access!'
-})
+        icon: 'error',
+        title: 'Oops...',
+        text: 'you don\'t have permission to access!'
+        });
 	}
 
 

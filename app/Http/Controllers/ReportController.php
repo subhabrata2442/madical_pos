@@ -56,6 +56,7 @@ use App\Exports\PurchaseProductWiseDownload;
 use App\Exports\InvoiceWiesSaleDownload;
 use App\Exports\ProductWiesSaleDownload;
 use App\Exports\ZeroStockProductDownload;
+use App\Exports\InventoryDownload;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -129,7 +130,7 @@ class ReportController extends Controller
 		if($user_role==1){
 			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','');
 		}else{
-			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('supplier_id',$branch_id);
+			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('branch_id',$branch_id);
 		}
 		//$sales = SellInwardStock::where('invoice_no','!=','');
 		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
@@ -153,8 +154,16 @@ class ReportController extends Controller
 
 		$purchase->orderBy('id', 'desc')->get();
 
+        $profitpersent = 0;
+        if($purchase->sum('qty_total_sell_price')!=''){
+            $totalsell = $purchase->sum('qty_total_sell_price');
+            $totalnet_price = $purchase->sum('qty_total_net_price');
+            $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);
+        }
+
 		$data = [];
-		$data['total_profit'] = $purchase->sum('total_profit');
+		$data['total_profit'] = $purchase->sum('qty_total_profit');
+		$data['profitpersent'] = $profitpersent;
 		$data['total_qty'] = $purchase->sum('total_qty');
 		$data['total_invoice'] = $purchase->count();
 		$data['purchases'] = $purchase->paginate(10);
@@ -241,7 +250,15 @@ class ReportController extends Controller
 	public function productWisePurchaseReport(Request $request){
 		//dd($request->all());
 		$data = [];
-		$queryProduct = InwardStockProducts::query();
+
+        $branch_id=Auth::user()->id;
+		$user_role=Auth::user()->role;
+		if($user_role==1){
+		    $queryProduct = InwardStockProducts::query();
+        }else{
+            $queryProduct = InwardStockProducts::where('branch_id', $branch_id);
+        }
+
 		//Add sorting
 		$queryProduct->orderBy('id', 'desc');
 		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
@@ -286,6 +303,12 @@ class ReportController extends Controller
 
 		$total_qty =  $queryProduct->sum('product_qty');
 		$total_profit =  $queryProduct->sum('profit_amount');
+		$profit_percent =  $queryProduct->sum('profit_percent');
+
+        $profitpersent = 0;
+        if($profit_percent!=0){
+            $profitpersent = ($profit_percent/$queryProduct->count());
+        }
 		//$total_cost =  0;
 		$all_product = $queryProduct->get();
 		$products = $queryProduct->paginate(10);
@@ -295,6 +318,7 @@ class ReportController extends Controller
 		$data['total_invoice']  = count(array_unique(array_column($all_product->toArray(), 'inward_stock_id')));
 		$data['total_qty']  = $total_qty;
 		$data['total_profit'] = $total_profit;
+		$data['profitpersent'] = $profitpersent;
 		$data['brands'] = Brand::all();
 		$data['dosages'] = Dosage::all();
 		$data['companies']      = Company::all();
@@ -302,7 +326,6 @@ class ReportController extends Controller
 		return view('admin.report.product_wise_purchase_report', compact('data'));
 	}
 	public function inventory(Request $request){
-		$branch_id=Auth::user()->id;
 
 		// $queryStockProduct = BranchStockProducts::query();
 		// $allStockProduct = $queryStockProduct->where('branch_id',$branch_id)->with('stockProduct')->get();
@@ -310,8 +333,16 @@ class ReportController extends Controller
 
 		try{
 			$data = [];
-			$queryStockProduct = BranchStockProducts::query();
-			$allStockProduct = $queryStockProduct->where('branch_id',$branch_id);
+
+            $branch_id=Auth::user()->id;
+            $user_role=Auth::user()->role;
+            if($user_role==1){
+			    $queryStockProduct = BranchStockProducts::query();
+            }else{
+                $queryStockProduct = BranchStockProducts::where('branch_id',$branch_id);
+            }
+
+			// $allStockProduct = $queryStockProduct->where('branch_id',$branch_id);
 
 			if(!is_null($request['product_barcode'])) {
 				$queryStockProduct->where('product_barcode',$request['product_barcode']);
@@ -330,12 +361,16 @@ class ReportController extends Controller
 				$queryStockProduct->where('product_id',$request['product_id']);
 			}
 
+            if(!is_null($request['store_id'])) {
+				$queryStockProduct->where('branch_id',$request['store_id']);
+			}
+
 			// if(!is_null($request['category'])) {
 			//     $queryStockProduct->whereHas('product',function($q) use ($request){
 			//         return $q->where('category_id',$request['category']);
 			//     });
 			// }
-			$allStockProduct = $queryStockProduct->with('stockProduct')->get();
+			// $allStockProduct = $queryStockProduct->with('stockProduct')->get();
 
 			//echo '<pre>';print_r($allStockProduct);exit;
 
@@ -345,12 +380,13 @@ class ReportController extends Controller
 			$data['heading']    = 'Sales List';
 			$data['breadcrumb'] = ['Sales', '', 'List'];
 			$data['products']   = $stockProducts;
-			$allStockProductArr = $allStockProduct->toArray();
+			// $allStockProductArr = $allStockProduct->toArray();
 
 			$data['total_qty']  	= 0;
 			$data['total_cost'] 	= 0;
 			$data['categories'] 	= Category::all();
 			$data['sub_categories']	= Subcategory::all();
+            $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
 			//$data['brands']      	= Brand::all();
 			return view('admin.report.inventory', compact('data'));
 		}catch (\Exception $e) {
@@ -2751,7 +2787,16 @@ class ReportController extends Controller
 
     public function salesItems(Request $request){
         try {
-            $sales = SellInwardStock::where('invoice_no','!=','');
+
+            $branch_id=Auth::user()->id;
+            $user_role=Auth::user()->role;
+            if($user_role==1){
+                $sales = SellInwardStock::where('invoice_no','!=','');
+            }else{
+                $sales = SellInwardStock::where('invoice_no','!=','')->where('branch_id', $branch_id);
+            }
+
+
                 if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
                     if($request->get('start_date') == $request->get('end_date')){
                         $sales->whereDate('sell_date', $request->get('start_date'));
@@ -2772,8 +2817,16 @@ class ReportController extends Controller
 
             $sales->orderBy('id', 'desc')->get();
 
+                $profitpersent = 0;
+                if($sales->sum('pay_amount')!=''){
+                    $totalsell = $sales->sum('pay_amount');
+                    $totalnet_price = $sales->sum('net_price');
+                    $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);
+                }
+
             $data = [];
             $data['total_ammount'] = $sales->sum('pay_amount');
+            $data['profitpersent'] = $profitpersent;
             $data['total_qty'] = $sales->sum('total_qty');
             $data['total_invoice'] = $sales->count();
             $data['sales'] = $sales->paginate(10);
@@ -2839,7 +2892,15 @@ class ReportController extends Controller
             //echo $request->get('start_date');die;
             //dd($request->all());
             $data = [];
-            $queryProduct = SellStockProducts::query();
+
+            $branch_id=Auth::user()->id;
+            $user_role=Auth::user()->role;
+            if($user_role==1){
+                $queryProduct = SellStockProducts::query();
+            }else{
+                $queryProduct = SellStockProducts::where('branch_id', $branch_id);
+            }
+
             //Add sorting
             $queryProduct->orderBy('id', 'desc');
             if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
@@ -2881,6 +2942,13 @@ class ReportController extends Controller
             if(!is_null($request['store_id'])) {
                 $queryProduct->where('branch_id', $request['store_id']);
             }
+
+            // $profitpersent = 0;
+            // if($queryProduct->sum('pay_amount')!=''){
+            //     $totalsell = $queryProduct->sum('pay_amount');
+            //     $totalnet_price = $queryProduct->sum('net_price');
+            //     $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);
+            // }
 
             $total_qty =  $queryProduct->sum('product_qty');
             $total_cost =  $queryProduct->sum('total_cost');
@@ -3743,6 +3811,17 @@ class ReportController extends Controller
         $store_id = $request->store_id;
 
         return Excel::download(new ZeroStockProductDownload($store_id), 'zero-stock-product-report.xlsx');
+    }
+
+
+    public function inventory_download(Request $request){
+
+        $brand = $request->brand;
+        $product_barcode = $request->product_barcode;
+        $store_id = $request->store_id;
+
+        return Excel::download(new InventoryDownload($brand, $product_barcode, $store_id), 'inventory-report.xlsx');
+
     }
 
 
