@@ -335,6 +335,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	});
 
+    Route::match(['GET'], '/allnotification', [NotificationController::class, 'allnotification'])->name('allnotification');
+
 
 });
 
@@ -352,6 +354,7 @@ Route::match(['GET'], '/test', [NotificationController::class, 'test'])->name('t
 Route::match(['GET'], '/product_expiry_notification', [NotificationController::class, 'product_expiry_notification'])->name('product_expiry_notification');
 
 Route::match(['GET'], '/seenNotification', [NotificationController::class, 'seenNotification'])->name('seenNotification');
+
 
 // Route::get('test', function () {
 //     event(new App\Events\StockAlert('Someone'));

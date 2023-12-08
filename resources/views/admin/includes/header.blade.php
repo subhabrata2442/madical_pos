@@ -64,6 +64,8 @@ $adminRoll 		= Session::get('admin_type');
                         {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
                     </a>
                 @endforeach
+
+                <a href="{{ route('admin.allnotification') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
             @else
                 <span class="dropdown-item dropdown-header zeronoti">0 Notifications</span>
             @endif
