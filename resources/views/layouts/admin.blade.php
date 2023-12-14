@@ -104,7 +104,7 @@
                 if(admin_type==1){
                     if(data.message!=''){
                         $(".zeronoti").hide();
-                        $(".appendnotification").append(htmls);
+                        $(".appendnotification").prepend(htmls);
                         $(".totalNoti").html(total);
                         toastr.success(data.message);
                     }
@@ -112,7 +112,7 @@
                     if(data.store_id==store_id){
                         if(data.message!=''){
                             $(".zeronoti").hide();
-                            $(".appendnotification").append(htmls);
+                            $(".appendnotification").prepend(htmls);
                             $(".totalNoti").html(total);
                             toastr.success(data.message);
                         }
