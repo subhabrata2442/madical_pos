@@ -112,7 +112,7 @@ $adminRoll = Session::get('admin_type');
                       <option value="cheque">Cheque</option>
                       <option value="net_banking">Net Banking</option>
                       <option value="cash">Cash</option>
-                      <option value="debt">Debt</option>
+                      <option value="credit">Credit</option>
                     </select>
                   </li>
                 </ul>
@@ -286,8 +286,8 @@ $adminRoll = Session::get('admin_type');
                     <th>NPP</th> {{-- No per package --}}
                     <th>Net Price</th>
                     <th style="width: 80px;">Price</th>
-                    
-                    
+
+
                     {{-- <th>Discount %</th> --}}
                     <th style="width: 80px;">Bonous</th>
                     {{-- <th id="th_rate_title">US/IQ rate</th> --}}
