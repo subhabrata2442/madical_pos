@@ -21,6 +21,7 @@ use App\Http\Controllers\DosageController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CredithistoryController;
+use App\Http\Controllers\SettlementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -120,7 +121,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// Route::match(['GET'], '/monthwise-report', [PurchaseOrderController::class, 'pdfMonthwiseReport'])->name('monthwise_report');
 		// Route::match(['GET'], '/item-wise-sales-report', [PurchaseOrderController::class, 'pdfItemWiseSalesReport'])->name('pdf3');
 		// Route::match(['GET'], '/e-report', [PurchaseOrderController::class, 'pdfEReport'])->name('pdf4');
+
+
+        // Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('asdddd');
+
+
 	});
+
+    Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('settlement_add');
 
 	Route::prefix('customer')->name('customer.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [CustomerController::class, 'add'])->name('add');
