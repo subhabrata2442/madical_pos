@@ -622,7 +622,7 @@ class ProductController extends Controller
 
 
 					/*echo '<pre>';print_r($product_result);exit;
-					
+
 					$brand_data[]=array(
 						'barcode1'		=> $barcode1,
 						'barcode2'		=> $barcode2,
@@ -678,7 +678,7 @@ class ProductController extends Controller
 				$company_name	= $importData[1];
 				$district		= $importData[2];
 				$address		= $importData[3];
-				
+
 				$warehouse_result=Warehouse::where('company_name',$company_name)->get();
 				if(count($warehouse_result)>0){
 						$warehouse_id=isset($warehouse_result[0]->id)?$warehouse_result[0]->id:0;
@@ -688,7 +688,7 @@ class ProductController extends Controller
 							'address'			=> $address
 						);
 						Warehouse::where('id', $warehouse_id)->update($feature_data);
-						echo '<pre>';print_r($feature_data);exit;	
+						echo '<pre>';print_r($feature_data);exit;
 					}else{
 						$feature_data=array(
 							'company_name'  	=> $company_name,
@@ -697,9 +697,9 @@ class ProductController extends Controller
 						);
 						Warehouse::create($feature_data);
 					}
-				
+
 			}
-			
+
 			echo '<pre>';print_r($importData_arr);exit;*/
 
 			//echo '<pre>';print_r($importData_arr);exit;

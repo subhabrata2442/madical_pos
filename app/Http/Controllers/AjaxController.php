@@ -915,7 +915,7 @@ class AjaxController extends Controller {
 	DB::beginTransaction();
 
 	try {
-		//dd($request->all());
+		// dd($request->all());
 		$branch_id=Auth::user()->id;
 
 		$inward_stock	= $request->inward_stock;

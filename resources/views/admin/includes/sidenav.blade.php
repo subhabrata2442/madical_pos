@@ -328,6 +328,11 @@ if($adminId!=1){
           </ul>
         </li>
 
+        <li class="nav-item"> <a href="{{ route('admin.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p> Credit History </p>
+            </a>
+        </li>
+
 
 
       </ul>
