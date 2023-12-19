@@ -90,6 +90,24 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        'live_server_connection' => [
+            'driver' => 'mysql',
+            'host' => env('ONLINE_DB_HOST'),
+            'port' => env('ONLINE_DB_PORT'),
+            'database' => env('ONLINE_DB_DATABASE'),
+            'username' => env('ONLINE_DB_USERNAME'),
+            'password' => env('ONLINE_DB_PASSWORD'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
     ],
 
@@ -123,7 +141,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

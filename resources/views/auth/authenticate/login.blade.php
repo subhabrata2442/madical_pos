@@ -20,9 +20,9 @@
             <div class="error">{{ $message }}</div>
               @enderror
           </div>
-          <div class="form-group position-relative add-lft-icon add-rgt-icon"> <span class="left-icon"> <i class="fas fa-key"></i> </span>
-            <input type="password" class="form-control inpyt-style" id="password-field" placeholder="Password" name="password" autocomplete="password-field">
-            <span class="rgt-icon" toggle="#password-field"> <i class="fas fa-eye-slash toggle-password"></i> </span> @error('password')
+          <div class="form-group position-relative add-lft-icon add-rgt-icon add_eye"> <span class="left-icon"> <i class="fas fa-key"></i> </span>
+            <input type="password" class="form-control inpyt-style pass_input" id="password-field" placeholder="Password" name="password" autocomplete="password-field">
+            <span class="rgt-icon pass_eye" toggle="#password-field"> <i class="fas fa-eye-slash toggle-password"></i> </span> @error('password')
             <div class="error">{{ $message }}</div>
             @enderror
           </div>
@@ -69,5 +69,5 @@
     </div>
   </div>
 </div>
-
 @endsection
+
