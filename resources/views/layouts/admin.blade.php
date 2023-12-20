@@ -40,13 +40,31 @@
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
+                    <div class="row mb-2 justify-content-between">
+                        <div class="col-auto">
                             <h1 class="m-0">
                                 {{ !empty($data['heading']) && $data['heading'] ? $data['heading'] : 'Dashboard' }}
                             </h1>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-auto">
+                            <div class="select-store">
+                                <ul>
+                                    <li><label>Select store</label></li>
+                                    <li class="select-store-file">
+                                        <select class="form-control select2" id="store" style="width: 100%;">
+                                            <option selected="selected">Alabama</option>
+                                            <option>Alaska</option>
+                                            <option>California</option>
+                                            <option>Delaware</option>
+                                            <option>Tennessee</option>
+                                            <option>Texas</option>
+                                            <option>Washington</option>
+                                        </select>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-auto">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 @foreach ($data['breadcrumb'] as $item)

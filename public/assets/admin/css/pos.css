@@ -1752,6 +1752,13 @@ p {
     box-shadow: none;
     border-radius: 5px;
 }
+.small-pay-btn a{
+    height: 3.2vw !important;
+    font-size: 0.75vw !important;
+}
+.small-pay-btn a svg{
+    font-size: 1vw !important;
+}
 
 /* Only Media */
 @media only screen and (max-width: 1365px) {

@@ -244,16 +244,16 @@
                                         <li class="payPrint"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-check"></i></span>pay</a></li>
                                     @endif
 
-                                    <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print Last Bill</a></li>
+                                    <li class="payPrint small-pay-btn"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print Last Bill</a></li>
 
                                     {{-- @php
                                         dd($data['settlement']);
                                     @endphp --}}
 
                                     @if (empty($data['settlement']))
-                                        <li class="payPrint"><a href="javascript:;" class="settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
+                                        <li class="payPrint small-pay-btn"><a href="javascript:;" class="settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
                                     @else
-                                        <li class="payPrint"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
+                                        <li class="payPrint small-pay-btn"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
                                     @endif
 
                                 </ul>
