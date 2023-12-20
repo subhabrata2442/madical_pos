@@ -30,7 +30,18 @@
             autoHeight: true
           });
         })
+
+        @if (Session::has('permissioncheck'))
+            $(document).ready(function() {
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You don\'t have permission to access!'
+                });
+            });
+        @endif
       </script>
+
       @yield('scripts')
 </body>
 </html>

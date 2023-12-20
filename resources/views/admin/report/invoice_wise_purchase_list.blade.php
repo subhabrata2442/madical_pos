@@ -52,6 +52,7 @@
 					<li>Total Invoice : <span>{{$data['total_invoice']}}</span></li>
 					<li>Total Qty : <span>{{$data['total_qty']}}</span></li>
 					<li>Total Profit : <span>{{number_format($data['total_profit'],2)}}</span></li>
+					<li>Profit : <span>{{number_format($data['profitpersent'],2)}}%</span></li>
 					<!-- <li>advanced Search : <span>0</span></li> -->
 				</ul>
 			</div>

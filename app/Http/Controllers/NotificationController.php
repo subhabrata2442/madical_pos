@@ -9,7 +9,8 @@ use App\Events\StockAlert;
 use Pusher\Pusher;
 use App\Models\Notification;
 use App\Models\InwardStockProducts;
-
+use Auth;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
@@ -105,6 +106,25 @@ class NotificationController extends Controller
         ];
         Notification::where('id', $request->ids)->update($data);
         // echo 1;
+    }
+
+    public function allnotification(){
+
+        $branch_id=Auth::user()->id;
+		$user_role=Auth::user()->role;
+		if($user_role==1){
+
+            $notification = Notification::orderBy('id', 'DESC')->paginate(20);
+        }else{
+            $notification = Notification::where('store_id', $branch_id)->orderBy('id', 'DESC')->paginate(20);
+        }
+
+        $data = [];
+        $data['notification'] = $notification;
+        $data['heading'] = 'Brand List';
+        $data['breadcrumb'] = ['Brand', 'List'];
+        return view('admin.notification', compact('data'));
+
     }
 
 

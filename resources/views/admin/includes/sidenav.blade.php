@@ -279,6 +279,10 @@ if($adminId!=1){
                 </li> --}}
               </ul>
             </li>
+            <li class="nav-item"> <a href="{{ route('admin.report.inventory') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.inventory') active @endif"> <i class="fas fa-store nav-icon"></i>
+                <p>Inventory</p>
+                </a>
+              </li>
             <li class="nav-item"> <a href="{{ route('admin.report.top_selling_products') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.top_selling_products') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Top selling products</p>
               </a>
@@ -322,6 +326,11 @@ if($adminId!=1){
             </li>
 
           </ul>
+        </li>
+
+        <li class="nav-item"> <a href="{{ route('admin.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p> Credit History </p>
+            </a>
         </li>
 
 

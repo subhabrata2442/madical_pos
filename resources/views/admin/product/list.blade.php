@@ -6,7 +6,7 @@ $user_role=Auth::user()->role;
 <div class="card">
 	<form action="" method="get" id="filter">
 		<div class="row">
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="customer_last_name" class="form-label">Product Name</label>
 					<div class="position-relative">
@@ -14,7 +14,7 @@ $user_role=Auth::user()->role;
 							value="{{request()->input('product_name')}}" autocomplete="off">
 					</div>
 				</div>
-			</div>
+			</div> --}}
 
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
@@ -26,8 +26,9 @@ $user_role=Auth::user()->role;
 				</div>
 			</div>
 
-			<div class="col-12">
-				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
+			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<label for="" class="form-label">Search</label>
+				<ul class="saveSrcArea">
 					{{-- <li> <a href="javascript:?" class="saveBtn-2 reset-btn" id="reset">Reset</i></a> </li> --}}
 					<li>
 						<button class="saveBtn-2" type="submit">Search <i
@@ -37,18 +38,31 @@ $user_role=Auth::user()->role;
 			</div>
 		</div>
 	</form>
+	
 </div>
 <div class="row">
 	<div class="col-12">
 		<div class="card">
 			<x-alert />
-
+				<form action="{{route('admin.product.product_excel_import')}}" method="post" id="" class="needs-validation" enctype="multipart/form-data">
+					@csrf
+					<div class="row justify-content-end mb-3">
+						<div class="col-lg-6 col-md-6 col-sm-12 col-12">
+							<div class="input-group align-items-center">
+								<label for="" class="form-label mb-0 mr-2">Excel Import</label>
+								<input type="file" name="product_excel" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+								<button class="btn btn-outline-secondary saveBtn-3" type="submit" id="inputGroupFileAddon04">Submit</button>
+							</div>
+							<span class="demo-excel-download"><a href="#">Click to Demo excel download</a></span>
+						</div>
+					</div>
+				</form>
 			<div class="table-responsive dataTable-design">
 				<table id="product_list" class="table table-bordered">
 					<thead>
 						<th>Barcode</th>
 						<th>Brand Name</th>
-						<th>Product Name</th>
+						{{-- <th>Product Name</th> --}}
 						<th>Dosage Form</th>
 						<th>Company Name</th>
 						<th>No per package</th>
@@ -61,7 +75,7 @@ $user_role=Auth::user()->role;
 						<tr>
 							<td>{{$product->product_barcode}}</td>
 							<td>{{$product->brand}}</td>
-							<td>{{$product->product_name}}</td>
+							{{-- <td>{{$product->product_name}}</td> --}}
 							<td>{{$product->dosage_name}}</td>
 							<td>{{$product->company_name}}</td>
 							<td>{{$product->no_package}}</td>

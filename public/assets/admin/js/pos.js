@@ -819,7 +819,7 @@ $(document).on('click', '#applyChargeBtn', function() {
 $(document).ready(function() {
     $("#applyCharge-form").validate({
         rules: {
-            charge_amt: "required",
+            // charge_amt: "required",
         },
         messages: {
             //promo: "Required",
@@ -840,6 +840,10 @@ $(document).ready(function() {
             var gross_total_amount = $('#gross_total_input').val();
             var charge_amt = $('#charge_amt').val();
 
+            if(charge_amt==''){
+                charge_amt = 0;
+            }
+
             var charge_amount = Number(gross_total_amount) + Number(charge_amt);
             var total_amount = Number(charge_amount);
 
@@ -853,6 +857,13 @@ $(document).ready(function() {
 
             $("#sub_total_mrp").html('$'+ formatNumber(total_amount));
             $("#sub_total_mrp-input").val(total_amount);
+
+            var total_profit = (total_amount-$("#net_price").val());
+            $("#total_profit").html('$'+ formatNumber(total_profit));
+            $("#profit_price").val(total_profit);
+
+            var profitpersent = (((total_amount - $("#net_price").val())/$("#net_price").val())*100);
+            $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
 
             $('#modal-applyCharges').modal('hide');
 
@@ -893,8 +904,8 @@ $(document).on('click', '#applyDiscountBtn', function() {
 $(document).ready(function() {
     $("#applyDiscount-form").validate({
         rules: {
-            special_discount_percent: "required",
-            special_discount_amt: "required",
+            // special_discount_percent: "required",
+            // special_discount_amt: "required",
         },
         messages: {
             //promo: "Required",
@@ -915,6 +926,15 @@ $(document).ready(function() {
             var gross_total_amount = $('#actual_amount').val();
             var discount_percent = $('#special_discount_percent').val();
             var total_discount = $('#special_discount_amt').val();
+
+            if(discount_percent==''){
+                discount_percent = 0;
+            }
+
+            if(total_discount==''){
+                total_discount = 0;
+            }
+
 
             //var total_discount = Number(gross_total_amount) * Number(discount_percent) / 100;
 
@@ -939,6 +959,13 @@ $(document).ready(function() {
 
             $('#gross_total_amount-input').val(discount_amount);
             $('#gross_total_input').val(discount_amount);
+
+            var total_profit = (total_amount-$("#net_price").val());
+            $("#total_profit").html('$'+ formatNumber(total_profit));
+            $("#profit_price").val(total_profit);
+
+            var profitpersent = (((total_amount - $("#net_price").val())/$("#net_price").val())*100);
+            $("#profitpersent").html(checkformatPercentage(profitpersent) + '%');
 
             $('#modal-applyDiscount').modal('hide');
 
@@ -2314,3 +2341,93 @@ function checkformatPercentage(value) {
       return (value.toFixed(2));
     }
   }
+
+
+$('.no_settlement').click(function() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Settlement submit already for today unable to make bill',
+        showConfirmButton: false,
+        // timer: 2500
+    });
+});
+
+$('.settlement').click(function() {
+
+
+    Swal.fire({
+        // title: "Are you sure? ",
+        text: "This is todays final settlement once you done, unable to make new bill",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            $("#modal_settlement").modal('show');
+        }
+    });
+
+
+});
+
+$(document).ready(function() {
+    $('input[id^="note_"]').on('input', function() {
+        var noteId = $(this).attr('id').split('_')[1];
+        var inputVal = $(this).val();
+
+        var note_name = $("#note_name_"+noteId).val();
+
+
+        if ($.isNumeric(inputVal)) {
+
+        var total = parseInt(inputVal) * parseInt(note_name);
+
+
+        $('.totalnote_' + noteId).text(total);
+        } else {
+
+        $('.totalnote_' + noteId).text('0');
+        }
+
+        // Calculate total settlement amount
+        var total_settlement_amount = 0;
+        $('[class^="totalnote_"]').each(function() {
+            var value = parseInt($(this).text());
+            if (!isNaN(value)) {
+                total_settlement_amount += value;
+            }
+        });
+
+        // Update the total_settlement_amount field with the calculated total
+        $('#total_settlement_amount').val(total_settlement_amount);
+        $('.total_settlement_amount').text(total_settlement_amount);
+
+    });
+
+
+    $("#settlement_form").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+
+            var total_settlement_amount = $("#total_settlement_amount").val();
+
+            if(total_settlement_amount==''){
+                toastr.error("Add minimum one note count!");
+            }else{
+
+                form.preventDefault();
+                $("#settlement_form").submit();
+            }
+
+
+        }
+    });
+
+});

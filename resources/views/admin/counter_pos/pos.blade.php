@@ -238,8 +238,24 @@
                                     <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-3"><span><i class="fas fa-street-view"></i></span>View Hold</a></li>
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-wallet"></i></span>Reset Bill</a></li>
                                     <li class="col-3 disabled_btn"><a href="javascript:;"><span><i class="fas fa-luggage-cart"></i></span>Today Sale</a></li> --}}
-                                    <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                                    @if (empty($data['settlement']))
+                                        <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                                    @else
+                                        <li class="payPrint"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                                    @endif
+
                                     <li class="payPrint"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print Last Bill</a></li>
+
+                                    {{-- @php
+                                        dd($data['settlement']);
+                                    @endphp --}}
+
+                                    @if (empty($data['settlement']))
+                                        <li class="payPrint"><a href="javascript:;" class="settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
+                                    @else
+                                        <li class="payPrint"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
+                                    @endif
+
                                 </ul>
                                 </div>
                             </div>
@@ -263,7 +279,7 @@
                           @if (count($data['topSellingProducts'])>0)
                             @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
                               @if ($topitem['t_qty']!=0)
-                                <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['product_name']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
+                                <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['brand']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
                               @endif
                             @endforeach
                           @endif
@@ -860,6 +876,66 @@
 {{-- <iframe src="{{$data['invoice_url']}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe> --}}
 <iframe src="{{asset('storage/uploads/'.$data['invoice_url'])}}" id="off_counter_invoice-frame" width="400" height="400" style="display:none;"></iframe>
 
+
+
+<div class="modal fade modalMdHeader" id="modal_settlement" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title appendtitle" id="modal-1Label">Settlement</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{{ route('admin.settlement_add') }}" id="settlement_form">
+        <div class="modal-body">
+
+                @csrf
+                <table class="table">
+                    <tr>
+                        <td style="width: 100px;">1000 </td>
+                        <td style="width: 100px;"><input type="text" id="note_1" name="note_count[]" class="form-control"></td>
+                        <input type="hidden" name="note_name[]" id="note_name_1" value="1000">
+                        <td class="totalnote_1">0</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">5000 </td>
+                        <td style="width: 100px;"><input type="text" id="note_2" name="note_count[]" class="form-control"></td>
+                        <input type="hidden" name="note_name[]" id="note_name_2" value="5000">
+                        <td class="totalnote_2">0</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">10000  </td>
+                        <td style="width: 100px;"><input type="text" id="note_3" name="note_count[]" class="form-control"></td>
+                        <input type="hidden" name="note_name[]" id="note_name_3" value="10000">
+                        <td class="totalnote_3">0</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">25000  </td>
+                        <td style="width: 100px;"><input type="text" id="note_4" name="note_count[]" class="form-control"></td>
+                        <input type="hidden" name="note_name[]" id="note_name_4" value="25000">
+                        <td class="totalnote_4">0</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">50000  </td>
+                        <td style="width: 100px;"><input type="text" id="note_5" name="note_count[]" class="form-control"></td>
+                        <input type="hidden" name="note_name[]" id="note_name_5" value="50000">
+                        <td class="totalnote_5">0</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">Total  </td>
+                        <td style="width: 100px;"></td>
+                        <input type="hidden" name="total_settlement_amount" id="total_settlement_amount" value="">
+                        <td class="total_settlement_amount">0</td>
+                    </tr>
+                </table>
+
+                <button class="btn btn-primary" type="submit">Submit</button>
+
+        </div>
+    </form>
+      </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -876,5 +952,41 @@
 $(function () {
 	  $('[data-toggle="tooltip"]').tooltip();
 });
+
+
+$(document).keyup(function(e){
+   if(e.which==122){
+       e.preventDefault();
+
+       console.log($('.content').hasClass('full-mode'));
+
+        if ($('.content').hasClass('full-mode')==false) {
+
+            $('.content').addClass('full-mode');
+            $('#fullscreen .requestfullscreen').hide();
+            $('#fullscreen .exitfullscreen').show();
+
+        }else{
+            $('.content').removeClass('full-mode');
+            $('#fullscreen .requestfullscreen').show();
+            $('#fullscreen .exitfullscreen').hide();
+        }
+
+       return false;
+   }
+});
+
+@if (Session::has('success'))
+    $(document).ready(function() {
+        Swal.fire({
+            title: 'Success',
+            text: '{{ Session::get('success') }}',
+            icon: 'success',
+        });
+    });
+@endif
+
 </script>
+
+
 @endsection

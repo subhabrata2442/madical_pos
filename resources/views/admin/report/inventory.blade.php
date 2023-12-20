@@ -62,14 +62,14 @@
           <input type="hidden" id="product_id" name="product_id" value="{{request()->input('product_id')}}">
         </div>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+      {{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
         <div class="form-group">
           <label for="drugstore" class="form-label">Drugstore name</label>
           <div class="position-relative">
             <input type="text" class="form-control" id="drugstore" name="drugstore" value="{{request()->input('drugstore')}}" autocomplete="off">
           </div>
         </div>
-      </div>
+      </div> --}}
       <div class="col-lg-3 col-md-3 col-sm-12 col-12">
         <div class="form-group">
           <label for="product_barcode" class="form-label">Barcode</label>
@@ -78,7 +78,23 @@
           </div>
         </div>
       </div>
-      
+
+        @if (Auth::user()->role == 1)
+            <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                <div class="form-group">
+                    <label for="" class="form-label">Select Store</label>
+                    <select class="form-control custom-select form-control-select" id="" name="store_id">
+                        <option value="">Select Store</option>
+                        @forelse ($data['storeUsers'] as $store)
+                            <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                        @empty
+
+                        @endforelse
+                    </select>
+                </div>
+            </div>
+        @endif
+
       {{-- <div class="col-lg-2 col-md-2 col-sm-12 col-12">
         <div class="form-group">
           <label for="" class="form-label">Select Category</label>
@@ -91,14 +107,33 @@
           </select>
         </div>
       </div> --}}
-      
-      
+
+
       <div class="col-12">
         <ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
           <li> <a href="javascript:?" class="saveBtn-2 reset-btn" id="reset">Reset</i></a> </li>
           <li>
             <button class="saveBtn-2" type="submit">Search <i class="fas fa-arrow-circle-right"></i></button>
           </li>
+          <li>
+            @php
+
+                $brand = '';
+                $product_barcode = '';
+                $store_id = '';
+
+                if (isset($_GET['brand'])) {
+                    $brand = $_GET['brand'];
+                }
+                if (isset($_GET['product_barcode'])) {
+                    $product_barcode = $_GET['product_barcode'];
+                }
+                if (isset($_GET['store_id'])) {
+                    $store_id = $_GET['store_id'];
+                }
+            @endphp
+            <a href="{{ url('admin/report/inventory_download?brand='.$brand.'&product_barcode='.$product_barcode.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
+        </li>
         </ul>
       </div>
     </div>
@@ -111,19 +146,20 @@
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
+            <th scope="col">Store</th>
             <th scope="col">Barcode</th>
-            <th scope="col">The Brand</th>
+            <th scope="col">Brand</th>
             <th scope="col">Dosage Form</th>
             <th scope="col">Company</th>
-            <th scope="col">Drugstore name</th>
-            <th scope="col">Total Quantity</th>
-            <th scope="col">Net Price</th>
+            {{-- <th scope="col">Drugstore name</th> --}}
+            <th scope="col">Total Stock</th>
+            {{-- <th scope="col">Net Price</th>
             <th scope="col">Price</th>
             <th scope="col">US/IQ rate</th>
-            <th scope="col">Sell Price</th>
+            <th scope="col">Sell Price</th> --}}
           </thead>
           <tbody>
-          
+
           @forelse ($data['products'] as $Stock_product)
           @php
           $product_mrp=isset($Stock_product->stockProduct->product_mrp)?number_format($Stock_product->stockProduct->product_mrp,2):'-';
@@ -131,16 +167,17 @@
           $w_qty=isset($Stock_product->stockProduct->w_qty)?$Stock_product->stockProduct->w_qty:'-';
           @endphp
           <tr>
+            <td>{{@$Stock_product->user->name}}</td>
             <td>{{@$Stock_product->product_barcode}}</td>
             <td>{{@$Stock_product->product->brand}}</td>
             <td>{{@$Stock_product->product->dosage_name}}</td>
             <td>{{@$Stock_product->product->company_name}}</td>
-            <td>{{@$Stock_product->product->drugstore_name}}</td>
+            {{-- <td>{{@$Stock_product->product->drugstore_name}}</td> --}}
             <td>{{@$Stock_product->t_qty}}</td>
-            <td>{{@$Stock_product->product->net_price}}</td>
+            {{-- <td>{{@$Stock_product->product->net_price}}</td>
             <td>{{@$Stock_product->product->product_mrp}}</td>
             <td>{{@$Stock_product->product->product_mrp}}</td>
-            <td>{{@$Stock_product->product->selling_price}}</td>
+            <td>{{@$Stock_product->product->selling_price}}</td> --}}
           </tr>
           @empty
           <tr >
@@ -148,7 +185,7 @@
           </tr>
           @endforelse
             </tbody>
-          
+
         </table>
         {{ $data['products']->appends($_GET)->links() }} </div>
     </div>
@@ -156,12 +193,12 @@
 </div>
 @endsection
 
-@section('scripts') 
-@if( Request::has('product')) 
+@section('scripts')
+@if( Request::has('product'))
 <script>
 	$(".toggleCard").css("display", "block");
-	</script> 
-@endif 
+	</script>
+@endif
 <script type="text/javascript">
 $(document).ready(function() {
     $(".qty_update").click(function() {
@@ -202,14 +239,14 @@ $(document).ready(function() {
         }
     });
 });
-</script> 
+</script>
 <script type="text/javascript">
 $(function() {
 	//End Date range picker
 	$('.searchDropBtn').on("click",function(){
 		$(".toggleCard").slideToggle();
 	})
-	
+
 	//Cusomer List
 	$("#search_customer").keyup(function() {
 		var search = $(this).val();
@@ -243,7 +280,7 @@ $(function() {
             });
         }
 	});
-	
+
 	//Invoice List
 	$("#search_sale_invoice").keyup(function() {
 		var search = $(this).val();
@@ -319,5 +356,5 @@ $(function() {
 	});
 });
 
-</script> 
-@endsection 
+</script>
+@endsection
