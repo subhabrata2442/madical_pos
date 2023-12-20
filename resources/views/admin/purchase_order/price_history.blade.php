@@ -3,60 +3,11 @@
 @php
 $user_role=Auth::user()->role;
 @endphp
-<div class="card">
-	<form action="" method="get" id="filter">
-		<div class="row">
-			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="customer_last_name" class="form-label">Product Name</label>
-					<div class="position-relative">
-						<input type="text" class="form-control" id="search_product" name="product_name"
-							value="{{request()->input('product_name')}}" autocomplete="off">
-					</div>
-				</div>
-			</div> --}}
 
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="product_barcode" class="form-label">Barcode</label>
-					<div class="position-relative">
-						<input type="text" class="form-control" id="product_barcode" name="product_barcode"
-							value="{{request()->input('product_barcode')}}" autocomplete="off">
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<label for="" class="form-label">Search</label>
-				<ul class="saveSrcArea">
-					{{-- <li> <a href="javascript:?" class="saveBtn-2 reset-btn" id="reset">Reset</i></a> </li> --}}
-					<li>
-						<button class="saveBtn-2" type="submit">Search <i
-								class="fas fa-arrow-circle-right"></i></button>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</form>
-	
-</div>
 <div class="row">
 	<div class="col-12">
 		<div class="card">
 			<x-alert />
-				<form action="{{route('admin.product.product_excel_import')}}" method="post" id="" class="needs-validation" enctype="multipart/form-data">
-					@csrf
-					<div class="row justify-content-end mb-3">
-						<div class="col-lg-6 col-md-6 col-sm-12 col-12">
-							<div class="input-group align-items-center">
-								<label for="" class="form-label mb-0 mr-2">Excel Import</label>
-								<input type="file" name="product_excel" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-								<button class="btn btn-outline-secondary saveBtn-3" type="submit" id="inputGroupFileAddon04">Submit</button>
-							</div>
-							<span class="demo-excel-download"><a href="#">Click to Demo excel download</a></span>
-						</div>
-					</div>
-				</form>
 			<div class="table-responsive dataTable-design">
 				<table id="product_list" class="table table-bordered">
 					<thead>
@@ -103,10 +54,7 @@ $user_role=Auth::user()->role;
 										</svg>
 									</div>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-										<a class="dropdown-item"
-											href="{{ route('admin.product.edit', [base64_encode($product->id)])}}">Edit</a>
-										<a class="dropdown-item delete-item" href="javascript:;" id="delete_product"
-											data-url="{{route('admin.product.delete', [base64_encode($product->id)]) }}">Delete</a>
+										<a class="dropdown-item" href="javascript:void(0)" onclick="priceHistory('{{$product->id}}')">Price History</a>
 									</div>
 								</div>
 							</td>
@@ -123,8 +71,58 @@ $user_role=Auth::user()->role;
 		</div>
 	</div>
 </div>
+
+
+<div class="modal fade modalMdHeader" id="modal_paymenthistory" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title appendtitle" id="modal-1Label">Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <table id="" class="table table-bordered paymentHistoryTable">
+                <thead>
+
+                    <th>Sl No.</th>
+                    <th>Price</th>
+                    <th>Purchase Date</th>
+                </thead>
+                <tbody class="paymentHistory">
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+
 @endsection
 
 @section('scripts')
+
+<script>
+    function priceHistory(product_id){
+        $.ajax({
+            url: "{{url('admin/purchase/pricehistory_product')}}/"+product_id,
+            type: "get",
+            data: {
+                product_id: product_id,
+                _token: "<?php echo csrf_token(); ?>",
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.status == 1) {
+                    $("#modal_paymenthistory").modal('show');
+                    $(".paymentHistory").html(response.html);
+                    $(".appendtitle").html(response.product_name);
+                }else{
+
+                }
+            },
+        });
+    }
+</script>
 
 @endsection

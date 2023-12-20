@@ -63,6 +63,7 @@ use Carbon\Carbon;
 use Smalot\PdfParser\Parser;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use App\Models\Settlement;
 
 use Pusher\Pusher;
 
@@ -479,7 +480,8 @@ class PosController extends Controller
 				}
 			}
 
-			// dd($result);
+            $data['settlement'] = Settlement::where('store_id', Auth::user()->id)->whereDate('created_at', now()->toDateString())->first();
+
 			$data['topSellingProducts']=$result;
 
             return view('admin.counter_pos.pos', compact('data'));
@@ -547,6 +549,7 @@ class PosController extends Controller
 			//'created_at'				=> date('Y-m-d'),
             'net_price' 			=> $request->net_price,
             'profit_price' 			=> $request->profit_price,
+            'emp_id' 			=> Auth::user()->id,
 		);
 
 		//print_r($sellStockData);exit;

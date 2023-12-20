@@ -88,7 +88,7 @@
             <th scope="col">Action</th>
               </thead>
           <tbody>
-          
+
           @forelse ($data['stock_product'] as $product_stock)
           <tr>
             <td>{{@$product_stock->product->product_name}}</td>
@@ -105,7 +105,7 @@
           </tr>
           @endforelse
             </tbody>
-          
+
         </table>
         {{ $data['stock_product']->appends($_GET)->links() }} </div>
     </div>
@@ -129,9 +129,9 @@
           <input type="hidden" id="transfer_to" name="transfer_to" value="w" />
             <div class="mb-3">
               <label for="" class="form-label">Warehouse Stock:<span id="prev_w_qty_label"></span></label>
-              
+
             </div>
-            
+
             @forelse ($data['counter'] as $counter_row)
             <div class="mb-3">
               <label for="" class="form-label">{{$counter_row->name}} (Stock:<span id="prev_c_qty_label"></span>)</label>
@@ -157,18 +157,18 @@
 @section('scripts')
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
-@if( Request::has('product')) 
+@if( Request::has('product'))
 <script>
 	$(".toggleCard").css("display", "block");
-	</script> 
-@endif 
+	</script>
+@endif
 <script type="text/javascript">
 
 
 $(document).on('click', '#w_qty-input', function() {
 	$('#transfer_to').val('w');
 	$(this).select();
-	
+
 });
 
 $(document).on('click', '#c_qty-input', function() {
@@ -179,17 +179,17 @@ $(document).on('click', '#c_qty-input', function() {
 $(document).on('keyup', '#w_qty-input', function() {
 	var original_w_qty	= $('#original_w_qty').val();
 	var original_c_qty	= $('#original_c_qty').val();
-	
+
 	var new_w_qty=$(this).val();
-	
+
 	if (Number(new_w_qty) <= 0) {
 		$('#w_qty-input').val(0);
 		toastr.error("Entered Qty should not be greater than Stock");
 		return false;
 	}
-	
+
 	console.log('new_w_qty',new_w_qty);
-	
+
 	var w_qty=0;
 	if(original_w_qty>0){
 		//console.log('original_w_qty',original_w_qty);
@@ -206,24 +206,24 @@ $(document).on('keyup', '#w_qty-input', function() {
 		var w_qty=$(this).val();
 		var new_c_qty=parseInt(original_c_qty)-parseInt(w_qty);
 	}
-	
+
 	$('#c_qty-input').val(new_c_qty);
 });
 
 $(document).on('keyup', '#c_qty-input', function() {
 	var original_w_qty	= $('#original_w_qty').val();
 	var original_c_qty	= $('#original_c_qty').val();
-	
+
 	var new_c_qty=$(this).val();
-	
+
 	if (Number(new_c_qty) <= 0) {
 		$('#c_qty-input').val(0);
 		toastr.error("Entered Qty should not be greater than Stock");
 		return false;
 	}
-	
-	
-	
+
+
+
 	var c_qty=0;
 	if(original_c_qty>0){
 		if(parseInt(original_c_qty) < parseInt(new_c_qty) ){
@@ -251,30 +251,30 @@ $(document).on('click','.exchange_btn',function(){
 	var c_qty		= $(this).data('c_qty');
 	var stock_id	= $(this).data('stock_id');
 	var price_id	= $(this).data('price_id');
-	
+
 	$('#prev_w_qty_label').text(w_qty);
 	$('#prev_c_qty_label').text(c_qty);
-	
-	
+
+
 	$('#stock_id').val(stock_id);
 	$('#price_id').val(price_id);
-	
-	
+
+
 	$('#original_w_qty').val(w_qty);
 	$('#original_c_qty').val(c_qty);
 	$('#w_qty-input').val(w_qty);
 	$('#c_qty-input').val(c_qty);
-	
+
 	var total_qty=0;
 	total_qty += parseInt(w_qty);
 	total_qty += parseInt(c_qty);
-	
+
 	if(total_qty>0){
 		$('#modal-applyExchange').modal('show');
 	}else{
 		toastr.error("Don't have enough stock to transfer");
 	}
-	
+
 });
 
 $(document).ready(function() {
@@ -301,26 +301,26 @@ $(document).ready(function() {
         submitHandler: function(form) {
             var gross_total_amount = $('#gross_total_amount-input').val();
             var charge_amt = $('#charge_amt').val();
-			
+
 			var original_w_qty	= $('#original_w_qty').val();
 			var original_c_qty	= $('#original_c_qty').val();
-			
+
 			var prev_total_qty=0;
 			prev_total_qty += parseInt(original_w_qty);
 			prev_total_qty += parseInt(original_c_qty);
-			
+
 			var new_w_qty		= $('#w_qty-input').val();
 			var new_c_qty		= $('#c_qty-input').val();
-			
+
 			var new_total_qty=0;
 			new_total_qty += parseInt(new_w_qty);
 			new_total_qty += parseInt(new_c_qty);
-			
+
 			if(new_total_qty==prev_total_qty){
 				var stock_id	= $('#stock_id').val();
 				var price_id	= $('#price_id').val();
 				var transfer_to	= $('#transfer_to').val();
-				
+
 				$.ajax({
 				url: prop.ajaxurl,
 				type: 'post',
@@ -347,19 +347,19 @@ $(document).ready(function() {
                     }).then((result) => {
 
                         if (result.isConfirmed) {
-                            
+
                             location.reload();
 
                         } else if (result.isDenied) {}
                     });
 				}
 			});
-				
+
 			}else{
 				toastr.error("Something Error Occurs!");
 			}
 
-            
+
 
         }
     });
@@ -414,5 +414,5 @@ $(function() {
 	});
 });
 
-</script> 
-@endsection 
+</script>
+@endsection

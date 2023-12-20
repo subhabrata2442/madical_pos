@@ -8,6 +8,9 @@
   .red_border {
     border: 1px solid #e50b0b;
   }
+  .fa-info-circle{
+    cursor: pointer;
+  }
 </style>
 
 @php
@@ -112,7 +115,7 @@ $adminRoll = Session::get('admin_type');
                       <option value="cheque">Cheque</option>
                       <option value="net_banking">Net Banking</option>
                       <option value="cash">Cash</option>
-                      <option value="debt">Debt</option>
+                      <option value="credit">Credit</option>
                     </select>
                   </li>
                 </ul>
@@ -286,8 +289,8 @@ $adminRoll = Session::get('admin_type');
                     <th>NPP</th> {{-- No per package --}}
                     <th>Net Price</th>
                     <th style="width: 80px;">Price</th>
-                    
-                    
+
+
                     {{-- <th>Discount %</th> --}}
                     <th style="width: 80px;">Bonous</th>
                     {{-- <th id="th_rate_title">US/IQ rate</th> --}}
@@ -510,6 +513,32 @@ $adminRoll = Session::get('admin_type');
     </div>
   </div>
 
+
+
+  <div class="modal fade modalMdHeader" id="modal_paymenthistory" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title appendtitle" id="modal-1Label">Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <table id="" class="table table-bordered paymentHistoryTable">
+                <thead>
+
+                    <th>Sl No.</th>
+                    <th>Price</th>
+                    <th>Purchase Date</th>
+                </thead>
+                <tbody class="paymentHistory">
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+    </div>
+</div>
+
   @endsection
 
   @section('scripts')
@@ -524,6 +553,28 @@ $adminRoll = Session::get('admin_type');
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
     });
+
+
+    function priceHistory(product_id){
+        $.ajax({
+            url: "{{url('admin/purchase/pricehistory_product')}}/"+product_id,
+            type: "get",
+            data: {
+                product_id: product_id,
+                _token: "<?php echo csrf_token(); ?>",
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.status == 1) {
+                    $("#modal_paymenthistory").modal('show');
+                    $(".paymentHistory").html(response.html);
+                    $(".appendtitle").html(response.product_name);
+                }else{
+
+                }
+            },
+        });
+    }
 
   </script>
 

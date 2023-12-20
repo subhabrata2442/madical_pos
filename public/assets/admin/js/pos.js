@@ -2341,3 +2341,93 @@ function checkformatPercentage(value) {
       return (value.toFixed(2));
     }
   }
+
+
+$('.no_settlement').click(function() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Settlement submit already for today unable to make bill',
+        showConfirmButton: false,
+        // timer: 2500
+    });
+});
+
+$('.settlement').click(function() {
+
+
+    Swal.fire({
+        // title: "Are you sure? ",
+        text: "This is todays final settlement once you done, unable to make new bill",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            $("#modal_settlement").modal('show');
+        }
+    });
+
+
+});
+
+$(document).ready(function() {
+    $('input[id^="note_"]').on('input', function() {
+        var noteId = $(this).attr('id').split('_')[1];
+        var inputVal = $(this).val();
+
+        var note_name = $("#note_name_"+noteId).val();
+
+
+        if ($.isNumeric(inputVal)) {
+
+        var total = parseInt(inputVal) * parseInt(note_name);
+
+
+        $('.totalnote_' + noteId).text(total);
+        } else {
+
+        $('.totalnote_' + noteId).text('0');
+        }
+
+        // Calculate total settlement amount
+        var total_settlement_amount = 0;
+        $('[class^="totalnote_"]').each(function() {
+            var value = parseInt($(this).text());
+            if (!isNaN(value)) {
+                total_settlement_amount += value;
+            }
+        });
+
+        // Update the total_settlement_amount field with the calculated total
+        $('#total_settlement_amount').val(total_settlement_amount);
+        $('.total_settlement_amount').text(total_settlement_amount);
+
+    });
+
+
+    $("#settlement_form").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+
+            var total_settlement_amount = $("#total_settlement_amount").val();
+
+            if(total_settlement_amount==''){
+                toastr.error("Add minimum one note count!");
+            }else{
+
+                form.preventDefault();
+                $("#settlement_form").submit();
+            }
+
+
+        }
+    });
+
+});

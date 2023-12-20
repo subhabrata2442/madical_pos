@@ -70,7 +70,7 @@
         <!-- /.card-body -->
       </div>
       <!-- /.card -->
-          
+
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <!-- AREA CHART -->
@@ -127,7 +127,7 @@
         </div>
         <!-- /.card-body -->
       </div>
-      
+
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6 col-12">
       <div class="card">
@@ -194,7 +194,7 @@
                     <tbody>
                     <tr>
                       <td>
-                        
+
                         Some Product
                       </td>
                       <td>$13 USD</td>
@@ -213,7 +213,7 @@
                     </tr>
                     <tr>
                       <td>
-                        
+
                         Another Product
                       </td>
                       <td>$29 USD</td>
@@ -232,7 +232,7 @@
                     </tr>
                     <tr>
                       <td>
-                        
+
                         Amazing Product
                       </td>
                       <td>$1,230 USD</td>
@@ -251,7 +251,7 @@
                     </tr>
                     <tr>
                       <td>
-                        
+
                         Perfect Item
                         <span class="badge bg-danger">NEW</span>
                       </td>
@@ -329,7 +329,7 @@
 
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script src="{{ url('assets/admin/js/plugins/chart/Chart.min.js') }}"></script>
 <script type="text/javascript">
   $(function () {
@@ -607,6 +607,6 @@
 
   });
 
-  
-</script> 
-@endsection 
+
+</script>
+@endsection

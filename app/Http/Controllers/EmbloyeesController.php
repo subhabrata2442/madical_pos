@@ -26,7 +26,7 @@ class EmbloyeesController extends Controller
 
             if ($request->ajax()) {
                 $users = User::with('get_role')->where('parent_id',$parent_id)->orderBy('id', 'desc')->get();
-                return DataTables::of($users) 
+                return DataTables::of($users)
                     ->addColumn('name', function ($row) {
                         return $row->name;
                     })
@@ -35,7 +35,7 @@ class EmbloyeesController extends Controller
                     })
                     ->addColumn('ph_no', function ($row) {
                         return $row->phone;
-                    }) 
+                    })
                     ->addColumn('status', function ($row) {
                         $status = '';
                         if ($row->status == 0) {
@@ -61,7 +61,7 @@ class EmbloyeesController extends Controller
 							$dropdown .= '<a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.embloyees.delete', [base64_encode($row->id)]) . '">Delete</a>';
 						}
 						// <a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.store.delete', [base64_encode($row->id)]) . '">Delete</a>
-                       
+
                         if ($row->status == 1) {
                             $dropdown .= '<a class="dropdown-item" id="change_status" href="#" data-status="0"  data-url="' . route('admin.embloyees.changeStatus', [base64_encode($row->id), 0]) . '">Block</a>';
                         } else {
@@ -116,11 +116,11 @@ class EmbloyeesController extends Controller
 					'phone'			=> $request->phone,
 					'password'		=>  Hash::make($request->password),
                     'parent_id'     => $parent_id,
-					'role'   		=> 2,
+					'role'   		=> 3,
 					'status'		=> 1,
 				);
 				//echo '<pre>';print_r($store_data);exit;
-				
+
 				$store=User::create($store_data);
 				$store_id=$store->id;
 
@@ -131,7 +131,7 @@ class EmbloyeesController extends Controller
 					'contact_mobile'    => $request->phone,
                     'whatsapp_no'       => $request->phone,
 				);
-                
+
                 StoreDetails::create($store_details_data);
 
 				$roll_ids           = $request->roll_ids;
@@ -143,8 +143,8 @@ class EmbloyeesController extends Controller
                 $roll_print_ids     = $request->print;
                 $roll_upload_ids    = $request->upload;
                 $role_permission_id = $request->employee_role_permission_id;
-                
-    
+
+
                 $rollPermision=[];
                 if(isset($roll_ids)){
                     if(count($roll_ids)>0){
@@ -155,7 +155,7 @@ class EmbloyeesController extends Controller
                             for($i=0;count($role_wise_permission_ids)>$i;$i++){
                                 $subRollPermisionType=[];
                                 $subRollPermisionTypeIds=[];
-                                
+
                                 $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -166,7 +166,7 @@ class EmbloyeesController extends Controller
                                     $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                     $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                     $subRollPermisionTypeIds[]=$subRolltypeId;
-                                    
+
                                 }
                                 $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                                 if($isAddPermision!=''){
@@ -224,7 +224,7 @@ class EmbloyeesController extends Controller
                                     );
                                 }
                             }
-                            
+
                             //echo '<pre>';print_r($role_wise_permission_ids);
 
                             $rollPermision[]=array(
@@ -248,7 +248,7 @@ class EmbloyeesController extends Controller
                         );
                         //echo '<pre>';print_r($userRolePermission);exit;
                         UserRolePermission::create($userRolePermission);
-                        
+
                         foreach($row['subRollPermision'] as $sRow){
                             $sub_roll_id=$sRow['sub_roll_id'];
                             foreach($sRow['permisionType'] as $key=>$val){
@@ -267,7 +267,7 @@ class EmbloyeesController extends Controller
                         }
                     }
                 }
-                
+
 				return redirect()->back()->with('success', 'Store Added successfully');
             }
             $data = [];
@@ -290,14 +290,14 @@ class EmbloyeesController extends Controller
             $store_role=[];
             foreach($rolePermission as $row){
                 $sub_roll=[];
-                
+
                 $storeRoleWisePermission= RoleWisePermission::where('branch_id',$parent_id)->where('role_id',$row->id)->select('permission_id')->distinct()->orderBy('id', 'asc')->get();
                 $storeSubRolePermissionIds=[];
                 foreach($storeRoleWisePermission as $sprow){
                     $storeSubRolePermissionIds[]=$sprow->permission_id;
                 }
                 //echo '<pre>';print_r($storeSubRolePermissionIds);exit;
-                
+
                 $subRolePermission= RolePermission::where('parent_id',$row->id)->whereIn('id', $storeSubRolePermissionIds)->where('status',1)->orderBy('id', 'asc')->get();
                 $is_checked='N';
 
@@ -320,7 +320,7 @@ class EmbloyeesController extends Controller
                     $is_print_chk   = 'N';
                     $is_upload_chk  = 'N';
 
-                    
+
 
                     $viewCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',1)->count();
                     if($viewCount>0){
@@ -330,32 +330,32 @@ class EmbloyeesController extends Controller
                     if($addCount>0){
                         $is_add    = 'Y';
                     }
-                    
+
                     $editCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',3)->count();
                     if($editCount>0){
                         $is_edit    = 'Y';
                     }
-                    
+
                     $deleteCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',4)->count();
                     if($deleteCount>0){
                         $is_delete    = 'Y';
                     }
-                    
+
                     $downloadCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',5)->count();
                     if($downloadCount>0){
                         $is_download    = 'Y';
                     }
-                    
+
                     $printCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',6)->count();
                     if($printCount>0){
                         $is_print    = 'Y';
                     }
-                    
+
                     $uploadCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',7)->count();
                     if($uploadCount>0){
                         $is_upload    = 'Y';
                     }
-                    
+
                     //echo '<pre>';print_r($is_view);exit;
 
 
@@ -379,7 +379,7 @@ class EmbloyeesController extends Controller
                         'is_upload_chk'   => $is_upload_chk,
                     );
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -391,27 +391,27 @@ class EmbloyeesController extends Controller
             $data['store_role'] = $store_role;
 
 			//echo '<pre>';print_r($data['store_role']);exit;
-			
+
             return view('admin.embloyees.add', compact('data'));
         } catch (\Exception $e) {
             $return_data['success'] = 0;
 			$return_data['error_message'] = 'Something went wrong. Please try later. ' . $e->getMessage();
         }
     }
-    
+
     public function edit(Request $request, $id)
     {
         try {
             $parent_id=Auth::user()->id;
             $store_id = base64_decode($id);
 			if ($request->isMethod('post')) {
-				
+
 			$validator = Validator::make($request->all(), [
 				'email' 	=> 'required|email|unique:users,email,' . $store_id,
 				'phone' 	=> 'required|numeric|unique:users,phone,' . $store_id,
 				'full_name' => 'required',
 			]);
-			
+
 			if($request->password!=''){
 				$validator = Validator::make($request->all(), [
 				'password' => 'min:6|required_with:password_confirm|same:password_confirm',
@@ -420,7 +420,7 @@ class EmbloyeesController extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-			
+
 			$array = [
 				'name' 	=> $request->full_name,
 				'email' => $request->email,
@@ -429,7 +429,7 @@ class EmbloyeesController extends Controller
 
 			//print_r($array);exit;
 
-			
+
 			if($request->password!=''){
 				$array['password']=Hash::make($request->password_confirm);
 			}
@@ -453,7 +453,7 @@ class EmbloyeesController extends Controller
             $roll_print_ids     = $request->print;
             $roll_upload_ids    = $request->upload;
             $role_permission_id = $request->employee_role_permission_id;
-            
+
 
             $rollPermision=[];
             if(isset($roll_ids)){
@@ -465,7 +465,7 @@ class EmbloyeesController extends Controller
                         for($i=0;count($role_wise_permission_ids)>$i;$i++){
                             $subRollPermisionType=[];
                             $subRollPermisionTypeIds=[];
-                            
+
                             $sub_roll_id=isset($role_wise_permission_ids[$i])?$role_wise_permission_ids[$i]:'';
 
 
@@ -476,7 +476,7 @@ class EmbloyeesController extends Controller
                                 $subRolltypeResult= RoleSubPermission::where('role_id',$sub_roll_id)->where('type_id',1)->first();
                                 $subRolltypeId	= isset($subRolltypeResult->id)?$subRolltypeResult->id:'0';
                                 $subRollPermisionTypeIds[]=$subRolltypeId;
-                                
+
                             }
                             $isAddPermision=isset($roll_add_ids[$key][$sub_roll_id])?$roll_add_ids[$key][$sub_roll_id]:'';
                             if($isAddPermision!=''){
@@ -534,7 +534,7 @@ class EmbloyeesController extends Controller
                                 );
                             }
                         }
-                        
+
                         //echo '<pre>';print_r($role_wise_permission_ids);
 
                         $rollPermision[]=array(
@@ -558,7 +558,7 @@ class EmbloyeesController extends Controller
                     );
                     //echo '<pre>';print_r($userRolePermission);exit;
                     UserRolePermission::create($userRolePermission);
-                    
+
                     foreach($row['subRollPermision'] as $sRow){
                         $sub_roll_id=$sRow['sub_roll_id'];
                         foreach($sRow['permisionType'] as $key=>$val){
@@ -579,18 +579,18 @@ class EmbloyeesController extends Controller
             }
 
             //echo '<pre>';print_r($rollPermision);exit;
-            
-			
+
+
 			return redirect()->back()->with('success', 'Store Updated successfully');
         }
-            
+
             $data = [];
             $data['heading'] 	= 'Embloyees Edit';
             $data['breadcrumb'] = ['Embloyees', 'Edit'];
             $data['store'] 	= User::find($store_id);
 			$data['role']= RolePermission::where('status',1)->orderBy('id', 'asc')->get();
 			$data['roleWisePermission']= RoleWisePermission::where('branch_id',$store_id)->orderBy('id', 'asc')->get();
-            
+
             $storeRolePermission= UserRolePermission::where('user_id',$parent_id)->whereNotIn('role_id', [6])->orderBy('id', 'asc')->get();
             $storeRolePermissionIds=[];
             foreach($storeRolePermission as $row){
@@ -603,7 +603,7 @@ class EmbloyeesController extends Controller
             $store_role=[];
             foreach($rolePermission as $row){
                 $sub_roll=[];
-                
+
                 $storeRoleWisePermission= RoleWisePermission::where('branch_id',$parent_id)->where('role_id',$row->id)->select('permission_id')->distinct()->orderBy('id', 'asc')->get();
                 $storeSubRolePermissionIds=[];
                 foreach($storeRoleWisePermission as $sprow){
@@ -622,7 +622,7 @@ class EmbloyeesController extends Controller
                 if($userRolePermissionCount>0){
                     $is_checked='Y';
                 }
-                
+
                 foreach($subRolePermission as $srow){
                     $is_view    = 'N';
                     $is_add     = 'N';
@@ -640,18 +640,18 @@ class EmbloyeesController extends Controller
                     $is_print_chk   = 'N';
                     $is_upload_chk  = 'N';
 
-                    
+
 
                     $viewCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',1)->count();
                     if($viewCount>0){
                         $is_view    = 'Y';
                     }
-                    
+
                     $viewchkCount= RoleWisePermission::where('branch_id',$store_id)->where('role_id',$row->id)->where('permission_id',$srow->id)->where('type_id',1)->count();
                     if($viewchkCount>0){
                         $is_view_chk    = 'Y';
                     }
-                    
+
                     $addCount= RoleSubPermission::where('role_id',$srow->id)->where('type_id',2)->count();
                     if($addCount>0){
                         $is_add    = 'Y';
@@ -723,7 +723,7 @@ class EmbloyeesController extends Controller
                         'is_upload_chk'   => $is_upload_chk,
                     );
                 }
-                
+
                 $store_role[]=array(
                     'roll_id'       => $row->id,
                     'title'         => $row->title,
@@ -733,9 +733,9 @@ class EmbloyeesController extends Controller
             }
 
             $data['store_role'] = $store_role;
-            
+
             //echo '<pre>';print_r($data['store_role']);exit;
-						
+
             return view('admin.embloyees.edit', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
@@ -750,7 +750,7 @@ class EmbloyeesController extends Controller
 			// SupplierBank::where('supplier_id',$id)->delete();
 			// SupplierGst::where('supplier_id',$id)->delete();
 			// SupplierContactDetails::where('supplier_id',$id)->delete();
-			
+
             return redirect()->back()->with('success', 'Supplier deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
