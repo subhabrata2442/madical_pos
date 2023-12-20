@@ -10,52 +10,52 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-info-g">
                 <div class="inner">
-                <h3>0</h3>
+                <h3>{{$data['totalSalesToday']}}</h3>
 
                 <p>Total sales</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-coins"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
             <div class="col-lg-3 col-6">
             <div class="small-box bg-success-g">
                 <div class="inner">
-                <h3>153<sup style="font-size: 20px">%</sup></h3>
+                <h3>{{$data['totalBilltoday']}}</h3>
 
                 <p>Total Bill</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-receipt"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
             <div class="col-lg-3 col-6">
             <div class="small-box bg-warning-g">
                 <div class="inner">
-                <h3>150</h3>
+                <h3>{{$data['totalProfitToday']}}</h3>
 
                 <p>Total Profit</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
             <div class="col-lg-3 col-6">
             <div class="small-box bg-danger-g">
                 <div class="inner">
-                <h3>150</h3>
+                <h3>{{$data['totalBilltoday']}}</h3>
                 <p>Total Customer</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
         </div>
@@ -68,49 +68,49 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
                 <div class="small-box bg-blue-g">
                 <div class="inner">
-                    <h3>150</h3>
+                    <h3>{{$data['totalSalesthismonth']}}</h3>
                     <p>Total Sale</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-coins"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-yellow-g">
                 <div class="inner">
-                <h3>150</h3>
+                <h3>{{$data['totalBillthismonth']}}</h3>
                 <p>Total Bill</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-receipt"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-syblue-g">
                 <div class="inner">
-                <h3>150</h3>
+                <h3>{{$data['totalProfitthismonth']}}</h3>
                 <p>Total Profit</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-yellowgreen-g">
                 <div class="inner">
-                <h3>150</h3>
+                <h3>{{$data['totalBillthismonth']}}</h3>
                 <p>Total Customer</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
         </div>
@@ -131,35 +131,18 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Invoice</th>
-                                    <th>Barnd</th>
                                     <th>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>21/12/2023</td>
-                                    <td>WE45425642</td>
-                                    <td>Apple</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>21/12/2023</td>
-                                    <td>WE45425642</td>
-                                    <td>Apple</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>21/12/2023</td>
-                                    <td>WE45425642</td>
-                                    <td>Apple</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>21/12/2023</td>
-                                    <td>WE45425642</td>
-                                    <td>Apple</td>
-                                    <td>$29 USD</td>
-                                </tr>
+
+                                @foreach ($data['latest_purchase_history'] as $itempurchase_history)
+                                    <tr>
+                                        <td>{{$itempurchase_history->purchase_date}}</td>
+                                        <td>{{$itempurchase_history->invoice_no}}</td>
+                                        <td>{{$itempurchase_history->gross_amount}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -179,22 +162,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Raju</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>das</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>Anik</td>
-                                    <td>$29 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>dany</td>
-                                    <td>$29 USD</td>
-                                </tr>
+                                @foreach ($data['emp_query'] as $emp_queryitem)
+                                    <tr>
+                                        <td>{{$emp_queryitem->name}}</td>
+                                        <td>{{$emp_queryitem->SellInwardStock->sum('sub_total')}}</td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -217,80 +191,21 @@
                         <table class="table table-valign-middle">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Sales</th>
-                                    <th>More</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Barcode</th>
+                                    <th scope="col">In Stock</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Some Product</td>
-                                    <td>$13 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        12%
-                                        </small>
-                                        12,000 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Another Product</td>
-                                    <td>$29 USD</td>
-                                    <td>
-                                        <small class="text-warning mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        0.5%
-                                        </small>
-                                        123,234 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Amazing Product</td>
-                                    <td>$1,230 USD</td>
-                                    <td>
-                                        <small class="text-danger mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        3%
-                                        </small>
-                                        198 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    Perfect Item
-                                        <span class="badge bg-danger">NEW</span>
-                                    </td>
-                                    <td>$199 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        63%
-                                        </small>
-                                        87 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($data['low_stock'] as $low_stockitem)
+                                    <tr>
+                                        <td>{{$low_stockitem->product->product_name}}</td>
+                                        <td>{{$low_stockitem->product->brand}}</td>
+                                        <td>{{$low_stockitem->product->product_barcode}}</td>
+                                        <td>{{$low_stockitem->t_qty}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -312,81 +227,23 @@
                     <div class="card-body table-responsive p-0">
                         <table class="table table-valign-middle">
                             <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Sales</th>
-                                    <th>More</th>
-                                </tr>
+                                <th scope="col">Brand</th>
+                                <th scope="col">Product Barcode</th>
+                                <th scope="col">Expiry Date</th>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Some Product</td>
-                                    <td>$13 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        12%
-                                        </small>
-                                        12,000 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Another Product</td>
-                                    <td>$29 USD</td>
-                                    <td>
-                                        <small class="text-warning mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        0.5%
-                                        </small>
-                                        123,234 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Amazing Product</td>
-                                    <td>$1,230 USD</td>
-                                    <td>
-                                        <small class="text-danger mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        3%
-                                        </small>
-                                        198 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    Perfect Item
-                                        <span class="badge bg-danger">NEW</span>
-                                    </td>
-                                    <td>$199 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        63%
-                                        </small>
-                                        87 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @forelse ($data['nearExpiryStock'] as $key=>$purchase)
+                                    @if($purchase->t_qty <= $purchase->product->alert_product_qty)
+                                        <tr>
+                                            <td>{{$purchase->product->brand}}</td>
+                                            <td>{{$purchase->product->product_barcode}}</td>
+                                            <td>{{date('Y-m', strtotime(str_replace('.', '/', $purchase->product_expiry_date)))}}</td>
+                                        </tr>
+                                    @endif
+                                @empty
+                                    <tr><td colspan="3"> No data found </td></tr>
+                                @endforelse
+
                             </tbody>
                         </table>
                     </div>
@@ -409,80 +266,21 @@
                         <table class="table table-valign-middle">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Sales</th>
-                                    <th>More</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Barcode</th>
+                                    <th scope="col">In Stock</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Some Product</td>
-                                    <td>$13 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        12%
-                                        </small>
-                                        12,000 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Another Product</td>
-                                    <td>$29 USD</td>
-                                    <td>
-                                        <small class="text-warning mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        0.5%
-                                        </small>
-                                        123,234 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Amazing Product</td>
-                                    <td>$1,230 USD</td>
-                                    <td>
-                                        <small class="text-danger mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        3%
-                                        </small>
-                                        198 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    Perfect Item
-                                        <span class="badge bg-danger">NEW</span>
-                                    </td>
-                                    <td>$199 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        63%
-                                        </small>
-                                        87 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($data['top_products'] as $top_productsitem)
+                                    <tr>
+                                        <td>{{$top_productsitem['product_name']}}</td>
+                                        <td>{{$top_productsitem['brand']}}</td>
+                                        <td>{{$top_productsitem['product_barcode']}}</td>
+                                        <td>{{$top_productsitem['t_qty']}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -497,80 +295,21 @@
                         <table class="table table-valign-middle">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Sales</th>
-                                    <th>More</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Barcode</th>
+                                    <th scope="col">In Stock</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Some Product</td>
-                                    <td>$13 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        12%
-                                        </small>
-                                        12,000 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Another Product</td>
-                                    <td>$29 USD</td>
-                                    <td>
-                                        <small class="text-warning mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        0.5%
-                                        </small>
-                                        123,234 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Amazing Product</td>
-                                    <td>$1,230 USD</td>
-                                    <td>
-                                        <small class="text-danger mr-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                        3%
-                                        </small>
-                                        198 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    Perfect Item
-                                        <span class="badge bg-danger">NEW</span>
-                                    </td>
-                                    <td>$199 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                        63%
-                                        </small>
-                                        87 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                        <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($data['low_products'] as $low_productsitem)
+                                    <tr>
+                                        <td>{{$low_productsitem['product_name']}}</td>
+                                        <td>{{$low_productsitem['brand']}}</td>
+                                        <td>{{$low_productsitem['product_barcode']}}</td>
+                                        <td>{{$low_productsitem['t_qty']}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -1131,6 +870,16 @@
 
 
   });
+
+
+
+  function selectStore(store_id){
+    if(store_id!=''){
+        $("#selectStoreForm").submit();
+    }else{
+        location.href = "{{ route('admin.dashboard') }}";
+    }
+  }
 
 
 </script>

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Settlement;
 use Illuminate\Support\Facades\Session;
 
+Use Illuminate\Support\Str;
+use Auth;
+use App\Models\User;
+
 
 
 class SettlementController extends Controller
@@ -16,9 +20,44 @@ class SettlementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function settlement(Request $request){
+
+        // $branch_id=Auth::user()->id;
+		$user_role=Auth::user()->role;
+
+		if($user_role==1){
+			$settlement 	= Settlement::where('total_settlement_amount','!=','');
+		}else{
+            $store_id	= Session::get('store_id');
+			$settlement = Settlement::where('total_settlement_amount','!=','')->where('store_id',$store_id);
+		}
+		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+			if($request->get('start_date') == $request->get('end_date')){
+				$settlement->whereDate('created_at', $request->get('start_date'));
+			}else{
+				$settlement->whereBetween('created_at', [$request->get('start_date'), $request->get('end_date')]);
+			}
+		}
+
+        if(!empty($request->get('store_id'))){
+
+			$settlement->where('store_id', $request->get('store_id'));
+
+		}
+
+		$settlement->orderBy('id', 'desc')->get();
+
+        $all_settlement = $settlement->paginate(10);
+
+        $data = [];
+
+		$data['all_settlement'] = $all_settlement;
+		$data['heading'] = 'Settlement';
+		$data['breadcrumb'] = ['Settlement', '', 'List'];
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
+
+		return view('admin.settlement.index', compact('data'));
+
     }
 
     /**
@@ -26,9 +65,12 @@ class SettlementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function settlement_approve($id){
+        $id = base64_decode($id);
+
+        Settlement::where('id', $id)->update(['admin_approved'=>'1']);
+        return redirect()->back()->with('success', 'Status approved successfully');
+
     }
 
     /**

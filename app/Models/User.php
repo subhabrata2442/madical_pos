@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -53,4 +54,10 @@ class User extends Authenticatable
     public function get_store_info(){
 		return $this->hasOne(StoreDetails::class,'store_id', 'id');
 	}
+
+    public function SellInwardStock(): HasMany
+    {
+        return $this->hasMany(SellInwardStock::class,'emp_id', 'id');
+    }
+
 }

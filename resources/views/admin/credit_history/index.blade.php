@@ -50,7 +50,7 @@
 	<div class="card">
 		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Credit history</h4>
+				<h4>Debit History</h4>
 			</div>
 			<div class="col d-flex invoiceAmout justify-content-center">
 				<ul class="d-flex">
@@ -75,9 +75,9 @@
 
                             <th>Sl No.</th>
                             <th>Supplier</th>
-                            <th>Total Credit</th>
-                            <th>Credit Pay</th>
-                            <th>Credit Due</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Due</th>
                             <th>Actions</th>
                         </thead>
                         <tbody>
@@ -111,7 +111,7 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="payCredit('{{$item->id}}')">Pay</a>
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}')">Credit history</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">Payment history</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">Paid history</a>
                                             </div>
                                         </div>
                                     </td>
@@ -139,13 +139,25 @@
                 <input type="hidden" id="supplier_id" name="supplier_id" />
                     @csrf
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Amount</label>
-                            <input type="text" name="amount" class="form-control" placeholder="Amount" required>
+                            <input type="number" name="amount" class="form-control" placeholder="Amount" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Amount</label>
+                            <select class="form-control custom-select form-control-select" id="payment_method" name="payment_method" required="required">
+                                <option value="">Select payment method</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="net_banking">Net Banking</option>
+                                <option value="cash">Cash</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Payment Date</label>
                             <input type="date" name="payment_date" class="form-control" value="{{date('d-m-Y')}}" required>
@@ -199,6 +211,7 @@
 
                         <th>Sl No.</th>
                         <th>Amount</th>
+                        <th>Payment method</th>
                         <th>Date</th>
                     </thead>
                     <tbody class="paymentHistory">

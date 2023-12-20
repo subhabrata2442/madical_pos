@@ -241,7 +241,7 @@
                                     @if (empty($data['settlement']))
                                         <li class="payPrint"><a href="javascript:;" class="payBtn"><span><i class="fas fa-money-check"></i></span>pay</a></li>
                                     @else
-                                        <li class="payPrint"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-check"></i></span>pay</a></li>
+                                        <li class="payPrint disabled_btn"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-check"></i></span>pay</a></li>
                                     @endif
 
                                     <li class="payPrint small-pay-btn"><a href="javascript:;" class="print_off_counter_bill"><span><i class="fas fa-print"></i></span>Print Last Bill</a></li>
@@ -253,7 +253,7 @@
                                     @if (empty($data['settlement']))
                                         <li class="payPrint small-pay-btn"><a href="javascript:;" class="settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
                                     @else
-                                        <li class="payPrint small-pay-btn"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
+                                        <li class="payPrint small-pay-btn disabled_btn"><a href="javascript:;" class="no_settlement"><span><i class="fas fa-money-bill"></i></span>Settlement</a></li>
                                     @endif
 
                                 </ul>
@@ -892,31 +892,31 @@
                 <table class="table">
                     <tr>
                         <td style="width: 100px;">1000 </td>
-                        <td style="width: 100px;"><input type="text" id="note_1" name="note_count[]" class="form-control"></td>
+                        <td style="width: 100px;"><input type="number" id="note_1" name="note_count[]" class="form-control"></td>
                         <input type="hidden" name="note_name[]" id="note_name_1" value="1000">
                         <td class="totalnote_1">0</td>
                     </tr>
                     <tr>
                         <td style="width: 100px;">5000 </td>
-                        <td style="width: 100px;"><input type="text" id="note_2" name="note_count[]" class="form-control"></td>
+                        <td style="width: 100px;"><input type="number" id="note_2" name="note_count[]" class="form-control"></td>
                         <input type="hidden" name="note_name[]" id="note_name_2" value="5000">
                         <td class="totalnote_2">0</td>
                     </tr>
                     <tr>
                         <td style="width: 100px;">10000  </td>
-                        <td style="width: 100px;"><input type="text" id="note_3" name="note_count[]" class="form-control"></td>
+                        <td style="width: 100px;"><input type="number" id="note_3" name="note_count[]" class="form-control"></td>
                         <input type="hidden" name="note_name[]" id="note_name_3" value="10000">
                         <td class="totalnote_3">0</td>
                     </tr>
                     <tr>
                         <td style="width: 100px;">25000  </td>
-                        <td style="width: 100px;"><input type="text" id="note_4" name="note_count[]" class="form-control"></td>
+                        <td style="width: 100px;"><input type="number" id="note_4" name="note_count[]" class="form-control"></td>
                         <input type="hidden" name="note_name[]" id="note_name_4" value="25000">
                         <td class="totalnote_4">0</td>
                     </tr>
                     <tr>
                         <td style="width: 100px;">50000  </td>
-                        <td style="width: 100px;"><input type="text" id="note_5" name="note_count[]" class="form-control"></td>
+                        <td style="width: 100px;"><input type="number" id="note_5" name="note_count[]" class="form-control"></td>
                         <input type="hidden" name="note_name[]" id="note_name_5" value="50000">
                         <td class="totalnote_5">0</td>
                     </tr>

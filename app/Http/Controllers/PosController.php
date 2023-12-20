@@ -480,7 +480,7 @@ class PosController extends Controller
 				}
 			}
 
-            $data['settlement'] = Settlement::where('store_id', $store_id)->whereDate('created_at', now()->toDateString())->first();
+            $data['settlement'] = Settlement::where('store_id', Auth::user()->id)->whereDate('created_at', now()->toDateString())->first();
 
 			$data['topSellingProducts']=$result;
 
@@ -549,6 +549,7 @@ class PosController extends Controller
 			//'created_at'				=> date('Y-m-d'),
             'net_price' 			=> $request->net_price,
             'profit_price' 			=> $request->profit_price,
+            'emp_id' 			=> Auth::user()->id,
 		);
 
 		//print_r($sellStockData);exit;

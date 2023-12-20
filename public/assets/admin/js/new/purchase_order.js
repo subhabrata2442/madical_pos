@@ -945,7 +945,7 @@ function setRow(element) {
                         product_id +
                         '">' +
                         brand_name +
-                        "</td>" +
+                        '<i class="fas fa-info-circle ml-1" onclick="priceHistory('+product_id+')"></i>'+"</td>" +
                         '<td style="display:none;" id="product_name_' +
                                                product_id +
                                                '">' +

@@ -46,24 +46,29 @@
                                 {{ !empty($data['heading']) && $data['heading'] ? $data['heading'] : 'Dashboard' }}
                             </h1>
                         </div>
-                        <div class="col-auto">
-                            <div class="select-store">
-                                <ul>
-                                    <li><label>Select store</label></li>
-                                    <li class="select-store-file">
-                                        <select class="form-control select2" id="store" style="width: 100%;">
-                                            <option selected="selected">Alabama</option>
-                                            <option>Alaska</option>
-                                            <option>California</option>
-                                            <option>Delaware</option>
-                                            <option>Tennessee</option>
-                                            <option>Texas</option>
-                                            <option>Washington</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        @if(Session::get('adminId')==1)
+                            @if (\Route::currentRouteName() == 'admin.dashboard')
+                                <div class="col-auto">
+                                    <div class="select-store">
+                                        <ul>
+                                            <li><label>Select store</label></li>
+                                            <li class="select-store-file">
+                                                <form action="" method="get" id="selectStoreForm">
+                                                    <select class="form-control select2" name="store_id" id="store_id" onchange="selectStore(this.value)" style="width: 100%;">
+                                                        <option value="">Select Store</option>
+                                                            @forelse ($data['storelist'] as $store)
+                                                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                                                            @empty
+
+                                                            @endforelse
+                                                    </select>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
                         <div class="col-auto">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>

@@ -32,6 +32,12 @@ class SellInwardStock extends Model
         return $this->hasOne(User::class,'id','branch_id');
     }
 
+    public function storeEmp(){
+        return $this->hasOne(User::class,'id','emp_id');
+    }
+
+
+
 
 
 

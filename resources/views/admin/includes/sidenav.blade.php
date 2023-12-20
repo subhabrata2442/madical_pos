@@ -176,6 +176,12 @@ if($adminId!=1){
                   </a>
                 </li>
                 @endif
+
+                <li class="nav-item"> <a href="{{ route('admin.purchase.price_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.price_history') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>Price History</p>
+                    </a>
+                </li>
+
                 @if(in_array('admin-purchase-stock-transfer-request', $page_permission))
                 @if ($adminRoll != 1)
                 <li class="nav-item"> <a href="{{ route('admin.purchase.stock.transferRequest') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.stock.transferRequest') active @endif"> <i class="fas fa-list nav-icon"></i>
@@ -329,9 +335,20 @@ if($adminId!=1){
         </li>
 
         <li class="nav-item"> <a href="{{ route('admin.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p> Credit History </p>
+            <p> Debit History </p>
             </a>
         </li>
+
+        <li class="nav-item"> <a href="{{ route('admin.settlement') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.settlement') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p> Settlement </p>
+            </a>
+        </li>
+        @if ($adminRoll != 1)
+            <li class="nav-item"> <a href="{{ route('admin.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p> Bill </p>
+                </a>
+            </li>
+        @endif
 
 
 

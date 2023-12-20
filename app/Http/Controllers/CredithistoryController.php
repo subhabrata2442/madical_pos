@@ -49,6 +49,7 @@ class CredithistoryController extends Controller
 			'supplier_id'  => $request->supplier_id,
             'amount'  => $request->amount,
             'payment_date'  => $request->payment_date,
+            'payment_method' => $request->payment_method,
 		);
         Suppliercreditpay::create($insert_data);
         return redirect()->back()->with('success', 'Payment added successfully');
@@ -129,6 +130,7 @@ class CredithistoryController extends Controller
             $html .= '<tr>
                         <td>'.($key+1).'</td>
                         <td>'.number_format($item->amount).'</td>
+                        <td>'.$item->payment_method.'</td>
                         <td>'.$item->payment_date.'</td>
                     </tr>';
         }

@@ -13,4 +13,8 @@ class Settlement extends Model
 
     protected $guarded = [];
 
+    public function user(){
+        return $this->hasOne(User::class,'id', 'store_id');
+    }
+
 }

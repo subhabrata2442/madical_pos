@@ -22,6 +22,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CredithistoryController;
 use App\Http\Controllers\SettlementController;
+use App\Http\Controllers\BillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -197,6 +198,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
 
 		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
+
+        Route::match(['GET', 'POST'], '/price_history', [PurchaseOrderController::class, 'price_history'])->name('price_history');
+        Route::match(['GET', 'POST'], '/pricehistory_product/{product_id}', [PurchaseOrderController::class, 'pricehistory_product'])->name('pricehistory_product');
 	});
 
 	Route::prefix('report')->name('report.')->middleware('checkPermission:3')->group(function () {
@@ -338,6 +342,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['get'], '/supplierpaymenthistory_modal/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory_modal'])->name('supplierpaymenthistory_modal');
 	Route::match(['get'], '/suppliercredithistory/{supplier_id}', [CredithistoryController::class, 'suppliercredithistory'])->name('suppliercredithistory');
 	Route::match(['get'], '/supplierpaymenthistory/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory'])->name('supplierpaymenthistory');
+
+
+	Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
+	Route::match(['get'], '/settlement_approve/{id}', [SettlementController::class, 'settlement_approve'])->name('settlement_approve');
+
+
+    Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+
 });
 
 
