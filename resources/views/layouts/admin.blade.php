@@ -56,6 +56,7 @@
                                                 <form action="" method="get" id="selectStoreForm">
                                                     <select class="form-control select2" name="store_id" id="store_id" onchange="selectStore(this.value)" style="width: 100%;">
                                                         <option value="">Select Store</option>
+                                                        <option value="">View All</option>
                                                             @forelse ($data['storelist'] as $store)
                                                                 <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
                                                             @empty
