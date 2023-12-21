@@ -31,7 +31,7 @@
               <input type="checkbox" id="keep-me-logged" name="remember_me" value="1">
               <label for="keep-me-logged">keep me logged</label>
             </li>
-            <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li>
+            {{-- <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li> --}}
           </div>
         </div>
         <div class="log-reg-btn-wrap d-flex justify-content-center">
@@ -69,5 +69,21 @@
     </div>
   </div>
 </div>
+
+<script>
+    $(document).on('click', '.pass_eye', function(){
+        if($(this).closest('.add_eye').find(".pass_input").attr('type')=='password'){
+        $(this).closest('.add_eye').find(".pass_input").attr('type','text');
+        $(this).closest('.add_eye').find(".fas").addClass("fa-eye").removeClass("fa-eye-slash");
+        }else{
+        $(this).closest('.add_eye').find(".pass_input").attr('type', 'password');
+        $(this).closest('.add_eye').find(".fas").removeClass("fa-eye").addClass("fa-eye-slash");
+        }
+    });
+</script>
+
 @endsection
+
+
+
 

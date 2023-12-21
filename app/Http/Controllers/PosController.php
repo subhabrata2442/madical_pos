@@ -492,7 +492,7 @@ class PosController extends Controller
     }
 
 	public function create(Request $request){
-		//dd($request->all());
+		// dd($request->all());
 		$branch_id		= Session::get('store_id');
 		//echo $branch_id;die;
 		//$supplier_id	= 0;
@@ -1198,4 +1198,315 @@ class PosController extends Controller
 		}else{
 		}
 	}
+
+
+    public function billedit($bill_no_edit){
+
+        DB::beginTransaction();
+        try {
+            $data = [];
+			$store_id = Session::get('store_id');
+
+            $data['heading'] 		= 'Sell Product';
+            $data['breadcrumb'] 	= ['Sell Product', 'Add'];
+            $data['product'] 		= Product::all();
+
+
+
+
+			$data['top_selling_product_result']=[];
+
+
+
+
+			$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
+			$invoice_url='';
+			$bill_no='';
+			$pay_amount=0;
+			if(count($lastSellInwardStock)>0){
+				$invoice_no=isset($lastSellInwardStock[0]->invoice_no)?$lastSellInwardStock[0]->invoice_no:'';
+				$bill_no=isset($lastSellInwardStock[0]->bill_no)? $lastSellInwardStock[0]->bill_no:'';
+				$branch_id=isset($lastSellInwardStock[0]->branch_id)? $lastSellInwardStock[0]->branch_id:'';
+				$pay_amount=isset($lastSellInwardStock[0]->pay_amount)? $lastSellInwardStock[0]->pay_amount:'';
+
+
+				$pdf_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
+				// $invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+
+				$invoice_url = $pdf_no.'-invoice.pdf?v='.time();
+
+			}
+
+			$data['last_bill_no']		= $bill_no;
+			$data['last_bill_amount']	= $pay_amount;
+			$data['invoice_url']		= $invoice_url;
+
+
+			$supplier_id	= Session::get('store_id');
+
+			$data['supplier']=User::find($supplier_id);
+
+
+			$store_id	= Session::get('store_id');
+
+
+
+
+			$topSellingProducts = Product::where('common_items', 'yes')->get();
+
+
+			$result=[];
+			if(count($topSellingProducts) > 0){
+				foreach($topSellingProducts as $row){
+					$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+					$result[]=array(
+						'id'				=> $row->id,
+						'product_barcode'	=> $row->product_barcode,
+						'product_name'		=> $row->product_name,
+                        'brand'		        => $row->brand,
+						't_qty'				=> $t_qty,
+					);
+
+				}
+			}
+
+            $data['settlement'] = Settlement::where('store_id', Auth::user()->id)->whereDate('created_at', now()->toDateString())->first();
+
+			$data['topSellingProducts']=$result;
+
+            $bill = SellInwardStock::where('bill_no', $bill_no_edit)->first();
+
+            // echo $bill->id;exit;
+
+            $data['bill_details']= $bill;
+
+            $data['sellStockProducts'] = SellStockProducts::where('inward_stock_id', $bill->id)->get();
+
+
+            return view('admin.counter_pos.pos_edit', compact('data'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+        }
+
+    }
+
+
+    public function update(Request $request){
+
+        $sell_inward_stock_id = $request->sell_inward_stock_id;
+
+        // dd($request->all());
+		$branch_id		= Session::get('store_id');
+		//echo $branch_id;die;
+		//$supplier_id	= 0;
+
+		$validator = Validator::make($request->all(), [
+			'total_quantity' => 'required',
+			'total_mrp' => 'required'
+		]);
+		if ($validator->fails()) {
+			$return_data['success']	= 0;
+			$return_data['msg']		= 'Product should not be empty';
+			echo json_encode($return_data);
+		}
+		//print_r($_POST);exit;
+		$invoice_no='';
+		$n=SellInwardStock::where('branch_id',$branch_id)->count();
+		$invoice_no .=date('d');
+		$invoice_no .='/'.date('Y');
+		$invoice_no .='/'.str_pad($n + 1, 4, 0, STR_PAD_LEFT);
+		$invoice_no .='|'.date('d/m/Y');
+
+		$bill_no=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
+
+
+		$product_barcode=str_pad($n + 1, 5, 0, STR_PAD_LEFT);
+
+		$payment_method=$request->payment_method_type;
+
+		$sellStockData=array(
+			'branch_id' 				=> $branch_id,
+			//'supplier_id' 				=> $supplier_id,
+			'customer_id' 				=> $request->customer_id,
+			// 'bill_no' 					=> $bill_no,
+			'invoice_no' 				=> $invoice_no,
+			'sell_date' 				=> date('Y-m-d'),
+			'sell_time' 				=> date('H:i'),
+			//'stock_type' 				=> $request->stock_type,
+			'total_qty' 				=> $request->total_quantity,
+			'gross_amount' 				=> $request->total_mrp,
+			'tax_amount' 				=> $request->tax_amount,
+			'discount_amount' 			=> $request->total_discount_amount,
+			'sub_total' 				=> $request->sub_total,
+			'round_off_amount' 			=> $request->round_off ?? 0,
+			'gross_total_amount'		=> $request->gross_total_amount ?? 0,
+			'special_discount_percent'	=> $request->special_discount_percent,
+			'special_discount_amt' 		=> $request->special_discount_amt,
+			'pay_amount' 				=> $request->total_payble_amount,
+			'tendered_due_amount' 		=> $request->total_payble_amount,
+			'tendered_amount' 			=> $request->tendered_amount,
+			'tendered_change_amount' 	=> $request->tendered_change_amount,
+			'payment_method' 			=> $request->payment_method_type,
+			'payment_date' 				=> date('Y-m-d'),
+			'charge_amount' 			=> $request->charge_amt,
+			//'created_at'				=> date('Y-m-d'),
+            'net_price' 			=> $request->net_price,
+            'profit_price' 			=> $request->profit_price,
+            'emp_id' 			=> Auth::user()->id,
+		);
+
+		//print_r($sellStockData);exit;
+
+		$sellStock		= SellInwardStock::where('id', $sell_inward_stock_id)->update($sellStockData);
+		$sellStockId	= $sell_inward_stock_id;
+		//$sellStockId	= 1;
+
+		//$result=SellInwardOnlinePayment::get();
+		//$arr=json_decode($result[0]->meta_data,true);
+		//print_r($arr['upi_payble_amount']);exit;
+
+		$stock_product_ids			= $request->product_id;
+		$product_total_amount	= $request->product_total_amount;
+		$product_barcode		= $request->product_barcode;
+		$product_name			= $request->product_name;
+		$brand_name			= $request->brand_name;
+		$product_qty			= $request->product_qty;
+		$product_disc_percent	= $request->product_disc_percent;
+		$product_disc_amount	= $request->product_disc_amount;
+		$product_unit_price		= $request->product_unit_price_amount;
+		$product_price_id		= $request->product_price_id;
+
+
+		for($i=0;count($stock_product_ids)>$i;$i++){
+			$product_stock_id			= $stock_product_ids[$i];
+			$branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->first();
+
+			$product_id 		= isset($branch_product_stock_info->product_id)?$branch_product_stock_info->product_id:'';
+
+			if($product_id!=''){
+				$total_amount	= isset($product_total_amount[$i])?$product_total_amount[$i]:'0';
+				$barcode		= isset($product_barcode[$i])?$product_barcode[$i]:'';
+				$name			= isset($product_name[$i])?$product_name[$i]:'';
+				$brand_name			= isset($brand_name[$i])?$brand_name[$i]:'';
+				$qty			= isset($product_qty[$i])?$product_qty[$i]:'';
+				$disc_percent	= isset($product_disc_percent[$i])?$product_disc_percent[$i]:0;
+				$disc_amount	= isset($product_disc_amount[$i])?$product_disc_amount[$i]:0;
+				$unit_price		= isset($product_unit_price[$i])?$product_unit_price[$i]:0;
+				$price_id		= isset($product_price_id[$i])?$product_price_id[$i]:0;
+
+				$productInfo	= Product::where('id',$product_id)->get();
+				$category_id	= isset($productInfo[0]->category_id)?$productInfo[0]->category_id:0;
+				$subcategory_id	= isset($productInfo[0]->subcategory_id)?$productInfo[0]->subcategory_id:0;
+
+				//$productSizeInfo= Size::where('id',$product_size_id)->get();
+				//$size	= isset($productSizeInfo[0]->name)?$productSizeInfo[0]->name:0;
+
+				/* $branch_product_stock_sell_price_info=BranchStockProductSellPrice::where('id',$price_id)->where('stock_type','counter')->get();
+
+				$sell_price_id=isset($branch_product_stock_sell_price_info[0]->id)?$branch_product_stock_sell_price_info[0]->id:'';
+
+				$sell_price_w_qty = 0;
+				$sell_price_c_qty = 0;
+				if($request->stock_type=='s'){
+					$sell_price_c_qty +=isset($branch_product_stock_sell_price_info[0]->c_qty)?$branch_product_stock_sell_price_info[0]->c_qty:'';
+					$sell_price_c_qty -=$qty;
+					BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type','counter')->update(['c_qty' => $sell_price_c_qty]);
+				}else{
+					$sell_price_w_qty +=isset($branch_product_stock_sell_price_info[0]->w_qty)?$branch_product_stock_sell_price_info[0]->w_qty:0;
+					$sell_price_w_qty -=$qty;
+					BranchStockProductSellPrice::where('id', $sell_price_id)->where('stock_type','counter')->update(['w_qty' => $sell_price_w_qty]);
+				}
+
+				$size_ml=trim(str_replace('ml', '', $size));
+				$total_ml=(int)$size_ml*(int)$qty; */
+
+                SellStockProducts::where('product_stock_id', $sell_inward_stock_id)->delete();
+
+				$sellStockproductData=array(
+					'inward_stock_id'	=> $sellStockId,
+					'product_id'  		=> $product_id,
+					'branch_id'  		=> $branch_id,
+					'product_stock_id'  => $product_stock_id,
+					'barcode'			=> $barcode,
+					'product_name'  	=> $name,
+					'brand_name'  	=> $brand_name,
+					'price_id'  		=> $price_id,
+					//'size_id'  			=> $product_size_id,
+					'category_id'  		=> $category_id,
+					'subcategory_id'  	=> $subcategory_id,
+					//'size_ml'  			=> $size,
+					//'total_ml'  		=> $total_ml,
+					'product_qty'		=> $qty,
+					'discount_percent'  => $disc_percent,
+					'discount_amount'  	=> $disc_amount,
+					'product_mrp'		=> $unit_price,
+					'unit_price'  		=> $unit_price,
+					'offer_price'  		=> $unit_price,
+					'total_cost'		=> $total_amount,
+					//'created_at'		=> date('Y-m-d'),
+				);
+				//print_r($sellStockproductData);exit;
+				SellStockProducts::create($sellStockproductData);
+				//Update product qty
+				$stock_update_val = ($branch_product_stock_info->t_qty - $qty);
+				BranchStockProducts::where('id',$product_stock_id)->update(['t_qty'=>$stock_update_val]);
+
+                //pusher notification
+
+                $low_stock = BranchStockProducts::with('product')->where('id',$product_stock_id)->where('branch_id', $branch_id)->first();
+
+
+
+			}
+		}
+
+
+
+		if($payment_method=='cash'){
+			$rupee_type 	= $request->rupee_type;
+			$rupee_val 		= $request->note;
+			$rupee_qty 		= $request->note_qty;
+			for($r=0;count($rupee_type)>$r;$r++){
+				$note_type	= isset($rupee_type[$r])?$rupee_type[$r]:'note';
+				$note_val	= isset($rupee_val[$r])?$rupee_val[$r]:0;
+				$note_qty	= isset($rupee_qty[$r])?$rupee_qty[$r]:0;
+				$total_note_amount	= $note_val*$note_qty;
+
+				$tenderedChangeAmount=array(
+					'sell_inward_stock_id'	=> $sellStockId,
+					'type'  				=> $note_type,
+					'rupee_val'  			=> $note_val,
+					'qty'					=> $note_qty,
+					'amount'  				=> $total_note_amount,
+					'created_at'			=> date('Y-m-d')
+				);
+				//print_r($tenderedChangeAmount);exit;
+				SellInwardTenderedChangeAmount::create($tenderedChangeAmount);
+			}
+		}else{
+			$sell_online_payment_data=array(
+				'sell_inward_stock_id'	=> $sellStockId,
+				'type'  				=> $payment_method,
+				'meta_data'  			=> json_encode($request->online_payment),
+				'created_at'			=> date('Y-m-d')
+			);
+			SellInwardOnlinePayment::create($sell_online_payment_data);
+			//print_r($sell_online_payment_data);exit;
+		}
+
+		//$this->daily_product_sell_history();
+
+		$invoicePdf = $this->print_invoice();
+
+		$return_data['invoicePdf']=$invoicePdf;
+
+
+		$return_data['success']	= 1;
+		echo json_encode($return_data);
+
+
+    }
+
+
 }

@@ -46,10 +46,10 @@ class DashboardController extends Controller
                 if(!empty($request->get('store_id'))){
                     $branchStockProducts_query->where('branch_id', $request->get('store_id'));
                 }
-                $low_stock = $branchStockProducts_query->limit(10)->get();
+                $low_stock = $branchStockProducts_query->limit(5)->get();
             }else{
                 $store_id	= Session::get('store_id');
-                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(10)->get();
+                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(5)->get();
             }
             $data['low_stock']=$low_stock;
             //low stock end
@@ -69,7 +69,7 @@ class DashboardController extends Controller
                         ->where('sell_stock_products.branch_id', $request->get('store_id'))
                         ->groupBy('products.id', 'products.product_name')
                         ->orderBy('sales_count', 'desc')
-                        ->limit(10)
+                        ->limit(5)
                         ->get();
                     }
 
@@ -80,7 +80,7 @@ class DashboardController extends Controller
                     ->where('sell_stock_products.branch_id', $store_id)
                     ->groupBy('products.id', 'products.product_name')
                     ->orderBy('sales_count', 'desc')
-                    ->limit(10)
+                    ->limit(5)
                     ->get();
             }
 
@@ -193,7 +193,7 @@ class DashboardController extends Controller
                 // dd($emp_list);
 
             }else{
-                $emp_list = User::with(['SellInwardStock'])->where('status', 1)->where('parent_id', $store_id)->limit(10)->get();
+                $emp_list = User::with(['SellInwardStock'])->where('status', 1)->where('parent_id', $store_id)->limit(5)->get();
             }
 
             $data['emp_query'] = $emp_list;
@@ -206,9 +206,9 @@ class DashboardController extends Controller
                 if(!empty($request->get('store_id'))){
                     $purchaseInwardStock_qurery->where('branch_id', $request->get('store_id'));
                 }
-                $latest_purchase_history = $purchaseInwardStock_qurery->limit(10)->orderBy('id', 'DESC')->get();
+                $latest_purchase_history = $purchaseInwardStock_qurery->limit(5)->orderBy('id', 'DESC')->get();
             }else{
-                $latest_purchase_history = PurchaseInwardStock::where('invoice_no','!=','')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(10)->get();
+                $latest_purchase_history = PurchaseInwardStock::where('invoice_no','!=','')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(5)->get();
             }
 
             $data['latest_purchase_history'] = $latest_purchase_history;
@@ -251,7 +251,7 @@ class DashboardController extends Controller
                         ->where('sell_stock_products.branch_id', $request->get('store_id'))
                         ->groupBy('products.id', 'products.product_name')
                         ->orderBy('sales_count', 'asc')
-                        ->limit(10)
+                        ->limit(5)
                         ->get();
                     }
 
@@ -262,7 +262,7 @@ class DashboardController extends Controller
                     ->where('sell_stock_products.branch_id', $store_id)
                     ->groupBy('products.id', 'products.product_name')
                     ->orderBy('sales_count', 'asc')
-                    ->limit(10)
+                    ->limit(5)
                     ->get();
             }
 

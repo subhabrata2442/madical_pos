@@ -121,197 +121,227 @@
                 <div class="wrap-heading">Overall</div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                    <h3 class="card-title">Latest purchase history</h3>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Invoice</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Latest purchase history</h3>
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Invoice</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                @foreach ($data['latest_purchase_history'] as $itempurchase_history)
-                                    <tr>
-                                        <td>{{$itempurchase_history->purchase_date}}</td>
-                                        <td>{{$itempurchase_history->invoice_no}}</td>
-                                        <td>{{$itempurchase_history->gross_amount}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                    <h3 class="card-title">Sale per employee</h3>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data['emp_query'] as $emp_queryitem)
-                                    <tr>
-                                        <td>{{$emp_queryitem->name}}</td>
-                                        <td>{{$emp_queryitem->SellInwardStock->sum('sub_total')}}</td>
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                    <h3 class="card-title">Low stock Alert</h3>
-                    {{-- <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-download"></i>
-                        </a>
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-bars"></i>
-                        </a>
-                    </div> --}}
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Brand</th>
-                                    <th scope="col">Barcode</th>
-                                    <th scope="col">In Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data['low_stock'] as $low_stockitem)
-                                    <tr>
-                                        <td>{{$low_stockitem->product->product_name}}</td>
-                                        <td>{{$low_stockitem->product->brand}}</td>
-                                        <td>{{$low_stockitem->product->product_barcode}}</td>
-                                        <td>{{$low_stockitem->t_qty}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                    <h3 class="card-title">Near Expiry Products</h3>
-                    {{-- <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-download"></i>
-                        </a>
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-bars"></i>
-                        </a>
-                    </div> --}}
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <th scope="col">Brand</th>
-                                <th scope="col">Product Barcode</th>
-                                <th scope="col">Expiry Date</th>
-                            </thead>
-                            <tbody>
-                                @forelse ($data['nearExpiryStock'] as $key=>$purchase)
-                                    @if($purchase->t_qty <= $purchase->product->alert_product_qty)
+                                    @foreach ($data['latest_purchase_history'] as $itempurchase_history)
                                         <tr>
-                                            <td>{{$purchase->product->brand}}</td>
-                                            <td>{{$purchase->product->product_barcode}}</td>
-                                            <td>{{date('Y-m', strtotime(str_replace('.', '/', $purchase->product_expiry_date)))}}</td>
+                                            <td>{{$itempurchase_history->purchase_date}}</td>
+                                            <td>{{$itempurchase_history->invoice_no}}</td>
+                                            <td>{{$itempurchase_history->gross_amount}}</td>
                                         </tr>
-                                    @endif
-                                @empty
-                                    <tr><td colspan="3"> No data found </td></tr>
-                                @endforelse
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="{{ route('admin.purchase.inward_list') }}" class="table-view-all-btn commonBtn-btnTag">view all</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Sale per employee</h3>
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data['emp_query'] as $emp_queryitem)
+                                        <tr>
+                                            <td>{{$emp_queryitem->name}}</td>
+                                            <td>{{$emp_queryitem->SellInwardStock->sum('sub_total')}}</td>
+                                        </tr>
+                                    @endforeach
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                    <h3 class="card-title">Top Selling Product</h3>
-                    {{-- <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-download"></i>
-                        </a>
-                        <a href="#" class="btn btn-tool btn-sm">
-                        <i class="fas fa-bars"></i>
-                        </a>
-                    </div> --}}
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Brand</th>
-                                    <th scope="col">Barcode</th>
-                                    <th scope="col">In Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data['top_products'] as $top_productsitem)
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Low stock Alert</h3>
+                        {{-- <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-download"></i>
+                            </a>
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-bars"></i>
+                            </a>
+                        </div> --}}
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
                                     <tr>
-                                        <td>{{$top_productsitem['product_name']}}</td>
-                                        <td>{{$top_productsitem['brand']}}</td>
-                                        <td>{{$top_productsitem['product_barcode']}}</td>
-                                        <td>{{$top_productsitem['t_qty']}}</td>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Brand</th>
+                                        <th scope="col">Barcode</th>
+                                        <th scope="col">In Stock</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data['low_stock'] as $low_stockitem)
+                                        <tr>
+                                            <td>{{$low_stockitem->product->product_name}}</td>
+                                            <td>{{$low_stockitem->product->brand}}</td>
+                                            <td>{{$low_stockitem->product->product_barcode}}</td>
+                                            <td>{{$low_stockitem->t_qty}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="{{ route('admin.report.low_stock_product') }}" class="table-view-all-btn commonBtn-btnTag">view all</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Slow Moving Item</h3>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Product</th>
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Near Expiry Products</h3>
+                        {{-- <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-download"></i>
+                            </a>
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-bars"></i>
+                            </a>
+                        </div> --}}
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
                                     <th scope="col">Brand</th>
-                                    <th scope="col">Barcode</th>
-                                    <th scope="col">In Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data['low_products'] as $low_productsitem)
+                                    <th scope="col">Product Barcode</th>
+                                    <th scope="col">Expiry Date</th>
+                                </thead>
+                                <tbody>
+                                    @forelse ($data['nearExpiryStock'] as $key=>$purchase)
+                                        @if($purchase->t_qty <= $purchase->product->alert_product_qty)
+                                            <tr>
+                                                <td>{{$purchase->product->brand}}</td>
+                                                <td>{{$purchase->product->product_barcode}}</td>
+                                                <td>{{date('Y-m', strtotime(str_replace('.', '/', $purchase->product_expiry_date)))}}</td>
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        <tr><td colspan="3"> No data found </td></tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="{{ route('admin.report.near_expiry_stock') }}" class="table-view-all-btn commonBtn-btnTag">view all</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top Selling Product</h3>
+                        {{-- <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-download"></i>
+                            </a>
+                            <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-bars"></i>
+                            </a>
+                        </div> --}}
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
                                     <tr>
-                                        <td>{{$low_productsitem['product_name']}}</td>
-                                        <td>{{$low_productsitem['brand']}}</td>
-                                        <td>{{$low_productsitem['product_barcode']}}</td>
-                                        <td>{{$low_productsitem['t_qty']}}</td>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Brand</th>
+                                        <th scope="col">Barcode</th>
+                                        <th scope="col">In Stock</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data['top_products'] as $top_productsitem)
+                                        <tr>
+                                            <td>{{$top_productsitem['product_name']}}</td>
+                                            <td>{{$top_productsitem['brand']}}</td>
+                                            <td>{{$top_productsitem['product_barcode']}}</td>
+                                            <td>{{$top_productsitem['t_qty']}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="{{ route('admin.report.top_selling_products') }}" class="table-view-all-btn commonBtn-btnTag">view all</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="box-card-new">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Slow Moving Item</h3>
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-valign-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Brand</th>
+                                        <th scope="col">Barcode</th>
+                                        <th scope="col">In Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data['low_products'] as $low_productsitem)
+                                        <tr>
+                                            <td>{{$low_productsitem['product_name']}}</td>
+                                            <td>{{$low_productsitem['brand']}}</td>
+                                            <td>{{$low_productsitem['product_barcode']}}</td>
+                                            <td>{{$low_productsitem['t_qty']}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-view-all">
+                        <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a>
                     </div>
                 </div>
             </div>
