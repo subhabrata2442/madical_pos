@@ -398,6 +398,67 @@ $(document).ready(function() {
             });
         }
     });
+
+    $("#pos_create_order-form_update").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+            var formData = new FormData($(form)[0]);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                url: $('#pos_create_order-form_update').attr('action'),
+                dataType: 'json',
+                data: formData,
+                success: function(data) {
+                    $(".payWrap").removeClass('active');
+                    // console.log(data.invoicePdf);
+                    $("#off_counter_invoice-frame").attr("src", data.invoicePdf);
+
+
+                },
+                beforeSend: function() {
+                    $('#ajax_loader').fadeIn();
+                },
+                complete: function() {
+                    $('#ajax_loader').fadeOut();
+
+                    setTimeout(function() {
+                        var frame = document.getElementById('off_counter_invoice-frame');
+                        frame.contentWindow.focus();
+                        frame.contentWindow.print();
+                    }, 500);
+
+
+                    Swal.fire({
+                        title: 'Order successfully submitted.',
+                        icon: 'success',
+                        showDenyButton: false,
+                        showCancelButton: false,
+                        allowOutsideClick: false
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+                            /* var redirect_url = prop.url + '/admin/pos/today-sales-product/download';
+                            window.open(redirect_url, "_blank"); */
+                            // location.reload();
+
+                            var pos_urls = $("#pos_urls").val();
+                            window.location.href = pos_urls;
+
+                        } else if (result.isDenied) {}
+                    });
+                }
+            });
+        }
+    });
+
 });
 
 $(document).on('click', '#calculate_cash_payment_btn', function() {
@@ -422,6 +483,75 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
 
 
 });
+
+
+$(document).on('click', '#calculate_cash_payment_btn_update', function() {
+    //alert('cash');
+
+    // finalsubmitpayment();
+    //return false;
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            finalsubmitpayment_update();
+        }
+    });
+
+
+});
+
+function finalsubmitpayment_update(){
+
+    // alert();
+
+    var due_amount_tendering = $('#due_amount_tendering').val();
+    var tendered_change_amount = $('#tendered_change_amount').val();
+    var tendered_amount = $('#tendered_amount').val();
+    if (tendered_change_amount > 0) {
+        $('#rupee_due_amount_tendering-input').val(tendered_change_amount);
+        $('#rupee_due_amount_tendering').html(tendered_change_amount);
+        /*$('.tab_sec').hide();
+
+        $('.payWrapLeft').hide();
+        $('.payWrapRight').addClass('tabMenuHideWrapRight');
+        $('#rupee_payment_sec').show();*/
+
+        $('.note_coin_count_sec').append('<input type="hidden" name="rupee_type[]" value="coin"><input type="hidden" name="note[]" value="1"><input type="hidden" name="note_qty[]" value="' + tendered_change_amount + '">');
+
+        var tendered_change_amount = $('#tendered_change_amount').val();
+        var tendered_amount = $('#tendered_amount').val();
+        $('#total_tendered_amount').val(tendered_amount);
+        $('#total_tendered_change_amount').val(tendered_change_amount);
+        $(".payWrap").toggleClass('active');
+        $("#pos_create_order-form_update").submit();
+
+
+
+
+    } else {
+
+        if (due_amount_tendering > tendered_amount) {
+            toastr.error("Make Full Payment");
+        } else {
+            $('.note_coin_count_sec').html('<input type="hidden" name="rupee_type[]" value="note"><input type="hidden" name="note[]" value="' + tendered_amount + '"><input type="hidden" name="note_qty[]" value="1">');
+
+            var tendered_change_amount = $('#tendered_change_amount').val();
+            var tendered_amount = $('#tendered_amount').val();
+            $('#total_tendered_amount').val(tendered_amount);
+            $('#total_tendered_change_amount').val(tendered_change_amount);
+            $(".payWrap").toggleClass('active');
+            $("#pos_create_order-form_update").submit();
+        }
+    }
+}
 
 function finalsubmitpayment(){
 

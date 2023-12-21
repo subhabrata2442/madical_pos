@@ -350,6 +350,11 @@ if($adminId!=1){
             </li>
         @endif
 
+        <li class="nav-item"> <a href="{{ route('admin.logreport.view') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.logreport.view') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p> Log Report </p>
+            </a>
+        </li>
+
 
 
       </ul>

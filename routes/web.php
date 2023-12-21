@@ -26,6 +26,8 @@ use App\Http\Controllers\BillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\LogreportController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -90,6 +92,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 		Route::match(['GET'], '/create_order', [PosController::class, 'pos_create'])->name('pos_create');
 		Route::match(['POST'], '/create', [PosController::class, 'create'])->name('create');
+        Route::match(['POST'], '/update', [PosController::class, 'update'])->name('update');
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
 
 
@@ -352,6 +355,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 
     Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+
+
+    Route::prefix('logreport')->name('logreport.')->group(function () {
+
+        Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
+
+    });
 
 });
 

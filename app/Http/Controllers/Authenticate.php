@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 
+use App\Models\Logreport;
+use Carbon\Carbon;
+
 
 class Authenticate extends Controller
 {
@@ -66,6 +69,18 @@ class Authenticate extends Controller
 					Session::put('admin_type', $userType);
 					Session::put('admin_email', $userEmail);
 					Session::put('admin_userName', $userName);
+
+                    // log table
+
+                    $currentDateTime = Carbon::now();
+                    $login_date_time = $currentDateTime->toDateTimeString();
+                    $logdata = [
+                        'user_id' => $user->id,
+                        'user_ip' => $_SERVER['REMOTE_ADDR'],
+                        'login_date_time' => $login_date_time,
+                        'activity'=> 'Login',
+                    ];
+                    Logreport::create($logdata);
 
                     return redirect('admin/dashboard');
                 } else {
@@ -175,6 +190,20 @@ class Authenticate extends Controller
 
     public function logout()
     {
+
+
+        // log table
+
+        $currentDateTime = Carbon::now();
+        $login_date_time = $currentDateTime->toDateTimeString();
+        $logdata = [
+            'user_id' => Auth::user()->id,
+            'user_ip' => $_SERVER['REMOTE_ADDR'],
+            'login_date_time' => $login_date_time,
+            'activity'=> 'Logout',
+        ];
+        Logreport::create($logdata);
+
         Session::flush();
 
         Auth::logout();

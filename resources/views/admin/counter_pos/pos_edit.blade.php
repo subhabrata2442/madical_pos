@@ -37,8 +37,12 @@
       </div>-->
       <!--<input type="button" id="fullscreen_btn" value="Fullscreen" onclick="requestFullScreen(document.body)">-->
     </div>
-    <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
+
+    <input type="hidden" name="pos_urls" id="pos_urls" value="{{ route('admin.pos.pos_create') }}">
+
+    <form method="post" action="{{ route('admin.pos.update') }}" id="pos_create_order-form_update" novalidate enctype="multipart/form-data">
       @csrf
+      <input type="hidden" name="sell_inward_stock_id" id="sell_inward_stock_id" value="{{$data['bill_details']->id}}">
       <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
       <input type="hidden" name="stock_type" value="s">
       <div class="w-100">
@@ -203,7 +207,7 @@
       <div class="note_coin_count_sec" style="display:none"> </div>
       <div class="upi_payment_sec" style="display:none"> </div>
       <div class="card_details_payment_sec" style="display:none"> </div>
-      <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
+      <input type="hidden" name="customer_id" id="selected_customer_id" value="{{$data['bill_details']->customer_id}}">
     </form>
   </div>
     <div class="col-lg-4 col-md-4">
@@ -224,16 +228,16 @@
                         <div class="data-sales-head radio-list">
                             <div class="form-check">
                                 <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
+                                <input type="radio" class="form-check-input" name="customertype" value="walkin" @if($data['bill_details']->customer_id=='0') checked @endif>Walk in customer
                                 </label>
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
+                                <input type="radio" class="form-check-input" name="customertype" value="regular" @if($data['bill_details']->customer_id!='0') checked @endif>Regular customer
                                 </label>
                             </div>
                         </div>
-                        <div class="data-sales-head customeSearch" style="display: none;">
+                        <div class="data-sales-head customeSearch" @if($data['bill_details']->customer_id=0) style="display: none;" @endif>
                             <div class="srcArea relative">
                                 <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
                                 <div class="custom-list">
@@ -257,11 +261,11 @@
                                 </div> --}}
                                 <div class="customerDetails">
                                 {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
-                                <div class="customerDetailsMid" style="display: none;">
+                                <div class="customerDetailsMid" @if($data['bill_details']->customer_id='0') style="display: none;" @endif>
                                 <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
                                     <ul>
-                                    <li id="cd_customer_name">Customer Name : <span></span></li>
-                                    <li id="cd_customer_number">Contact Number : <span></span></li>
+                                    <li id="cd_customer_name">Customer Name : {{@$data['bill_details']->customer->customer_name}}<span></span></li>
+                                    <li id="cd_customer_number">Contact Number : {{@$data['bill_details']->customer->customer_mobile}}<span></span></li>
                                     </ul>
                                 </div>
                                 {{-- <div class="customerDetailsBtm">
@@ -368,11 +372,11 @@
           <form action="" method="get" id="applyDiscount-form">
             <div class="mb-3">
               <label for="" class="form-label">Discount (%)</label>
-              <input type="text" class="form-control number" name="special_discount_percent" id="special_discount_percent" autocomplete="off">
+              <input type="text" class="form-control number" name="special_discount_percent" id="special_discount_percent" autocomplete="off" value="{{$data['bill_details']->special_discount_percent}}">
             </div>
             <div class="mb-3">
               <label for="" class="form-label">Discount Amt</label>
-              <input type="text" class="form-control number" name="special_discount_amt" id="special_discount_amt" autocomplete="off">
+              <input type="text" class="form-control number" name="special_discount_amt" id="special_discount_amt" autocomplete="off" value="{{$data['bill_details']->special_discount_amt}}">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -676,7 +680,7 @@
             <div class="d-flex justify-content-center">
               <ul class="d-flex">
                 <li class="col-auto">
-                  <button type="button" class="saveBtn-2" id="calculate_cash_payment_btn">Submit</button>
+                  <button type="button" class="saveBtn-2" id="calculate_cash_payment_btn_update">Submit</button>
                 </li>
                 <li class="col-auto"><a href="javascript:;" class="saveBtnBdr paymentModalCloseBtn">Cancel</a></li>
               </ul>
@@ -1039,6 +1043,11 @@ $(document).keyup(function(e){
 
 $(document).ready(function() {
     total_cal();
+    // $('#modal-applyDiscount').modal('show');
+    window.onload = setTimeout(function(){
+        $("#applyDiscount-form").submit();
+    }, 1000);
+
 });
 
 </script>
