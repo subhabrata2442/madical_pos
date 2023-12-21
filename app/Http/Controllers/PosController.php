@@ -492,7 +492,7 @@ class PosController extends Controller
     }
 
 	public function create(Request $request){
-		//dd($request->all());
+		// dd($request->all());
 		$branch_id		= Session::get('store_id');
 		//echo $branch_id;die;
 		//$supplier_id	= 0;
@@ -1198,4 +1198,97 @@ class PosController extends Controller
 		}else{
 		}
 	}
+
+
+    public function billedit($bill_no_edit){
+
+        DB::beginTransaction();
+        try {
+            $data = [];
+			$store_id = Session::get('store_id');
+
+            $data['heading'] 		= 'Sell Product';
+            $data['breadcrumb'] 	= ['Sell Product', 'Add'];
+            $data['product'] 		= Product::all();
+
+
+
+
+			$data['top_selling_product_result']=[];
+
+
+
+
+			$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
+			$invoice_url='';
+			$bill_no='';
+			$pay_amount=0;
+			if(count($lastSellInwardStock)>0){
+				$invoice_no=isset($lastSellInwardStock[0]->invoice_no)?$lastSellInwardStock[0]->invoice_no:'';
+				$bill_no=isset($lastSellInwardStock[0]->bill_no)? $lastSellInwardStock[0]->bill_no:'';
+				$branch_id=isset($lastSellInwardStock[0]->branch_id)? $lastSellInwardStock[0]->branch_id:'';
+				$pay_amount=isset($lastSellInwardStock[0]->pay_amount)? $lastSellInwardStock[0]->pay_amount:'';
+
+
+				$pdf_no=Common::create_slug($bill_no.' '.$branch_id.' '.$invoice_no);
+				// $invoice_url=asset('uploads/off_counter/'.$pdf_no.'-invoice.pdf?v='.time());
+
+				$invoice_url = $pdf_no.'-invoice.pdf?v='.time();
+
+			}
+
+			$data['last_bill_no']		= $bill_no;
+			$data['last_bill_amount']	= $pay_amount;
+			$data['invoice_url']		= $invoice_url;
+
+
+			$supplier_id	= Session::get('store_id');
+
+			$data['supplier']=User::find($supplier_id);
+
+
+			$store_id	= Session::get('store_id');
+
+
+
+
+			$topSellingProducts = Product::where('common_items', 'yes')->get();
+
+
+			$result=[];
+			if(count($topSellingProducts) > 0){
+				foreach($topSellingProducts as $row){
+					$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+					$result[]=array(
+						'id'				=> $row->id,
+						'product_barcode'	=> $row->product_barcode,
+						'product_name'		=> $row->product_name,
+                        'brand'		        => $row->brand,
+						't_qty'				=> $t_qty,
+					);
+
+				}
+			}
+
+            $data['settlement'] = Settlement::where('store_id', Auth::user()->id)->whereDate('created_at', now()->toDateString())->first();
+
+			$data['topSellingProducts']=$result;
+
+            $bill = SellInwardStock::where('bill_no', $bill_no_edit)->first();
+
+            // echo $bill->id;exit;
+
+            $data['bill_details']= $bill;
+
+            $data['sellStockProducts'] = SellStockProducts::where('inward_stock_id', $bill->id)->get();
+
+
+            return view('admin.counter_pos.pos_edit', compact('data'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+        }
+
+    }
+
 }

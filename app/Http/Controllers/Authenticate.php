@@ -73,8 +73,13 @@ class Authenticate extends Controller
                 }
             }
 
+            if(Auth::user()){
+                return redirect('admin/dashboard');
+            }else{
+                return view('auth.authenticate.login');
+            }
 
-            return view('auth.authenticate.login');
+
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ');

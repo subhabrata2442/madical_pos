@@ -92,6 +92,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['POST'], '/create', [PosController::class, 'create'])->name('create');
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
 
+
+        Route::match(['GET'], '/billedit/{bill_no}', [PosController::class, 'billedit'])->name('billedit');
+
 		// Route::match(['GET'], '/pos_type', [PurchaseOrderController::class, 'pos_type'])->name('pos_type');
 
 		// Route::match(['GET'], '/demo_page_1', [PurchaseOrderController::class, 'demo_page_1'])->name('demo_page_1');
