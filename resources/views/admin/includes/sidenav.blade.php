@@ -209,7 +209,7 @@ if($adminId!=1){
               @endif
                 @if ($adminRoll != 1)
                     <li class="nav-item"> <a href="{{ route('admin.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p> Bill </p>
+                        <p> Return Bill </p>
                         </a>
                     </li>
                 @endif
