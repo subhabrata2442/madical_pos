@@ -2553,6 +2553,52 @@ a.downloadBtn {
     color: #fff;
 }
 
+.bg-blue-g {
+    background: #4633f5;
+    background: -moz-linear-gradient(45deg, #9cacf1 0%, #4b52b5 100%);
+    background: -webkit-linear-gradient(45deg, #9cacf1 0%, #4b52b5 100%);
+    background: linear-gradient(45deg, #9cacf1 0%, #4b52b5 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e49cf1', endColorstr='#954bb5', GradientType=1);
+}
+
+.bg-blue-g h3 {
+    color: #fff;
+}
+.bg-yellow-g {
+    background: #f5d833;
+    background: -moz-linear-gradient(45deg, #f1eb9c 0%, #d1c62d 100%);
+    background: -webkit-linear-gradient(45deg, #f1eb9c 0%, #d1c62d 100%);
+    background: linear-gradient(45deg, #f1eb9c 0%, #d1c62d 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e49cf1', endColorstr='#954bb5', GradientType=1);
+}
+
+.bg-yellow-g h3 {
+    color: #fff;
+}
+
+.bg-syblue-g {
+    background: #33bef5;
+    background: -moz-linear-gradient(45deg, #9ccff1 0%, #2690ab 100%);
+    background: -webkit-linear-gradient(45deg, #9ccff1 0%, #2690ab 100%);
+    background: linear-gradient(45deg, #9ccff1 0%, #2690ab 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e49cf1', endColorstr='#954bb5', GradientType=1);
+}
+
+.bg-syblue-g h3 {
+    color: #fff;
+}
+.bg-yellowgreen-g {
+    background: #46d12d;
+    background: -moz-linear-gradient(45deg, #d8f19c 0%, #d8f19c 0%, #46d12d 100%);
+    background: -webkit-linear-gradient(45deg, #d8f19c 0%, #46d12d 100%);
+    background: linear-gradient(45deg, #d8f19c 0%, #46d12d 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e49cf1', endColorstr='#954bb5', GradientType=1);
+}
+
+.bg-yellowgreen-g h3 {
+    color: #fff;
+}
+
 .chartArea .card {
     height: 100%;
 }
@@ -2793,7 +2839,7 @@ a.downloadBtn {
     font-weight: 800;
     text-transform: capitalize;
     margin-bottom: 1rem;
-    font-size: 1.25rem;
+    font-size: 1.2vw;
     text-align: center;
     padding-top: 0.5rem;
 }
@@ -2805,6 +2851,7 @@ a.downloadBtn {
     justify-content: space-between;
     background-color: #f5f4fd;
     border-radius: 5px;
+    font-size: 1vw;
 }
 
 .top-product-list li:hover {
@@ -2812,7 +2859,7 @@ a.downloadBtn {
 }
 
 .total-qty {
-    font-size: 14px;
+    font-size: 1vw;
     font-weight: 700;
 }
 
@@ -2834,6 +2881,7 @@ a.downloadBtn {
 .top-heading-qty li {
     padding: 4px 8px;
     font-weight: 700;
+    font-size: 1vw;
 }
 
 .artReleases {
@@ -2853,4 +2901,64 @@ a.downloadBtn {
     font-size: 14px;
     text-align: right;
     display: block;
+}
+.wrap-heading {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #039;
+    font-weight: 600;
+}
+.select-store ul{
+    display: flex;
+    align-items: center;
+}
+.select-store{
+    width: 100%;
+}
+.select-store ul li:not(:last-child){
+    margin-right: 1rem;
+}
+.select-store ul li.select-store-file{
+    width: 400px;
+}
+.select-store ul li label{
+    margin-bottom: 0;
+    line-height: 1;
+}
+.white-box-sadow{
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, .15);
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: 0.5rem;
+}
+.box-card-new{
+    margin-bottom: 1rem;
+}
+.box-card-new .card{
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, .15);
+    margin-bottom: 0;
+}
+.dark_mode .box-card-new .card{
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, .15);
+}
+.table-view-all {
+    text-align: right;
+}
+.table-view-all-btn {
+    display: inline-block;
+    border-radius: 0 0 5px 5px;
+    line-height: 2;
+    font-size: 0.875rem;
+    background-color: #039;
+}
+.box-card-new .card-title{
+    font-size: 1rem;
+    font-weight: 500;
+}
+.box-card-new tr th,
+.box-card-new tr td{
+    font-size: 0.875rem;
+    padding: 8px 10px !important;
 }

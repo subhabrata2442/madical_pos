@@ -3152,4 +3152,88 @@ class PurchaseOrderController extends Controller
 	}
 
 
+    public function price_history(Request $request){
+
+        $branch_id = Auth::user()->id;
+		$store_id = Session::get('store_id');
+		$user_role = Auth::user()->role;
+
+		if ($user_role == 1) {
+			$drugstore_id = isset($request['drugstore']) ? $request['drugstore'] : 0;
+		} else {
+			$drugstore_id = $store_id;
+		}
+
+        try {
+			$data = [];
+			$queryProduct = Product::query();
+			//$products = $queryProduct->where('drugstore_id',$drugstore_id);
+			if (!is_null($request['product_barcode'])) {
+				$queryProduct->where('product_barcode', $request['product_barcode']);
+			}
+			if (!is_null($request['product_name'])) {
+				$queryProduct->where('brand', $request['product_name']);
+			}
+			$products = $queryProduct->get();
+
+			//echo '<pre>';print_r($product);exit;
+
+			$data['store']			= [];
+			if ($user_role == 1) {
+				$data['store'] 		= User::where('role', 2)->where('parent_id', 0)->where('status', 1)->get();
+			}
+
+			//echo '<pre>';print_r($data['store']);exit;
+
+			$stockProducts 		= $queryProduct->paginate(10);
+			$data['heading'] 	= 'Price History';
+			$data['breadcrumb'] = ['Price History', 'List'];
+			$data['products']   = $stockProducts;
+			//$products = $products->toArray();
+			//echo '<pre>';print_r($data['store']);exit;
+
+
+			return view('admin.purchase_order.price_history', compact('data'));
+		} catch (\Exception $e) {
+			return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+		}
+
+    }
+
+    public function pricehistory_product($product_id){
+
+        $product_details =Product::where('id', $product_id)->first();
+
+        $branch_stock_product_result = BranchStockProducts::where('product_id',$product_id)->get();
+        //dd($branch_stock_product_result);
+        $branch_stock_product_id	= isset($branch_stock_product_result[0]->id)?$branch_stock_product_result[0]->id:'';
+
+        $html = '';
+
+        if($branch_stock_product_id!=''){
+            if(count($branch_stock_product_result)>0){
+                foreach($branch_stock_product_result as $key=>$row){
+                    $html .= '<tr>';
+                    $html .= '<td>'.($key+1).'</td>';
+                    $html .= '<td>'.$row->net_price.'</td>';
+                    $html .= '<td>'.date('d-m-Y', strtotime(str_replace('.', '/', $row->created_at))).'</td>';
+                    $html .= '</tr>';
+                }
+            }else{
+                $html .= '<tr><td>No record found!</td></tr>';
+            }
+        }else{
+            $html .= '<tr><td>No record found!</td></tr>';
+        }
+
+
+        return response()->json([
+            'status' => 1,
+            'html'=>$html,
+            'product_name'=> $product_details->brand,
+        ]);
+
+    }
+
+
 }

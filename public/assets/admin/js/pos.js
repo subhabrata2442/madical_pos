@@ -398,6 +398,67 @@ $(document).ready(function() {
             });
         }
     });
+
+    $("#pos_create_order-form_update").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+            var formData = new FormData($(form)[0]);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                url: $('#pos_create_order-form_update').attr('action'),
+                dataType: 'json',
+                data: formData,
+                success: function(data) {
+                    $(".payWrap").removeClass('active');
+                    // console.log(data.invoicePdf);
+                    $("#off_counter_invoice-frame").attr("src", data.invoicePdf);
+
+
+                },
+                beforeSend: function() {
+                    $('#ajax_loader').fadeIn();
+                },
+                complete: function() {
+                    $('#ajax_loader').fadeOut();
+
+                    setTimeout(function() {
+                        var frame = document.getElementById('off_counter_invoice-frame');
+                        frame.contentWindow.focus();
+                        frame.contentWindow.print();
+                    }, 500);
+
+
+                    Swal.fire({
+                        title: 'Order successfully submitted.',
+                        icon: 'success',
+                        showDenyButton: false,
+                        showCancelButton: false,
+                        allowOutsideClick: false
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+                            /* var redirect_url = prop.url + '/admin/pos/today-sales-product/download';
+                            window.open(redirect_url, "_blank"); */
+                            // location.reload();
+
+                            var pos_urls = $("#pos_urls").val();
+                            window.location.href = pos_urls;
+
+                        } else if (result.isDenied) {}
+                    });
+                }
+            });
+        }
+    });
+
 });
 
 $(document).on('click', '#calculate_cash_payment_btn', function() {
@@ -422,6 +483,75 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
 
 
 });
+
+
+$(document).on('click', '#calculate_cash_payment_btn_update', function() {
+    //alert('cash');
+
+    // finalsubmitpayment();
+    //return false;
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            finalsubmitpayment_update();
+        }
+    });
+
+
+});
+
+function finalsubmitpayment_update(){
+
+    // alert();
+
+    var due_amount_tendering = $('#due_amount_tendering').val();
+    var tendered_change_amount = $('#tendered_change_amount').val();
+    var tendered_amount = $('#tendered_amount').val();
+    if (tendered_change_amount > 0) {
+        $('#rupee_due_amount_tendering-input').val(tendered_change_amount);
+        $('#rupee_due_amount_tendering').html(tendered_change_amount);
+        /*$('.tab_sec').hide();
+
+        $('.payWrapLeft').hide();
+        $('.payWrapRight').addClass('tabMenuHideWrapRight');
+        $('#rupee_payment_sec').show();*/
+
+        $('.note_coin_count_sec').append('<input type="hidden" name="rupee_type[]" value="coin"><input type="hidden" name="note[]" value="1"><input type="hidden" name="note_qty[]" value="' + tendered_change_amount + '">');
+
+        var tendered_change_amount = $('#tendered_change_amount').val();
+        var tendered_amount = $('#tendered_amount').val();
+        $('#total_tendered_amount').val(tendered_amount);
+        $('#total_tendered_change_amount').val(tendered_change_amount);
+        $(".payWrap").toggleClass('active');
+        $("#pos_create_order-form_update").submit();
+
+
+
+
+    } else {
+
+        if (due_amount_tendering > tendered_amount) {
+            toastr.error("Make Full Payment");
+        } else {
+            $('.note_coin_count_sec').html('<input type="hidden" name="rupee_type[]" value="note"><input type="hidden" name="note[]" value="' + tendered_amount + '"><input type="hidden" name="note_qty[]" value="1">');
+
+            var tendered_change_amount = $('#tendered_change_amount').val();
+            var tendered_amount = $('#tendered_amount').val();
+            $('#total_tendered_amount').val(tendered_amount);
+            $('#total_tendered_change_amount').val(tendered_change_amount);
+            $(".payWrap").toggleClass('active');
+            $("#pos_create_order-form_update").submit();
+        }
+    }
+}
 
 function finalsubmitpayment(){
 
@@ -2341,3 +2471,93 @@ function checkformatPercentage(value) {
       return (value.toFixed(2));
     }
   }
+
+
+$('.no_settlement').click(function() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Settlement submit already for today unable to make bill',
+        showConfirmButton: false,
+        // timer: 2500
+    });
+});
+
+$('.settlement').click(function() {
+
+
+    Swal.fire({
+        // title: "Are you sure? ",
+        text: "This is todays final settlement once you done, unable to make new bill",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Submit"
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            $("#modal_settlement").modal('show');
+        }
+    });
+
+
+});
+
+$(document).ready(function() {
+    $('input[id^="note_"]').on('input', function() {
+        var noteId = $(this).attr('id').split('_')[1];
+        var inputVal = $(this).val();
+
+        var note_name = $("#note_name_"+noteId).val();
+
+
+        if ($.isNumeric(inputVal)) {
+
+        var total = parseInt(inputVal) * parseInt(note_name);
+
+
+        $('.totalnote_' + noteId).text(total);
+        } else {
+
+        $('.totalnote_' + noteId).text('0');
+        }
+
+        // Calculate total settlement amount
+        var total_settlement_amount = 0;
+        $('[class^="totalnote_"]').each(function() {
+            var value = parseInt($(this).text());
+            if (!isNaN(value)) {
+                total_settlement_amount += value;
+            }
+        });
+
+        // Update the total_settlement_amount field with the calculated total
+        $('#total_settlement_amount').val(total_settlement_amount);
+        $('.total_settlement_amount').text(total_settlement_amount);
+
+    });
+
+
+    $("#settlement_form").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+
+            var total_settlement_amount = $("#total_settlement_amount").val();
+
+            if(total_settlement_amount==''){
+                toastr.error("Add minimum one note count!");
+            }else{
+
+                form.preventDefault();
+                $("#settlement_form").submit();
+            }
+
+
+        }
+    });
+
+});

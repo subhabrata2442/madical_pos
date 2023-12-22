@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>POS</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/fabicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ url('assets/admin/css/vendors.bundle.css') }}">
     <link rel="stylesheet" href="{{ url('assets/admin/css/style.bundle.css') }}">-->
     <link rel="stylesheet" href="{{ url('assets/admin/css/dev.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/admin/css/responsive.css') }}">
 
     <script>
  var base_url = "{{url('/')}}";
@@ -40,13 +41,37 @@
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
+                    <div class="row mb-2 justify-content-between">
+                        <div class="col-auto">
                             <h1 class="m-0">
                                 {{ !empty($data['heading']) && $data['heading'] ? $data['heading'] : 'Dashboard' }}
                             </h1>
                         </div>
-                        <div class="col-sm-6">
+                        @if(Session::get('adminId')==1)
+                            @if (\Route::currentRouteName() == 'admin.dashboard')
+                                <div class="col-auto">
+                                    <div class="select-store">
+                                        <ul>
+                                            <li><label>Select store</label></li>
+                                            <li class="select-store-file">
+                                                <form action="" method="get" id="selectStoreForm">
+                                                    <select class="form-control select2" name="store_id" id="store_id" onchange="selectStore(this.value)" style="width: 100%;">
+                                                        <option value="">Select Store</option>
+                                                        <option value="">View All</option>
+                                                            @forelse ($data['storelist'] as $store)
+                                                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
+                                                            @empty
+
+                                                            @endforelse
+                                                    </select>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+                        <div class="col-auto">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 @foreach ($data['breadcrumb'] as $item)

@@ -8,6 +8,9 @@
   .red_border {
     border: 1px solid #e50b0b;
   }
+  .fa-info-circle{
+    cursor: pointer;
+  }
 </style>
 
 @php
@@ -21,8 +24,8 @@ $adminRoll = Session::get('admin_type');
     <div class="col-12 mb-3">
       <div class="commonBox">
         <!--<div class="arrowUpDown2"> <span class="arrowDown"><i class="fas fa-arrow-alt-circle-down"></i></span> </div>-->
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="row g-3">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierWrap">
               <div class="invArea">
                 <ul class="d-flex flex-wrap align-items-center">
@@ -82,7 +85,7 @@ $adminRoll = Session::get('admin_type');
               </div>
             </div>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierDetails relative">
               <h4>Additional Details</h4>
 
@@ -98,7 +101,7 @@ $adminRoll = Session::get('admin_type');
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierDetails relative">
               <h4>Payment Details</h4>
 
@@ -112,7 +115,7 @@ $adminRoll = Session::get('admin_type');
                       <option value="cheque">Cheque</option>
                       <option value="net_banking">Net Banking</option>
                       <option value="cash">Cash</option>
-                      <option value="credit">Credit</option>
+                      <option value="debt">Debt</option>
                     </select>
                   </li>
                 </ul>
@@ -510,6 +513,32 @@ $adminRoll = Session::get('admin_type');
     </div>
   </div>
 
+
+
+  <div class="modal fade modalMdHeader" id="modal_paymenthistory" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title appendtitle" id="modal-1Label">Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <table id="" class="table table-bordered paymentHistoryTable">
+                <thead>
+
+                    <th>Sl No.</th>
+                    <th>Price</th>
+                    <th>Purchase Date</th>
+                </thead>
+                <tbody class="paymentHistory">
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+    </div>
+</div>
+
   @endsection
 
   @section('scripts')
@@ -524,6 +553,28 @@ $adminRoll = Session::get('admin_type');
     $(document).on('change', '#upload_excel_input', function() {
       $("#invoice_upload-form").submit()
     });
+
+
+    function priceHistory(product_id){
+        $.ajax({
+            url: "{{url('admin/purchase/pricehistory_product')}}/"+product_id,
+            type: "get",
+            data: {
+                product_id: product_id,
+                _token: "<?php echo csrf_token(); ?>",
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.status == 1) {
+                    $("#modal_paymenthistory").modal('show');
+                    $(".paymentHistory").html(response.html);
+                    $(".appendtitle").html(response.product_name);
+                }else{
+
+                }
+            },
+        });
+    }
 
   </script>
 

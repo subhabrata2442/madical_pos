@@ -21,8 +21,12 @@ use App\Http\Controllers\DosageController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CredithistoryController;
+use App\Http\Controllers\SettlementController;
+use App\Http\Controllers\BillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\LogreportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +92,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 		Route::match(['GET'], '/create_order', [PosController::class, 'pos_create'])->name('pos_create');
 		Route::match(['POST'], '/create', [PosController::class, 'create'])->name('create');
+        Route::match(['POST'], '/update', [PosController::class, 'update'])->name('update');
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
+
+
+        Route::match(['GET'], '/billedit/{bill_no}', [PosController::class, 'billedit'])->name('billedit');
+        Route::match(['GET'], '/billdelete/{id}', [PosController::class, 'billdelete'])->name('billdelete');
 
 		// Route::match(['GET'], '/pos_type', [PurchaseOrderController::class, 'pos_type'])->name('pos_type');
 
@@ -120,7 +129,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// Route::match(['GET'], '/monthwise-report', [PurchaseOrderController::class, 'pdfMonthwiseReport'])->name('monthwise_report');
 		// Route::match(['GET'], '/item-wise-sales-report', [PurchaseOrderController::class, 'pdfItemWiseSalesReport'])->name('pdf3');
 		// Route::match(['GET'], '/e-report', [PurchaseOrderController::class, 'pdfEReport'])->name('pdf4');
+
+
+        // Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('asdddd');
+
+
 	});
+
+    Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('settlement_add');
 
 	Route::prefix('customer')->name('customer.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [CustomerController::class, 'add'])->name('add');
@@ -189,6 +205,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET', 'POST'], '/opening-stock', [PurchaseOrderController::class, 'setOpeningStock'])->name('opening_stock');
 
 		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
+
+        Route::match(['GET', 'POST'], '/price_history', [PurchaseOrderController::class, 'price_history'])->name('price_history');
+        Route::match(['GET', 'POST'], '/pricehistory_product/{product_id}', [PurchaseOrderController::class, 'pricehistory_product'])->name('pricehistory_product');
 	});
 
 	Route::prefix('report')->name('report.')->middleware('checkPermission:3')->group(function () {
@@ -330,6 +349,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['get'], '/supplierpaymenthistory_modal/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory_modal'])->name('supplierpaymenthistory_modal');
 	Route::match(['get'], '/suppliercredithistory/{supplier_id}', [CredithistoryController::class, 'suppliercredithistory'])->name('suppliercredithistory');
 	Route::match(['get'], '/supplierpaymenthistory/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory'])->name('supplierpaymenthistory');
+
+
+	Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
+	Route::match(['get'], '/settlement_approve/{id}', [SettlementController::class, 'settlement_approve'])->name('settlement_approve');
+
+
+    Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+
+
+    Route::prefix('logreport')->name('logreport.')->group(function () {
+
+        Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
+
+    });
+
 });
 
 

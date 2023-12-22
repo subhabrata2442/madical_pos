@@ -17,7 +17,6 @@ use App\Models\PurchaseInwardStock;
 use App\Models\SellInwardStock;
 use App\Models\BranchStockProducts;
 use App\Models\Product;
-use App\Models\InwardStockProducts;
 use DataTables;
 use DB;
 
@@ -26,35 +25,48 @@ use Auth;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
             $branch_id=Auth::user()->id;
-
+			$store_id = Session::get('store_id');
             $admin_type = Session::get('admin_type');
             $data = [];
             $data['heading'] = 'Dashboard';
             $data['breadcrumb'] = ['Dashboard'];
+            //$data['breadcrumb'] = ['Dashboard'];
 
-            $store_id = Session::get('store_id');
+            // if($admin_type==1){
+            //     $total_sales= SellInwardStock::sum('pay_amount');
+            //     $total_purchases=PurchaseInwardStock::sum('total_amount');
+            //     $total_profit=PurchaseInwardStock::sum('qty_total_profit');
+            //     $total_net_price=PurchaseInwardStock::sum('qty_total_net_price');
+            //     $total_sell_return=0;
+
+            // }else{
+            //     $total_sales=SellInwardStock::where('branch_id',$store_id)->sum('pay_amount');
+            //     $total_purchases=PurchaseInwardStock::where('branch_id',$store_id)->sum('total_amount');
+            //     $total_profit=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_profit');
+            //     $total_net_price=PurchaseInwardStock::where('branch_id',$store_id)->sum('qty_total_net_price');
+            //     $total_sell_return=0;
+            // }
+            // $data['total_sales']=$total_sales;
+            // $data['total_purchases']=$total_purchases;
+            // $data['total_profit']=$total_profit;
+            // $data['total_net_price']=$total_net_price;
+            // $data['total_sell_return']=$total_sell_return;
 
 
-
-            //low stock start
             if($admin_type==1){
-                $branchStockProducts_query = BranchStockProducts::with('product');
-                if(!empty($request->get('store_id'))){
-                    $branchStockProducts_query->where('branch_id', $request->get('store_id'));
-                }
-                $low_stock = $branchStockProducts_query->limit(5)->get();
+                $low_stock = BranchStockProducts::with('product')->limit(5)->get();
             }else{
                 $store_id	= Session::get('store_id');
                 $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(5)->get();
             }
-            $data['low_stock']=$low_stock;
-            //low stock end
 
-            // Top Selling Product start
+            $data['low_stock']=$low_stock;
+
+
             if($admin_type==1){
                 $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
                     ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
@@ -62,17 +74,6 @@ class DashboardController extends Controller
                     ->orderBy('sales_count', 'desc')
                     ->limit(5)
                     ->get();
-
-                    if(!empty($request->get('store_id'))){
-                        $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-                        ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-                        ->where('sell_stock_products.branch_id', $request->get('store_id'))
-                        ->groupBy('products.id', 'products.product_name')
-                        ->orderBy('sales_count', 'desc')
-                        ->limit(5)
-                        ->get();
-                    }
-
             }else{
                 $store_id	= Session::get('store_id');
                 $topSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
@@ -104,24 +105,21 @@ class DashboardController extends Controller
 
                 }
             }
-            $data['top_products'] = $result;
-            // Top Selling Product end
 
+            $data['top_products'] = $result;
 
 
             if($admin_type==1){
-                $sellInwardStock_query = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'));
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_query->where('branch_id', $request->get('store_id'));
-                }
-                $totalSalesToday = $sellInwardStock_query->sum('sub_total');
+                $latestBill = SellInwardStock::with('customer')->orderBy('id', 'DESC')->limit(5)->get();
+            }else{
+                $latestBill = SellInwardStock::with('customer')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(5)->get();
+            }
 
-                $sellInwardStock_querytoday = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'));
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_querytoday->where('branch_id', $request->get('store_id'));
-                }
-                $totalProfitToday = $sellInwardStock_querytoday->sum('profit_price');
+            $data['latestBill'] = $latestBill;
 
+            if($admin_type==1){
+                $totalSalesToday = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'))->sum('sub_total');
+                $totalProfitToday = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'))->sum('profit_price');
             }else{
                 $totalSalesToday = SellInwardStock::where('branch_id', $store_id)->whereDate('payment_date', now()->format('Y-m-d'))->sum('sub_total');
                 $totalProfitToday = SellInwardStock::where('branch_id', $store_id)->whereDate('payment_date', now()->format('Y-m-d'))->sum('profit_price');
@@ -133,18 +131,8 @@ class DashboardController extends Controller
             $currentMonth = now()->format('m');
             $currentYear = now()->format('Y');
             if($admin_type==1){
-                $sellInwardStock_query_mmonth = SellInwardStock::whereYear('payment_date', $currentYear);
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_query_mmonth->where('branch_id', $request->get('store_id'));
-                }
-                $totalSalesthismonth = $sellInwardStock_query_mmonth->sum('sub_total');
-
-
-                $sellInwardStock_profit_query = SellInwardStock::whereMonth('payment_date', $currentMonth);
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_profit_query->where('branch_id', $request->get('store_id'));
-                }
-                $totalProfitthismonth = $sellInwardStock_profit_query->sum('profit_price');
+                $totalSalesthismonth = SellInwardStock::whereYear('payment_date', $currentYear)->sum('sub_total');
+                $totalProfitthismonth = SellInwardStock::whereMonth('payment_date', $currentMonth)->sum('profit_price');
 
             }else{
                 $totalSalesthismonth = SellInwardStock::where('branch_id', $store_id)->whereYear('payment_date', $currentYear)->sum('sub_total');
@@ -153,143 +141,6 @@ class DashboardController extends Controller
 
             $data['totalSalesthismonth'] = $totalSalesthismonth;
             $data['totalProfitthismonth'] = $totalProfitthismonth;
-
-
-
-            if($admin_type==1){
-
-                $sellInwardStock_totalbill_today = SellInwardStock::whereDate('payment_date', now()->format('Y-m-d'));
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_totalbill_today->where('branch_id', $request->get('store_id'));
-                }
-                $totalBilltoday = $sellInwardStock_totalbill_today->count();
-
-
-                $sellInwardStock_totalbill_month = SellInwardStock::whereYear('payment_date', $currentYear);
-                if(!empty($request->get('store_id'))){
-                    $sellInwardStock_totalbill_month->where('branch_id', $request->get('store_id'));
-                }
-                $totalBillthismonth = $sellInwardStock_totalbill_month->count();
-
-            }else{
-                $totalBilltoday = SellInwardStock::where('branch_id', $store_id)->whereDate('payment_date', now()->format('Y-m-d'))->count();
-                $totalBillthismonth = SellInwardStock::where('branch_id', $store_id)->whereYear('payment_date', $currentYear)->count();
-            }
-
-            $data['totalBilltoday'] = $totalBilltoday;
-            $data['totalBillthismonth'] = $totalBillthismonth;
-
-
-            // Sale per employee
-
-            if($admin_type==1){
-
-                $emp_query = User::with(['SellInwardStock'])->where('status', 1)->where('role', 3);
-                if(!empty($request->get('store_id'))){
-                    $emp_query->where('parent_id', $request->get('store_id'));
-                }
-                $emp_list = $emp_query->limit(10)->get();
-
-                // dd($emp_list);
-
-            }else{
-                $emp_list = User::with(['SellInwardStock'])->where('status', 1)->where('parent_id', $store_id)->limit(5)->get();
-            }
-
-            $data['emp_query'] = $emp_list;
-
-
-            //Latest purchase history
-
-            if($admin_type==1){
-                $purchaseInwardStock_qurery = PurchaseInwardStock::where('invoice_no','!=','');
-                if(!empty($request->get('store_id'))){
-                    $purchaseInwardStock_qurery->where('branch_id', $request->get('store_id'));
-                }
-                $latest_purchase_history = $purchaseInwardStock_qurery->limit(5)->orderBy('id', 'DESC')->get();
-            }else{
-                $latest_purchase_history = PurchaseInwardStock::where('invoice_no','!=','')->where('branch_id', $store_id)->orderBy('id', 'DESC')->limit(5)->get();
-            }
-
-            $data['latest_purchase_history'] = $latest_purchase_history;
-
-
-
-            //Near Expiry Products
-
-            if($admin_type==1){
-                if(!empty($request->get('store_id'))){
-                    $nearExpiryStock = InwardStockProducts::with('product')->where('branch_id', $request->get('store_id'))->whereDate('product_expiry_date', '>=', now())
-                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
-                    ->get();
-                }else{
-                    $nearExpiryStock = InwardStockProducts::with('product')->whereDate('product_expiry_date', '>=', now())
-                    ->whereDate('product_expiry_date', '<=', now()->addDays(60))
-                    ->get();
-                }
-            }else{
-                $store_id	= Session::get('store_id');
-                $nearExpiryStock = InwardStockProducts::with('product')->where('branch_id', $store_id)->whereDate('product_expiry_date', '>=', now())
-                ->whereDate('product_expiry_date', '<=', now()->addDays(60))
-                ->get();
-            }
-            $data['nearExpiryStock'] = $nearExpiryStock;
-
-            // Slow Moving Item
-
-            if($admin_type==1){
-                $lowSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-                    ->groupBy('products.id', 'products.product_name')
-                    ->orderBy('sales_count', 'asc')
-                    ->limit(5)
-                    ->get();
-
-                    if(!empty($request->get('store_id'))){
-                        $lowSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-                        ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-                        ->where('sell_stock_products.branch_id', $request->get('store_id'))
-                        ->groupBy('products.id', 'products.product_name')
-                        ->orderBy('sales_count', 'asc')
-                        ->limit(5)
-                        ->get();
-                    }
-
-            }else{
-                $store_id	= Session::get('store_id');
-                $lowSellingProducts = Product::select('products.id', 'products.product_name', 'products.product_barcode', 'products.brand', 'products.dosage_name', 'products.selling_by_name', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-                    ->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-                    ->where('sell_stock_products.branch_id', $store_id)
-                    ->groupBy('products.id', 'products.product_name')
-                    ->orderBy('sales_count', 'asc')
-                    ->limit(5)
-                    ->get();
-            }
-
-            $results=[];
-            if(count($lowSellingProducts) > 0){
-                foreach($lowSellingProducts as $row){
-                    if($admin_type==1){
-                        $t_qty = BranchStockProducts::where('product_id', $row->id)->sum('t_qty');
-                    }else{
-                        $t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
-                    }
-                    $results[]=array(
-                        'id'				=> $row->id,
-                        'product_barcode'	=> $row->product_barcode,
-                        'product_name'		=> $row->product_name,
-                        't_qty'				=> $t_qty,
-                        'brand'				=>  $row->brand,
-                        'dosage_name'		=>  $row->dosage_name,
-                        'selling_by_name'	=>  $row->selling_by_name,
-                    );
-
-                }
-            }
-            $data['low_products'] = $results;
-
-
-
 
 
 

@@ -41,28 +41,26 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
 <div class="srcBtnWrap">
 	<div class="card">
-		<div class="row g-3 align-items-center justify-content-between">
+		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Invoice Wise Sale</h4>
+				<h4>Log Report</h4>
 			</div>
-			<div class="col d-flex invoiceAmout justify-content-center">
+			{{-- <div class="col d-flex invoiceAmout justify-content-center">
 				<ul class="d-flex">
-					<li>Total Invoice : <span>{{$data['total_invoice']}}</span></li>
-					<li>Total Qty : <span>{{$data['total_qty']}}</span></li>
-					<li>Total Amount : <span>{{number_format($data['total_ammount'],2)}}</span></li>
-					<li>Total Profit : <span>{{number_format($data['profitpersent'],2)}}%</span></li>
-					<!-- <li>advanced Search : <span>0</span></li> -->
+					<li>Total Expense : {{number_format($data['totalexpense'])}}<span></span></li>
 				</ul>
 			</div>
 			<div class="col-auto">
 				<a href="javascript:;" class="searchDropBtn">Advance Search <i class="fas fa-chevron-circle-down"></i></a>
-			</div>
+			</div> --}}
 		</div>
 	</div>
 </div>
-<div class="card toggleCard">
+{{-- <div class="card toggleCard">
 	<form action="" method="get" id="filter">
 		<div class="row">
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
@@ -73,41 +71,36 @@
 					<input type="hidden" name="end_date" id="end_date" value="{{request()->input('end_date')}}">
 				</div>
 			</div>
-			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+            @if (Auth::user()->role == 1)
+            <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
-					<label for="customer_last_name" class="form-label">By Customer Name / Mobile</label>
+					<label for="customer_last_name" class="form-label">Select Store</label>
 					<div class="position-relative">
-						<input type="text" class="form-control" id="search_customer" name="customer" value="{{request()->input('customer')}}" autocomplete="off">
-						<ul id="search_customer_list" class="auto_search_result">
+						<select name="branch_id" id="branch_id" class="form-control form-inputtext">
+                            <option value="">Select Store</option>
+                            @foreach ($data['storelist'] as $key=>$storeitem)
+                                <option value="{{$storeitem->id}}" @if(isset($_GET['branch_id'])) @if($_GET['branch_id']==$storeitem->id) selected @endif @endif>{{$storeitem->name}}</option>
+                            @endforeach
+                        </select>
 					</div>
-					<input type="hidden" name="customer_id" id="customer_id" value="{{request()->input('customer_id')}}">
-				</div>
-			</div> --}}
-			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="customer_last_name" class="form-label">Invoice No.</label>
-					<div class="position-relative">
-						<input type="text" class="form-control" id="search_sale_invoice" name="invoice" value="{{request()->input('invoice')}}" autocomplete="off">
-						<ul id="search_sale_invoice_list" class="auto_search_result">
-					</div>
-					<input type="hidden" id="invoice_id" name="invoice_id" value="{{request()->input('invoice_id')}}">
+
 				</div>
 			</div>
-            @if (Auth::user()->role == 1)
-                <div class="col-lg-3 col-md-3 col-sm-12 col-12">
-                    <div class="form-group">
-                        <label for="" class="form-label">Select Store</label>
-                        <select class="form-control custom-select form-control-select" id="" name="store_id">
-                            <option value="">Select Store</option>
-                            @forelse ($data['storeUsers'] as $store)
-                                <option value="{{$store->id}}" {{request()->input('store_id') == $store->id ? 'selected' : ''}}>{{$store->name}}</option>
-                            @empty
-
-                            @endforelse
+			@endif
+			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="customer_last_name" class="form-label">Select Catrgory</label>
+					<div class="position-relative">
+						<select name="category_id" id="category_id" class="form-control form-inputtext">
+                            <option value="">Select Category</option>
+                            @foreach ($data['category'] as $key=>$item)
+                                <option value="{{$item->id}}" @if(isset($_GET['category_id'])) @if($_GET['category_id']==$item->id) selected @endif @endif>{{$item->category_name}}</option>
+                            @endforeach
                         </select>
-                    </div>
-                </div>
-            @endif
+					</div>
+
+				</div>
+			</div>
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -116,89 +109,49 @@
 					<li>
 						<button class="saveBtn-2" type="submit">Search <i class="fas fa-arrow-circle-right"></i></button>
 					</li>
-					{{-- <li class="d-flex align-items-center">
-						<div>
-							<select class="form-control custom-select form-control-select" id="report_type">
-								<option value=""> Select Report Type</option>
-								<option value="item_wise_sales_report"> Item Wise sales report</option>
-							</select>
-						</div>
-						<div>
-							<button type="button" id="download_report" class="srcBtnWrapGo"><i class="fas fa-download"></i></button>
-						</div>
-					</li> --}}
-
-                    <li>
-                        @php
-
-                            $invoice = '';
-                            $start_date = '';
-                            $end_date = '';
-                            $store_id = '';
-
-                            if (isset($_GET['invoice'])) {
-                                $invoice = $_GET['invoice'];
-                            }
-                            if (isset($_GET['start_date'])) {
-                                $start_date = $_GET['start_date'];
-                            }
-                            if (isset($_GET['end_date'])) {
-                                $end_date = $_GET['end_date'];
-                            }
-                            if (isset($_GET['store_id'])) {
-                                $store_id = $_GET['store_id'];
-                            }
-                        @endphp
-						<a href="{{ url('admin/report/invoice_wies_sale_download?invoice='.$invoice.'&start_date='.$start_date.'&end_date='.$end_date.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
-					</li>
 
 				</ul>
 			</div>
 		</div>
 	</form>
-</div>
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <x-alert />
-      <div class="table-responsive custom-table">
-        <table id="" class="table table-bordered text-nowrap">
-			<thead>
-				<th scope="col">Invoice No</th>
-				<th scope="col">Store Name</th>
-				<th scope="col">Sell Date</th>
-				<th scope="col">Total Qty</th>
-				<th scope="col">Gross Amount</th>
-				<th scope="col">Discount Amount</th>
-				<th scope="col">Sub Total</th>
-				<th scope="col">Pay Amount</th>
-				<th scope="col">Payment Method</th>
-			</thead>
-			<tbody>
-				@forelse ($data['sales'] as $sale)
-				<tr>
-					<th><a class="td-anchor" href="{{route('admin.report.sales.product',['id'=>base64_encode($sale->id)])}}" target="_blank">{{$sale->invoice_no}}</a></th>
-					<th>{{@$sale->storeUser->name}}</th>
-					<td>{{date('d-m-Y', strtotime($sale->sell_date))}}</td>
-					<th>{{$sale->total_qty}}</th>
-					<th>{{number_format($sale->gross_amount,2)}}</th>
-					<th>{{number_format($sale->special_discount_amt,2)}}</th>
-					<th>{{number_format($sale->sub_total,2)}}</th>
-					<th>{{number_format($sale->pay_amount,2)}}</th>
-					<th>{{$sale->payment_method}}</th>
-				</tr>
-				@empty
-					<tr ><td colspan="11"> No data found </td></tr>
-				@endforelse
+</div> --}}
 
-			</tbody>
-        </table>
-		{{ $data['sales']->appends($_GET)->links() }}
-      </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <x-alert />
+                <div class="table-responsive dataTable-design">
+                    <table id="user-table" class="table table-bordered">
+                        <thead>
+
+                            <th>Sl No.</th>
+                            <th>User</th>
+                            <th>Activity</th>
+                            <th>Date Time</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($data['logreport'] as $key=>$item)
+                                <tr>
+                                    <td>{{($key+1)}}</td>
+                                    <td>{{$item->user->name}}</td>
+                                    <td>{{$item->activity}}</td>
+                                    <td>
+                                        @if ($item->activity=='Login')
+                                            {{$item->login_date_time}}
+                                        @elseif ($item->activity=='Logout')
+                                            {{$item->logout_date_time}}
+                                        @endif
+                                    </td>
+
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
 @endsection
 
 @section('scripts')
@@ -231,7 +184,7 @@ $(function() {
             })
         }else{
 			console.log('sdfd');
-            var url = "{{route('admin.report.sales.product.item_wise')}}";
+            var url = "{{route('admin.report.purchase.invoice_wise')}}";
 			var href = url+'?start_date='+start_date+'&end_date='+end_date;
 
 			window.open(href);
@@ -317,7 +270,7 @@ $(function() {
 		var search = $(this).val();
 		if (search != "") {
             $.ajax({
-                url: '{{route('admin.ajax.sale-invoice-list')}}',
+                url: '{{route('admin.ajax.purchase-invoice-list')}}',
                 type: 'get',
                 data: {
                     search: search,

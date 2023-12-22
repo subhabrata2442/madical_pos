@@ -1190,7 +1190,7 @@ p {
 }
 .customerDetailsBtm ul li a{
     padding: 0 !important;
-    line-height: 26px;
+    line-height: 18px;
 }
 
 .customerDetailsBtm ul li span {
@@ -1228,14 +1228,13 @@ p {
 
 .tableFixHead {
     overflow: auto;
-    /* height: 28.28vw; */
-    height: calc(100vh - 40vh);
+    height: 28.28vw;
     margin-bottom: 1vw;
     border: #e1e1e1 1px solid;
     border-radius: 6px;
 }
 .full-mode .tableFixHead {
-    height: calc(100vh - 36vh);
+    height: 36vw;
 }
 
 .tableFixHead thead th {
@@ -1753,21 +1752,43 @@ p {
     box-shadow: none;
     border-radius: 5px;
 }
-/* .content-wrapper>.content {
-    height: 100%;
-} */
-/* #pos_create_order-form {
-    height: calc(100vh - 9vh);
-} */
-
+.small-pay-btn a{
+    height: 3.2vw !important;
+    font-size: 0.75vw !important;
+}
+.small-pay-btn a svg{
+    font-size: 1vw !important;
+}
+.inner-body-wrap{
+    height: calc(100vh - 5.1vw);
+}
+.inner-body-wrap .inner-body-wrap-box{
+    height: calc(100vh - 18.5vw);
+}
+.inner-body-wrap .tableFixHead{
+    height: calc(100% - 1vw);
+}
+.atpMid ul li a svg{
+    font-size: 1vw;
+}
+.cutomer-logout{
+    text-align: right;
+}
+.cutomer-logout a{
+    color: #3b8ccf;
+    font-weight: 600;
+    font-size: 0.9vw;
+}
+.table-responsive-auto{
+    overflow-x: auto !important;
+}
 /* Only Media */
 @media only screen and (max-width: 1365px) {
     .topsellingProduct {
         display: none;
     }
     .tableFixHead {
-        /* height: 38.28vw; */
-        height: 43.28vw;
+        height: 38.28vw;
     }
     .customerDetails h4 {
         font-size: 1.4vw;
@@ -1786,6 +1807,6 @@ p {
     }
     .sidebar-widget ul li a,
     .sidebar-widget ul li button {
-        height: 10.15vw;
+        height: 6.5vw;
     }
 }

@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>POS</title>
-<link rel="icon" type="image/x-icon" href="{{ asset('assets/img/fabicon.ico') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url('assets/admin/css/app.css') }}">
 <link rel="stylesheet" href="{{ url('assets/admin/css/dev.css') }}">
 <link rel="stylesheet" href="{{ url('assets/admin/css/pos.css') }}">
+<link rel="stylesheet" href="{{ url('assets/admin/css/responsive.css') }}">
 <script>
  var base_url = "{{url('/')}}";
  var csrf_token = "{{csrf_token()}}";
@@ -29,7 +30,7 @@
     </section>
   </div>
 </div>
-@yield('scripts') 
+@yield('scripts')
 <script>
 	$(document).on('click','.nav-link-btn',function(){
 		if ($( "#navbar-nav" ).hasClass('active')) {
@@ -37,7 +38,7 @@
 		} else {
 			$( "#navbar-nav" ).addClass( 'active');
 		}
-		
+
 	});
 	</script>
 </body>

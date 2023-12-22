@@ -286,8 +286,8 @@ $adminRoll = Session::get('admin_type');
                     <th>NPP</th> {{-- No per package --}}
                     <th>Net Price</th>
                     <th style="width: 80px;">Price</th>
-                    
-                    
+
+
                     {{-- <th>Discount %</th> --}}
                     <th style="width: 80px;">Bonous</th>
                     {{-- <th id="th_rate_title">US/IQ rate</th> --}}
@@ -303,7 +303,7 @@ $adminRoll = Session::get('admin_type');
                 <input type="hidden" id="purchaseId" value="{{$data['purchaseInward']->id}}">
                 <tbody id="product_record_sec">
                     @foreach ($data['purchaseInward']->inwardStockProducts as $key=>$itemstock)
-                    
+
                     <tr id="product_{{$itemstock->product_id}}" data-id="{{($key+1)}}" class="old_item">
                         <input type="hidden" name="item_scan_time_{{$itemstock->product_id}}" id="item_scan_time_{{$itemstock->product_id}}" value="13-10-2023 4:01:10 pm">
                         <input type="hidden" name="product_discountCost_{{$itemstock->product_id}}" id="product_discountCost_{{$itemstock->product_id}}" value="0">
@@ -312,9 +312,9 @@ $adminRoll = Session::get('admin_type');
                         <input type="hidden" name="selling_type_{{$itemstock->product_id}}" id="selling_type_{{$itemstock->product_id}}" value="{{$itemstock->product->selling_by}}">
                         <input type="hidden" name="is_chronic_{{$itemstock->product_id}}" id="is_chronic_{{$itemstock->product_id}}" value="{{$itemstock->is_chronic}}">
                         <input type="hidden" name="stock_transfers_detail_id_{{$itemstock->product_id}}" id="stock_transfers_detail_id_{{$itemstock->product_id}}" value="">
-                        
+
                         <input type="hidden" name="updateProductId_{{$itemstock->product_id}}" id="updateProductId_{{$itemstock->product_id}}" value="{{$itemstock->product_id}}">
-                        
+
                         <td>
                             <a href="javascript:;" onclick="removeUpdate({{($key+1)}}, {{$itemstock->id}})" ;=""><svg class="svg-inline--fa fa-times fa-w-11" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg=""><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg><!-- <i class="fa fa-times" aria-hidden="true"></i> Font Awesome fontawesome.com --></a>
                         </td>
@@ -437,7 +437,7 @@ $adminRoll = Session::get('admin_type');
                 </tr>
               </thead>
               <tbody id="new_product_record_sec">
-                
+
               </tbody>
             </table>
           </div>

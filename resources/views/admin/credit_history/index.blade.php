@@ -50,7 +50,7 @@
 	<div class="card">
 		<div class="row align-items-center justify-content-between">
 			<div class="col-auto">
-				<h4>Credit history</h4>
+				<h4>Debit History</h4>
 			</div>
 			<div class="col d-flex invoiceAmout justify-content-center">
 				<ul class="d-flex">
@@ -75,9 +75,9 @@
 
                             <th>Sl No.</th>
                             <th>Supplier</th>
-                            <th>Total Credit</th>
-                            <th>Credit Pay</th>
-                            <th>Credit Due</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Due</th>
                             <th>Actions</th>
                         </thead>
                         <tbody>
@@ -85,8 +85,8 @@
                                 <tr>
                                     <td>{{($key+1)}}</td>
                                     <td>{{$item->company_name}}</td>
-                                    <td> <a class="color_black" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}')">{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price'))}}</a></td>
-                                    <td> <a class="color_black" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">{{number_format($item->Suppliercreditpay->sum('amount'))}}</a></td>
+                                    <td> {{number_format($item->PurchaseInwardStock->sum('qty_total_net_price'))}}</td>
+                                    <td> {{number_format($item->Suppliercreditpay->sum('amount'))}}</td>
                                     <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->sum('amount'))}}</td>
                                     <td>
                                         <div class="dropdown">
@@ -111,7 +111,7 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="payCredit('{{$item->id}}')">Pay</a>
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}')">Credit history</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">Payment history</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">Paid history</a>
                                             </div>
                                         </div>
                                     </td>
@@ -139,16 +139,29 @@
                 <input type="hidden" id="supplier_id" name="supplier_id" />
                     @csrf
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Amount</label>
-                            <input type="text" name="amount" class="form-control" placeholder="Amount" required>
+                            <input type="number" name="amount" id="amount" class="form-control" placeholder="Amount" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <input type="hidden" name="id" id="id" value="">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Payment method</label>
+                            <select class="form-control custom-select form-control-select" id="payment_method" name="payment_method" required="required">
+                                <option value="">Select payment method</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Net Banking">Net Banking</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Payment Date</label>
-                            <input type="date" name="payment_date" class="form-control" value="{{date('d-m-Y')}}" required>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control" required>
                         </div>
                     </div>
                   </div>
@@ -194,16 +207,20 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table id="" class="table table-bordered paymentHistoryTable">
-                    <thead>
+                <div class="table-responsive">
+                    <table id="" class="table table-bordered paymentHistoryTable">
+                        <thead>
 
-                        <th>Sl No.</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </thead>
-                    <tbody class="paymentHistory">
-                    </tbody>
-                </table>
+                            <th>Sl No.</th>
+                            <th>Amount</th>
+                            <th>Payment method</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody class="paymentHistory">
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
           </div>
@@ -368,6 +385,18 @@ function paymentHistory(supplier_id){
             }
         },
     });
+}
+
+function edit_payment(id, amount, payment_method, payment_date){
+
+
+    $('#modal_paymenthistory').modal('toggle');
+    $("#modal_paycradit").modal('show');
+
+    $("#id").val(id);
+    $("#amount").val(amount);
+    $("#payment_method").val(payment_method);
+    $("#payment_date").val(ipayment_dated);
 }
 
 </script>

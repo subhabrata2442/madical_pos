@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class Logreport extends Model
 {
     use HasFactory;
 
-
-    protected $table = 'notification';
+    protected $table = 'log_report';
+    protected $dates = ['deleted_at'];
     protected $guarded = [];
 
 
     public function user(){
-        return $this->hasOne(User::class,'id', 'store_id');
+        return $this->hasOne(User::class,'id', 'user_id');
     }
 
 }

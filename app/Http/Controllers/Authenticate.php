@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 
+use App\Models\Logreport;
+use Carbon\Carbon;
+
 
 class Authenticate extends Controller
 {
@@ -20,7 +23,7 @@ class Authenticate extends Controller
     public function login(Request $request)
     {
         try {
-           
+
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
                     'email' => 'required|email',
@@ -32,14 +35,14 @@ class Authenticate extends Controller
                 }
                 $email = $request->email;
                 $password = $request->password;
-				
+
                 $remember = false;
                 if ($request->remember_me) {
                     $remember = true;
                 }
 
                 //print_r($_POST);exit;
-				
+
 				$authenticated = Auth::attempt([
                     'email' 	=> $email,
 					'password'  => $password,
@@ -47,7 +50,7 @@ class Authenticate extends Controller
                 ],$remember);
 
                 //print_r($authenticated);exxit;
-                
+
 				if ($authenticated) {
 					$user = User::where([['email', '=', $email],['status', '=', '1']])->first();
 
@@ -55,7 +58,7 @@ class Authenticate extends Controller
 					$userType 	= $user->role;
 					$userEmail 	= $user->email;
 					$userName 	= $user->name;
-                    
+
                     $store_id 	= $user->id;
                     if($userType==3){
                         $store_id 	= $user->parent_id;
@@ -66,15 +69,32 @@ class Authenticate extends Controller
 					Session::put('admin_type', $userType);
 					Session::put('admin_email', $userEmail);
 					Session::put('admin_userName', $userName);
-					
+
+                    // log table
+
+                    $currentDateTime = Carbon::now();
+                    $login_date_time = $currentDateTime->toDateTimeString();
+                    $logdata = [
+                        'user_id' => $user->id,
+                        'user_ip' => $_SERVER['REMOTE_ADDR'],
+                        'login_date_time' => $login_date_time,
+                        'activity'=> 'Login',
+                    ];
+                    Logreport::create($logdata);
+
                     return redirect('admin/dashboard');
                 } else {
                     return redirect()->back()->with('error', 'Wrong credentials');
                 }
             }
-			
-			
-            return view('auth.authenticate.login');
+
+            if(Auth::user()){
+                return redirect('admin/dashboard');
+            }else{
+                return view('auth.authenticate.login');
+            }
+
+
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ');
@@ -161,15 +181,29 @@ class Authenticate extends Controller
         Mail::to($email)->send(new EmailVerification($otp));
         return $otp;
     }
-	
-	
+
+
 	public function permission_denied(){
 		return view('auth.authenticate.permission_denied');
 	}
-	
-	
+
+
     public function logout()
     {
+
+
+        // log table
+
+        $currentDateTime = Carbon::now();
+        $login_date_time = $currentDateTime->toDateTimeString();
+        $logdata = [
+            'user_id' => Auth::user()->id,
+            'user_ip' => $_SERVER['REMOTE_ADDR'],
+            'login_date_time' => $login_date_time,
+            'activity'=> 'Logout',
+        ];
+        Logreport::create($logdata);
+
         Session::flush();
 
         Auth::logout();

@@ -60,6 +60,7 @@
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Sl NO.</th>
+                <th scope="col">Store</th>
                 <th scope="col">Message</th>
 				<th scope="col">Date</th>
 				<th scope="col">Action</th>
@@ -69,6 +70,7 @@
 				<tr>
 
 					<td>{{($key+1)}}</td>
+                    <td>{{$notification->user->name}}</td>
                     <td>{{$notification->msg}}</td>
 					<td>{{ \Carbon\Carbon::parse($notification->created_at)}}</td>
                     <td>

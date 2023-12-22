@@ -36,7 +36,7 @@
               @enderror </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="phone" class="form-label">Phone</label>
               <input type="text" class="form-control admin-input" id="phone" name="phone" value="" required
@@ -45,11 +45,20 @@
               <div class="error">{{ $message }}</div>
               @enderror </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="password" class="form-label">Password</label>
-              <input type="text" class="form-control admin-input" id="password" name="password" autocomplete="off">
+              <input type="text" class="form-control admin-input" id="password" name="password" required autocomplete="off">
               @error('password')
+              <div class="error admin-error">{{ $message }}</div>
+              @enderror </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="password" class="form-label">Confirm Password</label>
+              <input type="text" class="form-control admin-input" id="password_confirmation" name="password_confirmation" required autocomplete="off">
+              @error('password_confirmation')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>

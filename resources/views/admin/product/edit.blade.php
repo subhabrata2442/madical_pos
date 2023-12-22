@@ -115,7 +115,7 @@
 
       <div class="card">
         <div class="row">
-          <div class="col-md-3 plusBoxWrap relative">
+          <div class="col-lg-3 col-md-6 col-sm-12 col-12 plusBoxWrap relative">
             <div class="form-group">
               <label for="no_package" class="form-label">No per package</label>
               {{-- <select name="no_package" id="no_package" class="form-control form-inputtext" required>
@@ -130,7 +130,7 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
-          <div class="col-md-3 plusBoxWrap relative">
+          <div class="col-lg-3 col-md-6 col-sm-12 col-12 plusBoxWrap relative">
             <div class="form-group">
               <label for="selling_by" class="form-label">Selling by </label>
               <select name="selling_by" id="selling_by" class="form-control form-inputtext" required>
@@ -142,7 +142,7 @@
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
           </div>
-          <div class="col-md-3 plusBoxWrap relative">
+          <div class="col-lg-3 col-md-6 col-sm-12 col-12 plusBoxWrap relative">
             <div class="form-group">
               <label for="dosage" class="form-label">Dosage Form</label>
               <select name="dosage" id="dosage" class="form-control form-inputtext">
@@ -158,7 +158,7 @@
               @enderror </div>
             <div class="plusBox"><a href="javascript:;" class="plusBoxBtn addmoreoption" data-type="dosage" data-title="Dosage Form"><i class="fas fa-plus"></i></a></div>
           </div>
-          <div class="col-md-3 plusBoxWrap relative">
+          <div class="col-lg-3 col-md-6 col-sm-12 col-12 plusBoxWrap relative">
             <div class="form-group">
               <label for="company" class="form-label">Company</label>
               <select name="company" id="company" class="form-control form-inputtext">

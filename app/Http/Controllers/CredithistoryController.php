@@ -21,7 +21,7 @@ class CredithistoryController extends Controller
 		$data['heading'] = 'Credit History';
 		$data['breadcrumb'] = ['Credit History', '', 'List'];
 
-        $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'credit')])->get();
+        $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')])->get();
 
         // dd($data['supplier']);
 		return view('admin.credit_history.index', compact('data'));
@@ -45,13 +45,27 @@ class CredithistoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $insert_data=array(
-			'supplier_id'  => $request->supplier_id,
-            'amount'  => $request->amount,
-            'payment_date'  => $request->payment_date,
-		);
-        Suppliercreditpay::create($insert_data);
-        return redirect()->back()->with('success', 'Payment added successfully');
+
+        if($request->id==''){
+            $insert_data=array(
+                'supplier_id'  => $request->supplier_id,
+                'amount'  => $request->amount,
+                'payment_date'  => $request->payment_date,
+                'payment_method' => $request->payment_method,
+            );
+            Suppliercreditpay::create($insert_data);
+            return redirect()->back()->with('success', 'Payment added successfully');
+        }else{
+            $insert_data=array(
+                'amount'  => $request->amount,
+                'payment_date'  => $request->payment_date,
+                'payment_method' => $request->payment_method,
+            );
+            Suppliercreditpay::where('id', $request->id)->update($insert_data);
+            return redirect()->back()->with('success', 'Payment updated successfully');
+        }
+
+
     }
 
     /**
@@ -129,7 +143,9 @@ class CredithistoryController extends Controller
             $html .= '<tr>
                         <td>'.($key+1).'</td>
                         <td>'.number_format($item->amount).'</td>
+                        <td>'.$item->payment_method.'</td>
                         <td>'.$item->payment_date.'</td>
+                        <td><a href="javascript:void(0)" onclick="edit_payment(\''.$item->id.'\', \''.$item->amount.'\',\''.$item->payment_method.'\', \''.$item->payment_date.'\')"><i class="fas fa-edit"></i></a></td>
                     </tr>';
         }
 

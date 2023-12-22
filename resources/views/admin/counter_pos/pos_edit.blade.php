@@ -37,132 +37,181 @@
       </div>-->
       <!--<input type="button" id="fullscreen_btn" value="Fullscreen" onclick="requestFullScreen(document.body)">-->
     </div>
-    <div class="inner-body-wrap">
-        <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
-        @csrf
-        <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
-        <input type="hidden" name="stock_type" value="s">
-        <div class="w-100 inner-body-wrap-box">
-            <div class="tableFixHead table-1">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <thead>
-                <tr>
-                    <th width="6%">Barcode</th>
-                    <th width="10%">Brand</th>
-                    <th width="19%">Product</th>
-                    <th width="4%">Selling by</th>
-                    <th width="6%">Stock</th>
-                    <th width="19%">Is cronic</th>
-                    <th width="11%">MRP</th>
-                    <th width="9%">Qty.</th>
-                    {{-- <th width="8%">Disc%</th> --}}
-                    {{-- <th width="11%">Disc Amt.</th> --}}
-                    <th width="8%">Unit Price</th>
-                    <th width="7%">Total</th>
-                    <th width="1%">&nbsp;</th>
+
+    <input type="hidden" name="pos_urls" id="pos_urls" value="{{ route('admin.pos.pos_create') }}">
+
+    <form method="post" action="{{ route('admin.pos.update') }}" id="pos_create_order-form_update" novalidate enctype="multipart/form-data">
+      @csrf
+      <input type="hidden" name="sell_inward_stock_id" id="sell_inward_stock_id" value="{{$data['bill_details']->id}}">
+      <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
+      <input type="hidden" name="stock_type" value="s">
+      <div class="w-100">
+        <div class="tableFixHead table-1">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr>
+                <th width="6%">Barcode</th>
+                <th width="10%">Brand</th>
+                <th width="19%">Product</th>
+                <th width="4%">Selling by</th>
+                <th width="6%">Stock</th>
+                <th width="19%">Is cronic</th>
+                <th width="11%">MRP</th>
+                <th width="9%">Qty.</th>
+                {{-- <th width="8%">Disc%</th> --}}
+                {{-- <th width="11%">Disc Amt.</th> --}}
+                <th width="8%">Unit Price</th>
+                <th width="7%">Total</th>
+                <th width="1%">&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody id="product_sell_record_sec">
+
+                @foreach ($data['sellStockProducts'] as $key=>$item)
+
+                @php
+                    // dd($item);
+                    $branch_stock_product = App\Models\BranchStockProducts::where('id',$item->product_stock_id)->first();
+                @endphp
+
+                <tr id="sell_product_{{$branch_stock_product->product_id}}" data-id="{{$key}}">
+                    <input type="hidden" name="product_id[]" value="{{$branch_stock_product->product_id}}">
+                    <input type="hidden" id="product_stock_{{$branch_stock_product->product_id}}" value="46">
+                    <input type="hidden" name="product_total_amount[]" id="input-product_total_amount_{{$branch_stock_product->product_id}}" value="2000.00">
+                    <input type="hidden" name="product_price_id[]" id="input-product_price_id_{{$branch_stock_product->product_id}}" value="{{$branch_stock_product->product_id}}">
+                    <input type="hidden" name="product_barcode[]" id="input-product_barcode_{{$branch_stock_product->product_id}}" value="8547">
+                    <input type="hidden" name="product_name[]" id="input-product_name_{{$branch_stock_product->product_id}}" value="test">
+                    <input type="hidden" name="brand_name[]" id="input-brand_name_{{$branch_stock_product->product_id}}" value="Elviton tab">
+                    <td>{{$branch_stock_product->product_barcode}}</td>
+                    <td class="">{{$branch_stock_product->product->brand}}</td>
+                    <td class="">{{$branch_stock_product->product->product_name}}</td>
+                    <td class="">{{$branch_stock_product->product->selling_by_name}}</td>
+                    <td id="product_stock_td_{{$branch_stock_product->product_id}}">{{$branch_stock_product->t_qty}}</td>
+
+                    <td>
+                        @if ($branch_stock_product->is_chronic=='Yes')
+                            <select class="select-3" name="" onchange="changeiscronic(this.value, '{{$branch_stock_product->product_id}}')">
+                                <option value="sellprice" @if($item->product_mrp==$branch_stock_product->selling_price) selected @endif>Sell price: {{$branch_stock_product->selling_price}}</option>
+                                <option value="cronicprice" @if($item->product_mrp==$branch_stock_product->chronic_amount) selected @endif>CP: {{$branch_stock_product->chronic_amount}}</option>
+                            </select>
+                            <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_{{$branch_stock_product->product_id}}" value="2500">
+                        @else
+                            No
+                        @endif
+                    </td>
+
+
+                    <td id="product_unit_price_{{$branch_stock_product->product_id}}">{{$item->product_mrp}}</td>
+                    <td><input type="number" name="product_qty[]" id="product_qty_{{$branch_stock_product->product_id}}" class="input-3 product_qty" value="{{$item->product_qty}}"></td>
+                    <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_{{$branch_stock_product->product_id}}" class="input-3 product_disc_percent" value="0"></td>
+                    <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_{{$branch_stock_product->product_id}}" class="input-3 product_disc_amount" value="0"></td>
+                    <td id="product_mrp_{{$branch_stock_product->product_id}}">{{$item->product_mrp}}</td>
+                    <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
+                    <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
+                    <td id="product_total_amount_{{$branch_stock_product->product_id}}">{{$item->total_cost}}</td>
+                    <td><a href="javascript:;" onclick="remove_sell_item({{$key}});"><svg class="svg-inline--fa fa-times-circle fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg><!-- <i class="fas fa-times-circle"></i> Font Awesome fontawesome.com --></a></td>
+                    <input type="hidden" name="product_net_price[]" id="product_net_price_{{$branch_stock_product->product_id}}" class="input-3" value="{{$branch_stock_product->net_price}}">
                 </tr>
-                </thead>
-                <tbody id="product_sell_record_sec">
-                </tbody>
-            </table>
-            </div>
+
+                @endforeach
+            </tbody>
+          </table>
         </div>
-        <div class="amountToPay d-flex w-100">
-            <div class="atpLeft">
-            <div class="atpLeftInner">
-                <ul class="d-flex w-100">
-                <li class="atpVall">Total Item -</li>
-                <li class="atpinfo" id="total_quantity">0</li>
-                <input type="hidden" name="total_quantity" id="total_quantity-input" value="0">
-                </ul>
-                <ul class="d-flex w-100">
-                <li class="atpVall">Total Net Price -</li>
-                <li class="atpinfo"><span id="total_net_price">$0</span></li>
-                <input type="hidden" name="net_price" id="net_price" value="0">
-                </ul>
-                <ul class="d-flex w-100">
-                <li class="atpVall">Total Sale Price -</li>
-                <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
-                <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
-                </ul>
-
-                <ul class="d-flex w-100">
-                <li class="atpVall">Discount -</li>
-                <li class="atpinfo" id="total_discount_amount">$0</li>
-                <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
-                </ul>
-                <ul class="d-flex w-100">
-                <li class="atpVall">Charge -</li>
-                <li class="atpinfo" id="extraCharge">$0</li>
-                </ul>
-                <ul class="d-flex w-100">
-                {{-- <li class="atpVall">Tax -</li>
-                <li class="atpinfo" id="tax_amount">$0.00</li> --}}
-                <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
-                </ul>
-                <ul class="d-flex w-100 subTotal">
-                <li class="atpVall">Sub Total-</li>
-                <li class="atpinfo" id="sub_total_mrp">$0</li>
-                <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
-                </ul>
-                {{-- <ul class="d-flex w-100">
-                <li class="atpVall">Round Off -</li>
-                <li class="atpinfo">
-                    <input type="text" name="round_off" id="round_off" class="small-input" placeholder="0" onkeydown="checkforroundoff(event,this)">
-                </li>
-                </ul> --}}
-                <ul class="d-flex w-100 subTotal">
-                <li class="atpVall">Total profit-</li>
-                <li class="atpinfo" id="total_profit">$0</li>
-                <input type="hidden" name="profit_price" id="profit_price" value="0">
-                </ul>
-                <ul class="d-flex w-100 subTotal">
-                <li class="atpVall">Profit-</li>
-                <li class="atpinfo" id="profitpersent">0%</li>
-                </ul>
-
-            </div>
-            </div>
-            {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
-                <div class="atpMid">
-            <ul>
-                <li><a href="javascript:;" class="applyCharge" id="applyChargeBtn">Apply Charge</a></li>
-                <li><a href="javascript:;" class="applyDiscount" id="applyDiscountBtn">Apply Discount </a></li>
+      </div>
+      <div class="amountToPay d-flex w-100">
+        <div class="atpLeft">
+          <div class="atpLeftInner">
+            <ul class="d-flex w-100">
+              <li class="atpVall">Total Item -</li>
+              <li class="atpinfo" id="total_quantity">0</li>
+              <input type="hidden" name="total_quantity" id="total_quantity-input" value="0">
             </ul>
-                <div class="customerDetailsBtm">
-                    <ul class="d-flex flex-wrap">
-                        <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                        <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
-                        <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="atpRight d-flex justify-content-center align-items-center">
-            <div class="text-center">
-                <h6>Amount to pay</h6>
-                <h3 id="total_payble_amount">$0</h3>
-                <input type="hidden" name="actual_amount" id="actual_amount" value="0">
-                <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
-                <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
-                <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
-                <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
-                <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="0">
-                <input type="hidden" name="charge_amt" id="charge_amt-input" value="0">
-                <input type="hidden" name="tendered_amount" id="total_tendered_amount" value="0">
-                <input type="hidden" name="tendered_change_amount" id="total_tendered_change_amount" value="0">
-            </div>
+            <ul class="d-flex w-100">
+              <li class="atpVall">Total Net Price -</li>
+              <li class="atpinfo"><span id="total_net_price">$0</span></li>
+              <input type="hidden" name="net_price" id="net_price" value="0">
+            </ul>
+            <ul class="d-flex w-100">
+              <li class="atpVall">Total Sale Price -</li>
+              <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
+              <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
+            </ul>
+
+            <ul class="d-flex w-100">
+              <li class="atpVall">Discount -</li>
+              <li class="atpinfo" id="total_discount_amount">$0</li>
+              <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
+            </ul>
+            <ul class="d-flex w-100">
+              <li class="atpVall">Charge -</li>
+              <li class="atpinfo" id="extraCharge">${{$data['bill_details']->charge_amount}}</li>
+            </ul>
+            <ul class="d-flex w-100">
+              {{-- <li class="atpVall">Tax -</li>
+              <li class="atpinfo" id="tax_amount">$0.00</li> --}}
+              <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
+            </ul>
+            <ul class="d-flex w-100 subTotal">
+              <li class="atpVall">Sub Total-</li>
+              <li class="atpinfo" id="sub_total_mrp">$0</li>
+              <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
+            </ul>
+            {{-- <ul class="d-flex w-100">
+              <li class="atpVall">Round Off -</li>
+              <li class="atpinfo">
+                <input type="text" name="round_off" id="round_off" class="small-input" placeholder="0" onkeydown="checkforroundoff(event,this)">
+              </li>
+            </ul> --}}
+            <ul class="d-flex w-100 subTotal">
+              <li class="atpVall">Total profit-</li>
+              <li class="atpinfo" id="total_profit">$0</li>
+              <input type="hidden" name="profit_price" id="profit_price" value="0">
+            </ul>
+            <ul class="d-flex w-100 subTotal">
+              <li class="atpVall">Profit-</li>
+              <li class="atpinfo" id="profitpersent">0%</li>
+            </ul>
+
+          </div>
+        </div>
+        {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
+            <div class="atpMid">
+          <ul>
+            <li><a href="javascript:;" class="applyCharge" id="applyChargeBtn">Apply Charge</a></li>
+            <li><a href="javascript:;" class="applyDiscount" id="applyDiscountBtn">Apply Discount </a></li>
+          </ul>
+            <div class="customerDetailsBtm">
+                <ul class="d-flex flex-wrap">
+                    <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                    <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
+                </ul>
             </div>
         </div>
-        <div class="note_coin_count_sec" style="display:none"> </div>
-        <div class="upi_payment_sec" style="display:none"> </div>
-        <div class="card_details_payment_sec" style="display:none"> </div>
-        <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
-        </form>
-    </div>
+        <div class="atpRight d-flex justify-content-center align-items-center">
+          <div class="text-center">
+            <h6>Amount to pay</h6>
+            <h3 id="total_payble_amount">$0</h3>
+            <input type="hidden" name="actual_amount" id="actual_amount" value="0">
+            <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
+            <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
+            <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
+            <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="{{$data['bill_details']->special_discount_percent}}">
+            <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="{{$data['bill_details']->special_discount_amt}}">
+            <input type="hidden" name="charge_amt" id="charge_amt-input" value="{{$data['bill_details']->charge_amount}}">
+            <input type="hidden" name="tendered_amount" id="total_tendered_amount" value="0">
+            <input type="hidden" name="tendered_change_amount" id="total_tendered_change_amount" value="0">
+          </div>
+        </div>
+      </div>
+      <div class="note_coin_count_sec" style="display:none"> </div>
+      <div class="upi_payment_sec" style="display:none"> </div>
+      <div class="card_details_payment_sec" style="display:none"> </div>
+      <input type="hidden" name="customer_id" id="selected_customer_id" value="{{$data['bill_details']->customer_id}}">
+    </form>
   </div>
     <div class="col-lg-4 col-md-4">
         <div class="d-flex flex-column justify-content-between h-100">
-            <div class="cutomer-logout"><a href="{{ route('admin.auth.logout') }}"><i class="fas fa-sign-out-alt"></i>logout</a></div>
             <div class="report-wrap h-100">
                 <div class="report-wrap-lft">
                     <div class="d-flex flex-column justify-content-between h-100">
@@ -179,16 +228,16 @@
                         <div class="data-sales-head radio-list">
                             <div class="form-check">
                                 <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="customertype" value="walkin" checked>Walk in customer
+                                <input type="radio" class="form-check-input" name="customertype" value="walkin" @if($data['bill_details']->customer_id=='0') checked @endif>Walk in customer
                                 </label>
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="customertype" value="regular">Regular customer
+                                <input type="radio" class="form-check-input" name="customertype" value="regular" @if($data['bill_details']->customer_id!='0') checked @endif>Regular customer
                                 </label>
                             </div>
                         </div>
-                        <div class="data-sales-head customeSearch" style="display: none;">
+                        <div class="data-sales-head customeSearch" @if($data['bill_details']->customer_id=0) style="display: none;" @endif>
                             <div class="srcArea relative">
                                 <input type="text" placeholder="Search by name/contact number" class="input-2" value="" id="search_customer">
                                 <div class="custom-list">
@@ -212,11 +261,11 @@
                                 </div> --}}
                                 <div class="customerDetails">
                                 {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
-                                <div class="customerDetailsMid" style="display: none;">
+                                <div class="customerDetailsMid" @if($data['bill_details']->customer_id='0') style="display: none;" @endif>
                                 <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
                                     <ul>
-                                    <li id="cd_customer_name">Customer Name : <span></span></li>
-                                    <li id="cd_customer_number">Contact Number : <span></span></li>
+                                    <li id="cd_customer_name">Customer Name : {{@$data['bill_details']->customer->customer_name}}<span></span></li>
+                                    <li id="cd_customer_number">Contact Number : {{@$data['bill_details']->customer->customer_mobile}}<span></span></li>
                                     </ul>
                                 </div>
                                 {{-- <div class="customerDetailsBtm">
@@ -323,11 +372,11 @@
           <form action="" method="get" id="applyDiscount-form">
             <div class="mb-3">
               <label for="" class="form-label">Discount (%)</label>
-              <input type="text" class="form-control number" name="special_discount_percent" id="special_discount_percent" autocomplete="off">
+              <input type="text" class="form-control number" name="special_discount_percent" id="special_discount_percent" autocomplete="off" value="{{$data['bill_details']->special_discount_percent}}">
             </div>
             <div class="mb-3">
               <label for="" class="form-label">Discount Amt</label>
-              <input type="text" class="form-control number" name="special_discount_amt" id="special_discount_amt" autocomplete="off">
+              <input type="text" class="form-control number" name="special_discount_amt" id="special_discount_amt" autocomplete="off" value="{{$data['bill_details']->special_discount_amt}}">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -339,6 +388,9 @@
     </div>
   </div>
 </div>
+@php
+    // dd($data['bill_details']);
+@endphp
 <div class="modal fade modalMdHeader" id="modal-applyCharges" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -351,7 +403,7 @@
           <form action="" method="get" id="applyCharge-form">
             <div class="mb-3">
               <label for="" class="form-label">Charge Amt</label>
-              <input type="text" class="form-control number" name="charge_amt" id="charge_amt" autocomplete="off">
+              <input type="text" class="form-control number" name="charge_amt" id="charge_amt" autocomplete="off" value="{{$data['bill_details']->charge_amount}}">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -400,7 +452,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="table-responsive table-responsive-auto">
+        <div class="table-responsive">
             <table class="table" id="price_item_table">
                 <thead>
                     <tr>
@@ -628,7 +680,7 @@
             <div class="d-flex justify-content-center">
               <ul class="d-flex">
                 <li class="col-auto">
-                  <button type="button" class="saveBtn-2" id="calculate_cash_payment_btn">Submit</button>
+                  <button type="button" class="saveBtn-2" id="calculate_cash_payment_btn_update">Submit</button>
                 </li>
                 <li class="col-auto"><a href="javascript:;" class="saveBtnBdr paymentModalCloseBtn">Cancel</a></li>
               </ul>
@@ -988,6 +1040,15 @@ $(document).keyup(function(e){
         });
     });
 @endif
+
+$(document).ready(function() {
+    total_cal();
+    // $('#modal-applyDiscount').modal('show');
+    window.onload = setTimeout(function(){
+        $("#applyDiscount-form").submit();
+    }, 1000);
+
+});
 
 </script>
 
