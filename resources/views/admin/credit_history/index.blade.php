@@ -39,6 +39,9 @@
     .color_black{
         color:#212529;
     }
+    .tableMrginbtn{
+        margin-bottom: 60px;
+    }
 </style>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -70,7 +73,7 @@
             <div class="card">
                 <x-alert />
                 <div class="table-responsive dataTable-design">
-                    <table id="user-table" class="table table-bordered">
+                    <table id="user-table" class="table table-bordered tableMrginbtn">
                         <thead>
 
                             <th>Sl No.</th>
