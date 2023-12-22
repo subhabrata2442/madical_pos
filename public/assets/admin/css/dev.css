@@ -2851,7 +2851,7 @@ a.downloadBtn {
     justify-content: space-between;
     background-color: #f5f4fd;
     border-radius: 5px;
-    font-size: 1.2vw;
+    font-size: 1vw;
 }
 
 .top-product-list li:hover {
