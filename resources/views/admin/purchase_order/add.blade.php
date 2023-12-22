@@ -115,7 +115,7 @@ $adminRoll = Session::get('admin_type');
                       <option value="cheque">Cheque</option>
                       <option value="net_banking">Net Banking</option>
                       <option value="cash">Cash</option>
-                      <option value="credit">Credit</option>
+                      <option value="debt">Debt</option>
                     </select>
                   </li>
                 </ul>

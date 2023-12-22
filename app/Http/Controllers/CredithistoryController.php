@@ -21,7 +21,7 @@ class CredithistoryController extends Controller
 		$data['heading'] = 'Credit History';
 		$data['breadcrumb'] = ['Credit History', '', 'List'];
 
-        $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'credit')])->get();
+        $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')])->get();
 
         // dd($data['supplier']);
 		return view('admin.credit_history.index', compact('data'));
