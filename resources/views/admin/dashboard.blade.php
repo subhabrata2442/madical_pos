@@ -20,7 +20,7 @@
                 {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-success-g">
                 <div class="inner">
                 <h3>{{$data['totalBilltoday']}}</h3>
@@ -33,7 +33,7 @@
                 {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-warning-g">
                 <div class="inner">
                 <h3>{{$data['totalProfitToday']}}</h3>
@@ -46,7 +46,7 @@
                 {{-- <a href="#" class="small-box-footer">Go to <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
             </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-danger-g">
                 <div class="inner">
                 <h3>{{$data['totalBilltoday']}}</h3>
@@ -120,7 +120,7 @@
             <div class="col-12">
                 <div class="wrap-heading">Overall</div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">
@@ -153,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">
@@ -226,7 +226,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">
@@ -269,7 +269,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">
@@ -311,7 +311,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="box-card-new">
                     <div class="card">
                         <div class="card-header">

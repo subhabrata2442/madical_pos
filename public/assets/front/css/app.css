@@ -76432,30 +76432,38 @@ li {
     background-size: cover !important;
 }
 
-.loginWrapRight {
+.loginWrapRight,
+.loginWrapLeft {
     -ms-flex: 0 0 50%;
-    flex: 0 0 100%;
+    flex: 0 0 50%;
     max-width: 100%;
     height: 100vh;
-    background: rgba(22,27,26,.6);
-    padding: 0 70px;
+    /* background: rgba(22,27,26,.6);
+    padding: 0 70px; */
 
 }
 .loginWrapLeft img {
     width: 100%;
     display: block;
 }
+.loginWrapLeft{
+    background-size: cover !important;
+}
+.loginWrapRight {
+    background-size: cover !important;
+    padding: 0 70px;
+}
 
 
 .loginFormFild {
     max-width: 688px;
     width: 100%;
-    background: rgba(255,255,255,.7);
+    /* background: rgba(255,255,255,.7); */
     padding: 50px;
-    border-radius: 20px;
+    /* border-radius: 20px;
     box-shadow: rgba(0,0,0,.3) 0 11px 30px -5px;
     backdrop-filter: blur(15px);
-    border: dotted;
+    border: dotted; */
 }
 
 .logtextBox {
@@ -76496,7 +76504,7 @@ li {
     color: #333;
 }
 
-  
+
 
 /* .logtextBox .form-control input::-moz-placeholder {
     font-size: 20px !important;
@@ -76538,7 +76546,7 @@ li {
     text-align: center;
     display: block;
 }
-.posLogo span{ 
+.posLogo span{
     display: block;
     max-width: 300px;
     width: 100%;

@@ -1,9 +1,12 @@
 @extends('layouts.front')
 @section('front-content')
-<section class="loginWrap d-flex flex-wrap justify-content-center" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;">
+{{-- <section class="loginWrap d-flex flex-wrap" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;"> --}}
+    <section class="loginWrap d-flex flex-wrap">
 
-
-  <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center">
+    <div class="loginWrapLeft d-flex flex-wrap align-items-end" style="background: url({{ asset('assets/img/login-bg-md2.jpg') }}) no-repeat center center;">
+        <img src="{{ asset('assets/img/left-img.png') }}" alt="">
+      </div>
+  <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center" style="background: url({{ asset('assets/img/login-bg-right2.jpg') }}) no-repeat center center;">
 
     <div class="loginFormFild">
       <form class="" method="post" action="{{ route('auth.login') }}" autocomplete="off">
@@ -26,12 +29,12 @@
             <div class="error">{{ $message }}</div>
             @enderror
           </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <li class="checkbox chk-wrap">
+          <div class="d-flex align-items-center justify-content-center">
+            {{-- <li class="checkbox chk-wrap">
               <input type="checkbox" id="keep-me-logged" name="remember_me" value="1">
               <label for="keep-me-logged">keep me logged</label>
-            </li>
-            {{-- <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li> --}}
+            </li> --}}
+            <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li>
           </div>
         </div>
         <div class="log-reg-btn-wrap d-flex justify-content-center">
@@ -74,10 +77,10 @@
     $(document).on('click', '.pass_eye', function(){
         if($(this).closest('.add_eye').find(".pass_input").attr('type')=='password'){
         $(this).closest('.add_eye').find(".pass_input").attr('type','text');
-        $(this).closest('.add_eye').find(".fas").addClass("fa-eye").removeClass("fa-eye-slash");
+        $(this).closest('.add_eye').find(".fa-eye-slash").addClass("fa-eye").removeClass("fa-eye-slash");
         }else{
         $(this).closest('.add_eye').find(".pass_input").attr('type', 'password');
-        $(this).closest('.add_eye').find(".fas").removeClass("fa-eye").addClass("fa-eye-slash");
+        $(this).closest('.add_eye').find(".fa-eye").removeClass("fa-eye").addClass("fa-eye-slash");
         }
     });
 </script>

@@ -43,7 +43,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <div class="srcBtnWrap">
 	<div class="card">
-		<div class="row align-items-center justify-content-between">
+		<div class="row g-3 align-items-center justify-content-between">
 			<div class="col-auto">
 				<h4>Product Wise Purchase</h4>
 			</div>
