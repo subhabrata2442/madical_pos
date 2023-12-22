@@ -207,6 +207,12 @@ if($adminId!=1){
               <p>Create Order</p>
               </a> </li>
               @endif
+                @if ($adminRoll != 1)
+                    <li class="nav-item"> <a href="{{ route('admin.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p> Bill </p>
+                        </a>
+                    </li>
+                @endif
           </ul>
         </li>
         @endif
@@ -343,12 +349,6 @@ if($adminId!=1){
             <p> Settlement </p>
             </a>
         </li>
-        @if ($adminRoll != 1)
-            <li class="nav-item"> <a href="{{ route('admin.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p> Bill </p>
-                </a>
-            </li>
-        @endif
 
         <li class="nav-item"> <a href="{{ route('admin.logreport.view') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.logreport.view') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Log Report </p>
