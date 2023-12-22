@@ -944,8 +944,7 @@ function setRow(element) {
                         '<td id="product_brand_' +
                         product_id +
                         '">' +
-                        brand_name +
-                        '<i class="fas fa-info-circle ml-1" onclick="priceHistory('+product_id+')"></i>'+"</td>" +
+                        brand_name +"</td>" +
                         '<td style="display:none;" id="product_name_' +
                                                product_id +
                                                '">' +
@@ -985,9 +984,9 @@ function setRow(element) {
                         '">' +
                         net_price +
                         "</td>" +
-                        '<td><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_price" id="product_price_' +
+                        '<td class="d-flex"><input type="text" onkeypress="return check_character(event);" class="number inputSize greenBg product_price" id="product_price_' +
                         product_id +
-                        '" value="'+price+'"></td>' +
+                        '" value="'+price+'"><i class="fas fa-info-circle ml-1" onclick="priceHistory('+product_id+')"></i></td>' +
                         /* '<td onkeypress="return check_character(event);" class="number greenBg product_discount" contenteditable = "true" id="product_discount_' +
                         product_id +
                         '">' +
