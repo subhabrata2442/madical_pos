@@ -26,11 +26,13 @@ class SettlementController extends Controller
 		$user_role=Auth::user()->role;
 
 		if($user_role==1){
-			$settlement 	= Settlement::where('total_settlement_amount','!=','');
+			$settlement 	= Settlement::where('total_settlement_amount','!=','')->orderBy('admin_approved', 'DESC');
 		}else{
             $store_id	= Session::get('store_id');
-			$settlement = Settlement::where('total_settlement_amount','!=','')->where('store_id',$store_id);
+			$settlement = Settlement::where('total_settlement_amount','!=','')->where('store_id',$store_id)->orderBy('admin_approved', 'DESC');
 		}
+
+
 		if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
 			if($request->get('start_date') == $request->get('end_date')){
 				$settlement->whereDate('created_at', $request->get('start_date'));
