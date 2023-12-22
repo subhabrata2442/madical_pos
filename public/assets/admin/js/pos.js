@@ -2476,7 +2476,7 @@ function checkformatPercentage(value) {
 $('.no_settlement').click(function() {
     Swal.fire({
         icon: 'warning',
-        title: 'Settlement submit already for today unable to make bill',
+        title: 'Sorry !! Settlement done , Unable to make new bill today.',
         showConfirmButton: false,
         // timer: 2500
     });
