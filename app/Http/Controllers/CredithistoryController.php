@@ -45,14 +45,27 @@ class CredithistoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $insert_data=array(
-			'supplier_id'  => $request->supplier_id,
-            'amount'  => $request->amount,
-            'payment_date'  => $request->payment_date,
-            'payment_method' => $request->payment_method,
-		);
-        Suppliercreditpay::create($insert_data);
-        return redirect()->back()->with('success', 'Payment added successfully');
+
+        if($request->id==''){
+            $insert_data=array(
+                'supplier_id'  => $request->supplier_id,
+                'amount'  => $request->amount,
+                'payment_date'  => $request->payment_date,
+                'payment_method' => $request->payment_method,
+            );
+            Suppliercreditpay::create($insert_data);
+            return redirect()->back()->with('success', 'Payment added successfully');
+        }else{
+            $insert_data=array(
+                'amount'  => $request->amount,
+                'payment_date'  => $request->payment_date,
+                'payment_method' => $request->payment_method,
+            );
+            Suppliercreditpay::where('id', $request->id)->update($insert_data);
+            return redirect()->back()->with('success', 'Payment updated successfully');
+        }
+
+
     }
 
     /**
@@ -132,6 +145,7 @@ class CredithistoryController extends Controller
                         <td>'.number_format($item->amount).'</td>
                         <td>'.$item->payment_method.'</td>
                         <td>'.$item->payment_date.'</td>
+                        <td><a href="javascript:void(0)" onclick="edit_payment(\''.$item->id.'\', \''.$item->amount.'\',\''.$item->payment_method.'\', \''.$item->payment_date.'\')"><i class="fas fa-edit"></i></a></td>
                     </tr>';
         }
 
