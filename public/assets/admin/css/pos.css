@@ -1190,7 +1190,7 @@ p {
 }
 .customerDetailsBtm ul li a{
     padding: 0 !important;
-    line-height: 26px;
+    line-height: 18px;
 }
 
 .customerDetailsBtm ul li span {
@@ -1759,7 +1759,29 @@ p {
 .small-pay-btn a svg{
     font-size: 1vw !important;
 }
-
+.inner-body-wrap{
+    height: calc(100vh - 5.1vw);
+}
+.inner-body-wrap .inner-body-wrap-box{
+    height: calc(100vh - 18.5vw);
+}
+.inner-body-wrap .tableFixHead{
+    height: calc(100% - 1vw);
+}
+.atpMid ul li a svg{
+    font-size: 1vw;
+}
+.cutomer-logout{
+    text-align: right;
+}
+.cutomer-logout a{
+    color: #3b8ccf;
+    font-weight: 600;
+    font-size: 0.9vw;
+}
+.table-responsive-auto{
+    overflow-x: auto !important;
+}
 /* Only Media */
 @media only screen and (max-width: 1365px) {
     .topsellingProduct {

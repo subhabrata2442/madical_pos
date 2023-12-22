@@ -69,6 +69,15 @@ class BillController extends Controller
             $data['latest_bill'] = SellInwardStock::where('branch_id', $store_id)->where('bill_no', $request->get('bill_no'))->orderBy('id', 'DESC')->paginate(20);
         }
 
+        if(!empty($request->get('customer_no'))){
+
+            $data['latest_bill'] = SellInwardStock::with(['customer' => fn($query) => $query->where('customer_mobile', $request->get('customer_no'))])
+                ->whereHas('customer', fn ($query) =>
+                    $query->where('customer_mobile', $request->get('customer_no'))
+                )->get();
+
+        }
+
 
         $data['heading'] = 'Bill';
         $data['breadcrumb'] = ['Bill', 'List'];

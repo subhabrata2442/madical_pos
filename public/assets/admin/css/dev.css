@@ -2839,7 +2839,7 @@ a.downloadBtn {
     font-weight: 800;
     text-transform: capitalize;
     margin-bottom: 1rem;
-    font-size: 1.25rem;
+    font-size: 1.2vw;
     text-align: center;
     padding-top: 0.5rem;
 }
@@ -2851,6 +2851,7 @@ a.downloadBtn {
     justify-content: space-between;
     background-color: #f5f4fd;
     border-radius: 5px;
+    font-size: 1vw;
 }
 
 .top-product-list li:hover {
@@ -2858,7 +2859,7 @@ a.downloadBtn {
 }
 
 .total-qty {
-    font-size: 14px;
+    font-size: 1vw;
     font-weight: 700;
 }
 
@@ -2880,6 +2881,7 @@ a.downloadBtn {
 .top-heading-qty li {
     padding: 4px 8px;
     font-weight: 700;
+    font-size: 1vw;
 }
 
 .artReleases {

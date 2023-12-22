@@ -37,129 +37,132 @@
       </div>-->
       <!--<input type="button" id="fullscreen_btn" value="Fullscreen" onclick="requestFullScreen(document.body)">-->
     </div>
-    <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
-      @csrf
-      <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
-      <input type="hidden" name="stock_type" value="s">
-      <div class="w-100">
-        <div class="tableFixHead table-1">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <thead>
-              <tr>
-                <th width="6%">Barcode</th>
-                <th width="10%">Brand</th>
-                <th width="19%">Product</th>
-                <th width="4%">Selling by</th>
-                <th width="6%">Stock</th>
-                <th width="19%">Is cronic</th>
-                <th width="11%">MRP</th>
-                <th width="9%">Qty.</th>
-                {{-- <th width="8%">Disc%</th> --}}
-                {{-- <th width="11%">Disc Amt.</th> --}}
-                <th width="8%">Unit Price</th>
-                <th width="7%">Total</th>
-                <th width="1%">&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody id="product_sell_record_sec">
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="amountToPay d-flex w-100">
-        <div class="atpLeft">
-          <div class="atpLeftInner">
-            <ul class="d-flex w-100">
-              <li class="atpVall">Total Item -</li>
-              <li class="atpinfo" id="total_quantity">0</li>
-              <input type="hidden" name="total_quantity" id="total_quantity-input" value="0">
-            </ul>
-            <ul class="d-flex w-100">
-              <li class="atpVall">Total Net Price -</li>
-              <li class="atpinfo"><span id="total_net_price">$0</span></li>
-              <input type="hidden" name="net_price" id="net_price" value="0">
-            </ul>
-            <ul class="d-flex w-100">
-              <li class="atpVall">Total Sale Price -</li>
-              <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
-              <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
-            </ul>
-
-            <ul class="d-flex w-100">
-              <li class="atpVall">Discount -</li>
-              <li class="atpinfo" id="total_discount_amount">$0</li>
-              <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
-            </ul>
-            <ul class="d-flex w-100">
-              <li class="atpVall">Charge -</li>
-              <li class="atpinfo" id="extraCharge">$0</li>
-            </ul>
-            <ul class="d-flex w-100">
-              {{-- <li class="atpVall">Tax -</li>
-              <li class="atpinfo" id="tax_amount">$0.00</li> --}}
-              <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
-            </ul>
-            <ul class="d-flex w-100 subTotal">
-              <li class="atpVall">Sub Total-</li>
-              <li class="atpinfo" id="sub_total_mrp">$0</li>
-              <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
-            </ul>
-            {{-- <ul class="d-flex w-100">
-              <li class="atpVall">Round Off -</li>
-              <li class="atpinfo">
-                <input type="text" name="round_off" id="round_off" class="small-input" placeholder="0" onkeydown="checkforroundoff(event,this)">
-              </li>
-            </ul> --}}
-            <ul class="d-flex w-100 subTotal">
-              <li class="atpVall">Total profit-</li>
-              <li class="atpinfo" id="total_profit">$0</li>
-              <input type="hidden" name="profit_price" id="profit_price" value="0">
-            </ul>
-            <ul class="d-flex w-100 subTotal">
-              <li class="atpVall">Profit-</li>
-              <li class="atpinfo" id="profitpersent">0%</li>
-            </ul>
-
-          </div>
-        </div>
-        {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
-            <div class="atpMid">
-          <ul>
-            <li><a href="javascript:;" class="applyCharge" id="applyChargeBtn">Apply Charge</a></li>
-            <li><a href="javascript:;" class="applyDiscount" id="applyDiscountBtn">Apply Discount </a></li>
-          </ul>
-            <div class="customerDetailsBtm">
-                <ul class="d-flex flex-wrap">
-                    <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                    <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
-                    <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
-                </ul>
+    <div class="inner-body-wrap">
+        <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
+        <input type="hidden" name="stock_type" value="s">
+        <div class="w-100 inner-body-wrap-box">
+            <div class="tableFixHead table-1">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                <tr>
+                    <th width="6%">Barcode</th>
+                    <th width="10%">Brand</th>
+                    <th width="19%">Product</th>
+                    <th width="4%">Selling by</th>
+                    <th width="6%">Stock</th>
+                    <th width="19%">Is cronic</th>
+                    <th width="11%">MRP</th>
+                    <th width="9%">Qty.</th>
+                    {{-- <th width="8%">Disc%</th> --}}
+                    {{-- <th width="11%">Disc Amt.</th> --}}
+                    <th width="8%">Unit Price</th>
+                    <th width="7%">Total</th>
+                    <th width="1%">&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody id="product_sell_record_sec">
+                </tbody>
+            </table>
             </div>
         </div>
-        <div class="atpRight d-flex justify-content-center align-items-center">
-          <div class="text-center">
-            <h6>Amount to pay</h6>
-            <h3 id="total_payble_amount">$0</h3>
-            <input type="hidden" name="actual_amount" id="actual_amount" value="0">
-            <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
-            <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
-            <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
-            <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
-            <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="0">
-            <input type="hidden" name="charge_amt" id="charge_amt-input" value="0">
-            <input type="hidden" name="tendered_amount" id="total_tendered_amount" value="0">
-            <input type="hidden" name="tendered_change_amount" id="total_tendered_change_amount" value="0">
-          </div>
+        <div class="amountToPay d-flex w-100">
+            <div class="atpLeft">
+            <div class="atpLeftInner">
+                <ul class="d-flex w-100">
+                <li class="atpVall">Total Item -</li>
+                <li class="atpinfo" id="total_quantity">0</li>
+                <input type="hidden" name="total_quantity" id="total_quantity-input" value="0">
+                </ul>
+                <ul class="d-flex w-100">
+                <li class="atpVall">Total Net Price -</li>
+                <li class="atpinfo"><span id="total_net_price">$0</span></li>
+                <input type="hidden" name="net_price" id="net_price" value="0">
+                </ul>
+                <ul class="d-flex w-100">
+                <li class="atpVall">Total Sale Price -</li>
+                <li class="atpinfo"><span id="total_mrp">$0</span> <small>(inclusive all taxes)</small></li>
+                <input type="hidden" name="total_mrp" id="total_mrp-input" value="0">
+                </ul>
+
+                <ul class="d-flex w-100">
+                <li class="atpVall">Discount -</li>
+                <li class="atpinfo" id="total_discount_amount">$0</li>
+                <input type="hidden" name="total_discount_amount" id="total_discount_amount-input" value="0">
+                </ul>
+                <ul class="d-flex w-100">
+                <li class="atpVall">Charge -</li>
+                <li class="atpinfo" id="extraCharge">$0</li>
+                </ul>
+                <ul class="d-flex w-100">
+                {{-- <li class="atpVall">Tax -</li>
+                <li class="atpinfo" id="tax_amount">$0.00</li> --}}
+                <input type="hidden" name="tax_amount" id="tax_amount-input" value="0">
+                </ul>
+                <ul class="d-flex w-100 subTotal">
+                <li class="atpVall">Sub Total-</li>
+                <li class="atpinfo" id="sub_total_mrp">$0</li>
+                <input type="hidden" name="sub_total" id="sub_total_mrp-input" value="0">
+                </ul>
+                {{-- <ul class="d-flex w-100">
+                <li class="atpVall">Round Off -</li>
+                <li class="atpinfo">
+                    <input type="text" name="round_off" id="round_off" class="small-input" placeholder="0" onkeydown="checkforroundoff(event,this)">
+                </li>
+                </ul> --}}
+                <ul class="d-flex w-100 subTotal">
+                <li class="atpVall">Total profit-</li>
+                <li class="atpinfo" id="total_profit">$0</li>
+                <input type="hidden" name="profit_price" id="profit_price" value="0">
+                </ul>
+                <ul class="d-flex w-100 subTotal">
+                <li class="atpVall">Profit-</li>
+                <li class="atpinfo" id="profitpersent">0%</li>
+                </ul>
+
+            </div>
+            </div>
+            {{-- <div class="atpMid d-flex justify-content-center align-items-center"> --}}
+                <div class="atpMid">
+            <ul>
+                <li><a href="javascript:;" class="applyCharge" id="applyChargeBtn">Apply Charge</a></li>
+                <li><a href="javascript:;" class="applyDiscount" id="applyDiscountBtn">Apply Discount </a></li>
+            </ul>
+                <div class="customerDetailsBtm">
+                    <ul class="d-flex flex-wrap">
+                        <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
+                        <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                        <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="atpRight d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <h6>Amount to pay</h6>
+                <h3 id="total_payble_amount">$0</h3>
+                <input type="hidden" name="actual_amount" id="actual_amount" value="0">
+                <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
+                <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
+                <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
+                <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
+                <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="0">
+                <input type="hidden" name="charge_amt" id="charge_amt-input" value="0">
+                <input type="hidden" name="tendered_amount" id="total_tendered_amount" value="0">
+                <input type="hidden" name="tendered_change_amount" id="total_tendered_change_amount" value="0">
+            </div>
+            </div>
         </div>
-      </div>
-      <div class="note_coin_count_sec" style="display:none"> </div>
-      <div class="upi_payment_sec" style="display:none"> </div>
-      <div class="card_details_payment_sec" style="display:none"> </div>
-      <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
-    </form>
+        <div class="note_coin_count_sec" style="display:none"> </div>
+        <div class="upi_payment_sec" style="display:none"> </div>
+        <div class="card_details_payment_sec" style="display:none"> </div>
+        <input type="hidden" name="customer_id" id="selected_customer_id" value="0">
+        </form>
+    </div>
   </div>
     <div class="col-lg-4 col-md-4">
         <div class="d-flex flex-column justify-content-between h-100">
+            <div class="cutomer-logout"><a href="{{ route('admin.auth.logout') }}"><i class="fas fa-sign-out-alt"></i>logout</a></div>
             <div class="report-wrap h-100">
                 <div class="report-wrap-lft">
                     <div class="d-flex flex-column justify-content-between h-100">
@@ -397,7 +400,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="table-responsive">
+        <div class="table-responsive table-responsive-auto">
             <table class="table" id="price_item_table">
                 <thead>
                     <tr>

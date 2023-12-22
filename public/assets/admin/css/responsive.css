@@ -1,0 +1,98 @@
+@media only screen and (max-width: 2560px) {}
+
+@media only screen and (max-width: 1920px) {}
+
+@media only screen and (max-width: 1660px) {}
+
+@media only screen and (max-width: 1440px) {}
+
+@media only screen and (max-width: 1366px) {
+    .srcBtnWrap ul li {
+        font-size: 0.75rem;
+    }
+    .srcBtnWrap ul li:not(:last-child) {
+        margin-right: 9px;
+    }
+    .srcBtnWrap h4 {
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 1350px) {}
+
+@media only screen and (max-width: 1280px) {}
+
+@media only screen and (max-width: 1204px) {}
+
+@media only screen and (max-width: 1135px) {
+    .form-label {
+        font-size: 0.75rem;
+    }
+    .form-control::placeholder{
+        font-size: 0.75rem;
+    }
+    .inner-body-wrap{
+        height: calc(100vh - 6vw);
+    }
+    .inner-body-wrap .inner-body-wrap-box{
+        height: calc(100vh - 19.3vw);
+    }
+}
+
+@media only screen and (max-width: 1024px) {}
+
+@media only screen and (max-width: 1000px) {}
+
+@media only screen and (max-width: 991px) {
+    /* .inner-body-wrap{
+        height: calc(100vh - 7.2vw);
+    }
+    .inner-body-wrap .inner-body-wrap-box{
+        height: calc(100vh - 20.5vw);
+    } */
+}
+
+@media only screen and (max-width: 960px) {}
+
+@media only screen and (max-width: 910px) {}
+
+@media only screen and (max-width: 900px) {}
+
+@media only screen and (max-width: 885px) {}
+
+@media only screen and (max-width: 880px) {
+    .inner-body-wrap{
+        height: calc(100vh - 6.5vw);
+    }
+    .inner-body-wrap .inner-body-wrap-box{
+        height: calc(100vh - 20vw);
+    }
+}
+
+@media only screen and (max-width: 800px) {}
+
+@media only screen and (max-width: 768px) {}
+
+@media only screen and (max-width: 767px) {}
+
+@media only screen and (max-width: 736px) {}
+
+@media only screen and (max-width: 667px) {}
+
+@media only screen and (max-width: 600px) {}
+
+@media only screen and (max-width: 575px) {}
+
+@media only screen and (max-width: 545px) {}
+
+@media only screen and (max-width: 480px) {}
+
+@media only screen and (max-width: 414px) {}
+
+@media only screen and (max-width: 384px) {}
+
+@media only screen and (max-width: 375px) {}
+
+@media only screen and (max-width: 320px) {}
+
+@media only screen and (max-width: 240px) {}

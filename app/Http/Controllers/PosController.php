@@ -1509,4 +1509,32 @@ class PosController extends Controller
     }
 
 
+    public function billdelete($id){
+
+
+
+
+        $sellStockProducts = SellStockProducts::where('inward_stock_id', $id)->get();
+
+        foreach ($sellStockProducts as $key => $value) {
+
+            $branch_product_stock_info	= BranchStockProducts::where('id',$value->product_stock_id)->first();
+
+            $stock_update_val = ($branch_product_stock_info->t_qty + $value->product_qty);
+			BranchStockProducts::where('id',$value->product_stock_id)->update(['t_qty'=>$stock_update_val]);
+
+        }
+
+
+
+        SellInwardStock::where('id', $id)->delete();
+
+        return redirect()->back()->with('success', 'Bill deleted successfully');
+
+
+
+
+    }
+
+
 }

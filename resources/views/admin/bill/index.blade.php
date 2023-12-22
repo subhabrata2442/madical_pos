@@ -53,7 +53,15 @@
                     <div class="form-group">
                         <div class="position-relative">
                             <input type="text" class="form-control" id="bill_no" name="bill_no"
-                                value="{{request()->input('bill_no')}}" autocomplete="off" placeholder="Enter Biull No." required>
+                                value="{{request()->input('bill_no')}}" autocomplete="off" placeholder="Enter bill No.">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <div class="position-relative">
+                            <input type="text" class="form-control" id="customer_no" name="customer_no"
+                                value="{{request()->input('customer_no')}}" autocomplete="off" placeholder="Customer phone number ">
                         </div>
                     </div>
                 </div>
@@ -62,7 +70,7 @@
                         <button class="saveBtn-2" type="submit">Search</button>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-3 col-12">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-12">
                 </div>
             </div>
         </form>
@@ -109,7 +117,7 @@
                                             <a href="javascript:void(0)" class="btn btn-secondary btn-sm disabled_btn" disabled>Date over</a>
                                         @endif
 
-
+                                        <a href="{{url('admin/pos/billdelete')}}/{{$item->id}}" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</a>
 
 
                                     </td>

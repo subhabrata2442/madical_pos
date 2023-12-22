@@ -103,7 +103,9 @@ class EmbloyeesController extends Controller
                     'phone' 	=> 'required|numeric|unique:users,phone',
                     'full_name' => 'required',
 					//'roll' 		=> 'required',
-					'password' 	=> 'required',
+					// 'password' 	=> 'required',
+
+                    'password' => 'required|confirmed',
                 ]);
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
