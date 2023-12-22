@@ -97,6 +97,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 
         Route::match(['GET'], '/billedit/{bill_no}', [PosController::class, 'billedit'])->name('billedit');
+        Route::match(['GET'], '/billdelete/{id}', [PosController::class, 'billdelete'])->name('billdelete');
 
 		// Route::match(['GET'], '/pos_type', [PurchaseOrderController::class, 'pos_type'])->name('pos_type');
 

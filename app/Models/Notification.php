@@ -11,8 +11,11 @@ class Notification extends Model
 
 
     protected $table = 'notification';
-
-
     protected $guarded = [];
+
+
+    public function user(){
+        return $this->hasOne(User::class,'id', 'store_id');
+    }
 
 }
