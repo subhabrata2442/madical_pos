@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @section('front-content')
 {{-- <section class="loginWrap d-flex flex-wrap" style="background: url({{ asset('assets/img/login-bg-md.jpg') }}) no-repeat center center;"> --}}
-    <section class="loginWrap d-flex flex-wrap">
+    <section class="loginWrap d-flex">
 
     <div class="loginWrapLeft d-flex flex-wrap align-items-end" style="background: url({{ asset('assets/img/login-bg-md2.jpg') }}) no-repeat center center;">
         <img src="{{ asset('assets/img/left-img2.png') }}" alt="">
