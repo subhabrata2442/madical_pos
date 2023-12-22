@@ -7,7 +7,7 @@
       <div class="card">
         <div class="card-body greybg">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
               <div class="form-group">
                 <ul class="row mdForm align-items-center">
                   <li class="inf">
@@ -80,10 +80,10 @@
                     @enderror </li>
                 </ul>
               </div>
-              
-              
+
+
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
               <div class="form-group">
                 <ul class="row mdForm align-items-center">
                   <li class="inf">
@@ -162,7 +162,7 @@
                     <input type="text" class="form-control admin-input" id="state_name" name="state_name" value="{{ old('state_name') }}" autocomplete="off">
                     @error('state_name')
                     <div class="error admin-error">{{ $message }}</div>
-                    @enderror 
+                    @enderror
                   </li>
                 </ul>
               </div>
@@ -187,7 +187,7 @@
                     <input type="text" class="form-control admin-input" id="country_name" name="country_name" value="{{ old('country_name') }}" autocomplete="off">
                     @error('country_name')
                     <div class="error admin-error">{{ $message }}</div>
-                    @enderror 
+                    @enderror
                   </li>
                     {{-- <select name="supplier_country_id" id="supplier_country_id" class="form-control form-inputtext">
                       <option value="">Select Country</option>
@@ -291,9 +291,9 @@
 </form>
 @endsection
 
-@section('scripts') 
-<script src="{{ url('assets/admin/js/supplier.js') }}"></script> 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
+@section('scripts')
+<script src="{{ url('assets/admin/js/supplier.js') }}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script>
 
 $(document).on('click','#supplier_additional_details_btn',function(){
@@ -361,5 +361,5 @@ $(document).ready(function() {
 });
 
 
-</script> 
-@endsection 
+</script>
+@endsection

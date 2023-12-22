@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ url('assets/admin/css/vendors.bundle.css') }}">
     <link rel="stylesheet" href="{{ url('assets/admin/css/style.bundle.css') }}">-->
     <link rel="stylesheet" href="{{ url('assets/admin/css/dev.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/admin/css/responsive.css') }}">
 
     <script>
  var base_url = "{{url('/')}}";

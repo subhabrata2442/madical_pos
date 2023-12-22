@@ -24,8 +24,8 @@ $adminRoll = Session::get('admin_type');
     <div class="col-12 mb-3">
       <div class="commonBox">
         <!--<div class="arrowUpDown2"> <span class="arrowDown"><i class="fas fa-arrow-alt-circle-down"></i></span> </div>-->
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="row g-3">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierWrap">
               <div class="invArea">
                 <ul class="d-flex flex-wrap align-items-center">
@@ -85,7 +85,7 @@ $adminRoll = Session::get('admin_type');
               </div>
             </div>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierDetails relative">
               <h4>Additional Details</h4>
 
@@ -101,7 +101,7 @@ $adminRoll = Session::get('admin_type');
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
             <div class="supplierDetails relative">
               <h4>Payment Details</h4>
 
