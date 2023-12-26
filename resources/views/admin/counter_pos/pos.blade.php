@@ -14,7 +14,7 @@
     <div class="d-flex align-items-center justify-content-between cbName">
       <div class="enterProduct d-flex align-items-center justify-content-between">
         <div class="enterProductInner d-flex">
-          <input type="text" name="search_product" id="search_product" placeholder="Enter Barcode/Enter Product Name" value="">
+          <input type="text" name="search_product" id="search_product" placeholder="Enter Barcode/Enter Brand Name" value="">
           <ul id="product_search_result">
           </ul>
         </div>
@@ -48,11 +48,11 @@
                 <thead>
                 <tr>
                     <th width="6%">Barcode</th>
-                    <th width="10%">Brand</th>
-                    <th width="19%">Product</th>
+                    <th width="25%">Brand</th>
+                    {{-- <th width="19%">Product</th> --}}
                     <th width="4%">Selling by</th>
-                    <th width="6%">Stock</th>
-                    <th width="19%">Is cronic</th>
+                    <th width="10%">Stock</th>
+                    <th width="10%">Is cronic</th>
                     <th width="11%">MRP</th>
                     <th width="9%">Qty.</th>
                     {{-- <th width="8%">Disc%</th> --}}
@@ -132,7 +132,7 @@
                 <div class="customerDetailsBtm">
                     <ul class="d-flex flex-wrap">
                         <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                        <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                        <li>Last Bill Amount - <span>${{number_format($data['last_bill_amount'])}}</span></li>
                         <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
                     </ul>
                 </div>
@@ -210,9 +210,9 @@
                                         </li>
                                     </ul>
                                 </div> --}}
-                                <div class="customerDetails">
+                                <div class="customerDetails" style="display: none;">
                                 {{-- <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4> --}}
-                                <div class="customerDetailsMid" style="display: none;">
+                                <div class="customerDetailsMid">
                                 <h4>Customer Details<span class="float-right" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="fas fa-info-circle"></i></span></h4>
                                     <ul>
                                     <li id="cd_customer_name">Customer Name : <span></span></li>
@@ -266,9 +266,10 @@
                     </div>
                 </div>
                 <div class="report-wrap-rgt">
+                    <button class="right-hover-menu">Menu</button>
                     <div class="top-product-head"><h3>top seling product</h3></div>
                     <div class="top-product-src">
-                        <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Product Name" value="">
+                        <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Brand Name" value="">
                         <ul id="product_search_result_top" class="top-product-src-list">
 
                         </ul>
@@ -405,7 +406,7 @@
                 <thead>
                     <tr>
                         <th>Brand</th>
-                        <th>Product</th>
+                        {{-- <th>Product</th> --}}
                         <th>Barcode</th>
                         <th>Selling by</th>
                         <th>Stock</th>

@@ -103,12 +103,12 @@
                                             Walk in customer
                                         @endif
                                     </td>
-                                    <td>{{$item->pay_amount}}</td>
+                                    <td>{{number_format($item->pay_amount)}}</td>
                                     <td>{{date('m-d-Y', strtotime(str_replace('.', '/', $item->created_at)))}}</td>
                                     <td>
                                         @php
                                             $dateToCheck = strtotime(date('Y-m-d', strtotime(str_replace('.', '/', $item->created_at))));
-                                            $startDate = strtotime(date('Y-m-d', strtotime('-7 days')));
+                                            $startDate = strtotime(date('Y-m-d', strtotime('-'.$data['settingdata']->return_bill_time.' days')));
                                             $endDate = strtotime(date('Y-m-d'));
                                         @endphp
                                         @if($dateToCheck >= $startDate && $dateToCheck <= $endDate)

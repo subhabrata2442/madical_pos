@@ -70,6 +70,9 @@
     .inner-body-wrap .inner-body-wrap-box{
         height: calc(100vh - 20vw);
     }
+    .right-hover-menu{
+        display: block;
+    }
 }
 
 @media only screen and (max-width: 800px) {}

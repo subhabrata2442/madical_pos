@@ -14,7 +14,7 @@
     <div class="d-flex align-items-center justify-content-between cbName">
       <div class="enterProduct d-flex align-items-center justify-content-between">
         <div class="enterProductInner d-flex">
-          <input type="text" name="search_product" id="search_product" placeholder="Enter Barcode/Enter Product Name" value="">
+          <input type="text" name="search_product" id="search_product" placeholder="Enter Barcode/Enter Brand Name" value="">
           <ul id="product_search_result">
           </ul>
         </div>
@@ -51,11 +51,11 @@
             <thead>
               <tr>
                 <th width="6%">Barcode</th>
-                <th width="10%">Brand</th>
-                <th width="19%">Product</th>
+                <th width="25%">Brand</th>
+                {{-- <th width="19%">Product</th> --}}
                 <th width="4%">Selling by</th>
-                <th width="6%">Stock</th>
-                <th width="19%">Is cronic</th>
+                <th width="10%">Stock</th>
+                <th width="10%">Is cronic</th>
                 <th width="11%">MRP</th>
                 <th width="9%">Qty.</th>
                 {{-- <th width="8%">Disc%</th> --}}
@@ -84,7 +84,7 @@
                     <input type="hidden" name="brand_name[]" id="input-brand_name_{{$branch_stock_product->product_id}}" value="Elviton tab">
                     <td>{{$branch_stock_product->product_barcode}}</td>
                     <td class="">{{$branch_stock_product->product->brand}}</td>
-                    <td class="">{{$branch_stock_product->product->product_name}}</td>
+                    {{-- <td class="">{{$branch_stock_product->product->product_name}}</td> --}}
                     <td class="">{{$branch_stock_product->product->selling_by_name}}</td>
                     <td id="product_stock_td_{{$branch_stock_product->product_id}}">{{$branch_stock_product->t_qty}}</td>
 
@@ -101,14 +101,14 @@
                     </td>
 
 
-                    <td id="product_unit_price_{{$branch_stock_product->product_id}}">{{$item->product_mrp}}</td>
+                    <td id="product_unit_price_{{$branch_stock_product->product_id}}">{{number_format($item->product_mrp)}}</td>
                     <td><input type="number" name="product_qty[]" id="product_qty_{{$branch_stock_product->product_id}}" class="input-3 product_qty" value="{{$item->product_qty}}"></td>
                     <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_{{$branch_stock_product->product_id}}" class="input-3 product_disc_percent" value="0"></td>
                     <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_{{$branch_stock_product->product_id}}" class="input-3 product_disc_amount" value="0"></td>
-                    <td id="product_mrp_{{$branch_stock_product->product_id}}">{{$item->product_mrp}}</td>
+                    <td id="product_mrp_{{$branch_stock_product->product_id}}">{{number_format($item->product_mrp)}}</td>
                     <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
                     <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
-                    <td id="product_total_amount_{{$branch_stock_product->product_id}}">{{$item->total_cost}}</td>
+                    <td id="product_total_amount_{{$branch_stock_product->product_id}}">{{number_format($item->total_cost)}}</td>
                     <td><a href="javascript:;" onclick="remove_sell_item({{$key}});"><svg class="svg-inline--fa fa-times-circle fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg><!-- <i class="fas fa-times-circle"></i> Font Awesome fontawesome.com --></a></td>
                     <input type="hidden" name="product_net_price[]" id="product_net_price_{{$branch_stock_product->product_id}}" class="input-3" value="{{$branch_stock_product->net_price}}">
                 </tr>
@@ -183,7 +183,7 @@
             <div class="customerDetailsBtm">
                 <ul class="d-flex flex-wrap">
                     <li>Last Bill No - <span>#{{$data['last_bill_no']}}</span></li>
-                    <li>Last Bill Amount - <span>${{$data['last_bill_amount']}}</span></li>
+                    <li>Last Bill Amount - <span>${{number_format($data['last_bill_amount'])}}</span></li>
                     <li class="ml-auto"><a href="javascript:;" class="print_off_counter_bill pt-0"><i class="fas fa-print"></i></a></li>
                 </ul>
             </div>
@@ -317,7 +317,7 @@
                 <div class="report-wrap-rgt">
                     <div class="top-product-head"><h3>top seling product</h3></div>
                     <div class="top-product-src">
-                        <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Product Name" value="">
+                        <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Brand Name" value="">
                         <ul id="product_search_result_top" class="top-product-src-list">
 
                         </ul>

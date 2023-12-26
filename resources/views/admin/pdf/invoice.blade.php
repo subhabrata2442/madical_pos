@@ -84,7 +84,7 @@
       @forelse ($items as $item)
         <tr>
           <td style="padding:6px 3px; text-align: center;">
-            {{$item['product_name']}}</td>
+            {{$item['brand_name']}}</td>
           <td style="padding:6px 3px; text-align: center;">
             {{$item['qty']}}</td>
           <td style="padding:6px 3px; text-align: center;">
@@ -124,7 +124,7 @@
       </td>
       <td style="padding:6px 3px 3px; text-align:right;">{{$total['total_charge']}}</td>
     </tr>
-    
+
 
 
     <tr>
