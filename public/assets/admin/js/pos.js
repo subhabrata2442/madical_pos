@@ -467,19 +467,28 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
     // finalsubmitpayment();
     //return false;
 
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Submit"
-    }).then(function (result) {
-        if (result.isConfirmed) {
-            finalsubmitpayment();
-        }
-    });
+    var due_amount_tendering = $('#due_amount_tendering').val();
+    var tendered_amount = $('#tendered_amount').val();
+
+    if (due_amount_tendering > tendered_amount) {
+        toastr.error("Make Full Payment");
+    }else{
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Submit"
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                finalsubmitpayment();
+            }
+        });
+    }
+
+
 
 
 });
@@ -1520,7 +1529,7 @@ function setProductRow(element) {
                             //option_html += '<option value="' + item_detail.item_prices[p].product_mrp + '">' + item_detail.item_prices[p].product_mrp + '</option>';
                             price_modal_html += `<tr>
                                 <td>${item_detail.item_prices[p].brand_name}</td>
-                                <td>${item_detail.item_prices[p].product_name}</td>
+
                                 <td>${item_detail.item_prices[p].product_barcode}</td>
                                 <td>${item_detail.item_prices[p].selling_by_name}</td>
                                 <td>${item_detail.item_prices[p].t_qty}</td>
@@ -1607,7 +1616,7 @@ function setProductRow(element) {
                                         <input type="hidden" name="brand_name[]" id="input-brand_name_${product_id}" value="${brand_name}">
                                         <td>${barcode}</td>
                                         <td class="">${brand_name}</td>
-                                        <td class="">${product_name}</td>
+
                                         <td class="">${selling_by_name}</td>
                                         <td id="product_stock_td_${product_id}">${stock}</td>`;
 
@@ -1764,7 +1773,7 @@ $(document).on('click', '.select_product_item', function() {
                                     <input type="hidden" name="brand_name[]" id="input-brand_name_${product_id}" value="${brand_name}">
                                     <td>${barcode}</td>
                                     <td class="">${brand_name}</td>
-                                    <td class="">${product_name}</td>
+
                                     <td class="">${selling_by_name}</td>
                                     <td id="product_stock_td_${product_id}">${stock}</td>`;
 
@@ -2398,10 +2407,10 @@ $(document).ready(function() {
         var selectedValue = $("input[name='customertype']:checked").val();
         if (selectedValue=='regular') {
             $(".customeSearch").show();
-            $(".customerDetailsMid").show();
+            $(".customerDetails").show();
         } else {
             $(".customeSearch").hide();
-            $(".customerDetailsMid").hide();
+            $(".customerDetails").hide();
         }
     });
 });
@@ -2560,4 +2569,10 @@ $(document).ready(function() {
         }
     });
 
+});
+
+
+
+$(document).on('click', '.right-hover-menu', function() {
+    $(".report-wrap-rgt").toggleClass('open');
 });

@@ -23,6 +23,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CredithistoryController;
 use App\Http\Controllers\SettlementController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -363,6 +364,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
 
     });
+
+    Route::match(['get'], '/settings', [SettingController::class, 'settings'])->name('settings');
+    Route::match(['post'], '/updatesetting', [SettingController::class, 'updatesetting'])->name('updatesetting');
 
 });
 

@@ -2962,3 +2962,7 @@ a.downloadBtn {
     font-size: 0.875rem;
     padding: 8px 10px !important;
 }
+
+.right-hover-menu{
+    display: none;
+}

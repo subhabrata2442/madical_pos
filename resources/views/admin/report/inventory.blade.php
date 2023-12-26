@@ -95,6 +95,17 @@
             </div>
         @endif
 
+        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+            <div class="form-group">
+                <label for="" class="form-label">Stock</label>
+                <select class="form-control custom-select form-control-select" id="" name="order_by">
+                    <option value="">Stock</option>
+                    <option value="htw" {{request()->input('order_by') == 'htw' ? 'selected' : ''}}>High to Low</option>
+                    <option value="lth" {{request()->input('order_by') == 'lth' ? 'selected' : ''}}>Low to High</option>
+                </select>
+            </div>
+        </div>
+
       {{-- <div class="col-lg-2 col-md-2 col-sm-12 col-12">
         <div class="form-group">
           <label for="" class="form-label">Select Category</label>

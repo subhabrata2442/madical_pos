@@ -57,6 +57,8 @@ use Illuminate\Support\Facades\Session;
 use Auth;
 use DB;
 
+use App\Models\Setting;
+
 class BillController extends Controller
 {
     public function bill(Request $request){
@@ -78,7 +80,7 @@ class BillController extends Controller
 
         }
 
-
+        $data['settingdata'] = Setting::first();
         $data['heading'] = 'Bill';
         $data['breadcrumb'] = ['Bill', 'List'];
         return view('admin.bill.index', compact('data'));

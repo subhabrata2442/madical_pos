@@ -282,8 +282,9 @@ class PosController extends Controller
 			if(count($sellStockProducts)>0){
 				foreach($sellStockProducts as $row){
 					$product_name=strtolower($row->product_name);
+                    $brand_name = strtolower($row->brand_name);
 					$data['items'][] = array(
-						'product_name'	=> ucfirst($product_name),
+						'brand_name'	=> ucfirst($brand_name),
 						'qty'			=> $row->product_qty,
 						'mrp'			=> number_format($row->product_mrp,2),
 						'offer_price'	=> number_format($row->offer_price,2),

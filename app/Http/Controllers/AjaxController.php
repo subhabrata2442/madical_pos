@@ -409,7 +409,7 @@ class AjaxController extends Controller {
 					//'id'				=> $row->id,
 					'id'				=> @$row->product->id,
 					'product_barcode'	=> @$row->product->product_barcode,
-					'product_name'		=> @$row->product->product_name,
+					'product_name'		=> @$row->product->brand,
 					//'product_size'		=> $row->size->name,
 				);
 				}
@@ -1816,7 +1816,7 @@ class AjaxController extends Controller {
 			//print_r($searchValues);exit;
 			$store_id	= Session::get('store_id');
 
-			$res = Product::select('products.id', 'products.product_name', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+			$res = Product::select('products.id', 'products.product_name', 'products.brand', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
 					->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
 					->where('sell_stock_products.branch_id', $store_id)
 					->where('products.product_name', 'like', "%{$search}%")
@@ -1837,7 +1837,7 @@ class AjaxController extends Controller {
 						//'id'				=> $row->id,
 						'id'				=> @$row->id,
 						'product_barcode'	=> @$row->product_barcode,
-						'product_name'		=> @$row->product_name,
+						'product_name'		=> @$row->brand,
 						//'product_size'		=> $row->size->name,
 					);
 
