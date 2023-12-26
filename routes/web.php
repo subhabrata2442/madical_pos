@@ -346,10 +346,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	Route::match(['GET'], '/credit_history', [CredithistoryController::class, 'index'])->name('credit_history');
 	Route::match(['post'], '/paymentcreditadd', [CredithistoryController::class, 'store'])->name('paymentcreditadd');
-	Route::match(['get'], '/suppliercredithistory_modal/{supplier_id}', [CredithistoryController::class, 'suppliercredithistory_modal'])->name('suppliercredithistory_modal');
-	Route::match(['get'], '/supplierpaymenthistory_modal/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory_modal'])->name('supplierpaymenthistory_modal');
+	Route::match(['get'], '/suppliercredithistory_modal', [CredithistoryController::class, 'suppliercredithistory_modal'])->name('suppliercredithistory_modal');
+	Route::match(['get'], '/supplierpaymenthistory_modal', [CredithistoryController::class, 'supplierpaymenthistory_modal'])->name('supplierpaymenthistory_modal');
 	Route::match(['get'], '/suppliercredithistory/{supplier_id}', [CredithistoryController::class, 'suppliercredithistory'])->name('suppliercredithistory');
 	Route::match(['get'], '/supplierpaymenthistory/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory'])->name('supplierpaymenthistory');
+	Route::match(['get'], '/debit_deletepayment/{supplier_id}', [CredithistoryController::class, 'debit_deletepayment'])->name('debit_deletepayment');
 
 
 	Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
