@@ -10,7 +10,7 @@
 
 </style>
 <div class="row">
-  <div class="col-lg-8 col-md-8">
+  <div class="col-xl-8 col-lg-8 col-md-9 col-sm-9 col-9">
     <div class="d-flex align-items-center justify-content-between cbName">
       <div class="enterProduct d-flex align-items-center justify-content-between">
         <div class="enterProductInner d-flex">
@@ -160,12 +160,12 @@
         </form>
     </div>
   </div>
-    <div class="col-lg-4 col-md-4">
+    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3">
         <div class="d-flex flex-column justify-content-between h-100">
             <div class="cutomer-logout"><a href="{{ route('admin.auth.logout') }}"><i class="fas fa-sign-out-alt"></i>logout</a></div>
             <div class="report-wrap h-100">
-                <div class="report-wrap-lft">
-                    <div class="d-flex flex-column justify-content-between h-100">
+                <div class="report-wrap-lft d-flex flex-wrap align-content-between">
+                    <div class="d-flex flex-column justify-content-between">
                         <div class="dateSales">
                             <ul class="d-flex flex-wrap justify-content-between align-items-center">
                                 <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                         <div class="d-flex flex-column justify-content-start h-100">
-                            <div class="data-sales-body d-flex flex-column justify-content-start h-100">
+                            <div class="data-sales-body d-flex flex-column justify-content-start">
                                 {{-- <div class="dateSales">
                                     <ul class="d-flex flex-wrap justify-content-between align-items-center">
                                         <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
@@ -228,7 +228,10 @@
                                 </div> --}}
                                 </div>
                             </div>
-                            <div class="data-sales-ftr">
+                            
+                        </div>
+                    </div>
+                    <div class="data-sales-ftr">
                                 <div class="sidebar-widget text-center">
                                 <ul class="row">
                                     {{-- <li class="col-3 disabled_btn"><a href="jsvascript:;" data-bs-toggle="modal" data-bs-target="#modal-1"><span><i class="fas fa-ticket-alt"></i></span>Apply<br>
@@ -262,12 +265,10 @@
                                 </ul>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="report-wrap-rgt">
-                    <button class="right-hover-menu">Menu</button>
-                    <div class="top-product-head"><h3>top seling product</h3></div>
+                    <button class="right-hover-menu">Top Seling Product</button>
+                    <div class="top-product-head"><h3>Top Seling Product</h3></div>
                     <div class="top-product-src">
                         <input type="text" class="top-product-src-input" name="" id="top_search_product" placeholder="Enter Brand Name" value="">
                         <ul id="product_search_result_top" class="top-product-src-list">
