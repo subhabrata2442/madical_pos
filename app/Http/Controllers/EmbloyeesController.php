@@ -416,7 +416,7 @@ class EmbloyeesController extends Controller
 
 			if($request->password!=''){
 				$validator = Validator::make($request->all(), [
-				'password' => 'min:6|required_with:password_confirm|same:password_confirm',
+				'password' => 'required',
 				]);
 			}
 			if ($validator->fails()) {

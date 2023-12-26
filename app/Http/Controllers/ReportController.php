@@ -365,6 +365,15 @@ class ReportController extends Controller
 				$queryStockProduct->where('branch_id',$request['store_id']);
 			}
 
+            if(!is_null($request['order_by'])) {
+                if ($request['order_by']=='htw') {
+                    $queryStockProduct->orderBy('t_qty', 'DESC');
+                }else{
+                    $queryStockProduct->orderBy('t_qty', 'ASC');
+                }
+
+			}
+
 			// if(!is_null($request['category'])) {
 			//     $queryStockProduct->whereHas('product',function($q) use ($request){
 			//         return $q->where('category_id',$request['category']);
