@@ -113,18 +113,20 @@
                                 <tr>
                                     <td>{{($key+1)}}</td>
                                     <td>{{$item->company_name}}</td>
-                                    <td> {{number_format($item->PurchaseInwardStock->sum('qty_total_net_price'))}}</td>
+
                                     @if($admin_type==1)
                                         @if(request()->input('branch_id'))
+                                            <td> {{number_format($item->PurchaseInwardStock->where('branch_id', request()->input('branch_id'))->sum('qty_total_net_price'))}}</td>
                                             <td>{{number_format($item->Suppliercreditpay->where('store_id', request()->input('branch_id'))->sum('amount'))}}</td>
                                             <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->where('store_id', request()->input('branch_id'))->sum('amount'))}}</td>
                                         @else
+                                            <td> {{number_format($item->PurchaseInwardStock->sum('qty_total_net_price'))}}</td>
                                             <td>{{number_format($item->Suppliercreditpay->sum('amount'))}}</td>
                                             <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->sum('amount'))}}</td>
                                         @endif
 
                                     @else
-
+                                    <td> {{number_format($item->PurchaseInwardStock->where('branch_id', $store_id)->sum('qty_total_net_price'))}}</td>
                                     <td>{{number_format($item->Suppliercreditpay->where('store_id', $store_id)->sum('amount'))}}</td>
                                     <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->where('store_id', $store_id)->sum('amount'))}}</td>
 
