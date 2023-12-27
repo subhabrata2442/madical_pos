@@ -39,6 +39,9 @@
     .color_black{
         color:#212529;
     }
+    .tableMrginbtn{
+        margin-bottom: 60px;
+    }
 </style>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -70,7 +73,25 @@
             <div class="card">
                 <x-alert />
                 <div class="table-responsive dataTable-design">
-                    <table id="user-table" class="table table-bordered">
+                    <form action="" id="selectStoreForm">
+                        @if (Auth::user()->role == 1)
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                            <div class="form-group">
+                                <div class="position-relative">
+                                    <select name="branch_id" id="branch_id" class="form-control form-inputtext" onchange="changeStore(this.value)">
+                                        <option value="">Select Store</option>
+                                        <option value="">View All</option>
+                                        @foreach ($data['storelist'] as $key=>$storeitem)
+                                            <option value="{{$storeitem->id}}" @if(isset($_GET['branch_id'])) @if($_GET['branch_id']==$storeitem->id) selected @endif @endif>{{$storeitem->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        @endif
+                    </form>
+                    <table id="user-table" class="table table-bordered tableMrginbtn">
                         <thead>
 
                             <th>Sl No.</th>
@@ -81,13 +102,33 @@
                             <th>Actions</th>
                         </thead>
                         <tbody>
+
+                            @php
+                                $admin_type = Session::get('admin_type');
+                                $store_id	= Session::get('store_id');
+                            @endphp
+
+
                             @foreach ($data['supplier'] as $key=>$item)
                                 <tr>
                                     <td>{{($key+1)}}</td>
                                     <td>{{$item->company_name}}</td>
                                     <td> {{number_format($item->PurchaseInwardStock->sum('qty_total_net_price'))}}</td>
-                                    <td> {{number_format($item->Suppliercreditpay->sum('amount'))}}</td>
-                                    <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->sum('amount'))}}</td>
+                                    @if($admin_type==1)
+                                        @if(request()->input('branch_id'))
+                                            <td>{{number_format($item->Suppliercreditpay->where('store_id', request()->input('branch_id'))->sum('amount'))}}</td>
+                                            <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->where('store_id', request()->input('branch_id'))->sum('amount'))}}</td>
+                                        @else
+                                            <td>{{number_format($item->Suppliercreditpay->sum('amount'))}}</td>
+                                            <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->sum('amount'))}}</td>
+                                        @endif
+
+                                    @else
+
+                                    <td>{{number_format($item->Suppliercreditpay->where('store_id', $store_id)->sum('amount'))}}</td>
+                                    <td>{{number_format($item->PurchaseInwardStock->sum('qty_total_net_price')-$item->Suppliercreditpay->where('store_id', $store_id)->sum('amount'))}}</td>
+
+                                    @endif
                                     <td>
                                         <div class="dropdown">
                                             <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -110,8 +151,19 @@
                                             </div>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="payCredit('{{$item->id}}')">Pay</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}')">Credit history</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}')">Paid history</a>
+                                                @if($admin_type==1)
+                                                    @if(request()->input('branch_id'))
+                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}', '{{request()->input('branch_id')}}')">Credit history</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}', '{{request()->input('branch_id')}}')">Paid history</a>
+                                                    @else
+                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}', '')">Credit history</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}', '')">Paid history</a>
+                                                    @endif
+
+                                                @else
+                                                    <a class="dropdown-item" href="javascript:void(0)" onclick="creditHistory('{{$item->id}}', '{{$store_id}}')">Credit history</a>
+                                                    <a class="dropdown-item" href="javascript:void(0)" onclick="paymentHistory('{{$item->id}}', '{{$store_id}}')">Paid history</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -127,7 +179,7 @@
 
 
     <div class="modal fade modalMdHeader" id="modal_paycradit" tabindex="-1" aria-labelledby="modal-1Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modal-1Label">Payment</h5>
@@ -139,14 +191,25 @@
                 <input type="hidden" id="supplier_id" name="supplier_id" />
                     @csrf
                   <div class="row">
-                    <div class="col-md-4">
+                    @if (Auth::user()->role == 1)
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                            <label for="">Store</label>
+                            <select name="store_id" id="store_id" class="form-control form-inputtext" required>
+                                <option value="">Select Store</option>
+                                @foreach ($data['storelist'] as $key=>$storeitem)
+                                    <option value="{{$storeitem->id}}">{{$storeitem->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Amount</label>
                             <input type="number" name="amount" id="amount" class="form-control" placeholder="Amount" required>
                         </div>
                     </div>
                     <input type="hidden" name="id" id="id" value="">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Payment method</label>
                             <select class="form-control custom-select form-control-select" id="payment_method" name="payment_method" required="required">
@@ -158,7 +221,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Payment Date</label>
                             <input type="date" name="payment_date" id="payment_date" class="form-control" required>
@@ -327,12 +390,13 @@ function payCredit(supplier_id){
     $('#modal_paycradit').modal('show');
 }
 
-function creditHistory(supplier_id){
+function creditHistory(supplier_id, store_id){
     $.ajax({
-        url: "{{url('admin/suppliercredithistory_modal')}}/"+supplier_id,
+        url: "{{url('admin/suppliercredithistory_modal')}}",
         type: "get",
         data: {
             supplier_id: supplier_id,
+            store_id: store_id,
             _token: "<?php echo csrf_token(); ?>",
         },
         dataType: "json",
@@ -357,12 +421,13 @@ function creditHistory(supplier_id){
     });
 }
 
-function paymentHistory(supplier_id){
+function paymentHistory(supplier_id, store_id){
     $.ajax({
-        url: "{{url('admin/supplierpaymenthistory_modal')}}/"+supplier_id,
+        url: "{{url('admin/supplierpaymenthistory_modal')}}",
         type: "get",
         data: {
             supplier_id: supplier_id,
+            store_id: store_id,
             _token: "<?php echo csrf_token(); ?>",
         },
         dataType: "json",
@@ -387,16 +452,25 @@ function paymentHistory(supplier_id){
     });
 }
 
-function edit_payment(id, amount, payment_method, payment_date){
+function edit_payment(id,store_id, amount, payment_method, payment_date){
 
 
     $('#modal_paymenthistory').modal('toggle');
     $("#modal_paycradit").modal('show');
 
     $("#id").val(id);
+    $("#store_id").val(store_id);
     $("#amount").val(amount);
     $("#payment_method").val(payment_method);
     $("#payment_date").val(ipayment_dated);
+}
+
+function changeStore(store_id){
+    if(store_id!=''){
+        $("#selectStoreForm").submit();
+    }else{
+        location.href = "{{ route('admin.credit_history') }}";
+    }
 }
 
 </script>

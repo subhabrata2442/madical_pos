@@ -282,8 +282,9 @@ class PosController extends Controller
 			if(count($sellStockProducts)>0){
 				foreach($sellStockProducts as $row){
 					$product_name=strtolower($row->product_name);
+                    $brand_name = strtolower($row->brand_name);
 					$data['items'][] = array(
-						'product_name'	=> ucfirst($product_name),
+						'brand_name'	=> ucfirst($brand_name),
 						'qty'			=> $row->product_qty,
 						'mrp'			=> number_format($row->product_mrp,2),
 						'offer_price'	=> number_format($row->offer_price,2),
@@ -414,7 +415,7 @@ class PosController extends Controller
 			// }
 
 
-			$lastSellInwardStock=SellInwardStock::orderBy('id','DESC')->take(1)->get();
+			$lastSellInwardStock=SellInwardStock::where('branch_id', $store_id)->orderBy('id','DESC')->take(1)->get();
 			$invoice_url='';
 			$bill_no='';
 			$pay_amount=0;
@@ -1421,7 +1422,8 @@ class PosController extends Controller
 				$size_ml=trim(str_replace('ml', '', $size));
 				$total_ml=(int)$size_ml*(int)$qty; */
 
-                SellStockProducts::where('product_stock_id', $sell_inward_stock_id)->delete();
+                SellStockProducts::where('product_stock_id', $sell_inward_stock_id)->where('product_id', $product_id)->delete();
+
 
 				$sellStockproductData=array(
 					'inward_stock_id'	=> $sellStockId,
@@ -1449,6 +1451,11 @@ class PosController extends Controller
 				//print_r($sellStockproductData);exit;
 				SellStockProducts::create($sellStockproductData);
 				//Update product qty
+
+
+
+
+
 				$stock_update_val = ($branch_product_stock_info->t_qty - $qty);
 				BranchStockProducts::where('id',$product_stock_id)->update(['t_qty'=>$stock_update_val]);
 

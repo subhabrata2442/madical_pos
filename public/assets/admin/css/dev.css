@@ -25,7 +25,6 @@
     font-size: 16px;
 }
 
-
 /* .sidebar-mini .main-sidebar .nav-link,
 .sidebar-mini-md .main-sidebar .nav-link,
 .sidebar-mini-xs .main-sidebar .nav-link {
@@ -42,18 +41,15 @@
 	width: 218px;
 } */
 
-
 /* body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
 	width: 218px;
 }
 */
 
-
 /* .layout-navbar-fixed .wrapper .main-sidebar:hover .brand-link {
 	transition: width .3s ease-in-out;
 	width: 218px;
 } */
-
 
 /* @media (min-width: 768px) {
 
@@ -64,8 +60,8 @@
 	}
 } */
 
-.dark_mode .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
-.dark_mode .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+.dark_mode .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.dark_mode .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
     background-color: transparent;
     /* background-color: rgba(255, 255, 255, .1); */
     color: var(--secondaryTextColor);
@@ -212,7 +208,7 @@ a.circle-button {
 
 .zmdi {
     display: inline-block;
-    font: normal normal normal 14px/1 'Material-Design-Iconic-Font';
+    font: normal normal normal 14px/1 "Material-Design-Iconic-Font";
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -247,7 +243,6 @@ a.circle-button {
     padding: 0;
 }
 
-
 /*CSS LOADER*/
 
 .cover-loader {
@@ -263,7 +258,7 @@ a.circle-button {
     height: 15px !important;
 }
 
-.has-search [data-loader='circle'] {
+.has-search [data-loader="circle"] {
     top: 19%;
     left: 30px;
 }
@@ -275,36 +270,36 @@ a.circle-button {
     cursor: pointer;
 }
 
-[data-loader='circle'].medium,
-[data-loader='circle-side'].medium {
+[data-loader="circle"].medium,
+[data-loader="circle-side"].medium {
     width: 40px;
     height: 40px;
 }
 
-[data-loader='circle'] {
+[data-loader="circle"] {
     width: 20px;
     height: 20px;
-    -webkit-animation: circle infinite .75s linear;
-    -moz-animation: circle infinite .75s linear;
-    -o-animation: circle infinite .75s linear;
-    animation: circle infinite .75s linear;
+    -webkit-animation: circle infinite 0.75s linear;
+    -moz-animation: circle infinite 0.75s linear;
+    -o-animation: circle infinite 0.75s linear;
+    animation: circle infinite 0.75s linear;
     border: 2px solid #000;
     border-top-color: transparent;
     border-radius: 100%;
 }
 
-[data-loader='circle-side'] {
+[data-loader="circle-side"] {
     position: relative;
     width: 20px;
     height: 20px;
-    -webkit-animation: circle infinite .75s linear;
-    -moz-animation: circle infinite .75s linear;
-    -o-animation: circle infinite .75s linear;
-    animation: circle infinite .75s linear;
+    -webkit-animation: circle infinite 0.75s linear;
+    -moz-animation: circle infinite 0.75s linear;
+    -o-animation: circle infinite 0.75s linear;
+    animation: circle infinite 0.75s linear;
     border: 2px solid #fff;
-    border-top-color: rgba(0, 0, 0, .2);
-    border-right-color: rgba(0, 0, 0, .2);
-    border-bottom-color: rgba(0, 0, 0, .2);
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-right-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: rgba(0, 0, 0, 0.2);
     border-radius: 100%;
 }
 
@@ -368,7 +363,6 @@ a.circle-button {
     }
 }
 
-
 /*END CSS LOADER*/
 
 .btn-green:hover {
@@ -403,9 +397,9 @@ a.circle-button {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .tt-suggestion {
@@ -445,11 +439,11 @@ a.circle-button {
     display: block;
     text-align: center;
     border: #ddd 3px dotted;
-    padding: 2rem .5rem;
+    padding: 2rem 0.5rem;
     font-weight: bold;
     color: #666;
     border-radius: 10px;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
     background: #f5f9ff;
     text-decoration: none !important;
 }
@@ -461,7 +455,7 @@ a.circle-button {
 
 .searchResultItem span.itemIcon {
     display: block;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 }
 
 .searchResultItem span.itemIcon svg {
@@ -521,7 +515,6 @@ hr {
     font-size: 13px;
 }
 
-
 /*#product_search_result li:nth-child(even){
 	background: cadetblue;
 	color: white;
@@ -554,7 +547,6 @@ hr {
     font-size: 13px;
 }
 
-
 /*#product_search_result_top li:nth-child(even){
 	background: cadetblue;
 	color: white;
@@ -582,9 +574,9 @@ hr {
 }
 
 .grossQty {
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     background: #203966;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 }
 
 .grossQty ul {
@@ -593,7 +585,7 @@ hr {
 
 .grossQty ul li {
     font-weight: 700;
-    font-size: .8rem;
+    font-size: 0.8rem;
     color: #fff;
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;
@@ -619,7 +611,7 @@ hr {
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
     font-weight: normal;
     border: #e1dcdc 1px solid;
     height: 34px;
@@ -633,7 +625,7 @@ hr {
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
     font-weight: normal;
     border: #e1dcdc 1px solid;
     height: 44px;
@@ -706,7 +698,7 @@ hr {
     right: 1px;
     border-radius: 3px 0 0 3px;
     font-weight: bold;
-    font-size: .6rem;
+    font-size: 0.6rem;
 }
 
 .upplierBox a span {
@@ -719,8 +711,8 @@ hr {
 
 .supplierBtm h6 {
     font-weight: bold;
-    margin-bottom: .5rem;
-    font-size: .8rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
 }
 
 .supplierBtm h6 span {
@@ -736,7 +728,7 @@ hr {
 }
 
 .supplierBtm p span:not(:last-child) {
-    margin-bottom: .8rem;
+    margin-bottom: 0.8rem;
 }
 
 .uploadProducts {
@@ -745,7 +737,7 @@ hr {
     bottom: 0;
     background: #203966;
     color: #fff;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
     font-weight: bold;
 }
 
@@ -784,13 +776,12 @@ hr {
     border-radius: 4px;
     padding: 0 1.25rem;
     display: block;
-    font-size: .8em;
+    font-size: 0.8em;
 }
 
 .saveBtnMd {
     padding: 0 2.25rem;
 }
-
 
 /* .inwardStockBtm .saveBtn {
 	width: 150px;
@@ -814,7 +805,7 @@ hr {
     border-radius: 4px;
     padding: 0 1.25rem;
     display: block;
-    font-size: .7rem;
+    font-size: 0.7rem;
 }
 
 .mainBtn:hover {
@@ -823,8 +814,8 @@ hr {
 }
 
 .unpaidAmt {
-    padding-left: .8rem;
-    font-size: .6rem;
+    padding-left: 0.8rem;
+    font-size: 0.6rem;
 }
 
 .unpaidAmt p {
@@ -845,7 +836,7 @@ hr {
 
 .inwordTableWrap th,
 .inwordTableWrap td {
-    font-size: .7rem;
+    font-size: 0.7rem;
 }
 
 .table tr td.red_border {
@@ -853,20 +844,20 @@ hr {
 }
 
 .noteAreaInner:not(:last-child) {
-    margin-bottom: .7rem;
+    margin-bottom: 0.7rem;
 }
 
 .noteAreaInner textarea {
     width: 100%;
     resize: none;
     height: 93px;
-    padding: .7rem;
+    padding: 0.7rem;
     border: #ddd 1px solid;
     border-radius: 10px;
 }
 
 .supplierDetails {
-    padding: .8rem;
+    padding: 0.8rem;
     border: #ddd 1px solid;
     border-radius: 10px;
     background: #f6f6f6;
@@ -883,11 +874,11 @@ hr {
 }
 
 .invArea ul:not(:last-child) {
-    margin-bottom: .9rem;
+    margin-bottom: 0.9rem;
 }
 
 .noteAreaInner ul li:not(:last-child) {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 .supplierWrap,
@@ -903,7 +894,7 @@ hr {
 .supplierDetails p {
     line-height: 1.999999;
     color: #666;
-    font-size: .815rem;
+    font-size: 0.815rem;
 }
 
 .supplierDetails .changeAddress {
@@ -937,21 +928,21 @@ hr {
 }
 
 .noteAreaInner .btn {
-    font-size: .8rem;
+    font-size: 0.8rem;
     display: block;
 }
 
 .addPayMeth li:not(:last-child) {
-    margin-right: .8rem;
+    margin-right: 0.8rem;
 }
 
 .addpayBtn {
     line-height: 34px;
     text-transform: uppercase;
     border-radius: 4px;
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     display: block;
-    font-size: .7rem;
+    font-size: 0.7rem;
     font-weight: bold;
 }
 
@@ -962,7 +953,7 @@ hr {
     border: #d7d7d7 1px solid;
     border-radius: 50%;
     top: -20px;
-    box-shadow: rgba(0, 0, 0, .3) 0 7px 10px -3px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 7px 10px -3px;
 }
 
 .arrowUpDown2 {
@@ -972,7 +963,7 @@ hr {
     border: #d7d7d7 1px solid;
     border-radius: 50%;
     bottom: -20px;
-    box-shadow: rgba(0, 0, 0, .3) 0 7px 10px -3px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 7px 10px -3px;
 }
 
 .arrowUpDown span,
@@ -1021,7 +1012,7 @@ hr {
     color: #282828;
     display: block;
     border: #ddd 1px solid;
-    padding: .7rem 1rem;
+    padding: 0.7rem 1rem;
     border-radius: 10px;
     background: url(../../img/dd-arrow.png) center right 15px no-repeat #fff;
 }
@@ -1041,7 +1032,7 @@ hr {
     background: lavender;
     padding: 4px;
     margin-bottom: 1px;
-    font-size: .85rem;
+    font-size: 0.85rem;
 }
 
 .upplierBox ul li:hover {
@@ -1053,7 +1044,7 @@ hr {
 .custom-select {
     height: 34px;
     border-color: #e1dcdc;
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .tablePage {
@@ -1086,7 +1077,7 @@ hr {
     background: #21314a;
     text-transform: uppercase;
     font-weight: bold;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
     font-size: 15px;
 }
 
@@ -1199,7 +1190,7 @@ hr {
 }
 
 .applyCouponTop label {
-    font-size: .9rem;
+    font-size: 0.9rem;
     color: #202020;
     font-weight: normal !important;
 }
@@ -1223,9 +1214,9 @@ hr {
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
-    -moz-transition: all ease-in-out .4s;
-    -webkit-transition: all ease-in-out .4s;
-    transition: all ease-in-out .4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -webkit-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
     position: relative;
 }
 
@@ -1372,9 +1363,9 @@ hr {
     z-index: 2;
     overflow-y: auto;
     transform: translateX(100%);
-    -moz-transition: all ease-in-out .4s;
-    -webkit-transition: all ease-in-out .4s;
-    transition: all ease-in-out .4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -webkit-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
     max-width: 1200px;
     width: 100%;
 }
@@ -1397,7 +1388,7 @@ hr {
 
 .payWrap.active {
     transform: translateX(0);
-    box-shadow: rgba(0, 0, 0, .15) -20px 0 50px 0;
+    box-shadow: rgba(0, 0, 0, 0.15) -20px 0 50px 0;
 }
 
 span.payWrapCloseBtn {
@@ -1434,9 +1425,9 @@ span.payWrapCloseBtn {
     color: #21314a;
     text-transform: uppercase;
     box-shadow: 0px 0px 16.74px 1.26px rgba(0, 0, 0, 0.21);
-    -moz-transition: all ease-in-out .4s;
-    -webkit-transition: all ease-in-out .4s;
-    transition: all ease-in-out .4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -webkit-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
     position: relative;
 }
 
@@ -1456,9 +1447,9 @@ span.payWrapCloseBtn {
 }
 
 .tabBox a span img {
-    -moz-transition: all ease-in-out .4s;
-    -webkit-transition: all ease-in-out .4s;
-    transition: all ease-in-out .4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -webkit-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
     max-width: 100%;
 }
 
@@ -1535,7 +1526,7 @@ a.tableBox:hover {
 }
 
 .tableBoxTop {
-    border-bottom: rgba(255, 255, 255, .5) 1px solid;
+    border-bottom: rgba(255, 255, 255, 0.5) 1px solid;
     padding: 0 0 10px 0;
 }
 
@@ -1553,7 +1544,7 @@ a.tableBox:hover {
 }
 
 .tableBoxBtm ul li {
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .tableBoxBtm ul li span {
@@ -1570,8 +1561,8 @@ a.tableBox:hover {
     -ms-flex: 0 0 270px;
     flex: 0 0 270px;
     max-width: 270px;
-    padding-right: calc(var(--bs-gutter-x) * .5);
-    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
 }
 
 .createOrder a {
@@ -1586,7 +1577,7 @@ a.tableBox:hover {
     font-size: 16px;
     font-weight: bold;
     text-align: center;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
 }
 
 .createOrder a:hover {
@@ -1754,9 +1745,9 @@ a.tableBox:hover {
     border-radius: 4px;
     color: #595959;
     font-weight: bold;
-    font-size: .81rem;
+    font-size: 0.81rem;
     border: #eae9e9 1px solid;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
 }
 
 .ftMenuBtm ul li a img {
@@ -1837,7 +1828,7 @@ a.tableBox:hover {
 .filterTableInner .table th,
 .filterTableInner .table td {
     border: none !important;
-    padding: .5rem;
+    padding: 0.5rem;
 }
 
 .filterTableInner .table th {
@@ -1918,7 +1909,7 @@ a.tableBox:hover {
 }
 
 .catalogsearch-box .form-check label {
-    padding: .2rem 1rem .2rem 1.25rem;
+    padding: 0.2rem 1rem 0.2rem 1.25rem;
 }
 
 .catalogsearch-box .form-check .form-check-input[type="radio"] {
@@ -2001,9 +1992,9 @@ a.downloadBtn {
     transform: translate(-50%, -50%) scale(0);
     -moz-transform: translate(-50%, -50%) scale(0);
     -webkit-transform: translate(-50%, -50%) scale(0);
-    -moz-transition: all ease-in-out .4s;
-    -webkit-transition: all ease-in-out .4s;
-    transition: all ease-in-out .4s;
+    -moz-transition: all ease-in-out 0.4s;
+    -webkit-transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.4s;
     max-width: 0;
     padding: 30px;
     opacity: 0;
@@ -2012,7 +2003,7 @@ a.downloadBtn {
 }
 
 .calculatorWrap.active {
-    box-shadow: rgba(0, 0, 0, .4)0 0 50px 0;
+    box-shadow: rgba(0, 0, 0, 0.4) 0 0 50px 0;
     max-width: 600px;
     opacity: 1;
     visibility: visible;
@@ -2026,7 +2017,7 @@ a.downloadBtn {
     padding: 10px;
     border-radius: 10px;
     width: 100%;
-    box-shadow: rgba(0, 0, 0, .3) 0 6px 20px -10px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 6px 20px -10px;
 }
 
 .calculatorInner table {
@@ -2095,7 +2086,7 @@ a.downloadBtn {
     padding: 6px 25px;
     border-radius: 30px;
     color: #fff;
-    font-size: .8rem;
+    font-size: 0.8rem;
     font-weight: bold;
     display: inline-block;
 }
@@ -2138,7 +2129,7 @@ a.downloadBtn {
 .saveSrcArea .custom-select {
     height: 42px;
     border-color: #14328b;
-    border-radius: .25rem 0 0 .25rem;
+    border-radius: 0.25rem 0 0 0.25rem;
 }
 
 .saveSrcArea .srcBtnWrapGo {
@@ -2148,7 +2139,7 @@ a.downloadBtn {
     font-weight: bold;
     font-size: 16px;
     border: none;
-    border-radius: 0 .25rem .25rem 0;
+    border-radius: 0 0.25rem 0.25rem 0;
     width: 58px;
 }
 
@@ -2273,7 +2264,7 @@ a.downloadBtn {
     padding: 10px;
     width: 60px;
     height: 60px;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
 }
 
 .tihInner ul li a.active,
@@ -2284,7 +2275,7 @@ a.downloadBtn {
 .tihInner ul li a img {
     display: block;
     width: 100%;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
 }
 
 .tihInner ul li a span {
@@ -2294,7 +2285,7 @@ a.downloadBtn {
     text-align: center;
     font-weight: bold;
     left: 50%;
-    background: rgba(255, 255, 255, .9);
+    background: rgba(255, 255, 255, 0.9);
     transform: translateX(-50%);
     height: 30px;
     line-height: 30px;
@@ -2303,13 +2294,13 @@ a.downloadBtn {
     font-size: 13px;
     /* border: #333 1px solid; */
     box-shadow: rgba(0, 0, 0, 0.3) 0 0 7px 2px;
-    transition: all ease-in-out .4s;
+    transition: all ease-in-out 0.4s;
 }
 
 .tihInner ul li a.active span,
 .tihInner ul li a:hover span {
     color: #fff;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .tihInner ul li a.active img,
@@ -2332,29 +2323,29 @@ a.downloadBtn {
     }
     .tabBox a {
         line-height: 42px;
-        font-size: .98rem;
+        font-size: 0.98rem;
     }
     .tabBox a span {
         width: 22px;
     }
     .tableBoxBtm h6 {
-        font-size: .8rem;
+        font-size: 0.8rem;
     }
     .tableBoxTop h5 {
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
     .countdownArea .countdown {
         margin-left: 5px;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
     .leftPannel.onlineMenu ul li a {
-        font-size: .95rem;
+        font-size: 0.95rem;
     }
     .leftPannel.onlineMenu ul li .noti a {
         font-size: 18px;
     }
     .leftPannel ul li a {
-        font-size: .95rem;
+        font-size: 0.95rem;
     }
     .leftPannel {
         flex: 0 0 240px;
@@ -2367,31 +2358,31 @@ a.downloadBtn {
     }
     .createOrder a {
         line-height: 46px;
-        font-size: .95rem;
+        font-size: 0.95rem;
     }
     .ftMenuBtm ul li a {
         padding: 8px 15px;
-        font-size: .9rem;
+        font-size: 0.9rem;
         font-weight: 600;
     }
     .catalogsearch-box span {
         padding: 5px 15px;
-        font-size: .95rem;
+        font-size: 0.95rem;
     }
     .ftBox a {
         padding: 1rem;
-        font-size: .7rem;
+        font-size: 0.7rem;
     }
     .filterTableInner .table td {
-        font-size: .7rem;
+        font-size: 0.7rem;
         font-weight: 500;
         vertical-align: middle;
     }
     .filterTableInner .table th {
-        font-size: .7rem;
+        font-size: 0.7rem;
     }
     .filterTableInner ul li {
-        font-size: .93rem;
+        font-size: 0.93rem;
     }
     .filterTableInner ul li span {
         margin-right: 2px;
@@ -2401,13 +2392,13 @@ a.downloadBtn {
         width: 20px;
     }
     .printBill ul li a {
-        font-size: .92rem;
+        font-size: 0.92rem;
     }
     .tableBoxBtm ul li {
-        font-size: .76rem;
+        font-size: 0.76rem;
     }
     .tableIndicate ul li {
-        font-size: .8rem;
+        font-size: 0.8rem;
     }
     .tableBox {
         letter-spacing: 0;
@@ -2439,14 +2430,17 @@ a.downloadBtn {
         width: 100%;
     }
     .purcheseDetails table tr td span {
-        font-size: .6rem;
+        font-size: 0.6rem;
     }
     .table.tableBorderless td {
         font-size: 10px;
     }
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper,
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer,
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+        .content-wrapper,
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+        .main-footer,
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+        .main-header {
         margin-left: 0;
     }
     .invArea .invAreaInf {
@@ -2459,7 +2453,7 @@ a.downloadBtn {
     }
 }
 
-.inwordTableWrap .table>thead {
+.inwordTableWrap .table > thead {
     position: sticky;
     top: 0;
 }
@@ -2497,7 +2491,7 @@ a.downloadBtn {
     border-radius: 4px;
     padding: 0 1.25rem;
     display: block;
-    font-size: .9em;
+    font-size: 0.9em;
     width: 100%;
 }
 
@@ -2589,7 +2583,12 @@ a.downloadBtn {
 }
 .bg-yellowgreen-g {
     background: #46d12d;
-    background: -moz-linear-gradient(45deg, #d8f19c 0%, #d8f19c 0%, #46d12d 100%);
+    background: -moz-linear-gradient(
+        45deg,
+        #d8f19c 0%,
+        #d8f19c 0%,
+        #46d12d 100%
+    );
     background: -webkit-linear-gradient(45deg, #d8f19c 0%, #46d12d 100%);
     background: linear-gradient(45deg, #d8f19c 0%, #46d12d 100%);
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e49cf1', endColorstr='#954bb5', GradientType=1);
@@ -2627,7 +2626,7 @@ a.downloadBtn {
 }
 
 .trborderbottom:hover {
-    background-color: #EEF2C4;
+    background-color: #eef2c4;
 }
 
 @media only screen and (max-width: 810px) {
@@ -2680,7 +2679,7 @@ a.downloadBtn {
     border: none;
     background-color: transparent;
     font-size: 1.2vw;
-    padding: .44vw;
+    padding: 0.44vw;
     outline: none;
 }
 
@@ -2741,7 +2740,6 @@ a.downloadBtn {
     color: white;
 }
 
-
 /* 12.10.2023 End*/
 
 .inputSize {
@@ -2752,7 +2750,6 @@ a.downloadBtn {
     border: 1px solid #999999;
     border-radius: 4px;
 }
-
 
 /* 12.10.2023 End*/
 
@@ -2769,11 +2766,11 @@ a.downloadBtn {
 .select-3 {
     height: 2.2vw;
     width: 100%;
-    font-size: .9vw;
+    font-size: 0.9vw;
     border: #e1e1e1 1px solid;
     padding: 0 0.4vw;
     border-radius: 4px;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 .report-wrap {
@@ -2909,39 +2906,39 @@ a.downloadBtn {
     color: #039;
     font-weight: 600;
 }
-.select-store ul{
+.select-store ul {
     display: flex;
     align-items: center;
 }
-.select-store{
+.select-store {
     width: 100%;
 }
-.select-store ul li:not(:last-child){
+.select-store ul li:not(:last-child) {
     margin-right: 1rem;
 }
-.select-store ul li.select-store-file{
+.select-store ul li.select-store-file {
     width: 400px;
 }
-.select-store ul li label{
+.select-store ul li label {
     margin-bottom: 0;
     line-height: 1;
 }
-.white-box-sadow{
+.white-box-sadow {
     background-color: #fff;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, .15);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
     padding: 1rem;
     margin-bottom: 1.25rem;
     border-radius: 0.5rem;
 }
-.box-card-new{
+.box-card-new {
     margin-bottom: 1rem;
 }
-.box-card-new .card{
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, .15);
+.box-card-new .card {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.15);
     margin-bottom: 0;
 }
-.dark_mode .box-card-new .card{
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, .15);
+.dark_mode .box-card-new .card {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.15);
 }
 .table-view-all {
     text-align: right;
@@ -2953,12 +2950,31 @@ a.downloadBtn {
     font-size: 0.875rem;
     background-color: #039;
 }
-.box-card-new .card-title{
+.box-card-new .card-title {
     font-size: 1rem;
     font-weight: 500;
 }
 .box-card-new tr th,
-.box-card-new tr td{
+.box-card-new tr td {
     font-size: 0.875rem;
     padding: 8px 10px !important;
 }
+
+.right-hover-menu {
+    display: none;
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    border: none;
+    background: #3b8ccf;
+    color: #fff;
+    padding: 3px 10px;
+    font-size: 15px;
+    transform: translateY(-50%) rotate(-90deg);
+    text-wrap: nowrap;
+    transform-origin: 100% 100%;
+    border-radius: 10px 10px 0 0;
+}
+/* .data-sales-ftr {
+    padding-bottom: 1rem;
+} */

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Suppliercreditpay;
 use App\Models\PurchaseInwardStock;
+use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class CredithistoryController extends Controller
 {
@@ -15,14 +17,38 @@ class CredithistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
+    public function index(Request $request){
+
+        $admin_type = Session::get('admin_type');
 
         $data = [];
 		$data['heading'] = 'Credit History';
 		$data['breadcrumb'] = ['Credit History', '', 'List'];
 
-        $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')])->get();
+        if($admin_type==1){
+            $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')])->get();
 
+            if(!empty($request->get('branch_id'))){
+                $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')->where('branch_id', $request->get('branch_id'))])
+                ->whereHas('PurchaseInwardStock', fn ($query) =>
+                    $query->where('branch_id', $request->get('branch_id'))
+                )->get();
+            }
+
+        }else{
+
+            $store_id	= Session::get('store_id');
+
+            $data['supplier'] = Supplier::with(['PurchaseInwardStock' => fn($query) => $query->where('payment_method', 'debt')->where('branch_id', $store_id)])
+            ->whereHas('PurchaseInwardStock', fn ($query) =>
+                $query->where('branch_id', $store_id)
+            )->get();
+
+        }
+
+
+
+        $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
         // dd($data['supplier']);
 		return view('admin.credit_history.index', compact('data'));
 
@@ -46,12 +72,23 @@ class CredithistoryController extends Controller
      */
     public function store(Request $request){
 
+
+        $admin_type = Session::get('admin_type');
+        if($admin_type==1){
+            $store_id = $request->store_id;
+        }else{
+            $store_id	= Session::get('store_id');
+        }
+
+
+
         if($request->id==''){
             $insert_data=array(
                 'supplier_id'  => $request->supplier_id,
                 'amount'  => $request->amount,
                 'payment_date'  => $request->payment_date,
                 'payment_method' => $request->payment_method,
+                'store_id' => $store_id,
             );
             Suppliercreditpay::create($insert_data);
             return redirect()->back()->with('success', 'Payment added successfully');
@@ -108,8 +145,17 @@ class CredithistoryController extends Controller
 
     }
 
-    public function suppliercredithistory_modal($supplier_id){
-        $purchaseInwardStock = PurchaseInwardStock::where('supplier_id', $supplier_id)->paginate(10);
+    public function suppliercredithistory_modal(Request $request){
+
+        $supplier_id = $request->supplier_id;
+        $store_id = $request->store_id;
+
+        if($store_id!=''){
+            $purchaseInwardStock = PurchaseInwardStock::where('branch_id', $store_id)->where('supplier_id', $supplier_id)->paginate(20);
+        }else{
+            $purchaseInwardStock = PurchaseInwardStock::where('supplier_id', $supplier_id)->paginate(20);
+        }
+
 
 
         $supplier = Supplier::where('id', $supplier_id)->first();
@@ -134,9 +180,20 @@ class CredithistoryController extends Controller
     }
 
 
-    public function supplierpaymenthistory_modal($supplier_id){
-        $suppliercreditpay = Suppliercreditpay::where('supplier_id', $supplier_id)->paginate(10);
+    public function supplierpaymenthistory_modal(Request $request){
+
+        $supplier_id = $request->supplier_id;
+        $store_id = $request->store_id;
+
+        if($store_id!=''){
+            $suppliercreditpay = Suppliercreditpay::where('supplier_id', $supplier_id)->where('store_id', $store_id)->paginate(20);
+        }else{
+            $suppliercreditpay = Suppliercreditpay::where('supplier_id', $supplier_id)->paginate(20);
+        }
+
         $supplier = Supplier::where('id', $supplier_id)->first();
+
+        $alert_msg = 'Are you sure?';
 
         $html = '';
         foreach ($suppliercreditpay as $key => $item) {
@@ -145,7 +202,10 @@ class CredithistoryController extends Controller
                         <td>'.number_format($item->amount).'</td>
                         <td>'.$item->payment_method.'</td>
                         <td>'.$item->payment_date.'</td>
-                        <td><a href="javascript:void(0)" onclick="edit_payment(\''.$item->id.'\', \''.$item->amount.'\',\''.$item->payment_method.'\', \''.$item->payment_date.'\')"><i class="fas fa-edit"></i></a></td>
+                        <td>
+                            <a href="javascript:void(0)" onclick="edit_payment(\''.$item->id.'\', \''.$item->store_id.'\', \''.$item->amount.'\',\''.$item->payment_method.'\', \''.$item->payment_date.'\')"><i class="fas fa-edit"></i></a>
+                            <a href="'.url('admin/debit_deletepayment').'/'.$item->id.'" onclick="return confirm(\''.$alert_msg.'\')"><i class="fas fa-trash"></i></a>
+                        </td>
                     </tr>';
         }
 
@@ -156,6 +216,11 @@ class CredithistoryController extends Controller
             'allurl' =>route('admin.suppliercredithistory', [base64_encode($supplier_id)]),
             'totalrecord' => count($suppliercreditpay),
         ]);
+    }
+
+    public function debit_deletepayment($id){
+        Suppliercreditpay::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Payment deleted successfully');
     }
 
 

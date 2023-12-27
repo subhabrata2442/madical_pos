@@ -162,7 +162,7 @@
                                 @endforeach
                             @endif
                         </td>
-                        <td>{{$purchase->total_settlement_amount}}</td>
+                        <td>{{number_format($purchase->total_settlement_amount)}}</td>
                         <td>{{date('d-m-Y', strtotime(str_replace('.', '/', $purchase->created_at)))}}</td>
                         <td>
                             @if ($purchase->admin_approved==0)
