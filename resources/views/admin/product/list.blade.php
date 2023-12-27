@@ -53,7 +53,7 @@ $user_role=Auth::user()->role;
 								<input type="file" name="product_excel" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
 								<button class="btn btn-outline-secondary saveBtn-3" type="submit" id="inputGroupFileAddon04">Submit</button>
 							</div>
-							<span class="demo-excel-download"><a href="#">Click to Demo excel download</a></span>
+							<span class="demo-excel-download"><a href="{{asset('demo_import_excel/demo_product.xlsx')}}" download>Click to Demo excel download</a></span>
 						</div>
 					</div>
 				</form>
