@@ -358,7 +358,7 @@ if($adminId!=1){
         @if ($adminRoll == 1)
             <li class="nav-item">
             <a href="{{ route('admin.settings') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.settings') active @endif"> <i class="fas fa-cog nav-icon"></i>
-                <p>Category</p>
+                <p>Setting</p>
             </a>
             </li>
         @endif
