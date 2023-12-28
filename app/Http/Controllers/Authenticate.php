@@ -202,9 +202,11 @@ class Authenticate extends Controller
         $logdata = [
             'user_id' => Auth::user()->id,
             'user_ip' => $_SERVER['REMOTE_ADDR'],
-            'login_date_time' => $login_date_time,
+            'logout_date_time' => $login_date_time,
             'activity'=> 'Logout',
         ];
+
+        // dd($logdata);
         Logreport::create($logdata);
 
         Session::flush();

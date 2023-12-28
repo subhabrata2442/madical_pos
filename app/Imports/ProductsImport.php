@@ -24,7 +24,7 @@ class ProductsImport implements ToCollection
                 if ($column[0] != '' && $column[1] != '') {
                     $check_product_barcode = Product::where('product_barcode', $column[1])->get();
                     if (count($check_product_barcode) > 0) {
-                        //product barcode already exist 
+                        //product barcode already exist
                     } else {
                         //New product insert
                         $n = Product::count();
