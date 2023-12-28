@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Session;
 
 use App\Models\Logreport;
 use Carbon\Carbon;
+use Str;
+
+
 
 
 class Authenticate extends Controller
@@ -214,5 +217,62 @@ class Authenticate extends Controller
     public function forget_password()
     {
         return view('authenticate.forget_pass');
+    }
+
+    public function changepassword()
+    {
+
+        $data = [];
+
+        $data['heading'] = 'Change Password';
+        $data['breadcrumb'] = ['Change Password', 'List'];
+        return view('auth.authenticate.changepassword', compact('data'));
+    }
+
+
+    public function save_changepassword(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user_id=Auth::user()->id;
+        $store_data=array(
+            'password'  =>  Hash::make($request->password),
+        );
+        $store=User::where('id', $user_id)->update($store_data);
+        return redirect()->back()->with('success', 'Password changed successfully');
+
+    }
+
+    public function forgotpassword(Request $request){
+        $email = $request->email;
+
+        $usercheck = User::where('email', $email)->first();
+
+        if(empty($usercheck)){
+            echo 0;
+        }else{
+
+            $new_password = Str::random(6);
+
+            $mailsend = \Mail::send('emails.forgotpassword', ['new_password' => $new_password], function($message) use($email){
+                $message->to($email);
+                $message->subject('Forgot Password');
+            });
+
+
+            $store_data=array(
+                'password'  =>  Hash::make($new_password),
+            );
+            $store=User::where('id', $usercheck->id)->update($store_data);
+
+            echo 1;
+
+        }
     }
 }
