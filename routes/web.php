@@ -50,6 +50,7 @@ Route::match(['GET', 'POST'], '/forget-password', [Authenticate::class, 'forget_
 
 Route::match(['GET', 'POST'], '/permission_denied', [Authenticate::class, 'permission_denied'])->name('auth.permission_denied');
 
+Route::match(['POST'], '/forgotpassword', [Authenticate::class, 'forgotpassword'])->name('auth.forgotpassword');
 
 // end Route
 
@@ -62,6 +63,10 @@ Route::match(['GET', 'POST'], '/daily_product_purchase_history/{id}', [CronContr
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['GET'], '/logout', [Authenticate::class, 'logout'])->name('auth.logout');
 	//Route::match(['GET'], '/setting', [UserController::class, 'setting'])->name('auth.setting');
+	Route::match(['GET'], '/changepassword', [Authenticate::class, 'changepassword'])->name('auth.changepassword');
+    Route::match(['POST'], '/save_changepassword', [Authenticate::class, 'save_changepassword'])->name('auth.save_changepassword');
+
+
 
 	Route::match(['GET'], '/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

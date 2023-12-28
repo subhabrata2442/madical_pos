@@ -34,7 +34,7 @@
               <input type="checkbox" id="keep-me-logged" name="remember_me" value="1">
               <label for="keep-me-logged">keep me logged</label>
             </li> --}}
-            {{-- <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li> --}}
+            <li><a href="javascript:;" class="forget-pass" data-bs-toggle="modal" data-bs-target="#exampleModal">forget password</a></li>
           </div>
         </div>
         <div class="log-reg-btn-wrap d-flex justify-content-center">
@@ -55,23 +55,23 @@
         <h5 class="modal-title" id="exampleModalLabel">Forget Password</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <form action="" method="get">
-          <div class="form-group">
-            <input type="password" class="form-control" id="" placeholder="New Password" name="">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="" placeholder="Confirm Password" name="">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      <form action="{{ route('auth.forgotpassword') }}" method="POST" class="needs-validation" novalidate id="forgotpasswordForm">
+            @csrf
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="email" class="form-control" id="" placeholder="Enter Email" name="email" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="resetBtn">Submit</button>
+            </div>
+      </form>
     </div>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
 
 <script>
     $(document).on('click', '.pass_eye', function(){
@@ -83,6 +83,70 @@
         $(this).closest('.add_eye').find(".fa-eye").removeClass("fa-eye").addClass("fa-eye-slash");
         }
     });
+
+
+    $("#forgotpasswordForm").validate({
+        rules: {},
+        messages: {},
+        errorElement: "em",
+        errorPlacement: function(error, element) {},
+        highlight: function(element, errorClass, validClass) {},
+        unhighlight: function(element, errorClass, validClass) {},
+        submitHandler: function(form) {
+            var formData = new FormData($(form)[0]);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                url: $('#forgotpasswordForm').attr('action'),
+                dataType: 'json',
+                data: formData,
+                success: function(data) {
+
+                    if(data==0){
+                        Swal.fire({
+                            title: 'User not found!',
+                            icon: 'error',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            allowOutsideClick: false
+                        });
+                    }else if(data==2){
+                        Swal.fire({
+                            title: 'Something went wrong!',
+                            icon: 'error',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            allowOutsideClick: false
+                        });
+                    }else if(data==1){
+                        Swal.fire({
+                            title: 'Password reset successfully please check your email',
+                            icon: 'success',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            allowOutsideClick: false
+                        });
+                    }
+
+                },
+                beforeSend: function() {
+                    $('#resetBtn').html('Please Wait...');
+                    $('#resetBtn').attr('disabled','disabled');
+                },
+                complete: function() {
+
+                    $('#resetBtn').html('Submit');
+                    $("#resetBtn").prop("disabled", false);
+
+
+                }
+            });
+        }
+    });
+
+
 </script>
 
 @endsection
