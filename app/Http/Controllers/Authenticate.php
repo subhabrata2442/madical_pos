@@ -264,17 +264,15 @@ class Authenticate extends Controller
                 $message->to($email);
                 $message->subject('Forgot Password');
             });
-            if($mailsend){
 
-                $store_data=array(
-                    'password'  =>  Hash::make($new_password),
-                );
-                $store=User::where('id', $usercheck->id)->update($store_data);
 
-                echo 1;
-            }else{
-                echo 2;
-            }
+            $store_data=array(
+                'password'  =>  Hash::make($new_password),
+            );
+            $store=User::where('id', $usercheck->id)->update($store_data);
+
+            echo 1;
+
         }
     }
 }
