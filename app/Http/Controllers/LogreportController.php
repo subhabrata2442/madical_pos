@@ -11,7 +11,7 @@ class LogreportController extends Controller
 {
     public function view(){
 
-        $logreport = Logreport::paginate(30);
+        $logreport = Logreport::orderBy('id', 'DESC')->paginate(30);
 
         $data = [];
 		// $data['zero_stock'] = $zero_stock;
