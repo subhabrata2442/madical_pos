@@ -2978,3 +2978,19 @@ a.downloadBtn {
 /* .data-sales-ftr {
     padding-bottom: 1rem;
 } */
+.table-with-accrodian .table tbody .accordion-button{
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    padding: 0;
+}
+.table-with-accrodian .details-box{
+    padding: 0;
+}
+.table-with-accrodian .table tbody .accordion-button::after{
+    margin: 0 auto;
+}
+.details-box .table thead th,
+.details-box .table tbody td{
+    padding: 0.5rem;
+}

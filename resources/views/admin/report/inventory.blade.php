@@ -163,10 +163,11 @@
   <div class="col-12">
     <div class="card">
       <x-alert />
-      <div class="table-responsive custom-table">
+      <div class="table-responsive custom-table accordion table-with-accrodian" id="stockInventory">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
             {{-- <th scope="col">Store</th> --}}
+            <th scope="col">#</th>
             <th scope="col">Barcode</th>
             <th scope="col">Brand</th>
             <th scope="col">Dosage Form</th>
@@ -180,7 +181,7 @@
           </thead>
           <tbody>
 
-          @forelse ($data['products'] as $Stock_product)
+          @forelse ($data['products'] as $key=>$Stock_product)
           @php
           $product_mrp=isset($Stock_product->stockProduct->product_mrp)?number_format($Stock_product->stockProduct->product_mrp,2):'-';
           $c_qty=isset($Stock_product->stockProduct->c_qty)?$Stock_product->stockProduct->c_qty:'-';
@@ -188,6 +189,10 @@
           @endphp
           <tr>
             {{-- <td>{{@$Stock_product->user->name}}</td> --}}
+            <td style="width: 60px">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{$key}}" aria-expanded="true" aria-controls="collapseOne{{$key}}">
+                </button>
+            </td>
             <td>{{@$Stock_product->product_barcode}}</td>
             <td>{{@$Stock_product->product->brand}}</td>
             <td>{{@$Stock_product->product->dosage_name}}</td>
@@ -198,6 +203,26 @@
             <td>{{@$Stock_product->product->product_mrp}}</td>
             <td>{{@$Stock_product->product->product_mrp}}</td>
             <td>{{@$Stock_product->product->selling_price}}</td> --}}
+          </tr>
+          <tr>
+            <td colspan="6" class="details-box">
+                <div id="collapseOne{{$key}}" class="accordion-collapse collapse" aria-labelledby="headingOne{{$key}}" data-bs-parent="#stockInventory">
+                    <div class="accordion-body">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
           </tr>
           @empty
           <tr >
