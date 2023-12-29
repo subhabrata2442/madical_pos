@@ -46,6 +46,11 @@
       <div class="col-auto">
         <h4>Stock Inventory</h4>
       </div>
+      <div class="col d-flex invoiceAmout justify-content-center">
+        <ul class="d-flex">
+            <li>Search By: {{$data['store_name']}}</span></li>
+        </ul>
+    </div>
       <div class="col-auto"> <a href="javascript:;" class="searchDropBtn">Advance Search <i class="fas fa-chevron-circle-down"></i></a> </div>
     </div>
   </div>
@@ -132,6 +137,7 @@
                 $brand = '';
                 $product_barcode = '';
                 $store_id = '';
+                $order_by = '';
 
                 if (isset($_GET['brand'])) {
                     $brand = $_GET['brand'];
@@ -142,8 +148,11 @@
                 if (isset($_GET['store_id'])) {
                     $store_id = $_GET['store_id'];
                 }
+                if (isset($_GET['order_by'])) {
+                    $order_by = $_GET['order_by'];
+                }
             @endphp
-            <a href="{{ url('admin/report/inventory_download?brand='.$brand.'&product_barcode='.$product_barcode.'&store_id='.$store_id) }}" class="btn btn-primary">Download Excel</a>
+            <a href="{{ url('admin/report/inventory_download?brand='.$brand.'&product_barcode='.$product_barcode.'&store_id='.$store_id.'&order_by='.$order_by) }}" class="btn btn-primary">Download Excel</a>
         </li>
         </ul>
       </div>
@@ -157,7 +166,7 @@
       <div class="table-responsive custom-table">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
-            <th scope="col">Store</th>
+            {{-- <th scope="col">Store</th> --}}
             <th scope="col">Barcode</th>
             <th scope="col">Brand</th>
             <th scope="col">Dosage Form</th>
@@ -178,7 +187,7 @@
           $w_qty=isset($Stock_product->stockProduct->w_qty)?$Stock_product->stockProduct->w_qty:'-';
           @endphp
           <tr>
-            <td>{{@$Stock_product->user->name}}</td>
+            {{-- <td>{{@$Stock_product->user->name}}</td> --}}
             <td>{{@$Stock_product->product_barcode}}</td>
             <td>{{@$Stock_product->product->brand}}</td>
             <td>{{@$Stock_product->product->dosage_name}}</td>

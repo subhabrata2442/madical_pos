@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use DB;
 
 use App\Models\BranchStockProducts;
 
@@ -15,12 +16,14 @@ class InventoryDownload implements FromView
     protected $brand;
     protected $product_barcode;
     protected $store_id;
+    protected $order_by;
 
-    public function __construct($brand, $product_barcode, $store_id)
+    public function __construct($brand, $product_barcode, $store_id, $order_by)
     {
         $this->brand = $brand;
         $this->product_barcode = $product_barcode;
         $this->store_id = $store_id;
+        $this->order_by = $order_by;
     }
 
     public function view(): View
@@ -29,9 +32,9 @@ class InventoryDownload implements FromView
         $branch_id=Auth::user()->id;
             $user_role=Auth::user()->role;
             if($user_role==1){
-			    $queryStockProduct = BranchStockProducts::query();
+			    $queryStockProduct = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id');
             }else{
-                $queryStockProduct = BranchStockProducts::where('branch_id',$branch_id);
+                $queryStockProduct = BranchStockProducts::select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id')->where('branch_id', $branch_id);
             }
 
 
@@ -45,6 +48,15 @@ class InventoryDownload implements FromView
 			}
             if($this->store_id!='') {
 				$queryStockProduct->where('branch_id',$this->store_id);
+			}
+
+            if($this->order_by!='') {
+                if ($this->order_by=='htw') {
+                    $queryStockProduct->orderBy('t_qty', 'DESC');
+                }else{
+                    $queryStockProduct->orderBy('t_qty', 'ASC');
+                }
+
 			}
 
 

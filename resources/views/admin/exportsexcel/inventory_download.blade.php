@@ -1,7 +1,7 @@
 <table id="" class="table table-bordered text-nowrap">
     <thead>
       <tr>
-        <th scope="col">Store</th>
+        {{-- <th scope="col">Store</th> --}}
         <th scope="col">Barcode</th>
         <th scope="col">Brand</th>
         <th scope="col">Dosage Form</th>
@@ -23,7 +23,7 @@
     $w_qty=isset($Stock_product->stockProduct->w_qty)?$Stock_product->stockProduct->w_qty:'-';
     @endphp
     <tr>
-      <td>{{@$Stock_product->user->name}}</td>
+      {{-- <td>{{@$Stock_product->user->name}}</td> --}}
       <td>{{@$Stock_product->product_barcode}}</td>
       <td>{{@$Stock_product->product->brand}}</td>
       <td>{{@$Stock_product->product->dosage_name}}</td>
