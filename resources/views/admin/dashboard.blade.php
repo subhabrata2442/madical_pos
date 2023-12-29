@@ -202,7 +202,7 @@
                             <table class="table table-valign-middle">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Product Name</th>
+                                        {{-- <th scope="col">Product Name</th> --}}
                                         <th scope="col">Brand</th>
                                         <th scope="col">Barcode</th>
                                         <th scope="col">In Stock</th>
@@ -211,7 +211,7 @@
                                 <tbody>
                                     @foreach ($data['low_stock'] as $low_stockitem)
                                         <tr>
-                                            <td>{{$low_stockitem->product->product_name}}</td>
+                                            {{-- <td>{{$low_stockitem->product->product_name}}</td> --}}
                                             <td>{{$low_stockitem->product->brand}}</td>
                                             <td>{{$low_stockitem->product->product_barcode}}</td>
                                             <td>{{$low_stockitem->t_qty}}</td>
@@ -287,7 +287,7 @@
                             <table class="table table-valign-middle">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Product</th>
+                                        {{-- <th scope="col">Product</th> --}}
                                         <th scope="col">Brand</th>
                                         <th scope="col">Barcode</th>
                                         <th scope="col">In Stock</th>
@@ -296,7 +296,7 @@
                                 <tbody>
                                     @foreach ($data['top_products'] as $top_productsitem)
                                         <tr>
-                                            <td>{{$top_productsitem['product_name']}}</td>
+                                            {{-- <td>{{$top_productsitem['product_name']}}</td> --}}
                                             <td>{{$top_productsitem['brand']}}</td>
                                             <td>{{$top_productsitem['product_barcode']}}</td>
                                             <td>{{$top_productsitem['t_qty']}}</td>
@@ -321,7 +321,7 @@
                             <table class="table table-valign-middle">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Product</th>
+                                        {{-- <th scope="col">Product</th> --}}
                                         <th scope="col">Brand</th>
                                         <th scope="col">Barcode</th>
                                         <th scope="col">In Stock</th>
@@ -330,7 +330,7 @@
                                 <tbody>
                                     @foreach ($data['low_products'] as $low_productsitem)
                                         <tr>
-                                            <td>{{$low_productsitem['product_name']}}</td>
+                                            {{-- <td>{{$low_productsitem['product_name']}}</td> --}}
                                             <td>{{$low_productsitem['brand']}}</td>
                                             <td>{{$low_productsitem['product_barcode']}}</td>
                                             <td>{{$low_productsitem['t_qty']}}</td>
