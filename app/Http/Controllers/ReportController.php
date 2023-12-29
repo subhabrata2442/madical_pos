@@ -3845,6 +3845,36 @@ class ReportController extends Controller
 
     }
 
+    public function get_productexperylist(Request $request){
+        $store_id = $request->store_id;
+        $product_id = $request->product_id;
+
+        if($store_id=='0'){
+            // echo "asd 0";
+            $queryStockProduct = BranchStockProducts::select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode', 'product_expiry_date')->where('product_id', $product_id)->groupBy('product_expiry_date')->get();
+        }else{
+            // echo "asd 1";
+            $queryStockProduct = BranchStockProducts::select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode', 'product_expiry_date')->where('product_id', $product_id)->where('branch_id', $store_id)->groupBy('product_expiry_date')->get();
+        }
+
+        // dd($queryStockProduct);
+
+        $html = '';
+        foreach ($queryStockProduct as $key => $item) {
+            $html .= '<tr>
+                        <td>'.($key+1).'</td>
+                        <td>'.date('m-Y', strtotime(str_replace('.', '/', $item->product_expiry_date))).'</td>
+                        <td>'.$item->t_qty.'</td>
+                    </tr>';
+        }
+
+        return response()->json([
+            'status' => 1,
+            'html'=>$html,
+        ]);
+
+    }
+
 
 
 
