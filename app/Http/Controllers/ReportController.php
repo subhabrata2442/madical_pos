@@ -327,19 +327,27 @@ class ReportController extends Controller
 	}
 	public function inventory(Request $request){
 
-		// $queryStockProduct = BranchStockProducts::query();
-		// $allStockProduct = $queryStockProduct->where('branch_id',$branch_id)->with('stockProduct')->get();
-		//echo '<pre>';print_r($allStockProduct);exit;
+		// $queryStockProduct = BranchStockProducts::select('product_id', DB::raw('SUM(t_qty) as total_quantity'))->groupBy('product_id');
+
+        // $results = $queryStockProduct->paginate(10);
+
+        // dd($results);
 
 		try{
 			$data = [];
 
             $branch_id=Auth::user()->id;
             $user_role=Auth::user()->role;
+
+            $data['store_name'] = 'All Store';
+
             if($user_role==1){
-			    $queryStockProduct = BranchStockProducts::query();
+			    $queryStockProduct = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id');
             }else{
-                $queryStockProduct = BranchStockProducts::where('branch_id',$branch_id);
+                $queryStockProduct = BranchStockProducts::select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id')->where('branch_id', $branch_id);
+
+                $store_details = User::where('id', $branch_id)->first();
+                $data['store_name'] = $store_details->name;
             }
 
 			// $allStockProduct = $queryStockProduct->where('branch_id',$branch_id);
@@ -363,6 +371,9 @@ class ReportController extends Controller
 
             if(!is_null($request['store_id'])) {
 				$queryStockProduct->where('branch_id',$request['store_id']);
+
+                $store_details = User::where('id', $request['store_id'])->first();
+                $data['store_name'] = $store_details->name;
 			}
 
             if(!is_null($request['order_by'])) {
@@ -383,7 +394,7 @@ class ReportController extends Controller
 
 			//echo '<pre>';print_r($allStockProduct);exit;
 
-
+            // dd($queryStockProduct->paginate(10));
 
 			$stockProducts 		= $queryStockProduct->paginate(10);
 			$data['heading']    = 'Sales List';
@@ -3828,8 +3839,9 @@ class ReportController extends Controller
         $brand = $request->brand;
         $product_barcode = $request->product_barcode;
         $store_id = $request->store_id;
+        $order_by = $request->order_by;
 
-        return Excel::download(new InventoryDownload($brand, $product_barcode, $store_id), 'inventory-report.xlsx');
+        return Excel::download(new InventoryDownload($brand, $product_barcode, $store_id, $order_by), 'inventory-report.xlsx');
 
     }
 
