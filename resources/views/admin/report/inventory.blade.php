@@ -163,10 +163,11 @@
   <div class="col-12">
     <div class="card">
       <x-alert />
-      <div class="table-responsive custom-table">
+      <div class="table-responsive custom-table accordion table-with-accrodian" id="stockInventory">
         <table id="" class="table table-bordered text-nowrap">
           <thead>
             {{-- <th scope="col">Store</th> --}}
+            <th scope="col">#</th>
             <th scope="col">Barcode</th>
             <th scope="col">Brand</th>
             <th scope="col">Dosage Form</th>
@@ -180,14 +181,32 @@
           </thead>
           <tbody>
 
-          @forelse ($data['products'] as $Stock_product)
+          @forelse ($data['products'] as $key=>$Stock_product)
           @php
           $product_mrp=isset($Stock_product->stockProduct->product_mrp)?number_format($Stock_product->stockProduct->product_mrp,2):'-';
           $c_qty=isset($Stock_product->stockProduct->c_qty)?$Stock_product->stockProduct->c_qty:'-';
           $w_qty=isset($Stock_product->stockProduct->w_qty)?$Stock_product->stockProduct->w_qty:'-';
+
+          $admin_type = Session::get('admin_type');
+
+
+            if($admin_type==1){
+                if(request()->input('store_id')){
+                    $store_id = request()->input('store_id');
+                }else{
+                    $store_id = '0';
+                }
+            }else{
+                $store_id = Session::get('store_id');
+            }
+
           @endphp
           <tr>
             {{-- <td>{{@$Stock_product->user->name}}</td> --}}
+            <td style="width: 60px">
+                <button class="accordion-button collapsed" onclick="get_productexperylist('{{$key}}', '{{$store_id}}', '{{@$Stock_product->product->id}}')" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{$key}}" aria-expanded="true" aria-controls="collapseOne{{$key}}">
+                </button>
+            </td>
             <td>{{@$Stock_product->product_barcode}}</td>
             <td>{{@$Stock_product->product->brand}}</td>
             <td>{{@$Stock_product->product->dosage_name}}</td>
@@ -198,6 +217,30 @@
             <td>{{@$Stock_product->product->product_mrp}}</td>
             <td>{{@$Stock_product->product->product_mrp}}</td>
             <td>{{@$Stock_product->product->selling_price}}</td> --}}
+          </tr>
+          <tr>
+            <td colspan="6" class="details-box">
+                <div id="collapseOne{{$key}}" class="accordion-collapse collapse" aria-labelledby="headingOne{{$key}}" data-bs-parent="#stockInventory">
+                    <div class="accordion-body">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>Expiry date</th>
+                                    <th>Total Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody class="appendexperyproduct{{$key}}">
+                                {{-- <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                </tr> --}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
           </tr>
           @empty
           <tr >
@@ -375,6 +418,27 @@ $(function() {
 		window.location = window.location.href.split("?")[0];
 	});
 });
+
+
+    function get_productexperylist(key, store_id, product_id){
+        $.ajax({
+        url: "{{url('admin/get_productexperylist')}}",
+        type: "get",
+        data: {
+            product_id: product_id,
+            store_id: store_id,
+            _token: "<?php echo csrf_token(); ?>",
+        },
+        dataType: "json",
+        success: function(response) {
+            if (response.status == 1) {
+                $(".appendexperyproduct"+key).html(response.html);
+            }else{
+
+            }
+        },
+    });
+    }
 
 </script>
 @endsection

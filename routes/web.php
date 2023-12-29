@@ -266,6 +266,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/inventory_download', [ReportController::class, 'inventory_download'])->name('inventory_download');
 	});
 
+    Route::match(['GET'], '/get_productexperylist', [ReportController::class, 'get_productexperylist'])->name('get_productexperylist');
+
 
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
