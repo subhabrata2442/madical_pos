@@ -66,8 +66,11 @@ class ProductController extends Controller
 			if (!is_null($request['product_barcode'])) {
 				$queryProduct->where('product_barcode', $request['product_barcode']);
 			}
-			if (!is_null($request['product_name'])) {
-				$queryProduct->where('brand', $request['product_name']);
+			// if (!is_null($request['product_name'])) {
+			// 	$queryProduct->where('brand', $request['product_name']);
+			// }
+            if (!is_null($request['brand_name'])) {
+				$queryProduct->where('brand', $request['brand_name']);
 			}
 			$products = $queryProduct->get();
 

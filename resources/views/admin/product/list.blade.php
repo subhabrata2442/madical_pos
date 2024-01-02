@@ -25,6 +25,15 @@ $user_role=Auth::user()->role;
 					</div>
 				</div>
 			</div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="brand_name" class="form-label">Brand Name</label>
+					<div class="position-relative">
+						<input type="text" class="form-control" id="brand_name" name="brand_name"
+							value="{{request()->input('brand_name')}}" autocomplete="off">
+					</div>
+				</div>
+			</div>
 
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<label for="" class="form-label">Search</label>
@@ -38,7 +47,7 @@ $user_role=Auth::user()->role;
 			</div>
 		</div>
 	</form>
-	
+
 </div>
 <div class="row">
 	<div class="col-12">

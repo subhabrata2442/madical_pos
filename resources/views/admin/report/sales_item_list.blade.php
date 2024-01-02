@@ -108,6 +108,20 @@
                     </div>
                 </div>
             @endif
+            <div class="col-md-3 plusBoxWrap relative">
+                <div class="form-group">
+                  <label for="brand" class="form-label">Customer</label>
+                  <select name="customer_id" id="customer_id" class="form-control form-inputtext selectTwo">
+                    <option value="">Select customer</option>
+                    @if(count($data['customer_list'])>0)
+                    @foreach($data['customer_list'] as $row)
+                    <option value="{{$row->id}}">{{$row->customer_name}}</option>
+                    @endforeach
+                    @endif
+                  </select>
+                  @error('brand')
+                  @enderror </div>
+            </div>
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -202,6 +216,11 @@
 @endsection
 
 @section('scripts')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -385,6 +404,12 @@ $(function() {
 		$('#filter').trigger("reset");
 		window.location = window.location.href.split("?")[0];
 	});
+});
+
+$(document).ready(function(){
+    $('.selectTwo').select2( {
+        theme: 'bootstrap-5'
+    });
 });
 
 </script>

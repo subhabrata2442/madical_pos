@@ -2835,6 +2835,12 @@ class ReportController extends Controller
 
                 }
 
+                if(!empty($request->get('customer_id'))){
+
+                    $sales->where('customer_id', $request->get('customer_id'));
+
+                }
+
             $sales->orderBy('id', 'desc')->get();
 
                 $profitpersent = 0;
@@ -2853,6 +2859,8 @@ class ReportController extends Controller
             $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
             $data['heading'] = 'Invoice Wise Sales List';
             $data['breadcrumb'] = ['Invoice Wise Sales', '', 'List'];
+
+            $data['customer_list'] = Customer::orderBy('id', 'desc')->get();
 
             return view('admin.report.sales_item_list', compact('data'));
         } catch (\Exception $e) {
@@ -3675,6 +3683,9 @@ class ReportController extends Controller
             }else{
                 $store_id	= Session::get('store_id');
                 $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
+                if(!empty($request->get('product_name'))){
+                    $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->where('product_id', $request->get('product_name'))->get();
+                }
             }
         }
 		// dd($low_stock);
@@ -3682,6 +3693,7 @@ class ReportController extends Controller
 		$data['low_stock'] = $low_stock;
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
+        $data['product_list']  = Product::orderBy('id', 'desc')->get();
         $data['storelist']  = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 
 		return view('admin.report.low_stock_product', compact('data'));

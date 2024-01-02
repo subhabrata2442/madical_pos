@@ -76,6 +76,23 @@
 			</div>
 			@endif
 
+            @if (Auth::user()->role != 1)
+            <div class="col-md-6 plusBoxWrap relative">
+                <div class="form-group">
+                  <label for="brand" class="form-label">Brand Name</label>
+                  <select name="product_name" id="product_name" class="form-control form-inputtext selectTwo">
+                    <option value="">Select Brand</option>
+                    @if(count($data['product_list'])>0)
+                    @foreach($data['product_list'] as $row)
+                    <option value="{{$row->id}}">{{$row->brand}}</option>
+                    @endforeach
+                    @endif
+                  </select>
+                  @error('brand')
+                  @enderror </div>
+                </div>
+            @endif
+
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
 					<li>
@@ -144,6 +161,10 @@
 @endsection
 
 @section('scripts')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -157,6 +178,11 @@
             $(".toggleCard").slideToggle();
         })
     });
+$(document).ready(function(){
+    $('.selectTwo').select2( {
+        theme: 'bootstrap-5'
+    });
+});
 </script>
 
 @endsection
