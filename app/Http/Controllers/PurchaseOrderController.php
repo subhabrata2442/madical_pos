@@ -3079,25 +3079,45 @@ class PurchaseOrderController extends Controller
                 if($admin_type==1){
 				    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
 
-                    if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
-                        if($request->get('start_date') == $request->get('end_date')){
+                    // if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                    //     if($request->get('start_date') == $request->get('end_date')){
 
-                            $purchase 	= PurchaseInwardStock::with('user')->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                        }else{
+                    //         $purchase 	= PurchaseInwardStock::with('user')->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    //     }else{
 
-                            $purchase 	= PurchaseInwardStock::with('user')->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    //         $purchase 	= PurchaseInwardStock::with('user')->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    //     }
+                    // }
+
+                    if(!empty($request->get('dateshort'))){
+                        if($request->get('dateshort')=='newtoold'){
+                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('purchase_date', 'desc')->get();
+                        }else if($request->get('dateshort')=='oldtonew'){
+                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('purchase_date', 'asc')->get();
                         }
+
                     }
 
                 }else{
                     $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('id', 'desc')->paginate(20);
-                    if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
-                        if($request->get('start_date') == $request->get('end_date')){
-                            $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                        }else{
-                            $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    // if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                    //     if($request->get('start_date') == $request->get('end_date')){
+                    //         $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    //     }else{
+                    //         $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                    //     }
+                    // }
+
+
+                    if(!empty($request->get('dateshort'))){
+                        if($request->get('dateshort')=='newtoold'){
+                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('purchase_date', 'desc')->get();
+                        }else if($request->get('dateshort')=='oldtonew'){
+                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('purchase_date', 'asc')->get();
                         }
+
                     }
+
                 }
 
 
@@ -3265,7 +3285,14 @@ class PurchaseOrderController extends Controller
                 foreach($branch_stock_product_result as $key=>$row){
                     $html .= '<tr>';
                     $html .= '<td>'.($key+1).'</td>';
-                    $html .= '<td>'.$row->net_price.'</td>';
+                    // if($row->is_chronic=='Yes'){
+                    //     $html .= '<td>'.$row->chronic_amount.'</td>';
+                    // }else{
+                    //     $html .= '<td>'.$row->selling_price.'</td>';
+                    // }
+
+                    $html .= '<td>'.$row->selling_price.'</td>';
+
                     $html .= '<td>'.date('d-m-Y', strtotime(str_replace('.', '/', $row->created_at))).'</td>';
                     $html .= '</tr>';
                 }

@@ -1055,7 +1055,7 @@ class AjaxController extends Controller {
 
 							$product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
 
-							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',$product_expiry_date)->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+							$branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',date("Y-d-m", strtotime('01/'.$product_expiry_date)))->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
 							if(count($branchProductStockResult)>0){
 								$sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
 

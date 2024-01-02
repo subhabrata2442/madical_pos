@@ -6,11 +6,20 @@
                 <x-alert />
                 <form action="" method="get" id="filter">
                     <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                        {{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="datefilter" id="reportrange" placeholder="Purhase date " autocomplete="off" value="{{request()->input('datefilter')}}">
                                 <input type="hidden" name="start_date" id="start_date" value="{{request()->input('start_date')}}">
                                 <input type="hidden" name="end_date" id="end_date" value="{{request()->input('end_date')}}">
+                            </div>
+                        </div> --}}
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                            <div class="form-group">
+                                <select name="dateshort" id="dateshort" class="form-control">
+                                    <option value="">Purchase date</option>
+                                    <option value="newtoold">New to old</option>
+                                    <option value="oldtonew">Old to new</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12">

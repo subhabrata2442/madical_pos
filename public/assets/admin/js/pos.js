@@ -207,6 +207,8 @@ $(document).ready(function() {
         var total_quantity = $('#total_quantity-input').val();
         var total_payble_amount = $('#total_payble_amount-input').val();
         $('#due_amount_tendering').val(total_payble_amount);
+        $('#due_amount_tendering_view').val(formatNumber(0 + parseFloat(total_payble_amount)));
+        // console.log(formatNumber(0 + parseFloat(total_payble_amount)));
         $('#tendered_amount').val('');
         $('#tendered_change_amount').val('');
 
@@ -219,6 +221,7 @@ $(document).ready(function() {
 
             var due_amount_tendering = parseFloat($("#due_amount_tendering").val());
             $("#tendered_amount").val(due_amount_tendering);
+            $("#tendered_amount_view").val(formatNumber(due_amount_tendering));
             $('#card_payble_amount').val(due_amount_tendering);
             $('#upi_payble_amount').val(due_amount_tendering);
             $("#tendered_change_amount").val('0.00');
@@ -269,6 +272,8 @@ $(document).on('click', '.tendered_number_btn', function() {
     }
 
     var tendered_amount = $("#tendered_amount").val();
+    // $("#tendered_amount_view").val(formatNumber(0 + parseFloat($("#tendered_amount").val())));
+
 
     if (number == '.') {
         var tendered_amount = parseFloat($("#tendered_amount").val());
@@ -277,10 +282,12 @@ $(document).on('click', '.tendered_number_btn', function() {
             amount = tendered_amount + number;
         }
         $("#tendered_amount").val(amount).trigger("keyup");
+        $("#tendered_amount_view").val(formatNumber(0 + parseFloat($("#tendered_amount").val()))).trigger("keyup");
     } else if (number == -1) {
         if (tendered_amount.length != 1) {
             var amount = parseFloat($("#tendered_amount").val().substring(0, $("#tendered_amount").val().length - 1));
             $("#tendered_amount").val(amount).trigger("keyup");
+            $("#tendered_amount_view").val(formatNumber(0 + parseFloat($("#tendered_amount").val()))).trigger("keyup");
         } else {
             $("#tendered_amount").val(0).trigger("keyup");
         }
@@ -290,6 +297,7 @@ $(document).on('click', '.tendered_number_btn', function() {
             amount = tendered_amount + number;
         }
         $("#tendered_amount").val(amount).trigger("keyup");
+        $("#tendered_amount_view").val(formatNumber(0 + parseFloat($("#tendered_amount").val()))).trigger("keyup");
     }
 
     $('#tendered_amount').focus();
@@ -309,10 +317,12 @@ $(document).on('click', '.tendered_plus_number_btn', function() {
             amount = tendered_amount + number;
         }
         $("#tendered_amount").val(amount).trigger("keyup");
+        $("#tendered_amount_view").val(formatNumber(amount)).trigger("keyup");
     } else if (number == -1) {
         if (tendered_amount.length != 1) {
             var amount = parseFloat($("#tendered_amount").val().substring(0, $("#tendered_amount").val().length - 1));
             $("#tendered_amount").val(amount).trigger("keyup");
+            $("#tendered_amount_view").val(formatNumber(amount)).trigger("keyup");
         } else {
             $("#tendered_amount").val(0).trigger("keyup");
         }
@@ -322,23 +332,30 @@ $(document).on('click', '.tendered_plus_number_btn', function() {
             amount = tendered_amount + number;
         }
         $("#tendered_amount").val(amount).trigger("keyup");
+        $("#tendered_amount_view").val(formatNumber(amount)).trigger("keyup");
     }
     $('#tendered_amount').focus();
 });
 
 $(document).on('click', '.tendered_number_reset', function() {
     $("#tendered_amount").val("0").trigger("keyup");
+    $("#tendered_amount_view").val("0").trigger("keyup");
     $('#tendered_amount').focus();
 });
 
-$(document).on('keyup', '#tendered_amount', function() {
+$(document).on('keyup', '#tendered_amount_view', function() {
     var due_amount_tendering = parseFloat($("#due_amount_tendering").val());
-    var tendered_amount = parseFloat($("#tendered_amount").val());
+    var numberWithComma = $("#tendered_amount_view").val();
 
-    $("#tendered_change_amount").val((tendered_amount - due_amount_tendering).toFixed(2));
+    var tendered_amount = numberWithComma.replace(/,/g, '');
+
+    console.log(numberWithComma);
+
+    $("#tendered_change_amount").val((tendered_amount - due_amount_tendering));
+    $("#tendered_change_amount_view").val(formatNumber((tendered_amount - due_amount_tendering)));
 
 
-    console.log(tendered_amount);
+    $("#tendered_amount").val(tendered_amount);
 });
 
 $(document).ready(function() {
@@ -470,7 +487,10 @@ $(document).on('click', '#calculate_cash_payment_btn', function() {
     var due_amount_tendering = $('#due_amount_tendering').val();
     var tendered_amount = $('#tendered_amount').val();
 
-    if (due_amount_tendering > tendered_amount) {
+    console.log("tendered_amount"+tendered_amount);
+    console.log("due_amount_tendering"+due_amount_tendering);
+
+    if (parseInt(due_amount_tendering) > parseInt(tendered_amount)) {
         toastr.error("Make Full Payment");
     }else{
         Swal.fire({
