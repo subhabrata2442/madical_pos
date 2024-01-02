@@ -3065,12 +3065,22 @@ class PurchaseOrderController extends Controller
 
 	  public function list_order(Request $request){
     //    echo "cadadas";exit;
+
+        $branch_id=Auth::user()->id;
+        $user_role=Auth::user()->role;
+        $admin_type = Session::get('admin_type');
+
 		try {
 			//$users = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 			//echo '<pre>';print_r($users);exit;
 
             if ($request->ajax()) {
-				$purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+
+                if($admin_type==1){
+				    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+                }else{
+                    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('id', 'desc')->get();
+                }
 
 
                 return DataTables::of($purchase)

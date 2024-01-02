@@ -10,7 +10,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-info-g">
                 <div class="inner">
-                <h3>{{$data['totalSalesToday']}}</h3>
+                <h3>{{number_format($data['totalSalesToday'])}}</h3>
 
                 <p>Total sales</p>
                 </div>
@@ -36,7 +36,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-warning-g">
                 <div class="inner">
-                <h3>{{$data['totalProfitToday']}}</h3>
+                <h3>{{number_format($data['totalProfitToday'])}}</h3>
 
                 <p>Total Profit</p>
                 </div>
@@ -68,7 +68,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
                 <div class="small-box bg-blue-g">
                 <div class="inner">
-                    <h3>{{$data['totalSalesthismonth']}}</h3>
+                    <h3>{{number_format($data['totalSalesthismonth'])}}</h3>
                     <p>Total Sale</p>
                 </div>
                 <div class="icon">
@@ -92,7 +92,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12 col-12">
             <div class="small-box bg-syblue-g">
                 <div class="inner">
-                <h3>{{$data['totalProfitthismonth']}}</h3>
+                <h3>{{number_format($data['totalProfitthismonth'])}}</h3>
                 <p>Total Profit</p>
                 </div>
                 <div class="icon">
@@ -141,7 +141,7 @@
                                         <tr>
                                             <td>{{$itempurchase_history->purchase_date}}</td>
                                             <td>{{$itempurchase_history->invoice_no}}</td>
-                                            <td>{{$itempurchase_history->gross_amount}}</td>
+                                            <td>{{number_format($itempurchase_history->gross_amount)}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -171,7 +171,7 @@
                                     @foreach ($data['emp_query'] as $emp_queryitem)
                                         <tr>
                                             <td>{{$emp_queryitem->name}}</td>
-                                            <td>{{$emp_queryitem->SellInwardStock->sum('sub_total')}}</td>
+                                            <td>{{number_format($emp_queryitem->SellInwardStock->sum('sub_total'))}}</td>
                                         </tr>
                                     @endforeach
 
