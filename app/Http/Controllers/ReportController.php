@@ -3703,7 +3703,8 @@ class ReportController extends Controller
 		$admin_type = Session::get('admin_type');
 		if($admin_type==1){
             if(!empty($request->get('store_id'))){
-			    $zero_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->get();
+			    // $zero_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->get();
+                $zero_stock = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->groupBy('product_id')->get();
             }else{
                 $zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
             }

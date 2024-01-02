@@ -3074,58 +3074,89 @@ class PurchaseOrderController extends Controller
 			//$users = User::with('get_role')->where('role',2)->where('parent_id',0)->orderBy('id', 'desc')->get();
 			//echo '<pre>';print_r($users);exit;
 
-            if ($request->ajax()) {
+            // if ($request->ajax()) {
 
                 if($admin_type==1){
 				    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
+
+                    if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                        if($request->get('start_date') == $request->get('end_date')){
+
+                            $purchase 	= PurchaseInwardStock::with('user')->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                        }else{
+
+                            $purchase 	= PurchaseInwardStock::with('user')->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                        }
+                    }
+
                 }else{
-                    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('id', 'desc')->get();
+                    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('id', 'desc')->paginate(20);
+                    if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                        if($request->get('start_date') == $request->get('end_date')){
+                            $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                        }else{
+                            $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
+                        }
+                    }
                 }
 
 
-                return DataTables::of($purchase)
-                    ->addColumn('store_name', function ($row) {
-                        if(!empty($row->user->name)){
-                            return $row->user->name;
-                        }else{
-                            return '';
-                        }
+                // dd($purchase);
 
-                    })
-                    ->addColumn('invoice_no', function ($row) {
-                        return $row->invoice_no;
-                    })
-                    ->addColumn('purchase_date', function ($row) {
-						return date('d-m-Y', strtotime($row->purchase_date));
-                    })
-                    ->addColumn('total_qty', function ($row) {
-                        return $row->total_qty;
-                    })
-                    ->addColumn('sub_total', function ($row) {
-						return number_format($row->sub_total,2);
-                    })
-                    ->addColumn('action', function ($row) {
-						// <a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.store.delete', [base64_encode($row->id)]) . '">Delete</a>
-                        $dropdown = '<a class="dropdown-item" href="' . route('admin.purchase.inward_edit', [base64_encode($row->id)]) . '">Edit</a>
-                        ';
-                        $btn = '<div class="dropdown">
-                                    <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
 
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        ' . $dropdown . '
-                                    </div>
-                                </div>
-                                ';
+                // return DataTables::of($purchase)
+                //     ->addColumn('store_name', function ($row) {
+                //         if(!empty($row->user->name)){
+                //             return $row->user->name;
+                //         }else{
+                //             return '';
+                //         }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
-            }
+                //     })
+                //     ->addColumn('invoice_no', function ($row) {
+                //         return $row->invoice_no;
+                //     })
+                //     ->addColumn('company_name', function ($row) {
+                //         if($row->supplier_id!=Null){
+                //             return $row->supplier->company_name;
+                //         }else{
+                //             return '';
+                //         }
+
+                //     })
+                //     ->addColumn('purchase_date', function ($row) {
+				// 		return date('d-m-Y', strtotime($row->purchase_date));
+                //     })
+                //     ->addColumn('total_qty', function ($row) {
+                //         return $row->total_qty;
+                //     })
+                //     ->addColumn('sub_total', function ($row) {
+				// 		return number_format($row->sub_total,2);
+                //     })
+                //     ->addColumn('action', function ($row) {
+				// 		// <a class="dropdown-item" href="#" id="delete_user" data-url="' . route('admin.store.delete', [base64_encode($row->id)]) . '">Delete</a>
+                //         $dropdown = '<a class="dropdown-item" href="' . route('admin.purchase.inward_edit', [base64_encode($row->id)]) . '">Edit</a>
+                //         ';
+                //         $btn = '<div class="dropdown">
+                //                     <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                //                         <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+
+                //                     </div>
+                //                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                //                         ' . $dropdown . '
+                //                     </div>
+                //                 </div>
+                //                 ';
+
+                //         return $btn;
+                //     })
+                //     ->rawColumns(['action'])
+                //     ->make(true);
+            // }
 
             $data = [];
+
+            $data['purchase_list'] = $purchase;
             $data['heading'] = 'Purchase List';
             $data['breadcrumb'] = ['Purchase', 'List'];
             return view('admin.purchase_order.listing', compact('data'));
