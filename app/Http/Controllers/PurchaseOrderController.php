@@ -3244,14 +3244,23 @@ class PurchaseOrderController extends Controller
     public function pricehistory_product($product_id){
 
         $product_details =Product::where('id', $product_id)->first();
+        $branch_id=Auth::user()->id;
 
-        $branch_stock_product_result = BranchStockProducts::where('product_id',$product_id)->get();
+        // echo $product_id;exit;
+
+        $admin_type		= Session::get('admin_type');
+        if($admin_type==1){
+            $branch_stock_product_result = BranchStockProducts::where('product_id',$product_id)->get();
+        }else{
+            $branch_stock_product_result = BranchStockProducts::where('product_id',$product_id)->where('branch_id', $branch_id)->get();
+        }
+
         //dd($branch_stock_product_result);
-        $branch_stock_product_id	= isset($branch_stock_product_result[0]->id)?$branch_stock_product_result[0]->id:'';
+        // $branch_stock_product_id	= isset($branch_stock_product_result[0]->id)?$branch_stock_product_result[0]->id:'';
 
         $html = '';
 
-        if($branch_stock_product_id!=''){
+        // if($branch_stock_product_id!=''){
             if(count($branch_stock_product_result)>0){
                 foreach($branch_stock_product_result as $key=>$row){
                     $html .= '<tr>';
@@ -3263,9 +3272,9 @@ class PurchaseOrderController extends Controller
             }else{
                 $html .= '<tr><td>No record found!</td></tr>';
             }
-        }else{
-            $html .= '<tr><td>No record found!</td></tr>';
-        }
+        // }else{
+        //     $html .= '<tr><td>No record found!</td></tr>';
+        // }
 
 
         return response()->json([

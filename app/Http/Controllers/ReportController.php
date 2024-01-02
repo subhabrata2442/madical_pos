@@ -3711,13 +3711,32 @@ class ReportController extends Controller
 		if($admin_type==1){
             if(!empty($request->get('store_id'))){
 			    // $zero_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->get();
-                $zero_stock = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->where('branch_id', $request->get('store_id'))->where('t_qty', '0')->groupBy('product_id')->get();
+                // $zero_stock = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')->where('branch_id', $request->get('store_id'))->where('total_qty', '0')->groupBy('product_id')->get();
+
+                $zero_stock = BranchStockProducts::with(['user', 'product'])
+                            ->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')
+                            ->where('branch_id', $request->get('store_id'))
+                            ->groupBy('product_id')
+                            ->havingRaw('SUM(t_qty) = 0')
+                            ->get();
+
             }else{
-                $zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
+                // $zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->get();
+                $zero_stock = BranchStockProducts::with(['user', 'product'])
+                            ->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')
+                            ->groupBy('product_id')
+                            ->havingRaw('SUM(t_qty) = 0')
+                            ->get();
             }
 		}else{
 			$store_id	= Session::get('store_id');
-			$zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->where('branch_id', $store_id)->get();
+			// $zero_stock = BranchStockProducts::with('product')->where('t_qty', '0')->where('branch_id', $store_id)->get();
+            $zero_stock = BranchStockProducts::with(['user', 'product'])
+                            ->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')
+                            ->where('branch_id', $store_id)
+                            ->groupBy('product_id')
+                            ->havingRaw('SUM(t_qty) = 0')
+                            ->get();
 		}
 
 		$data = [];

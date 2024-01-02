@@ -128,7 +128,7 @@
 				@forelse ($data['zero_stock'] as $key=>$purchase)
                     <tr>
                         <td>{{($key+1)}}</td>
-                        <td>{{$purchase->t_qty}}</td>
+                        <td>{{$purchase->total_qty}}</td>
 						<td>{{$purchase->product->brand}}</td>
 						<td>{{$purchase->product->product_barcode}}</td>
 						{{-- <td>{{$purchase->product->dosage_name}}</td>
