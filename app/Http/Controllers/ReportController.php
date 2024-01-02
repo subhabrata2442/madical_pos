@@ -2844,11 +2844,18 @@ class ReportController extends Controller
             $sales->orderBy('id', 'desc')->get();
 
                 $profitpersent = 0;
-                if($sales->sum('pay_amount')!=''){
-                    $totalsell = $sales->sum('pay_amount');
-                    $totalnet_price = $sales->sum('net_price');
-                    $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);
+                if($sales->count()!=0){
+                    if($sales->sum('pay_amount')!=''){
+                        $totalsell = $sales->sum('pay_amount');
+                        $totalnet_price = $sales->sum('net_price');
+                        $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);
+                    }
+                }else{
+                    $totalsell = 0;
+                    $totalnet_price = 0;
+                    $profitpersent = 0;
                 }
+
 
             $data = [];
             $data['total_ammount'] = $sales->sum('pay_amount');
