@@ -228,7 +228,7 @@
                                 </div> --}}
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="data-sales-ftr">
@@ -576,19 +576,22 @@
                 <li class="col-lg-4 col-md-4 col-sm-6 col-12">
                   <div class="mb-3 cashOptionTopBox">
                     <label for="due_amount_tendering-input" class="form-label">Due Ammout</label>
-                    <input type="text" class="form-control tendering-input" id="due_amount_tendering" value="0" readonly="readonly" disabled="disabled"/>
+                    <input type="text" class="form-control tendering-input" id="due_amount_tendering_view" value="0" readonly="readonly" disabled="disabled"/>
+                    <input type="hidden" class="form-control tendering-input" id="due_amount_tendering" value="0"/>
                   </div>
                 </li>
                 <li class="col-lg-4 col-md-4 col-sm-6 col-12">
                   <div class="mb-3 cashOptionTopBox">
                     <label for="tendered_amount" class="form-label">Tendered</label>
-                    <input type="text" class="form-control tendering-input" id="tendered_amount" value="0" onkeypress="return check_character(event);">
+                    <input type="text" class="form-control tendering-input" id="tendered_amount_view" value="0" onkeypress="return check_character(event);">
+                    <input type="hidden" class="form-control tendering-input" id="tendered_amount" value="0">
                   </div>
                 </li>
                 <li class="col-lg-4 col-md-4 col-sm-6 col-12">
                   <div class="mb-3 cashOptionTopBox">
                     <label for="tendered_change_amount-input" class="form-label">Change</label>
-                    <input type="text" class="form-control tendering-input" id="tendered_change_amount" value="0" readonly="readonly" disabled="disabled"/>
+                    <input type="text" class="form-control tendering-input" id="tendered_change_amount_view" value="0" readonly="readonly" disabled="disabled"/>
+                    <input type="hidden" class="form-control tendering-input" id="tendered_change_amount" value="0"/>
                   </div>
                 </li>
               </ul>
@@ -620,7 +623,8 @@
                   <tr>
                     <td><a href="javascript:;" class="tendered_number_reset">C</a></td>
                     <td><a href="javascript:;" class="tendered_number_btn" data-id="0">0</a></td>
-                    <td><a href="javascript:;" class="tendered_number_btn" data-id=".">.</a></td>
+                    {{-- <td><a href="javascript:;" class="tendered_number_btn" data-id=".">.</a></td> --}}
+                    <td></td>
                     <td><a href="javascript:;" class="tendered_plus_number_btn" data-id="25000">+25000</a></td>
                     <td><a href="javascript:;" class="tendered_number_btn" data-id="-1"><i class="fas fa-times-circle"></i></a></td>
                   </tr>
