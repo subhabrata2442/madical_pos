@@ -391,7 +391,7 @@ class AjaxController extends Controller {
 
 		//print_r($searchValues);exit;
 		$store_id	= Session::get('store_id');
-		$queryInwardStockProduct = InwardStockProducts::query();
+		$queryInwardStockProduct = BranchStockProducts::query();
 		$queryInwardStockProduct->where('branch_id',$store_id);
 		$queryInwardStockProduct->with('product',function($q) use ($search){
 			$q->where('product_barcode', 'like', "%{$search}%")
