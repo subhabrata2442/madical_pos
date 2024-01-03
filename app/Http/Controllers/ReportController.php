@@ -3717,7 +3717,7 @@ class ReportController extends Controller
                             ->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')
                             ->where('branch_id', $request->get('store_id'))
                             ->groupBy('product_id')
-                            // ->havingRaw('SUM(t_qty) = 0')
+                            ->havingRaw('SUM(t_qty) = 0')
                             ->where('t_qty', '0')
                             ->get();
 
@@ -3726,8 +3726,8 @@ class ReportController extends Controller
                 $zero_stock = BranchStockProducts::with(['user', 'product'])
                             ->select('product_id', DB::raw('SUM(t_qty) as total_qty'), 'branch_id', 'product_barcode')
                             ->groupBy('product_id')
-                            // ->havingRaw('SUM(t_qty) = 0')
-                            ->where('t_qty', '0')
+                            ->havingRaw('SUM(t_qty) = 0')
+                            // ->where('t_qty', '0')
                             ->get();
             }
 		}else{
