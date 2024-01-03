@@ -123,7 +123,8 @@
                 var total = (parseFloat(totalunreadnotification)+1)
                 $("#totalunreadnotification").val(total);
 
-                var urls = mainUrl+'/'+data.urls;
+                // var urls = mainUrl+'/'+data.urls;
+                var urls = '{{route('admin.allnotification')}}';
                 var htmls = '<a href="'+urls+'" class="dropdown-item"><i class="fas fa-envelope mr-2"></i>'+data.message+'</a>';
 
                 if(admin_type==1){

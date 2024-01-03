@@ -47,23 +47,29 @@ $adminRoll 		= Session::get('admin_type');
         <input type="hidden" id="totalunreadnotification" value="{{$pending_s_count}}">
         <div class="appendnotification">
             @if (count($pending_s_result)>0)
+
                 @foreach ($pending_s_result as $itempending_s_result)
                 @php
-                    $urls = '';
-                    if($itempending_s_result->type=='stock-alert'){
-                        $urls = url('/').'/admin/report/low_stock_product?id='.$itempending_s_result->branch_stock_id;
-                    }else if($itempending_s_result->type=='product-expiry'){
-                        $urls = url('/').'/admin/report/near_expiry_stock?id='.$itempending_s_result->id;
-                    }else if($itempending_s_result->type=='stock-transfer'){
-                        $urls = url('/').'/admin/purchase/stock-transfer';
-                    }
+                    $urls = route('admin.allnotification');
+                    // if($itempending_s_result->type=='stock-alert'){
+                    //     $urls = url('/').'/admin/report/low_stock_product?id='.$itempending_s_result->branch_stock_id;
+                    // }else if($itempending_s_result->type=='product-expiry'){
+                    //     $urls = url('/').'/admin/report/near_expiry_stock?id='.$itempending_s_result->id;
+                    // }else if($itempending_s_result->type=='stock-transfer'){
+                    //     $urls = url('/').'/admin/purchase/stock-transfer';
+                    // }
                 @endphp
+
+
 
                     <a href="{{$urls}}" onclick="seenNotification('{{$itempending_s_result->id}}')" class="dropdown-item">
                         <i class="fas fa-envelope mr-2"></i> {{$itempending_s_result->msg}}
                         {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
                     </a>
+
+
                 @endforeach
+
 
                 <a href="{{ route('admin.allnotification') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
             @else

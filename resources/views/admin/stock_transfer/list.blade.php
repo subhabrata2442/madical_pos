@@ -60,7 +60,7 @@ $adminRoll = Session::get('admin_type');
       <div class="col-auto">
         <h4>Stock Transfer</h4>
       </div>
-      
+
     </div>
   </div>
 </div>
@@ -68,7 +68,7 @@ $adminRoll = Session::get('admin_type');
   <form action="" method="get" id="filter">
     <div class="row">
       @if($adminRoll==1)
-      <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+      <div class="col-lg-4 col-md-4 col-sm-12 col-12">
         <div class="form-group">
           <label for="customer_last_name" class="form-label">Store</label>
           <div class="position-relative">
@@ -84,7 +84,7 @@ $adminRoll = Session::get('admin_type');
         </div>
       </div>
       @endif
-      <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+      <div class="col-lg-4 col-md-4 col-sm-12 col-12">
         <div class="form-group">
           <label for="customer_last_name" class="form-label">By Product Name</label>
           <div class="position-relative">
@@ -96,6 +96,18 @@ $adminRoll = Session::get('admin_type');
           <input type="hidden" name="product_id" id="product_id" value="{{request()->input('product_id')}}">
         </div>
       </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+            <div class="form-group">
+                <label for="" class="form-label">Total Quantity</label>
+                <select class="form-control custom-select form-control-select" id="" name="order_by">
+                    <option value="">Total Quantity</option>
+                    <option value="htw" {{request()->input('order_by') == 'htw' ? 'selected' : ''}}>High to Low</option>
+                    <option value="lth" {{request()->input('order_by') == 'lth' ? 'selected' : ''}}>Low to High</option>
+                </select>
+            </div>
+        </div>
+
       <div class="col-12">
         <ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
           <li> <a href="javascript:?" class="saveBtn-2 reset-btn" id="reset">Reset</i></a> </li>
@@ -116,7 +128,7 @@ $adminRoll = Session::get('admin_type');
           <thead>
             <th scope="col">Barcode</th>
             <th scope="col">The Brand</th>
-            <th scope="col">Product Name</th>
+            {{-- <th scope="col">Product Name</th> --}}
             <th scope="col">Dosage Form</th>
             <th scope="col">Company</th>
             {{-- <th scope="col">Drugstore name</th> --}}
@@ -135,7 +147,7 @@ $adminRoll = Session::get('admin_type');
             <tr>
               <td>{{$product_stock->product->product_barcode}}</td>
               <td>{{$product_stock->product->brand}}</td>
-              <td>{{$product_stock->product->product_name}}</td>
+              {{-- <td>{{$product_stock->product->product_name}}</td> --}}
               <td>{{$product_stock->product->dosage_name}}</td>
               <td>{{$product_stock->product->company_name}}</td>
               {{-- <td>{{$product_stock->product->drugstore_name}}</td> --}}
@@ -194,7 +206,7 @@ $adminRoll = Session::get('admin_type');
               <div class="modal-body-sub-head1">
                 <h6>Left available stock: <strong id="left_t_qty_label">0</strong></h6>
               </div>
-            
+
             </div>
 
             <div class="mb-3">
@@ -208,7 +220,7 @@ $adminRoll = Session::get('admin_type');
                 required="required">
                 <option value="">Select Store</option>
                 @foreach($data['store'] as $store)
-                
+
                 <option value="{{$store->id}}" @php if(isset($_GET['store_id'])){if($_GET['store_id']==$store->id){ echo
                   'disabled'; }} @endphp >{{$store->name}}</option>
                 @endforeach
@@ -275,7 +287,7 @@ $adminRoll = Session::get('admin_type');
     }
 });
 
-  
+
   $(document).on('click', '.view_btn', function() {
     var store_id = $(this).data('store_id');
     var stock_id = $(this).data('stock_id');
@@ -347,7 +359,7 @@ $adminRoll = Session::get('admin_type');
     var pending_r_qty = $(this).data('pending_r_qty');
     $('#prev_t_qty_label').text(t_qty);
     $('#left_t_qty_label').text(t_qty);
-    
+
     $('#pending_t_qty_label').text(pending_r_qty);
     $('#input-store_id').val(store_id);
     $('#stock_id').val(stock_id);
@@ -382,7 +394,7 @@ $adminRoll = Session::get('admin_type');
       submitHandler: function(form) {
         var t_qty = $('#t_qty-input').val();
         var o_qty = $('#original_t_qty').val();
-        
+
         var store_name = $("#req_store_id option:selected").text();
         if (t_qty != 0) {
           if (t_qty < 0) {

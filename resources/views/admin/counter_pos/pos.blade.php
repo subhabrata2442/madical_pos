@@ -40,6 +40,8 @@
     <div class="inner-body-wrap">
         <form method="post" action="{{ route('admin.pos.create') }}" id="pos_create_order-form" novalidate enctype="multipart/form-data">
         @csrf
+        <input type="hidden" class="input-2" name="sell_date" id="sell_date" value="<?php echo date('Y-m-d');?>">
+
         <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
         <input type="hidden" name="stock_type" value="s">
         <div class="w-100 inner-body-wrap-box">
@@ -171,8 +173,10 @@
                                 <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
                                 <li class="d-flex align-items-center">
                                 <p>Date:</p>
-                                <?php echo date('d-m-Y');?>
-                                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                                <?php
+                                    // echo date('d-m-Y');
+                                ?>
+                                <input type="date" class="input-2" onchange="get_sell_date(this.value)" name="sell_date_view" id="sell_date_view" value="<?php echo date('Y-m-d');?>">
                                 </li>
                             </ul>
                         </div>

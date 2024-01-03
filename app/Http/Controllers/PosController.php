@@ -494,6 +494,8 @@ class PosController extends Controller
 
 	public function create(Request $request){
 		// dd($request->all());
+        // dd($request->sell_date);
+
 		$branch_id		= Session::get('store_id');
 		//echo $branch_id;die;
 		//$supplier_id	= 0;
@@ -528,7 +530,7 @@ class PosController extends Controller
 			'customer_id' 				=> $request->customer_id,
 			'bill_no' 					=> $bill_no,
 			'invoice_no' 				=> $invoice_no,
-			'sell_date' 				=> date('Y-m-d'),
+			'sell_date' 				=> date('Y-m-d', strtotime(str_replace('.', '/', $request->sell_date))),
 			'sell_time' 				=> date('H:i'),
 			//'stock_type' 				=> $request->stock_type,
 			'total_qty' 				=> $request->total_quantity,

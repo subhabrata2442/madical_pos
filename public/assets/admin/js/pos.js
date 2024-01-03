@@ -368,6 +368,7 @@ $(document).ready(function() {
         unhighlight: function(element, errorClass, validClass) {},
         submitHandler: function(form) {
             var formData = new FormData($(form)[0]);
+            console.log(formData);
             $.ajax({
                 type: "POST",
                 cache: false,
@@ -2596,3 +2597,9 @@ $(document).ready(function() {
 $(document).on('click', '.right-hover-menu', function() {
     $(".report-wrap-rgt").toggleClass('open');
 });
+
+function get_sell_date(dates){
+    // alert(dates);
+    $("#sell_date").val(dates);
+    // console.log(dates);
+}

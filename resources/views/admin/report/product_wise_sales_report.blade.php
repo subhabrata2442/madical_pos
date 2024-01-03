@@ -156,6 +156,20 @@
                     </div>
                 </div>
             @endif
+
+            <div class="col-md-3 plusBoxWrap relative">
+                <div class="form-group">
+                    <label for="brand" class="form-label">Customer</label>
+                    <select name="customer_id" id="customer_id" class="form-control form-inputtext selectTwo">
+                        <option value="">Select customer</option>
+                        @if(count($data['customer_list'])>0)
+                            @foreach($data['customer_list'] as $row)
+                            <option value="{{$row->id}}" {{request()->input('customer_id') == $row->id ? 'selected' : ''}}>{{$row->customer_name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            </div>
 			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="" class="form-label">Select Brand</label>
@@ -296,6 +310,11 @@
 @endsection
 
 @section('scripts')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 @if( Request::has('datefilter'))
     <script>
 	$(".toggleCard").css("display", "block");
@@ -455,6 +474,12 @@ $(function() {
 		$('#filter').trigger("reset");
 		window.location = window.location.href.split("?")[0];
 	});
+});
+
+$(document).ready(function(){
+    $('.selectTwo').select2( {
+        theme: 'bootstrap-5'
+    });
 });
 
 </script>

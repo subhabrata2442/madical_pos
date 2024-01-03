@@ -56,6 +56,9 @@ use Illuminate\Support\Facades\Session;
 use Auth;
 use DB;
 
+use Pusher\Pusher;
+use App\Models\Notification;
+
 
 class AjaxController extends Controller {
 
@@ -180,6 +183,45 @@ class AjaxController extends Controller {
 
 				StockTransferHistory::where('product_mrp', $product_mrp)->where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>2]);
 
+
+                // pusher notification
+
+                $productInfo	= Product::where('id',$product_id)->first();
+                $to_store = User::where('id', $to_store_id)->first();
+
+                $message = 'Stock transfer request accepted by '.$to_store->name;
+                $urls = 'admin/purchase/stock-transfer';
+
+
+                $options = array(
+                    'cluster' => env('PUSHER_APP_CLUSTER'),
+                    'encrypted' => true
+                );
+                $pusher = new Pusher(
+                    env('PUSHER_APP_KEY'),
+                    env('PUSHER_APP_SECRET'),
+                    env('PUSHER_APP_ID'),
+                    $options
+                );
+                $data =[
+                    'message' => $message,
+                    'store_id'=>$from_store_id,
+                    'urls'=>$urls,
+                ];
+                $notify = 'stockalert-channel';
+                $pusher->trigger($notify, 'stockalert-event-send-meesages', $data);
+
+                $datainsert = [
+                    'type'=> 'stock-transfer-accept',
+                    'store_id'=>$from_store_id,
+                    'msg'=> $message,
+                    'product_id'=> $productInfo->id,
+                    'urls'=>$urls,
+                ];
+                Notification::create($datainsert);
+
+
+
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;
 
@@ -221,6 +263,44 @@ class AjaxController extends Controller {
 
 				BranchStockRequest::where('id', $stock_id)->update(['status' =>3]);
 				StockTransferHistory::where('product_mrp', $product_mrp)->where('branch_id', $from_store_id)->where('transfer_to', $to_store_id)->where('product_id', $product_id)->update(['status' =>3]);
+
+
+                // pusher notification
+
+                $productInfo	= Product::where('id',$product_id)->first();
+                $to_store = User::where('id', $to_store_id)->first();
+
+                $message = 'Stock transfer request Reject by '.$to_store->name;
+                $urls = 'admin/purchase/stock-transfer';
+
+
+                $options = array(
+                    'cluster' => env('PUSHER_APP_CLUSTER'),
+                    'encrypted' => true
+                );
+                $pusher = new Pusher(
+                    env('PUSHER_APP_KEY'),
+                    env('PUSHER_APP_SECRET'),
+                    env('PUSHER_APP_ID'),
+                    $options
+                );
+                $data =[
+                    'message' => $message,
+                    'store_id'=>$from_store_id,
+                    'urls'=>$urls,
+                ];
+                $notify = 'stockalert-channel';
+                $pusher->trigger($notify, 'stockalert-event-send-meesages', $data);
+
+                $datainsert = [
+                    'type'=> 'stock-transfer-accept',
+                    'store_id'=>$from_store_id,
+                    'msg'=> $message,
+                    'product_id'=> $productInfo->id,
+                    'urls'=>$urls,
+                ];
+                Notification::create($datainsert);
+
 
 				$return_data['status']	= 1;
 				echo json_encode($return_data);exit;

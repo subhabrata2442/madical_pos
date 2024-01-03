@@ -6,19 +6,29 @@
                 <x-alert />
                 <form action="" method="get" id="filter">
                     <div class="row">
-                        {{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="datefilter" id="reportrange" placeholder="Purhase date " autocomplete="off" value="{{request()->input('datefilter')}}">
                                 <input type="hidden" name="start_date" id="start_date" value="{{request()->input('start_date')}}">
                                 <input type="hidden" name="end_date" id="end_date" value="{{request()->input('end_date')}}">
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12">
                             <div class="form-group">
                                 <select name="dateshort" id="dateshort" class="form-control">
                                     <option value="">Purchase date</option>
-                                    <option value="newtoold">New to old</option>
-                                    <option value="oldtonew">Old to new</option>
+                                    <option value="newtoold" @if(isset($_GET['dateshort'])) @if($_GET['dateshort']=='newtoold') selected @endif @endif>New to old</option>
+                                    <option value="oldtonew" @if(isset($_GET['dateshort'])) @if($_GET['dateshort']=='oldtonew') selected @endif @endif>Old to new</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                            <div class="form-group">
+                                <select name="supplier" id="supplier" class="form-control">
+                                    <option value="">Supplier</option>
+                                    @foreach ($data['supplier'] as $itemsupplier)
+                                        <option value="{{$itemsupplier->id}}" @if(isset($_GET['supplier'])) @if($_GET['supplier']==$itemsupplier->id) selected @endif @endif>{{$itemsupplier->company_name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -66,6 +76,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $data['purchase_list']->appends($_GET)->links() }}
                 </div>
             </div>
         </div>

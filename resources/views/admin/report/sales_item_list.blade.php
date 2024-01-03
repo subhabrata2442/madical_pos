@@ -110,17 +110,16 @@
             @endif
             <div class="col-md-3 plusBoxWrap relative">
                 <div class="form-group">
-                  <label for="brand" class="form-label">Customer</label>
-                  <select name="customer_id" id="customer_id" class="form-control form-inputtext selectTwo">
-                    <option value="">Select customer</option>
-                    @if(count($data['customer_list'])>0)
-                    @foreach($data['customer_list'] as $row)
-                    <option value="{{$row->id}}">{{$row->customer_name}}</option>
-                    @endforeach
-                    @endif
-                  </select>
-                  @error('brand')
-                  @enderror </div>
+                    <label for="brand" class="form-label">Customer</label>
+                    <select name="customer_id" id="customer_id" class="form-control form-inputtext selectTwo">
+                        <option value="">Select customer</option>
+                        @if(count($data['customer_list'])>0)
+                        @foreach($data['customer_list'] as $row)
+                        <option value="{{$row->id}}" {{request()->input('customer_id') == $row->id ? 'selected' : ''}}>{{$row->customer_name}}</option>
+                        @endforeach
+                        @endif
+                    </select>
+                </div>
             </div>
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
@@ -180,6 +179,7 @@
 			<thead>
 				<th scope="col">Invoice No</th>
 				<th scope="col">Store Name</th>
+                <th scope="col">Customer</th>
 				<th scope="col">Sell Date</th>
 				<th scope="col">Total Qty</th>
 				<th scope="col">Gross Amount</th>
@@ -193,6 +193,7 @@
 				<tr>
 					<th><a class="td-anchor" href="{{route('admin.report.sales.product',['id'=>base64_encode($sale->id)])}}" target="_blank">{{$sale->invoice_no}}</a></th>
 					<th>{{@$sale->storeUser->name}}</th>
+                    <td>{{@$sale->customer->customer_name}}</td>
 					<td>{{date('d-m-Y', strtotime($sale->sell_date))}}</td>
 					<th>{{$sale->total_qty}}</th>
 					<th>{{number_format($sale->gross_amount,2)}}</th>
