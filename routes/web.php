@@ -139,6 +139,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
         // Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('asdddd');
 
+        Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+
 
 	});
 
@@ -174,7 +176,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	});
 
-	Route::prefix('supplier')->name('supplier.')->group(function () {
+	Route::prefix('supplier')->name('supplier.')->middleware('checkPermission:31')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [SupplierController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/list', [SupplierController::class, 'list'])->name('list');
 		Route::match(['GET', 'POST'], '/edit/{id}', [SupplierController::class, 'edit'])->name('edit');
@@ -268,6 +270,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::match(['GET'], '/get_productexperylist', [ReportController::class, 'get_productexperylist'])->name('get_productexperylist');
 
+    Route::prefix('history')->name('history.')->middleware('checkPermission:43')->group(function () {
+	    Route::match(['GET'], '/credit_history', [CredithistoryController::class, 'index'])->name('credit_history');
+    });
 
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
@@ -277,21 +282,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET', 'POST'], '/delete/{id}', [StoreController::class, 'delete'])->name('delete');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [StoreController::class, 'change_status'])->name('changeStatus');
 	});
-	Route::prefix('brand')->name('brand.')->group(function () {
+	Route::prefix('brand')->name('brand.')->middleware('checkPermission:33')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [BrandController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/list', [BrandController::class, 'list'])->name('list');
 		Route::match(['GET', 'POST'], '/edit/{id}', [BrandController::class, 'edit'])->name('edit');
 		Route::match(['GET', 'POST'], '/delete/{id}', [BrandController::class, 'delete'])->name('delete');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [BrandController::class, 'change_status'])->name('changeStatus');
 	});
-	Route::prefix('dosage')->name('dosage.')->group(function () {
+	Route::prefix('dosage')->name('dosage.')->middleware('checkPermission:35')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [DosageController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/list', [DosageController::class, 'list'])->name('list');
 		Route::match(['GET', 'POST'], '/edit/{id}', [DosageController::class, 'edit'])->name('edit');
 		Route::match(['GET', 'POST'], '/delete/{id}', [DosageController::class, 'delete'])->name('delete');
 		Route::match(['GET'], '/users/change-status/{id}/{status}', [DosageController::class, 'change_status'])->name('changeStatus');
 	});
-	Route::prefix('company')->name('company.')->group(function () {
+	Route::prefix('company')->name('company.')->middleware('checkPermission:37')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [CompanyController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/list', [CompanyController::class, 'list'])->name('list');
 		Route::match(['GET', 'POST'], '/edit/{id}', [CompanyController::class, 'edit'])->name('edit');
@@ -338,7 +343,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::get('/get-product-by-name', [ReportController::class, 'getProductByKeyup'])->name('ajax.sale-product');
 
 
-	Route::prefix('expense')->name('expense.')->group(function () {
+	Route::prefix('expense')->name('expense.')->middleware('checkPermission:40')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [ExpenseController::class, 'add'])->name('add');
 		Route::match(['GET', 'POST'], '/category', [ExpenseController::class, 'category'])->name('category');
 		Route::match(['GET', 'POST'], '/delete/{id}', [ExpenseController::class, 'delete'])->name('category.delete');
@@ -351,7 +356,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 	Route::match(['GET'], '/allnotification', [NotificationController::class, 'allnotification'])->name('allnotification');
 
-	Route::match(['GET'], '/credit_history', [CredithistoryController::class, 'index'])->name('credit_history');
+
+
 	Route::match(['post'], '/paymentcreditadd', [CredithistoryController::class, 'store'])->name('paymentcreditadd');
 	Route::match(['get'], '/suppliercredithistory_modal', [CredithistoryController::class, 'suppliercredithistory_modal'])->name('suppliercredithistory_modal');
 	Route::match(['get'], '/supplierpaymenthistory_modal', [CredithistoryController::class, 'supplierpaymenthistory_modal'])->name('supplierpaymenthistory_modal');
@@ -359,15 +365,17 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['get'], '/supplierpaymenthistory/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory'])->name('supplierpaymenthistory');
 	Route::match(['get'], '/debit_deletepayment/{supplier_id}', [CredithistoryController::class, 'debit_deletepayment'])->name('debit_deletepayment');
 
+    Route::prefix('money')->name('money.')->middleware('checkPermission:45')->group(function () {
+	    Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
+    });
 
-	Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
 	Route::match(['get'], '/settlement_approve/{id}', [SettlementController::class, 'settlement_approve'])->name('settlement_approve');
 
 
-    Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+    // Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
 
 
-    Route::prefix('logreport')->name('logreport.')->group(function () {
+    Route::prefix('logreport')->name('logreport.')->middleware('checkPermission:47')->group(function () {
 
         Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
 

@@ -63,54 +63,98 @@ if($adminId!=1){
             </li>
 
           @endif
+
+          @if(isset($permission))
+          @if(in_array(31, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="nav-icon fas fa-handshake"></i>
             <p>Manage suppliers <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item"> <a href="{{ route('admin.supplier.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                <p>List suppliers</p>
-                </a> </li>
-              <li class="nav-item"> <a href="{{ route('admin.supplier.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                <p>Add supplier</p>
-                </a> </li>
+                @if(in_array('admin-supplier-list', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.supplier.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>List suppliers</p>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('admin-supplier-add', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.supplier.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.supplier.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+                    <p>Add supplier</p>
+                    </a>
+                </li>
+                @endif
             </ul>
           </li>
+          @endif
+          @endif
+
+          @if(isset($permission))
+          @if(in_array(33, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) parent-active @endif"> <i class="nav-icon fas fa-tag"></i>
             <p>Manage brands <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item"> <a href="{{ route('admin.brand.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.brand.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                <p>List brands</p>
-                </a> </li>
-              <li class="nav-item"> <a href="{{ route('admin.brand.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.brand.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                <p>Add brand</p>
-                </a> </li>
+                @if(in_array('admin-brand-list', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.brand.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.brand.list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>List brands</p>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('admin-brand-add', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.brand.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.brand.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+                    <p>Add brand</p>
+                    </a>
+                </li>
+                @endif
             </ul>
           </li>
+          @endif
+          @endif
+
+          @if(isset($permission))
+          @if(in_array(35, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) parent-active @endif"> <i class="nav-icon fas fa-syringe"></i>
             <p>Manage dosages <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item"> <a href="{{ route('admin.dosage.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dosage.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                <p>List dosages</p>
-                </a> </li>
-              <li class="nav-item"> <a href="{{ route('admin.dosage.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dosage.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                <p>Add dosage</p>
-                </a> </li>
+                @if(in_array('admin-dosage-list', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.dosage.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dosage.list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>List dosages</p>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('admin-dosage-add', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.dosage.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.dosage.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+                    <p>Add dosage</p>
+                    </a>
+                </li>
+                @endif
             </ul>
           </li>
+          @endif
+          @endif
+
+          @if(isset($permission))
+          @if(in_array(35, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.company') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.company') !== false) parent-active @endif"> <i class="nav-icon fas fa-building"></i>
             <p>Manage companies <i class="fas fa-angle-left right"></i></p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item"> <a href="{{ route('admin.company.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.company.list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                <p>List companies</p>
-                </a> </li>
-              <li class="nav-item"> <a href="{{ route('admin.company.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.company.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                <p>Add company</p>
-                </a> </li>
+                @if(in_array('admin-company-list', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.company.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.company.list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>List companies</p>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('admin-company-add', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.company.add') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.company.add') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+                    <p>Add company</p>
+                    </a>
+                </li>
+                @endif
             </ul>
           </li>
+          @endif
+          @endif
 
           @if(isset($permission))
           @if(in_array(6, $permission))
@@ -207,12 +251,13 @@ if($adminId!=1){
               <p>Create Order</p>
               </a> </li>
               @endif
-                @if ($adminRoll != 1)
-                    <li class="nav-item"> <a href="{{ route('admin.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+                @if(in_array('admin-pos-bill', $page_permission))
+                    <li class="nav-item"> <a href="{{ route('admin.pos.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p> Return Bill </p>
                         </a>
                     </li>
                 @endif
+
           </ul>
         </li>
         @endif
@@ -240,6 +285,10 @@ if($adminId!=1){
             </li>
           @endif
         @endif --}}
+
+
+        @if(isset($permission))
+        @if(in_array(3, $permission))
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.report') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.report') !== false) parent-active @endif"> <i class="fas fa-cart-plus nav-icon"></i>
           <p>Report <i class="fas fa-angle-left right"></i></p>
           </a>
@@ -253,16 +302,20 @@ if($adminId!=1){
                   </p>
               </a>
               <ul class="nav nav-treeview" >
+                @if(in_array('admin-report-purchase', $page_permission))
                 <li class="nav-item">
                   <a href="{{ route('admin.report.purchase.invoice_wise') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.purchase.invoice_wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Invoice Wise</p>
                   </a>
                 </li>
+                @endif
+                @if(in_array('admin-report-purchase', $page_permission))
                 <li class="nav-item">
                   <a href="{{ route('admin.report.purchase.product_wise') }}" class="nav-link  @if (\Route::currentRouteName() == 'admin.report.purchase.product_wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Product Wise</p>
                   </a>
                 </li>
+                @endif
               </ul>
             </li>
             <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.report.sales') !== false) menu-open @endif">
@@ -274,16 +327,20 @@ if($adminId!=1){
                   </p>
               </a>
               <ul class="nav nav-treeview" >
+                @if(in_array('admin-report-sales', $page_permission))
                 <li class="nav-item">
                   <a href="{{ route('admin.report.sales.item') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.item') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Invoice Wise Sales</p>
                   </a>
                 </li>
+                @endif
+                @if(in_array('admin-report-product-wise-sales-report', $page_permission))
                 <li class="nav-item">
                   <a href="{{ route('admin.report.sales.report.product.wise') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.report.product.wise') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Product Wise Sales</p>
                   </a>
                 </li>
+                @endif
                 {{-- <li class="nav-item">
                   <a href="{{ route('admin.report.sales.product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.sales.product') active @endif"> <i class="fas fa-list nav-icon"></i>
                   <p>Sales Product</p>
@@ -291,69 +348,106 @@ if($adminId!=1){
                 </li> --}}
               </ul>
             </li>
+            @if(in_array('admin-report-inventory', $page_permission))
             <li class="nav-item"> <a href="{{ route('admin.report.inventory') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.inventory') active @endif"> <i class="fas fa-store nav-icon"></i>
                 <p>Inventory</p>
                 </a>
-              </li>
+            </li>
+            @endif
+            @if(in_array('admin-report-top_selling_products', $page_permission))
             <li class="nav-item"> <a href="{{ route('admin.report.top_selling_products') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.top_selling_products') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Top selling products</p>
               </a>
             </li>
+            @endif
+            @if(in_array('admin-report-low_stock_product', $page_permission))
             <li class="nav-item"> <a href="{{ route('admin.report.low_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.low_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Low stock product</p>
               </a>
             </li>
+            @endif
+            @if(in_array('admin-report-zero_stock_product', $page_permission))
             <li class="nav-item"> <a href="{{ route('admin.report.zero_stock_product') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.zero_stock_product') active @endif"> <i class="fas fa-list nav-icon"></i>
               <p>Zero stock product</p>
               </a>
             </li>
+            @endif
+            @if(in_array('admin-report-near_expiry_stock', $page_permission))
             <li class="nav-item"> <a href="{{ route('admin.report.near_expiry_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.report.near_expiry_stock') active @endif"> <i class="fas fa-list nav-icon"></i>
                 <p>Stock near expiry</p>
                 </a>
             </li>
+            @endif
           </ul>
         </li>
 
+        @endif
+        @endif
 
+        @if(isset($permission))
+        @if(in_array(40, $permission))
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) parent-active @endif"><i class="fas fa-money-bill nav-icon"></i>
           <p>Expense  <i class="fas fa-angle-left right"></i></p>
           </a>
           <ul class="nav nav-treeview">
-            @if ($adminRoll == 1)
-              <li class="nav-item">
-                <a href="{{ route('admin.expense.category') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.category') active @endif"> <i class="fas fa-list nav-icon"></i>
-                  <p>Category</p>
-                </a>
-              </li>
+            @if(in_array('admin-expense-category', $page_permission))
+            <li class="nav-item">
+            <a href="{{ route('admin.expense.category') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.category') active @endif"> <i class="fas fa-list nav-icon"></i>
+                <p>Category</p>
+            </a>
+            </li>
             @endif
+            @if(in_array('admin-expense-expenselist', $page_permission))
             <li class="nav-item">
               <a href="{{ route('admin.expense.expenselist') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.expenselist') active @endif"> <i class="fas fa-list nav-icon"></i>
                 <p>Expense List</p>
               </a>
             </li>
+            @endif
+            @if(in_array('admin-expense-addexpense', $page_permission))
             <li class="nav-item">
               <a href="{{ route('admin.expense.addexpense') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.expense.addexpense') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
                 <p>Add Expense</p>
               </a>
             </li>
-
+            @endif
           </ul>
         </li>
+        @endif
+        @endif
 
-        <li class="nav-item"> <a href="{{ route('admin.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+        @if(isset($permission))
+        @if(in_array(43, $permission))
+        @if(in_array('admin-history-credit_history', $page_permission))
+        <li class="nav-item"> <a href="{{ route('admin.history.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.history.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Debit History </p>
             </a>
         </li>
+        @endif
+        @endif
+        @endif
 
-        <li class="nav-item"> <a href="{{ route('admin.settlement') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.settlement') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+        @if(isset($permission))
+        @if(in_array(45, $permission))
+        @if(in_array('admin-money-settlement', $page_permission))
+        <li class="nav-item"> <a href="{{ route('admin.money.settlement') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.money.settlement') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Settlement </p>
             </a>
         </li>
+        @endif
+        @endif
+        @endif
 
+        @if(isset($permission))
+        @if(in_array(47, $permission))
+        @if(in_array('admin-logreport-view', $page_permission))
         <li class="nav-item"> <a href="{{ route('admin.logreport.view') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.logreport.view') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Log Report </p>
             </a>
         </li>
+        @endif
+        @endif
+        @endif
 
         @if ($adminRoll == 1)
             <li class="nav-item">
