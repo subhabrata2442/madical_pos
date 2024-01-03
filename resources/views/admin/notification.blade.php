@@ -60,20 +60,20 @@
         <table id="" class="table table-bordered text-nowrap">
 			<thead>
 				<th scope="col">Sl NO.</th>
-                <th scope="col">Store</th>
+                {{-- <th scope="col">Store</th> --}}
                 <th scope="col">Message</th>
 				<th scope="col">Date</th>
-				<th scope="col">Action</th>
+				{{-- <th scope="col">Action</th> --}}
 			</thead>
 			<tbody>
 				@forelse ($data['notification'] as $key=>$notification)
 				<tr>
 
 					<td>{{($key+1)}}</td>
-                    <td>{{$notification->user->name}}</td>
+                    {{-- <td>{{$notification->user->name}}</td> --}}
                     <td>{{$notification->msg}}</td>
 					<td>{{ \Carbon\Carbon::parse($notification->created_at)}}</td>
-                    <td>
+                    {{-- <td>
                         <div class="dropdown">
                             <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -109,7 +109,7 @@
                                 <a class="dropdown-item" href="{{$urls}}">View</a>
                             </div>
                         </div>
-                    </td>
+                    </td> --}}
 				</tr>
 				@empty
 					<tr ><td colspan="4"> No data found </td></tr>

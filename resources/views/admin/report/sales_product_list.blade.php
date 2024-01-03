@@ -22,12 +22,12 @@
 		</form>
 		{{-- <a href="javascript:;" id="download" data-date="" class="downloadBtn"><i class="fas fa-download"></i> Download</a> --}}
 	  </div>
-	  
+
       <div class="table-responsive dataTable-design">
 		{{-- <input type="data" name="date_filter" class="form-control searchDate" placeholder="Date"> --}}
         <table id="stock_product" class="table table-bordered">
           <thead>
-			<th>Product Name</th>
+			{{-- <th>Product Name</th> --}}
             <th>Barcode</th>
 			<th>Brand Name</th>
 			<th>Qty</th>
@@ -44,7 +44,7 @@
 </div>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script type="text/javascript">
 
 
@@ -71,36 +71,36 @@ $(function() {
             }
 		},
 		columns: [
-			{
-				data: 'product_name',
-				name: 'product_name'
-			},	
+			// {
+			// 	data: 'product_name',
+			// 	name: 'product_name'
+			// },
 			{
 				data: 'barcode',
 				name: 'barcode'
-			},	
+			},
 			{
 				data: 'brand_name',
 				name: 'brand_name'
-			},	
+			},
 			{
 				data: 'product_qty',
 				name: 'product_qty'
-			},	
+			},
 			{
 				data: 'product_mrp',
 				name: 'product_mrp'
-			},	
+			},
 			{
 				data: 'total_cost',
 				name: 'total_cost'
-			},	
+			},
 			{
 				data: 'created_at',
 				name: 'created_at'
-			},		
+			},
 		]
-		
+
 	});
 	/* $(".searchDate").keyup(function(){
         table.draw();
@@ -111,7 +111,7 @@ $(function() {
         e.preventDefault();
     });
 
-	
+
 	//Start date range picker
 	/* var start = moment().subtract(29, 'days');
     var end = moment();
@@ -147,5 +147,5 @@ $(function() {
   	});
 	//End Date range picker
 });
-</script> 
-@endsection 
+</script>
+@endsection

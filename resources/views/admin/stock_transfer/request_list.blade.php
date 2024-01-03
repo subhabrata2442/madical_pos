@@ -151,7 +151,7 @@ $adminRoll = Session::get('admin_type');
                         });
 
                         }
-                        
+
                     }
                 });
             } else if (result.isDenied) {
@@ -202,7 +202,7 @@ $adminRoll = Session::get('admin_type');
                         });
 
                         }
-                        
+
                     }
                 });
             } else if (result.isDenied) {

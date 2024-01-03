@@ -2735,9 +2735,9 @@ class ReportController extends Controller
 
                 }) */
 
-                    ->addColumn('product_name', function ($row) {
-                        return $row->product_name;
-                    })
+                    // ->addColumn('product_name', function ($row) {
+                    //     return $row->product_name;
+                    // })
                     ->addColumn('barcode', function ($row) {
                         return $row->barcode;
                     })
@@ -2978,6 +2978,16 @@ class ReportController extends Controller
                 $queryProduct->where('branch_id', $request['store_id']);
             }
 
+            if(!empty($request->get('customer_id'))){
+
+                // $queryProduct->where('customer_id', $request->get('customer_id'));
+                $queryProduct->whereHas('sellInwardStock', function ($query) use ($request) {
+                    $query->where('customer_id', $request->get('customer_id'));
+                });
+
+
+            }
+
             // $profitpersent = 0;
             // if($queryProduct->sum('pay_amount')!=''){
             //     $totalsell = $queryProduct->sum('pay_amount');
@@ -2999,6 +3009,7 @@ class ReportController extends Controller
 			$data['dosages'] = Dosage::all();
 			$data['companies']      = Company::all();
             $data['storeUsers'] = User::select('id','name','email','phone')->where('role',2)->get();
+            $data['customer_list'] = Customer::orderBy('id', 'desc')->get();
             //$data['request'] = $request;
             return view('admin.report.product_wise_sales_report', compact('data'));
         } catch (\Exception $e) {
@@ -3673,31 +3684,45 @@ class ReportController extends Controller
 
 		$admin_type = Session::get('admin_type');
 
-        if(isset($request->id)){
-            if($admin_type==1){
-                $low_stock = BranchStockProducts::with('product')->where('id', $request->id)->get();
-            }else{
-                $store_id	= Session::get('store_id');
-                $low_stock = BranchStockProducts::with('product')->where('id', $request->id)->where('branch_id', $store_id)->get();
-            }
+
+
+
+        if($admin_type==1){
+            $branchStockProducts_query = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id');
+
         }else{
-            if($admin_type==1){
-                if(!empty($request->get('branch_id'))){
-                    $low_stock = BranchStockProducts::with('product')->where('branch_id', $request->get('branch_id'))->get();
-                }else{
-                    $low_stock = BranchStockProducts::with('product')->get();
-                }
-            }else{
-                $store_id	= Session::get('store_id');
-                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->get();
-                if(!empty($request->get('product_name'))){
-                    $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->where('product_id', $request->get('product_name'))->get();
-                }
-            }
+            $store_id	= Session::get('store_id');
+            $branchStockProducts_query = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id')->where('branch_id', $store_id);
         }
+
+
+        if(!empty($request->get('branch_id'))){
+            $branchStockProducts_query->where('branch_id', $request->get('branch_id'));
+        }
+
+        if(!empty($request->get('branch_id'))){
+            $branchStockProducts_query->where('branch_id', $request->get('branch_id'));
+        }
+
+        if(!empty($request->get('product_barcode'))){
+            $branchStockProducts_query->whereHas('product', function ($query) use ($request) {
+                $query->where('product_barcode', $request->get('product_barcode'));
+            });
+        }
+
+        if(!empty($request->get('product_name'))){
+            $branchStockProducts_query->whereHas('product', function ($query) use ($request) {
+                $query->where('id', $request->get('product_name'));
+            });
+        }
+
+        // dd($branchStockProducts_query->paginate(20));
+
+
+
 		// dd($low_stock);
 		$data = [];
-		$data['low_stock'] = $low_stock;
+		$data['low_stock'] = $branchStockProducts_query->paginate(20);
 		$data['heading'] = 'Invoice Wise Purchase List';
 		$data['breadcrumb'] = ['Invoice Wise Purchase', '', 'List'];
         $data['product_list']  = Product::orderBy('id', 'desc')->get();

@@ -2994,3 +2994,7 @@ a.downloadBtn {
 .details-box .table tbody td{
     padding: 0.5rem;
 }
+
+.appendnotification .dropdown-item{
+    white-space: inherit;
+}

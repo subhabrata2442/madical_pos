@@ -60,7 +60,7 @@
 		<div class="row">
 
             @if (Auth::user()->role == 1)
-            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="customer_last_name" class="form-label">Select Store</label>
 					<div class="position-relative">
@@ -76,22 +76,37 @@
 			</div>
 			@endif
 
-            @if (Auth::user()->role != 1)
-            <div class="col-md-6 plusBoxWrap relative">
-                <div class="form-group">
-                  <label for="brand" class="form-label">Brand Name</label>
-                  <select name="product_name" id="product_name" class="form-control form-inputtext selectTwo">
-                    <option value="">Select Brand</option>
-                    @if(count($data['product_list'])>0)
-                    @foreach($data['product_list'] as $row)
-                    <option value="{{$row->id}}">{{$row->brand}}</option>
-                    @endforeach
-                    @endif
-                  </select>
-                  @error('brand')
-                  @enderror </div>
-                </div>
-            @endif
+            <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="customer_last_name" class="form-label">Product Barcode</label>
+					<div class="position-relative">
+						<input type="text" placeholder="Product Barcode" name="product_barcode" id="product_barcode" class="form-control" value="{{request()->input('product_barcode')}}">
+					</div>
+
+				</div>
+			</div>
+
+
+            <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="customer_last_name" class="form-label">Brand name</label>
+					<div class="position-relative">
+						<select name="product_name" id="product_name" class="form-control form-inputtext selectTwo">
+                            <option value="">Select Brand</option>
+                            @if(count($data['product_list'])>0)
+                                @foreach($data['product_list'] as $row)
+                                    <option value="{{$row->id}}" {{request()->input('product_name') == $row->id ? 'selected' : ''}}>{{$row->brand}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+					</div>
+
+				</div>
+			</div>
+
+
+
+
 
 			<div class="col-12">
 				<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">

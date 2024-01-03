@@ -2439,8 +2439,8 @@ class PurchaseOrderController extends Controller
                         $from_store = User::where('id', $store_id)->first();
                         $to_store = User::where('id', $req_store_id)->first();
 
-                        $message = 'Stock transfer '.$productInfo->product_name. ', '.$from_store->name. ' to '.$to_store->name;
-                        $urls = 'admin/purchase/stock-transfer';
+                        $message = 'New stock transfer request form '.$from_store->name;
+                        $urls = 'admin/purchase/stock-transfer-request';
 
                         $options = array(
                             'cluster' => env('PUSHER_APP_CLUSTER'),
@@ -2454,37 +2454,37 @@ class PurchaseOrderController extends Controller
                         );
                         $data =[
                             'message' => $message,
-                            'store_id'=>$store_id,
+                            'store_id'=>$req_store_id,
                             'urls'=>$urls,
                         ];
                         $notify = 'stockalert-channel';
                         $pusher->trigger($notify, 'stockalert-event-send-meesages', $data);
 
-                        $data_one =[
-                            'message' => $message,
-                            'store_id'=>$req_store_id,
-                            'urls'=>$urls,
-                        ];
-                        $notify_one = 'stockalert-channel';
-                        $pusher->trigger($notify_one, 'stockalert-event-send-meesages', $data_one);
+                        // $data_one =[
+                        //     'message' => $message,
+                        //     'store_id'=>$req_store_id,
+                        //     'urls'=>$urls,
+                        // ];
+                        // $notify_one = 'stockalert-channel';
+                        // $pusher->trigger($notify_one, 'stockalert-event-send-meesages', $data_one);
 
                         $datainsert = [
                             'type'=> 'stock-transfer',
-                            'store_id'=>$store_id,
+                            'store_id'=>$req_store_id,
                             'msg'=> $message,
                             'product_id'=> $productInfo->id,
                             'urls'=>$urls,
                         ];
                         Notification::create($datainsert);
 
-                        $datainsert_one = [
-                            'type'=> 'stock-transfer',
-                            'store_id'=>$req_store_id,
-                            'msg'=> $message,
-                            'product_id'=> $productInfo->id,
-                            'urls'=>$urls,
-                        ];
-                        Notification::create($datainsert_one);
+                        // $datainsert_one = [
+                        //     'type'=> 'stock-transfer',
+                        //     'store_id'=>$req_store_id,
+                        //     'msg'=> $message,
+                        //     'product_id'=> $productInfo->id,
+                        //     'urls'=>$urls,
+                        // ];
+                        // Notification::create($datainsert_one);
 
 					}
 					$return_data['status']	= 1;
@@ -2512,9 +2512,21 @@ class PurchaseOrderController extends Controller
 					if(!empty($request->get('product_id'))){
 						$stock_product->where('product_id', $request->get('product_id'));
 					}
+
+                    if(!is_null($request['order_by'])) {
+                        if ($request['order_by']=='htw') {
+                            $stock_product->orderBy('t_qty', 'DESC');
+                        }else{
+                            $stock_product->orderBy('t_qty', 'ASC');
+                        }
+
+                    }
+
+
 					$stock_product=$stock_product->paginate(20);
 
 					//echo '<pre>';print_r($stock_product);exit;
+
 
 				}
 			}else{
@@ -2523,6 +2535,16 @@ class PurchaseOrderController extends Controller
 					if(!empty($request->get('product_id'))){
 						$stock_product->where('product_id', $request->get('product_id'));
 					}
+
+                    if(!is_null($request['order_by'])) {
+                        if ($request['order_by']=='htw') {
+                            $stock_product->orderBy('t_qty', 'DESC');
+                        }else{
+                            $stock_product->orderBy('t_qty', 'ASC');
+                        }
+
+                    }
+
 					$stock_product=$stock_product->paginate(20);
 					//echo '<pre>';print_r($stock_product);exit;
 			}
@@ -3076,49 +3098,40 @@ class PurchaseOrderController extends Controller
 
             // if ($request->ajax()) {
 
+
                 if($admin_type==1){
-				    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('id', 'desc')->get();
-
-                    // if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
-                    //     if($request->get('start_date') == $request->get('end_date')){
-
-                    //         $purchase 	= PurchaseInwardStock::with('user')->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                    //     }else{
-
-                    //         $purchase 	= PurchaseInwardStock::with('user')->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                    //     }
-                    // }
-
-                    if(!empty($request->get('dateshort'))){
-                        if($request->get('dateshort')=='newtoold'){
-                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('purchase_date', 'desc')->get();
-                        }else if($request->get('dateshort')=='oldtonew'){
-                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->orderBy('purchase_date', 'asc')->get();
-                        }
-
-                    }
-
+                    $purchaseInwardStock_query 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','');
                 }else{
-                    $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('id', 'desc')->paginate(20);
-                    // if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
-                    //     if($request->get('start_date') == $request->get('end_date')){
-                    //         $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereDate('purchase_date', $request->get('start_date'))->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                    //     }else{
-                    //         $purchase 	= PurchaseInwardStock::with('user')->where('branch_id', $branch_id)->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')])->where('invoice_no','!=','')->orderBy('id', 'desc')->paginate(20);
-                    //     }
-                    // }
-
-
-                    if(!empty($request->get('dateshort'))){
-                        if($request->get('dateshort')=='newtoold'){
-                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('purchase_date', 'desc')->get();
-                        }else if($request->get('dateshort')=='oldtonew'){
-                            $purchase 	= PurchaseInwardStock::with('user')->where('invoice_no','!=','')->where('branch_id', $branch_id)->orderBy('purchase_date', 'asc')->get();
-                        }
-
-                    }
-
+                    $purchaseInwardStock_query = PurchaseInwardStock::where('branch_id', $branch_id);
                 }
+
+
+
+                if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                    if($request->get('start_date') == $request->get('end_date')){
+                        $purchaseInwardStock_query->whereDate('purchase_date', $request->get('start_date'));
+                    }else{
+
+                        $purchaseInwardStock_query->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')]);
+                    }
+                }
+
+                if(!empty($request->get('dateshort'))){
+                    if($request->get('dateshort')=='newtoold'){
+                        $purchaseInwardStock_query->orderBy('purchase_date', 'desc');
+                    }else if($request->get('dateshort')=='oldtonew'){
+                        $purchaseInwardStock_query->orderBy('purchase_date', 'asc');
+                    }
+                }else{
+                    $purchaseInwardStock_query->orderBy('id', 'desc');
+                }
+
+                if(!empty($request->get('supplier'))){
+                    $purchaseInwardStock_query->where('supplier_id', $request->get('supplier'));
+                }
+
+
+                $purchase = $purchaseInwardStock_query->paginate(20);
 
 
                 // dd($purchase);
@@ -3179,6 +3192,7 @@ class PurchaseOrderController extends Controller
             $data['purchase_list'] = $purchase;
             $data['heading'] = 'Purchase List';
             $data['breadcrumb'] = ['Purchase', 'List'];
+            $data['supplier'] = Supplier::orderBy('id', 'desc')->get();
             return view('admin.purchase_order.listing', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());

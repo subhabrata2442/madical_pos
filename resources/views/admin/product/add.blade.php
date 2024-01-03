@@ -118,7 +118,7 @@
                 <option value="{{$i}}">{{$i}}</option>
                 @endfor
               </select> --}}
-              <input type="text" class="form-control admin-input isnumber" id="no_package" name="no_package" value="{{ old('no_package') }}"  autocomplete="off" placeholder="No per package" maxlength="5">
+              <input type="text" class="form-control admin-input isnumber" id="no_package" name="no_package" value="{{ old('no_package') }}"  autocomplete="off" placeholder="No per package" maxlength="5" required>
               @error('no_package')
               <div class="error admin-error">{{ $message }}</div>
               @enderror </div>
