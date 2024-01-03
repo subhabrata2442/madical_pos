@@ -12,10 +12,10 @@ $adminRoll 		= Session::get('admin_type');
 
     if($admin_type==1){
         $pending_s_count =\App\Models\Notification::where('is_seen','0')->count();
-        $pending_s_result=\App\Models\Notification::where('is_seen','0')->get();
+        $pending_s_result=\App\Models\Notification::where('is_seen','0')->orderBy('id', 'DESC')->limit(6)->get();
     }else if($admin_type=2){
         $pending_s_count =\App\Models\Notification::where('store_id',$store_id)->where('is_seen','0')->count();
-        $pending_s_result=\App\Models\Notification::where('store_id',$store_id)->where('is_seen','0')->get();
+        $pending_s_result=\App\Models\Notification::where('store_id',$store_id)->where('is_seen','0')->orderBy('id', 'DESC')->limit(6)->get();
     }
 
 
