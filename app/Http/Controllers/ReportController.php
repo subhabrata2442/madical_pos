@@ -155,7 +155,10 @@ class ReportController extends Controller
 		$purchase->orderBy('id', 'desc')->get();
 
         $profitpersent = 0;
-        if($purchase->sum('qty_total_sell_price')!=''){
+
+
+
+        if($purchase->sum('qty_total_sell_price')>0){
             $totalsell = $purchase->sum('qty_total_sell_price');
             $totalnet_price = $purchase->sum('qty_total_net_price');
             $profitpersent = ((($totalsell - $totalnet_price)/$totalnet_price)*100);

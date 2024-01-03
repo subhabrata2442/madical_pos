@@ -471,7 +471,7 @@ function changeStore(store_id){
     if(store_id!=''){
         $("#selectStoreForm").submit();
     }else{
-        location.href = "{{ route('admin.credit_history') }}";
+        location.href = "{{ route('admin.history.credit_history') }}";
     }
 }
 
