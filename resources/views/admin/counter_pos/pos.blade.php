@@ -287,9 +287,9 @@
                         <ul class="top-product-list">
                           @if (count($data['topSellingProducts'])>0)
                             @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
-                              @if ($topitem['t_qty']!=0)
+
                                 <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['brand']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
-                              @endif
+
                             @endforeach
                           @endif
                         </ul>
