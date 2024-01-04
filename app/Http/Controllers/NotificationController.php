@@ -149,6 +149,7 @@ class NotificationController extends Controller
                 foreach ($pending_s_result as $itempending_s_result){
 
                     $urls = route('admin.allnotification');
+                    $urls = url($itempending_s_result->urls);
 
 
 

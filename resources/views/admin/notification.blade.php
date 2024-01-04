@@ -71,7 +71,15 @@
 
 					<td>{{($key+1)}}</td>
                     {{-- <td>{{$notification->user->name}}</td> --}}
-                    <td>{{$notification->msg}}</td>
+                    <td>
+                        @if($notification->is_seen==1)
+                            <i class="fas fa-envelope-open-text"></i>
+                        @else
+                            <i class="fas fa-envelope mr-2"></i>
+                        @endif
+                        <a href="{{url($notification->urls)}}" onclick="seenNotification('{{$notification->id}}')" style="color:#324148">{{$notification->msg}}</a>
+
+                    </td>
 					<td>{{ \Carbon\Carbon::parse($notification->created_at)}}</td>
                     {{-- <td>
                         <div class="dropdown">
