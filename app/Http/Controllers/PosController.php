@@ -1392,7 +1392,7 @@ class PosController extends Controller
 			'customer_id' 				=> $request->customer_id,
 			// 'bill_no' 					=> $bill_no,
 			'invoice_no' 				=> $invoice_no,
-			'sell_date' 				=> date('Y-m-d'),
+			'sell_date' 				=> date('Y-m-d', strtotime(str_replace('.', '/', $request->sell_date))),
 			'sell_time' 				=> date('H:i'),
 			//'stock_type' 				=> $request->stock_type,
 			'total_qty' 				=> $request->total_quantity,
