@@ -32,7 +32,7 @@ $adminRoll 		= Session::get('admin_type');
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto me-3">
     <li class="nav-item dropdown">
-      <a class="nav-link noti-nav-link" data-toggle="dropdown" href="javascript:;" aria-expanded="false">
+      <a class="nav-link noti-nav-link" data-toggle="dropdown" href="javascript:;" aria-expanded="false" onclick="get_notificationheader()">
         <i class="far fa-bell"></i>
         <span class="badge badge-danger navbar-badge totalNoti">{{$pending_s_count}}</span>
       </a>
@@ -62,10 +62,10 @@ $adminRoll 		= Session::get('admin_type');
 
 
 
-                    <a href="{{$urls}}" onclick="seenNotification('{{$itempending_s_result->id}}')" class="dropdown-item">
+                    {{-- <a href="{{$urls}}" onclick="seenNotification('{{$itempending_s_result->id}}')" class="dropdown-item">
                         <i class="fas fa-envelope mr-2"></i> {{$itempending_s_result->msg}}
-                        {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
-                    </a>
+                        <span class="float-right text-muted text-sm">3 mins</span>
+                    </a> --}}
 
 
                 @endforeach
@@ -73,7 +73,8 @@ $adminRoll 		= Session::get('admin_type');
 
                 <a href="{{ route('admin.allnotification') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
             @else
-                <span class="dropdown-item dropdown-header zeronoti">0 Notifications</span>
+                {{-- <span class="dropdown-item dropdown-header zeronoti">0 Notifications</span> --}}
+                <a href="{{ route('admin.allnotification') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
             @endif
         </div>
 
@@ -141,5 +142,25 @@ $adminRoll 		= Session::get('admin_type');
   $(document).on('click','.noti-nav-link',function(){
     $(this).parent().toggleClass("show").find(".dropdown-menu").toggleClass("show");
   });
+
+
+  function get_notificationheader(){
+    $.ajax({
+        url: "{{url('admin/get_notificationheader')}}",
+        type: "get",
+        data: {
+
+            _token: "<?php echo csrf_token(); ?>",
+        },
+        dataType: "json",
+        success: function(response) {
+            if (response.status == 1) {
+                $(".appendnotification").html(response.html);
+            }else{
+
+            }
+        },
+    });
+  }
 </script>
 
