@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\InwardStockProducts;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class NotificationController extends Controller
 {
@@ -124,6 +125,53 @@ class NotificationController extends Controller
         $data['heading'] = 'Brand List';
         $data['breadcrumb'] = ['Brand', 'List'];
         return view('admin.notification', compact('data'));
+
+    }
+
+
+    public function get_notificationheader(){
+
+        $admin_type = Session::get('admin_type');
+        $store_id	= Session::get('store_id');
+
+        if($admin_type==1){
+            $pending_s_count =Notification::where('is_seen','0')->count();
+            $pending_s_result=Notification::where('is_seen','0')->orderBy('id', 'DESC')->limit(6)->get();
+        }else if($admin_type=2){
+            $pending_s_count =Notification::where('store_id',$store_id)->where('is_seen','0')->count();
+            $pending_s_result=Notification::where('store_id',$store_id)->where('is_seen','0')->orderBy('id', 'DESC')->limit(6)->get();
+        }
+
+        $html = '';
+
+        if (count($pending_s_result)>0){
+
+                foreach ($pending_s_result as $itempending_s_result){
+
+                    $urls = route('admin.allnotification');
+
+
+
+
+                    $html .= '<a href="'.$urls.'" onclick="seenNotification(\''.$itempending_s_result->id.'\')" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2"></i> '.$itempending_s_result->msg.'
+                    </a>';
+
+
+                }
+
+
+                $html .= '<a href="'.route('admin.allnotification').'" class="dropdown-item dropdown-footer">See All Notifications</a>';
+        }else{
+
+            $html .= '<a href="'.route('admin.allnotification').'" class="dropdown-item dropdown-footer">See All Notifications</a>';
+        }
+
+
+        return response()->json([
+            'status' => 1,
+            'html'=>$html,
+        ]);
 
     }
 

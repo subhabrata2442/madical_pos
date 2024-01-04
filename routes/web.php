@@ -384,6 +384,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::match(['get'], '/settings', [SettingController::class, 'settings'])->name('settings');
     Route::match(['post'], '/updatesetting', [SettingController::class, 'updatesetting'])->name('updatesetting');
 
+    Route::match(['get'], '/get_notificationheader', [NotificationController::class, 'get_notificationheader'])->name('get_notificationheader');
+
 });
 
 
