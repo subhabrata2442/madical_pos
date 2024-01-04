@@ -463,7 +463,7 @@ class PosController extends Controller
 			// 		->get();
 
 
-			$topSellingProducts = Product::where('common_items', 'yes')->get();
+			$topSellingProducts = Product::where('common_items', 'yes')->limit(10)->get();
 
 
 			$result=[];

@@ -1896,33 +1896,53 @@ class AjaxController extends Controller {
 			//print_r($searchValues);exit;
 			$store_id	= Session::get('store_id');
 
-			$res = Product::select('products.id', 'products.product_name', 'products.brand', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
-					->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
-					->where('sell_stock_products.branch_id', $store_id)
-					->where('products.product_name', 'like', "%{$search}%")
-					->orWhere('products.product_barcode', 'like', '%' . $search . '%')
-					->groupBy('products.id', 'products.product_name')
-					->orderBy('sales_count', 'desc')
-					->limit(10)
-					->get();
+			// $res = Product::select('products.id', 'products.product_name', 'products.brand', 'products.product_barcode', DB::raw('COUNT(sell_stock_products.id) as sales_count'))
+			// 		->leftJoin('sell_stock_products', 'products.id', '=', 'sell_stock_products.product_id')
+			// 		->where('sell_stock_products.branch_id', $store_id)
+			// 		->where('products.product_name', 'like', "%{$search}%")
+			// 		->orWhere('products.product_barcode', 'like', '%' . $search . '%')
+			// 		->groupBy('products.id', 'products.product_name')
+			// 		->orderBy('sales_count', 'desc')
+			// 		->limit(10)
+			// 		->get();
+
+
+
+
 
 			// dd($res);
 
-			$result=[];
+			// $result=[];
 
-			if(count($res) > 0){
-				foreach($res as $row){
+			// if(count($res) > 0){
+			// 	foreach($res as $row){
 
-					$result[]=array(
-						//'id'				=> $row->id,
-						'id'				=> @$row->id,
-						'product_barcode'	=> @$row->product_barcode,
-						'product_name'		=> @$row->brand,
-						//'product_size'		=> $row->size->name,
-					);
+			// 		$result[]=array(
+			// 			//'id'				=> $row->id,
+			// 			'id'				=> @$row->id,
+			// 			'product_barcode'	=> @$row->product_barcode,
+			// 			'product_name'		=> @$row->brand,
+			// 			//'product_size'		=> $row->size->name,
+			// 		);
 
-				}
-			}
+			// 	}
+			// }
+
+            $topSellingProducts = Product::where('common_items', 'yes')->where('brand', 'like', "%{$search}%")->orWhere('product_barcode', 'like', '%' . $search . '%')->limit(10)->get();
+
+
+            $result=[];
+            if(count($topSellingProducts) > 0){
+                foreach($topSellingProducts as $row){
+                    $t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+                    $result[]=array(
+                        'id'				=> $row->id,
+                        'product_barcode'	=> $row->product_barcode,
+                        'product_name'		=> $row->brand,
+                    );
+
+                }
+            }
 
 
 			//print_r($result);exit;
