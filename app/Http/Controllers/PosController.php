@@ -500,7 +500,7 @@ class PosController extends Controller
 
 					$result[]=array(
 						//'id'				=> $row->id,
-						'id'				=> @$row->id,
+						'id'				=> @$row->product->id,
 						'product_barcode'	=> @$row->product_barcode,
 						'brand'		=> @$row->product->brand,
 						//'product_size'		=> $row->size->name,
