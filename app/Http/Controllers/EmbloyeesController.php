@@ -429,12 +429,15 @@ class EmbloyeesController extends Controller
 				'phone' => $request->phone
 			];
 
-			//print_r($array);exit;
+			// print_r($array);exit;
 
 
 			if($request->password!=''){
-				$array['password']=Hash::make($request->password_confirm);
+				$array['password']=Hash::make($request->password);
 			}
+
+            // print_r($array);exit;
+
 			User::find($store_id)->update($array);
 
             $store_details_data=array(
