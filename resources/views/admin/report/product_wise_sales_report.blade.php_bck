@@ -89,7 +89,7 @@
 		</div>
 		<div class="col-12">
 			<ul class="saveSrcArea d-flex align-items-center justify-content-center mb-2">
-				
+
 				<li>
 					<button class="saveBtn-2">Search <i class="fas fa-arrow-circle-right"></i></button>
 				</li>
@@ -124,7 +124,7 @@
 		</form>
 		<a href="javascript:;" id="download" data-date="" class="downloadBtn"><i class="fas fa-download"></i> Download</a>
 	  </div> --}}
-	  
+
       <div class="table-responsive dataTable-design">
 		{{-- <input type="data" name="date_filter" class="form-control searchDate" placeholder="Date"> --}}
         <table id="product_wise_sale" class="table table-bordered">
@@ -150,7 +150,7 @@
 </div>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script type="text/javascript">
 
 
@@ -180,49 +180,49 @@ $(function() {
 			{
 				data: 'invoice_no',
 				name: 'invoice_no'
-			},	
+			},
 			{
 				data: 'sell_date',
 				name: 'sell_date'
-			},	
+			},
 			{
 				data: 'customer_name',
 				name: 'customer_name'
-			},	
+			},
 			{
 				data: 'supplier',
 				name: 'supplier'
-			},	
+			},
 			{
 				data: 'product_name',
 				name: 'product_name'
-			},	
+			},
 			{
 				data: 'category',
 				name: 'category'
-			},	
+			},
 			{
 				data: 'sub_category',
 				name: 'sub_category'
-			},		
+			},
 			{
 				data: 'product_qty',
 				name: 'product_qty'
-			},		
+			},
 			{
 				data: 'size_ml',
 				name: 'size_ml'
-			},		
+			},
 			{
 				data: 'product_mrp',
 				name: 'product_mrp'
-			},		
+			},
 			{
 				data: 'total_cost',
 				name: 'total_cost'
-			},		
+			},
 		]
-		
+
 	});
 	/* $(".searchDate").keyup(function(){
         table.draw();
@@ -278,5 +278,5 @@ $(function() {
 		$(".toggleCard").slideToggle();
 	})
 });
-</script> 
-@endsection 
+</script>
+@endsection

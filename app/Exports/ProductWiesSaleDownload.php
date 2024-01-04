@@ -53,6 +53,9 @@ class ProductWiesSaleDownload implements FromView
             //         return $q->where('customer_id',$request['customer_id']);
             //     });
             // }
+
+            $request = '';
+
             if($this->invoice!='') {
                 $queryProduct->whereHas('sellInwardStock',function($q) use ($request){
                     return $q->where('id',$this->invoice);

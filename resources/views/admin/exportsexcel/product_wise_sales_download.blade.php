@@ -21,7 +21,7 @@
           <td>{{@$product->sellInwardStock->customer->customer_name}}</td>
           <td>{{@$product->sellInwardStock->storeUser->name}}</td>
           {{-- <td>{{$product->product_name;}}</td> --}}
-          <td>{{@$product->brand_name}}</td>
+          <td>{{@$product->product->brand}}</td>
           <td>{{@$product->barcode}}</td>
           <td>{{$product->product_qty}}</td>
           <td>{{number_format($product->product_mrp,2)}}</td>
