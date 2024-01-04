@@ -210,12 +210,14 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data['low_stock'] as $low_stockitem)
-                                        <tr>
-                                            {{-- <td>{{$low_stockitem->product->product_name}}</td> --}}
-                                            <td>{{$low_stockitem->product->brand}}</td>
-                                            <td>{{$low_stockitem->product->product_barcode}}</td>
-                                            <td>{{$low_stockitem->t_qty}}</td>
-                                        </tr>
+                                        @if($low_stockitem->t_qty <= $low_stockitem->product->alert_product_qty)
+                                            <tr>
+                                                {{-- <td>{{$low_stockitem->product->product_name}}</td> --}}
+                                                <td>{{$low_stockitem->product->brand}}</td>
+                                                <td>{{$low_stockitem->product->product_barcode}}</td>
+                                                <td>{{$low_stockitem->t_qty}}</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

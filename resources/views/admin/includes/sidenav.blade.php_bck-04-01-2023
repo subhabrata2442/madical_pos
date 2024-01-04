@@ -65,7 +65,7 @@ if($adminId!=1){
           @endif
 
           @if(isset($permission))
-          @if(in_array(31, $permission) || $adminRoll == '1')
+          @if(in_array(31, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.supplier') !== false) parent-active @endif"> <i class="nav-icon fas fa-handshake"></i>
             <p>Manage suppliers <i class="fas fa-angle-left right"></i></p>
             </a>
@@ -88,7 +88,7 @@ if($adminId!=1){
           @endif
 
           @if(isset($permission))
-          @if(in_array(33, $permission) || $adminRoll == '1')
+          @if(in_array(33, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.brand') !== false) parent-active @endif"> <i class="nav-icon fas fa-tag"></i>
             <p>Manage brands <i class="fas fa-angle-left right"></i></p>
             </a>
@@ -111,7 +111,7 @@ if($adminId!=1){
           @endif
 
           @if(isset($permission))
-          @if(in_array(35, $permission) || $adminRoll == '1')
+          @if(in_array(35, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.dosage') !== false) parent-active @endif"> <i class="nav-icon fas fa-syringe"></i>
             <p>Manage dosages <i class="fas fa-angle-left right"></i></p>
             </a>
@@ -134,7 +134,7 @@ if($adminId!=1){
           @endif
 
           @if(isset($permission))
-          @if(in_array(35, $permission) || $adminRoll == '1')
+          @if(in_array(35, $permission))
           <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.company') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.company') !== false) parent-active @endif"> <i class="nav-icon fas fa-building"></i>
             <p>Manage companies <i class="fas fa-angle-left right"></i></p>
             </a>
@@ -385,7 +385,7 @@ if($adminId!=1){
         @endif
 
         @if(isset($permission))
-        @if(in_array(40, $permission) || $adminRoll == '1')
+        @if(in_array(40, $permission))
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.expense') !== false) parent-active @endif"><i class="fas fa-money-bill nav-icon"></i>
           <p>Expense  <i class="fas fa-angle-left right"></i></p>
           </a>
@@ -417,7 +417,7 @@ if($adminId!=1){
         @endif
 
         @if(isset($permission))
-        @if(in_array(43, $permission) || $adminRoll == '1')
+        @if(in_array(43, $permission))
         @if(in_array('admin-history-credit_history', $page_permission))
         <li class="nav-item"> <a href="{{ route('admin.history.credit_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.history.credit_history') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Debit History </p>
@@ -428,7 +428,7 @@ if($adminId!=1){
         @endif
 
         @if(isset($permission))
-        @if(in_array(45, $permission) || $adminRoll == '1')
+        @if(in_array(45, $permission))
         @if(in_array('admin-money-settlement', $page_permission))
         <li class="nav-item"> <a href="{{ route('admin.money.settlement') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.money.settlement') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Settlement </p>
@@ -439,7 +439,7 @@ if($adminId!=1){
         @endif
 
         @if(isset($permission))
-        @if(in_array(47, $permission) || $adminRoll == '1')
+        @if(in_array(47, $permission))
         @if(in_array('admin-logreport-view', $page_permission))
         <li class="nav-item"> <a href="{{ route('admin.logreport.view') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.logreport.view') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
             <p> Log Report </p>
