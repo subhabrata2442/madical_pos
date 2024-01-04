@@ -1355,6 +1355,8 @@ class PosController extends Controller
 
         $sell_inward_stock_id = $request->sell_inward_stock_id;
 
+        // dd($sell_inward_stock_id);
+
         // dd($request->all());
 		$branch_id		= Session::get('store_id');
 		//echo $branch_id;die;
@@ -1437,11 +1439,17 @@ class PosController extends Controller
 		$product_price_id		= $request->product_price_id;
 
 
+
 		for($i=0;count($stock_product_ids)>$i;$i++){
+
+
+
 			$product_stock_id			= $stock_product_ids[$i];
 			$branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->first();
 
 			$product_id 		= isset($branch_product_stock_info->product_id)?$branch_product_stock_info->product_id:'';
+
+            // dd($product_id);
 
 			if($product_id!=''){
 				$total_amount	= isset($product_total_amount[$i])?$product_total_amount[$i]:'0';
@@ -1480,7 +1488,14 @@ class PosController extends Controller
 				$size_ml=trim(str_replace('ml', '', $size));
 				$total_ml=(int)$size_ml*(int)$qty; */
 
-                SellStockProducts::where('product_stock_id', $sell_inward_stock_id)->where('product_id', $product_id)->delete();
+
+                $sellStockProducts_get = SellStockProducts::where('inward_stock_id', $sell_inward_stock_id)->where('product_id', $product_id)->first();
+                $branchStockProducts_get = BranchStockProducts::where('id', $sellStockProducts_get->product_stock_id)->first();
+
+                $t_qty_old = ($branchStockProducts_get->t_qty + $sellStockProducts_get->product_qty);
+                BranchStockProducts::where('id', $sellStockProducts_get->product_stock_id)->update(['t_qty'=>$t_qty_old]);
+
+                SellStockProducts::where('inward_stock_id', $sell_inward_stock_id)->where('product_id', $product_id)->delete();
 
 
 				$sellStockproductData=array(

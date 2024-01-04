@@ -75,43 +75,43 @@
                     $branch_stock_product = App\Models\BranchStockProducts::where('id',$item->product_stock_id)->first();
                 @endphp
 
-                <tr id="sell_product_{{$branch_stock_product->product_id}}" data-id="{{$key}}">
-                    <input type="hidden" name="product_id[]" value="{{$branch_stock_product->product_id}}">
-                    <input type="hidden" id="product_stock_{{$branch_stock_product->product_id}}" value="46">
-                    <input type="hidden" name="product_total_amount[]" id="input-product_total_amount_{{$branch_stock_product->product_id}}" value="2000.00">
-                    <input type="hidden" name="product_price_id[]" id="input-product_price_id_{{$branch_stock_product->product_id}}" value="{{$branch_stock_product->product_id}}">
-                    <input type="hidden" name="product_barcode[]" id="input-product_barcode_{{$branch_stock_product->product_id}}" value="8547">
-                    <input type="hidden" name="product_name[]" id="input-product_name_{{$branch_stock_product->product_id}}" value="test">
-                    <input type="hidden" name="brand_name[]" id="input-brand_name_{{$branch_stock_product->product_id}}" value="Elviton tab">
+                <tr id="sell_product_{{$branch_stock_product->id}}" data-id="{{$key}}">
+                    <input type="hidden" name="product_id[]" value="{{$branch_stock_product->id}}">
+                    <input type="hidden" id="product_stock_{{$branch_stock_product->id}}" value="46">
+                    <input type="hidden" name="product_total_amount[]" id="input-product_total_amount_{{$branch_stock_product->id}}" value="2000.00">
+                    <input type="hidden" name="product_price_id[]" id="input-product_price_id_{{$branch_stock_product->id}}" value="{{$branch_stock_product->id}}">
+                    <input type="hidden" name="product_barcode[]" id="input-product_barcode_{{$branch_stock_product->id}}" value="8547">
+                    <input type="hidden" name="product_name[]" id="input-product_name_{{$branch_stock_product->id}}" value="test">
+                    <input type="hidden" name="brand_name[]" id="input-brand_name_{{$branch_stock_product->id}}" value="Elviton tab">
                     <td>{{$branch_stock_product->product_barcode}}</td>
                     <td class="">{{$branch_stock_product->product->brand}}</td>
                     {{-- <td class="">{{$branch_stock_product->product->product_name}}</td> --}}
                     <td class="">{{$branch_stock_product->product->selling_by_name}}</td>
-                    <td id="product_stock_td_{{$branch_stock_product->product_id}}">{{$branch_stock_product->t_qty}}</td>
+                    <td id="product_stock_td_{{$branch_stock_product->id}}">{{$branch_stock_product->t_qty}}</td>
 
                     <td>
                         @if ($branch_stock_product->is_chronic=='Yes')
-                            <select class="select-3" name="" onchange="changeiscronic(this.value, '{{$branch_stock_product->product_id}}')">
+                            <select class="select-3" name="" onchange="changeiscronic(this.value, '{{$branch_stock_product->id}}')">
                                 <option value="sellprice" @if($item->product_mrp==$branch_stock_product->selling_price) selected @endif>Sell price: {{$branch_stock_product->selling_price}}</option>
                                 <option value="cronicprice" @if($item->product_mrp==$branch_stock_product->chronic_amount) selected @endif>CP: {{$branch_stock_product->chronic_amount}}</option>
                             </select>
-                            <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_{{$branch_stock_product->product_id}}" value="2500">
+                            <input type="hidden" class="product_cronic_amount input-3" name="product_cronic_amount_[]" id="product_cronic_amount_{{$branch_stock_product->id}}" value="2500">
                         @else
                             No
                         @endif
                     </td>
 
 
-                    <td id="product_unit_price_{{$branch_stock_product->product_id}}">{{number_format($item->product_mrp)}}</td>
-                    <td><input type="number" name="product_qty[]" id="product_qty_{{$branch_stock_product->product_id}}" class="input-3 product_qty" value="{{$item->product_qty}}"></td>
-                    <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_{{$branch_stock_product->product_id}}" class="input-3 product_disc_percent" value="0"></td>
-                    <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_{{$branch_stock_product->product_id}}" class="input-3 product_disc_amount" value="0"></td>
-                    <td id="product_mrp_{{$branch_stock_product->product_id}}">{{number_format($item->product_mrp)}}</td>
-                    <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
-                    <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
-                    <td id="product_total_amount_{{$branch_stock_product->product_id}}">{{number_format($item->total_cost)}}</td>
+                    <td id="product_unit_price_{{$branch_stock_product->id}}">{{number_format($item->product_mrp)}}</td>
+                    <td><input type="number" name="product_qty[]" id="product_qty_{{$branch_stock_product->id}}" class="input-3 product_qty" value="{{$item->product_qty}}"></td>
+                    <td style="display:none;"><input type="text" name="product_disc_percent[]" id="product_disc_percent_{{$branch_stock_product->id}}" class="input-3 product_disc_percent" value="0"></td>
+                    <td style="display:none;"><input type="text" name="product_disc_amount[]" id="product_disc_amount_{{$branch_stock_product->id}}" class="input-3 product_disc_amount" value="0"></td>
+                    <td id="product_mrp_{{$branch_stock_product->id}}">{{number_format($item->product_mrp)}}</td>
+                    <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_{{$branch_stock_product->id}}" value="{{$item->product_mrp}}">
+                    <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_{{$branch_stock_product->id}}" value="{{$item->product_mrp}}">
+                    <td id="product_total_amount_{{$branch_stock_product->id}}">{{number_format($item->total_cost)}}</td>
                     <td><a href="javascript:;" onclick="remove_sell_item_edit({{$key}}, {{$item->id}});"><svg class="svg-inline--fa fa-times-circle fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg><!-- <i class="fas fa-times-circle"></i> Font Awesome fontawesome.com --></a></td>
-                    <input type="hidden" name="product_net_price[]" id="product_net_price_{{$branch_stock_product->product_id}}" class="input-3" value="{{$branch_stock_product->net_price}}">
+                    <input type="hidden" name="product_net_price[]" id="product_net_price_{{$branch_stock_product->id}}" class="input-3" value="{{$branch_stock_product->net_price}}">
                 </tr>
 
                 @endforeach
