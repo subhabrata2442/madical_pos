@@ -41,16 +41,34 @@ class DashboardController extends Controller
 
 
             //low stock start
+            // if($admin_type==1){
+            //     $branchStockProducts_query = BranchStockProducts::with('product');
+            //     if(!empty($request->get('store_id'))){
+            //         $branchStockProducts_query->where('branch_id', $request->get('store_id'));
+            //     }
+            //     $low_stock = $branchStockProducts_query->limit(5)->get();
+            // }else{
+            //     $store_id	= Session::get('store_id');
+            //     $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(5)->get();
+            // }
+
             if($admin_type==1){
-                $branchStockProducts_query = BranchStockProducts::with('product');
+                $branchStockProducts_query = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id');
+
                 if(!empty($request->get('store_id'))){
                     $branchStockProducts_query->where('branch_id', $request->get('store_id'));
                 }
-                $low_stock = $branchStockProducts_query->limit(5)->get();
+
+                $low_stock = $branchStockProducts_query->paginate(20);
             }else{
                 $store_id	= Session::get('store_id');
-                $low_stock = BranchStockProducts::with('product')->where('branch_id', $store_id)->limit(5)->get();
+                $branchStockProducts_query = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id')->where('branch_id', $store_id);
+
+                $low_stock = $branchStockProducts_query->paginate(20);
             }
+
+
+
             $data['low_stock']=$low_stock;
             //low stock end
 
