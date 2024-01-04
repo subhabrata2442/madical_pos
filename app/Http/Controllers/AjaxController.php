@@ -44,6 +44,7 @@ use App\Models\FloorWiseTable;
 use App\Models\TableBookingHistory;
 use App\Models\BarProductSizePrice;
 use App\Models\Customer;
+use App\Models\SellStockProducts;
 
 use App\Models\BranchStockRequest;
 
@@ -1952,5 +1953,21 @@ class AjaxController extends Controller {
 
 			echo json_encode($return_data);
 		}
+
+        public function ajaxpost_delete_sell_product($request) {
+            $sellStockProducts = SellStockProducts::where('id', $request->sell_stock_products_id)->first();
+
+            $branchStockProducts = BranchStockProducts::where('id', $sellStockProducts->product_stock_id)->first();
+
+            $t_qty = ($branchStockProducts->t_qty + $sellStockProducts->product_qty);
+
+            BranchStockProducts::where('id', $sellStockProducts->product_stock_id)->update(['t_qty'=>$t_qty]);
+
+            SellStockProducts::where('id', $request->sell_stock_products_id)->delete();
+
+            $return_data['status']	= 1;
+			echo json_encode($return_data);
+        }
+
 
 }

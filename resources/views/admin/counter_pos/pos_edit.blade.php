@@ -110,7 +110,7 @@
                     <input type="hidden" class="input-3" name="" id="product_unit_price_amount_old_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
                     <input type="hidden" class="product_unit_price_amount input-3" name="product_unit_price_amount[]" id="product_unit_price_amount_{{$branch_stock_product->product_id}}" value="{{$item->product_mrp}}">
                     <td id="product_total_amount_{{$branch_stock_product->product_id}}">{{number_format($item->total_cost)}}</td>
-                    <td><a href="javascript:;" onclick="remove_sell_item({{$key}});"><svg class="svg-inline--fa fa-times-circle fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg><!-- <i class="fas fa-times-circle"></i> Font Awesome fontawesome.com --></a></td>
+                    <td><a href="javascript:;" onclick="remove_sell_item_edit({{$key}}, {{$item->id}});"><svg class="svg-inline--fa fa-times-circle fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg><!-- <i class="fas fa-times-circle"></i> Font Awesome fontawesome.com --></a></td>
                     <input type="hidden" name="product_net_price[]" id="product_net_price_{{$branch_stock_product->product_id}}" class="input-3" value="{{$branch_stock_product->net_price}}">
                 </tr>
 
@@ -460,7 +460,7 @@
                 <thead>
                     <tr>
                         <th>Brand</th>
-                        <th>Product</th>
+                        {{-- <th>Product</th> --}}
                         <th>Barcode</th>
                         <th>Selling by</th>
                         <th>Stock</th>
