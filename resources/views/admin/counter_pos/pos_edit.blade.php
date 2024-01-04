@@ -42,6 +42,7 @@
 
     <form method="post" action="{{ route('admin.pos.update') }}" id="pos_create_order-form_update" novalidate enctype="multipart/form-data">
       @csrf
+      <input type="hidden" class="input-2" name="sell_date" id="sell_date" value="{{$data['bill_details']->sell_date}}">
       <input type="hidden" name="sell_inward_stock_id" id="sell_inward_stock_id" value="{{$data['bill_details']->id}}">
       <input type="hidden" name="payment_method_type" id="payment_method_type-input" value="cash">
       <input type="hidden" name="stock_type" value="s">
@@ -220,8 +221,10 @@
                                 <li><strong>Cashier :</strong> {{$data['supplier']->name}}</li>
                                 <li class="d-flex align-items-center">
                                 <p>Date:</p>
-                                <?php echo date('d-m-Y');?>
-                                <!--<input type="date" class="input-2" value="<?php echo date('d-m-Y');?>">-->
+                                <?php
+                                // echo date('d-m-Y');
+                                ?>
+                                <input type="date" class="input-2" onchange="get_sell_date(this.value)" name="sell_date_view" id="sell_date_view" value="{{$data['bill_details']->sell_date}}">
                                 </li>
                             </ul>
                         </div>
@@ -330,9 +333,9 @@
                         <ul class="top-product-list">
                           @if (count($data['topSellingProducts'])>0)
                             @foreach ($data['topSellingProducts'] as $keystop=>$topitem)
-                              @if ($topitem['t_qty']!=0)
+
                                 <li value="{{$topitem['id']}}" class="topSellProductItem">{{$topitem['brand']}}<span class="total-qty">{{$topitem['t_qty']}}</span></li>
-                              @endif
+
                             @endforeach
                           @endif
                         </ul>

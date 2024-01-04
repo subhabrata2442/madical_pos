@@ -1232,7 +1232,7 @@ class PosController extends Controller
 	}
 
 
-    public function billedit($bill_no_edit){
+    public function billedit(Request $request, $bill_no_edit){
 
         DB::beginTransaction();
         try {
@@ -1284,19 +1284,46 @@ class PosController extends Controller
 
 
 
-			$topSellingProducts = Product::where('common_items', 'yes')->get();
+			// $topSellingProducts = Product::where('common_items', 'yes')->get();
 
 
-			$result=[];
-			if(count($topSellingProducts) > 0){
-				foreach($topSellingProducts as $row){
-					$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+			// $result=[];
+			// if(count($topSellingProducts) > 0){
+			// 	foreach($topSellingProducts as $row){
+			// 		$t_qty = BranchStockProducts::where('product_id', $row->id)->where('branch_id', $store_id)->sum('t_qty');
+			// 		$result[]=array(
+			// 			'id'				=> $row->id,
+			// 			'product_barcode'	=> $row->product_barcode,
+			// 			'product_name'		=> $row->product_name,
+            //             'brand'		        => $row->brand,
+			// 			't_qty'				=> $t_qty,
+			// 		);
+
+			// 	}
+			// }
+
+
+            $branchStockProducts_query = BranchStockProducts::with(['user', 'product'])->select('product_id', DB::raw('SUM(t_qty) as t_qty'), 'branch_id', 'product_barcode')->groupBy('product_id')->havingRaw('SUM(t_qty) != 0');
+            $branchStockProducts_query->where('branch_id', $store_id);
+            $branchStockProducts_query->whereHas('product', function ($query) use ($request) {
+                $query->where('common_items', 'yes');
+            });
+            $resss = $branchStockProducts_query->limit(10)->get();
+
+            // dd($resss);
+
+            $result=[];
+
+			if(count($resss) > 0){
+				foreach($resss as $row){
+
 					$result[]=array(
-						'id'				=> $row->id,
-						'product_barcode'	=> $row->product_barcode,
-						'product_name'		=> $row->product_name,
-                        'brand'		        => $row->brand,
-						't_qty'				=> $t_qty,
+						//'id'				=> $row->id,
+						'id'				=> @$row->product->id,
+						'product_barcode'	=> @$row->product_barcode,
+						'brand'		=> @$row->product->brand,
+						//'product_size'		=> $row->size->name,
+                        't_qty'				=> @$row->t_qty,
 					);
 
 				}
