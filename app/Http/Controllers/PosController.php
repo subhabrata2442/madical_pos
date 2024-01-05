@@ -1493,9 +1493,22 @@ class PosController extends Controller
                 $branchStockProducts_get = BranchStockProducts::where('id', $sellStockProducts_get->product_stock_id)->first();
 
                 $t_qty_old = ($branchStockProducts_get->t_qty + $sellStockProducts_get->product_qty);
+
+                // echo $sellStockProducts_get->product_qty;
+                // echo "<br>";
+                // echo $branchStockProducts_get->t_qty;
+                // exit;
+
+                // dd($sellStockProducts_get->product_stock_id);
+
                 BranchStockProducts::where('id', $sellStockProducts_get->product_stock_id)->update(['t_qty'=>$t_qty_old]);
 
+                // echo $qty;
+                // exit;
+
                 SellStockProducts::where('inward_stock_id', $sell_inward_stock_id)->where('product_id', $product_id)->delete();
+
+                $branch_product_stock_info	= BranchStockProducts::where('id',$product_stock_id)->first();
 
 
 				$sellStockproductData=array(
