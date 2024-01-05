@@ -1232,13 +1232,14 @@ $(document).ready(function() {
                         });
                         $('#modal_createCustomer').modal('hide');
                         //window.location.replace("{{ route('admin.supplier.list') }}");
-                    } else {
+
+                    }if (data[0].success == 0) {
                         Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: data[0].error_message,
-                            })
-                            //alert(data[0].error_message);
+                            icon: 'warning',
+                            title: 'Customer aleady exits.',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
                     }
                     //$("html, body").animate({ scrollTop: 0 }, "slow");
                 },
