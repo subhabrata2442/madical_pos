@@ -208,6 +208,9 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{ url('assets/admin/js/jquery.scannerdetection.js')}}"></script>
+
 <script src="{{ url('assets/admin/js/product.js') }}"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
@@ -228,5 +231,27 @@
     });
 
 });
+
+
+
+
+
+
+// $(document).scannerDetection({
+//     timeBeforeScanTest: 200,
+//     startChar: [120],
+//     endChar: [13],
+//     avgTimeByChar: 40,
+
+//     onComplete: function(barcode, qty) {
+//         console.log(barcode);
+//         barcodeScanner(barcode);
+//     }
+// });
+
+// barcodeScanner(barcode){
+//     console.log(barcode);
+// }
+
 </script>
 @endsection
