@@ -197,8 +197,10 @@
             <input type="hidden" name="gross_total_amount" id="gross_total_input" value="0">
             <input type="hidden" name="gross_total_amount_cal" id="gross_total_amount-input" value="0">
             <input type="hidden" name="total_payble_amount" id="total_payble_amount-input" value="0">
-            <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="{{$data['bill_details']->special_discount_percent}}">
-            <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="{{$data['bill_details']->special_discount_amt}}">
+            {{-- <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="{{$data['bill_details']->special_discount_percent}}">
+            <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="{{$data['bill_details']->special_discount_amt}}"> --}}
+            <input type="hidden" name="special_discount_percent" id="selling_special_discount_percent-input" value="0">
+            <input type="hidden" name="special_discount_amt" id="selling_special_discount_amt-input" value="0">
             <input type="hidden" name="charge_amt" id="charge_amt-input" value="{{$data['bill_details']->charge_amount}}">
             <input type="hidden" name="tendered_amount" id="total_tendered_amount" value="0">
             <input type="hidden" name="tendered_change_amount" id="total_tendered_change_amount" value="0">
