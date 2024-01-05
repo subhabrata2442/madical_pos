@@ -1920,22 +1920,22 @@ function remove_sell_item_edit(row, sell_stock_products_id) {
     $("#product_sell_record_sec").find("tr[data-id='" + row + "']").remove();
     total_cal();
 
-    $.ajax({
-        url: prop.ajaxurl,
-        type: "get",
-        dataType: "json",
-        data: {
-            sell_stock_products_id: sell_stock_products_id,
-            action: "delete_sell_product",
-            _token: prop.csrf_token,
-        },
-        beforeSend: function() {},
-        success: function(response) {
-            if (response.status == 1) {
+    // $.ajax({
+    //     url: prop.ajaxurl,
+    //     type: "get",
+    //     dataType: "json",
+    //     data: {
+    //         sell_stock_products_id: sell_stock_products_id,
+    //         action: "delete_sell_product",
+    //         _token: prop.csrf_token,
+    //     },
+    //     beforeSend: function() {},
+    //     success: function(response) {
+    //         if (response.status == 1) {
 
-            }
-        },
-    });
+    //         }
+    //     },
+    // });
 
 }
 
