@@ -18,6 +18,9 @@ class CustomerController extends Controller
     public function add(Request $request)
     {
         try {
+
+            // dd($request->all());
+
             if ($request->isMethod('post')) {
                 $validator = Validator::make($request->all(), [
                     'customer_name' 		=> 'required',
@@ -27,25 +30,36 @@ class CustomerController extends Controller
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
-				
+
 				//$delivery_address=$request->delivery_address;
-				
-				
+
+
 				/* $is_same_delivery_address='N';
 				if(isset($delivery_address)){
 					if($delivery_address=='yes'){
 						$is_same_delivery_address='Y';
 					}
 				} */
-				
+
+                $checkcustomer = Customer::where('customer_mobile', $request->customer_mobile)->first();
+
+
 				$customer_data=array(
 					'customer_name'  		=> $request->customer_name,
 					'customer_mobile'  	=> $request->customer_mobile,
 					'created_at'			=> date('Y-m-d')
 				);
-				$customer=Customer::create($customer_data);
-				$customer_id=$customer->id;
-				
+
+                if(empty($checkcustomer)){
+                    $customer=Customer::create($customer_data);
+				    $customer_id=$customer->id;
+                }else{
+                    $return_data['success'] = 0;
+				    return response()->json([$return_data]);
+                }
+
+
+
 				/* $customer_address_data=array(
 					'customer_id'  	=> $customer_id,
 					'address'  		=> $request->customer_address,
@@ -56,11 +70,11 @@ class CustomerController extends Controller
 					'country'		=> $request->customer_country_id,
 					'created_at'	=> date('Y-m-d')
 				);
-				
+
 				CustomerAddress::create($customer_address_data);
-				
-				
-				
+
+
+
 				$customer_delivery_address_data=array(
 					'customer_id'  	=> $customer_id,
 					'address'  		=> $request->customer_delivery_address,
@@ -71,14 +85,14 @@ class CustomerController extends Controller
 					'country'		=> $request->customer_delivery_country_id,
 					'created_at'	=> date('Y-m-d')
 				);
-				
+
 				if($is_same_delivery_address=='Y'){
 					CustomerDeliveryAddress::create($customer_address_data);
 				}else{
 					CustomerDeliveryAddress::create($customer_delivery_address_data);
 				}
 				$customer_id=$customer->id;
-				
+
 				$customer_address_data=array(
 					'customer_id'  	=> $customer_id,
 					'address'  		=> $request->customer_address,
@@ -89,11 +103,11 @@ class CustomerController extends Controller
 					'country'		=> $request->customer_country_id,
 					'created_at'	=> date('Y-m-d')
 				);
-				
+
 				CustomerAddress::create($customer_address_data);
-				
-				
-				
+
+
+
 				$customer_delivery_address_data=array(
 					'customer_id'  	=> $customer_id,
 					'address'  		=> $request->customer_delivery_address,
@@ -104,13 +118,13 @@ class CustomerController extends Controller
 					'country'		=> $request->customer_delivery_country_id,
 					'created_at'	=> date('Y-m-d')
 				);
-				
+
 				if($is_same_delivery_address=='Y'){
 					CustomerDeliveryAddress::create($customer_address_data);
 				}else{
 					CustomerDeliveryAddress::create($customer_delivery_address_data);
 				} */
-				
+
 				/* if(isset($request->child_name)){
 					if(count($request->child_name)>0){
 						for($i=0;count($request->child_name)>$i;$i++){
@@ -136,10 +150,10 @@ class CustomerController extends Controller
             $data['heading'] 		= 'Add New Customer';
             $data['breadcrumb'] 	= ['Customer', 'Add'];
 			//print_r($data);exit;
-			
+
             return view('admin.customer.add', compact('data'));
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
     }
@@ -149,7 +163,7 @@ class CustomerController extends Controller
         try {
             if ($request->ajax()) {
                 $customer = Customer::orderBy('id', 'desc')->get();
-				
+
                 return DataTables::of($customer)
                     ->addColumn('customer_fname', function ($row) {
                         return $row->customer_fname.' '.$row->customer_last_name;
@@ -187,7 +201,7 @@ class CustomerController extends Controller
                     })
 					->rawColumns(['action', 'company_name', 'first_name'])
                     ->make(true);
-					
+
             }
             $data = [];
             $data['heading'] = 'Customer List';
@@ -215,7 +229,7 @@ class CustomerController extends Controller
                 if ($validator->fails()) {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
-				
+
 				$delivery_address=$request->delivery_address;
 				$is_same_delivery_address='N';
 				if(isset($delivery_address)){
@@ -223,9 +237,9 @@ class CustomerController extends Controller
 						$is_same_delivery_address='Y';
 					}
 				}
-				
+
 				//echo '<pre>';print_r($_POST);exit;
-				
+
 				$customer_data=array(
 					'customer_fname'  		=> $request->customer_fname,
 					'customer_last_name'  	=> $request->customer_last_name,
@@ -240,7 +254,7 @@ class CustomerController extends Controller
 					'created_at'			=> date('Y-m-d')
 				);
 				Customer::find($customer_id)->update($customer_data);
-				
+
 				CustomerAddress::where('customer_id',$customer_id)->delete();
 				$customer_address_data=array(
 					'customer_id'  	=> $customer_id,
@@ -253,9 +267,9 @@ class CustomerController extends Controller
 					'created_at'	=> date('Y-m-d')
 				);
 				CustomerAddress::create($customer_address_data);
-				
-				
-				
+
+
+
 				$customer_delivery_address_data=array(
 					'customer_id'  	=> $customer_id,
 					'address'  		=> $request->customer_delivery_address,
@@ -272,7 +286,7 @@ class CustomerController extends Controller
 				}else{
 					CustomerDeliveryAddress::create($customer_delivery_address_data);
 				}
-				
+
 				CustomerChildren::where('customer_id',$customer_id)->delete();
 				if(isset($request->child_name)){
 					if(count($request->child_name)>0){
@@ -288,7 +302,7 @@ class CustomerController extends Controller
 					}
 
 				}
-				
+
                 return redirect()->back()->with('success', 'Customer updated successfully');
             }
             $data = [];
@@ -300,7 +314,7 @@ class CustomerController extends Controller
 			$data['delivery_address'] = CustomerDeliveryAddress::where('customer_id',$customer_id)->first();
             return view('admin.customer.edit', compact('data'));
         } catch (\Exception $e) {
-           
+
             return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
         }
     }
