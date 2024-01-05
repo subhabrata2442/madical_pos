@@ -72,7 +72,7 @@ class ProductController extends Controller
             if (!is_null($request['brand_name'])) {
 				$queryProduct->where('brand', $request['brand_name']);
 			}
-			$products = $queryProduct->get();
+			$products = $queryProduct->orderBy('id', 'desc')->get();
 
 			//echo '<pre>';print_r($product);exit;
 
@@ -83,7 +83,7 @@ class ProductController extends Controller
 
 			//echo '<pre>';print_r($data['store']);exit;
 
-			$stockProducts 		= $queryProduct->paginate(10);
+			$stockProducts 		= $queryProduct->paginate(20);
 			$data['heading'] 	= 'Product List';
 			$data['breadcrumb'] = ['Product', 'List'];
 			$data['products']   = $stockProducts;
