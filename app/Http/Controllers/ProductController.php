@@ -236,7 +236,7 @@ class ProductController extends Controller
 			$data['brand'] 			= Brand::all();
 			$data['dosage'] 		= Dosage::all();
 			$data['category'] 		= Category::all();
-			$data['company'] 		= Company::all();
+			$data['company'] 		= Company::orderBy('name', 'asc')->get();
 			$data['brand'] 			= Brand::all();
 			$data['subcategory'] 	= Subcategory::all();
 			//$data['drugstore'] 		= Drugstore::all();
@@ -391,7 +391,7 @@ class ProductController extends Controller
 			$data['brand'] 			= Brand::all();
 			$data['dosage'] 		= Dosage::all();
 			$data['category'] 		= Category::all();
-			$data['company'] 		= Company::all();
+			$data['company'] 		= Company::orderBy('name', 'asc')->get();
 			$data['brand'] 			= Brand::all();
 			$data['subcategory'] 	= Subcategory::all();
 			//$data['drugstore'] 		= Drugstore::all();
