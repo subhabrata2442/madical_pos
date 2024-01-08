@@ -73,7 +73,7 @@ class BillController extends Controller
 
         if(!empty($request->get('customer_no'))){
 
-            $data['latest_bill'] = SellInwardStock::with(['customer' => fn($query) => $query->where('customer_mobile', $request->get('customer_no'))])
+            $data['latest_bill'] = SellInwardStock::where('branch_id', $store_id)->with(['customer' => fn($query) => $query->where('customer_mobile', $request->get('customer_no'))])
                 ->whereHas('customer', fn ($query) =>
                     $query->where('customer_mobile', $request->get('customer_no'))
                 )->get();

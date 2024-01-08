@@ -1333,7 +1333,7 @@ class PosController extends Controller
 
 			$data['topSellingProducts']=$result;
 
-            $bill = SellInwardStock::where('bill_no', $bill_no_edit)->first();
+            $bill = SellInwardStock::where('id', $bill_no_edit)->first();
 
             // echo $bill->id;exit;
 

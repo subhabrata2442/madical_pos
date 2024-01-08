@@ -112,7 +112,7 @@
                                             $endDate = strtotime(date('Y-m-d'));
                                         @endphp
                                         @if($dateToCheck >= $startDate && $dateToCheck <= $endDate)
-                                            <a href="{{url('admin/pos/billedit')}}/{{$item->bill_no}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <a href="{{url('admin/pos/billedit')}}/{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
                                         @else
                                             <a href="javascript:void(0)" class="btn btn-secondary btn-sm disabled_btn" disabled>Date over</a>
                                         @endif
