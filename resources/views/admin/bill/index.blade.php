@@ -153,11 +153,9 @@ if($adminId!=1){
                                                 <a href="javascript:void(0)" class="btn btn-secondary btn-sm disabled_btn" disabled>Date over</a>
                                             @endif
                                         @endif
-                                    @endif
-                                    @endif
 
-                                    @if(isset($permission))
-                                    @if(in_array(18, $permission))
+
+
                                         @if(in_array('admin-pos-billdelete', $page_permission))
                                             <a href="{{url('admin/pos/billdelete')}}/{{$item->id}}" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</a>
                                         @endif
