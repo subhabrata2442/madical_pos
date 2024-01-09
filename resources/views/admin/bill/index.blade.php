@@ -42,6 +42,38 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
+
+@php
+$adminId 			= Session::get('adminId');
+$adminRoll 		= Session::get('admin_type');
+
+
+$permission=array();
+$rolePermissionResult		= App\Models\UserRolePermission::where('user_id',$adminId)->orderBy('id', 'asc')->get();
+
+foreach($rolePermissionResult as $row){
+	$permission[]=$row->role_id;
+}
+$page_permission=array();
+
+if($adminId!=1){
+  $roleWisePermissionResult		= App\Models\RoleWisePermission::where('branch_id',$adminId)->orderBy('id', 'asc')->get();
+  foreach($roleWisePermissionResult as $row){
+    $page_permission[]=$row->get_slug->slug;
+  }
+}else{
+  $roleWisePermissionResult		= App\Models\RoleSubPermission::get();
+  foreach($roleWisePermissionResult as $row){
+    $page_permission[]=$row->slug;
+  }
+
+}
+
+//echo '<pre>';print_r($page_permission);exit;
+
+
+@endphp
+
 <div class="srcBtnWrap">
 	<div class="card">
 		<form action="">
@@ -111,14 +143,26 @@
                                             $startDate = strtotime(date('Y-m-d', strtotime('-'.$data['settingdata']->return_bill_time.' days')));
                                             $endDate = strtotime(date('Y-m-d'));
                                         @endphp
-                                        @if($dateToCheck >= $startDate && $dateToCheck <= $endDate)
-                                            <a href="{{url('admin/pos/billedit')}}/{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
-                                        @else
-                                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm disabled_btn" disabled>Date over</a>
+
+                                    @if(isset($permission))
+                                    @if(in_array(18, $permission))
+                                        @if(in_array('admin-pos-billedit', $page_permission))
+                                            @if($dateToCheck >= $startDate && $dateToCheck <= $endDate)
+                                                <a href="{{url('admin/pos/billedit')}}/{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            @else
+                                                <a href="javascript:void(0)" class="btn btn-secondary btn-sm disabled_btn" disabled>Date over</a>
+                                            @endif
                                         @endif
+                                    @endif
+                                    @endif
 
-                                        <a href="{{url('admin/pos/billdelete')}}/{{$item->id}}" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</a>
-
+                                    @if(isset($permission))
+                                    @if(in_array(18, $permission))
+                                        @if(in_array('admin-pos-billdelete', $page_permission))
+                                            <a href="{{url('admin/pos/billdelete')}}/{{$item->id}}" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm">Delete</a>
+                                        @endif
+                                    @endif
+                                    @endif
 
                                     </td>
                                 </tr>

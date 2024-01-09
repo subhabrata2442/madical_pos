@@ -148,6 +148,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $data['logreport']->appends($_GET)->links() }}
                 </div>
             </div>
         </div>

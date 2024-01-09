@@ -156,6 +156,20 @@ if($adminId!=1){
           @endif
           @endif
 
+
+        @if(isset($permission))
+        @if(in_array(35, $permission) || $adminRoll == '1')
+            @if(in_array('admin-customer-list', $page_permission))
+                <li class="nav-item"> <a href="{{ route('admin.customer.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.customer.list') active @endif"> <i class="nav-icon fas fa-users"></i>
+                    <p> Customer </p>
+                    </a>
+                </li>
+            @endif
+        @endif
+        @endif
+
+
+
           @if(isset($permission))
           @if(in_array(6, $permission))
             <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.embloyees') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.embloyees') !== false) parent-active @endif"> <i class="fas fa-user nav-icon"></i>
