@@ -146,9 +146,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('settlement_add');
 
+    Route::prefix('customer')->name('customer.')->middleware('checkPermission:49')->group(function () {
+		Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
+	});
+
 	Route::prefix('customer')->name('customer.')->group(function () {
 		Route::match(['GET', 'POST'], '/add', [CustomerController::class, 'add'])->name('add');
-		Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
+		// Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
 		Route::match(['GET', 'POST'], '/edit/{id}', [CustomerController::class, 'edit'])->name('edit');
 		Route::match(['GET', 'POST'], '/delete/{id}', [CustomerController::class, 'delete'])->name('delete');
 	});

@@ -161,49 +161,21 @@ class CustomerController extends Controller
     public function list(Request $request)
     {
         try {
-            if ($request->ajax()) {
-                $customer = Customer::orderBy('id', 'desc')->get();
 
-                return DataTables::of($customer)
-                    ->addColumn('customer_fname', function ($row) {
-                        return $row->customer_fname.' '.$row->customer_last_name;
-                    })
-                    ->addColumn('customer_email', function ($row) {
-                        return $row->customer_email;
-                    })
-                    ->addColumn('customer_mobile', function ($row) {
-                        return $row->customer_mobile;
-                    })
-                    ->addColumn('gender', function ($row) {
-                        return $row->gender;
-                    })
-                    ->addColumn('customer_gstin', function ($row) {
-                        return $row->customer_gstin;
-                    })
-                    ->addColumn('date_of_birth', function ($row) {
-                        return $row->date_of_birth;
-                    })
-					->addColumn('action', function ($row) {
-                        $dropdown = '<a class="dropdown-item" href="' . route('admin.customer.edit', [base64_encode($row->id)]) . '">Edit</a>
-                        <a class="dropdown-item delete-item" href="#" id="delete_product" data-url="' . route('admin.customer.delete', [base64_encode($row->id)]) . '">Delete</a>';
+                $customer_query = Customer::query();
 
-                        $btn = '<div class="dropdown">
-                                    <div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        ' . $dropdown . '
-                                    </div>
-                                </div>
-                                ';
+                if (!is_null($request['customer_name'])) {
+                    $customer_query->where('customer_name', $request['customer_name']);
+                }
 
-                        return $btn;
-                    })
-					->rawColumns(['action', 'company_name', 'first_name'])
-                    ->make(true);
+                if (!is_null($request['customer_mobile'])) {
+                    $customer_query->where('customer_mobile', $request['customer_mobile']);
+                }
 
-            }
+                $customer = $customer_query->orderBy('id', 'desc')->paginate(20);
+
             $data = [];
+            $data['customer_list'] = $customer;
             $data['heading'] = 'Customer List';
             $data['breadcrumb'] = ['Customer', 'List'];
             return view('admin.customer.list', compact('data'));
