@@ -180,7 +180,7 @@
                         </div>
                     </div>
                     <div class="table-view-all">
-                        <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a>
+                        {{-- <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a> --}}
                     </div>
                 </div>
             </div>
@@ -343,7 +343,7 @@
                         </div>
                     </div>
                     <div class="table-view-all">
-                        <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a>
+                        {{-- <a href="#" class="table-view-all-btn commonBtn-btnTag">view all</a> --}}
                     </div>
                 </div>
             </div>
