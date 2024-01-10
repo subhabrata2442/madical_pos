@@ -30,6 +30,12 @@
     <x-preloader />
     <x-ajaxloader />
     <div class="wrapper">
+        <div class="data-sync-wrap">
+            <div class="data-sync-txt">
+                {{--<a href="#" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</a>--}}
+                <button type="button" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</button>
+            </div>
+        </div>
 
         {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('assets/admin-lte/img/AdminLTELogo.png') }}" alt="AdminLTELogo"

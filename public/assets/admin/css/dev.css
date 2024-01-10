@@ -2998,3 +2998,29 @@ a.downloadBtn {
 .appendnotification .dropdown-item{
     white-space: inherit;
 }
+.data-sync-wrap {
+    position: fixed;
+    right: 0;
+    bottom: 50px;
+    z-index: 2;
+}
+.data-sync-btn{
+    display: block;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #039;
+    color: #fff !important;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 1rem;
+    border: none;
+    box-shadow: none;
+}
+.data-sync-btn svg,
+.data-sync-btn i{
+    margin-right: 0.5rem;
+}
+/* .data-sync-btn:hover {
+    color: var(--secondaryTextColor) !important;
+    background: var(--inputBgmain);
+} */
