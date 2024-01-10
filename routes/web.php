@@ -42,6 +42,7 @@ use App\Http\Controllers\LogreportController;
 
 // authentication routes
 Route::match(['GET', 'POST'], '/', [Authenticate::class, 'login'])->name('auth.login');
+Route::match(['GET', 'POST'], '/login', [Authenticate::class, 'login'])->name('auth.do_login');
 Route::match(['GET', 'POST'], '/register', [Authenticate::class, 'register'])->name('auth.register');
 Route::match(['GET'], '/email/verification/{data}', [Authenticate::class, 'email_verification'])->name('auth.email_verification');
 Route::match(['POST'], '/email/resend-otp', [Authenticate::class, 'email_resend_otp'])->name('auth.email_resend_otp');
