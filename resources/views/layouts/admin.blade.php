@@ -30,12 +30,15 @@
     <x-preloader />
     <x-ajaxloader />
     <div class="wrapper">
-        <div class="data-sync-wrap">
-            <div class="data-sync-txt">
-                {{--<a href="#" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</a>--}}
-                <button type="button" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</button>
+        @if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1:8000') 
+            <div class="data-sync-wrap">
+                <div class="data-sync-txt">
+                    {{--<a href="#" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</a>--}}
+                    <button type="button" class="data-sync-btn" id="database_sync_btn"><i class="fas fa-sync data_sync"></i>click to data sync</button>
+                </div>
             </div>
-        </div>
+        @endif
+        
 
         {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('assets/admin-lte/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
@@ -152,6 +155,29 @@
                 }
 
             });
+
+            
+            $(document).on("click","#database_sync_btn",function() {
+                $('.data_sync').addClass('fa-spin');
+                $('#database_sync_btn').attr('disabled','disabled');
+                $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '{{route('database_sync')}}',
+                    success: function(data) {
+                        $('.data_sync').removeClass('fa-spin');
+                        $('#database_sync_btn').removeAttr('disabled');
+                    },
+                    beforeSend: function() {
+                        $('.data_sync').addClass('fa-spin');
+                    },
+                    complete: function() {
+                        $('.data_sync').removeClass('fa-spin');
+                        $('#database_sync_btn').removeAttr('disabled');
+                    }
+                });
+            })
+
         });
 
         function seenNotification(ids){
