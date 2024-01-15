@@ -60,6 +60,9 @@ use DB;
 use Pusher\Pusher;
 use App\Models\Notification;
 
+use App\Models\PurchaseInwardStockDraft;
+use App\Models\InwardStockProductsDraft;
+
 
 class AjaxController extends Controller {
 
@@ -990,6 +993,250 @@ class AjaxController extends Controller {
 		echo json_encode($return_data);
 
 	}
+
+
+    public function ajaxpost_add_inward_stockdraft($request) {
+
+
+
+        DB::beginTransaction();
+
+        try {
+            // dd($request->all());
+            $branch_id=Auth::user()->id;
+
+            $inward_stock	= $request->inward_stock;
+            //echo '<pre>';print_r($inward_stock);exit;
+
+
+
+            if($inward_stock['invoice_no']!=''){
+                $invoice_no=$inward_stock['invoice_no'];
+                $count=PurchaseInwardStock::where('invoice_no',$invoice_no)->count();
+                //$count=0;
+                if($count>0){
+                    $return_data['msg']		= 'This invoice already exists!';
+                    $return_data['status']	= 0;
+                    echo json_encode($return_data);exit;
+                }else{
+
+                    $product_total_profit=0;
+                    $productItemErrorMsg=[];
+                    if(isset($inward_stock['product_detail'])){
+                        if(count($inward_stock['product_detail'])>0){
+                            for($i=0;count($inward_stock['product_detail'])>$i;$i++){
+                                $product_total_profit += isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
+                                $product_quantity	= isset($inward_stock['product_detail'][$i]['product_quantity'])?$inward_stock['product_detail'][$i]['product_quantity']:0;
+                                if($product_quantity==0 || $product_quantity==''){
+                                    $productItemErrorMsg[]='Quantity should not be empty or 0!';
+                                }
+                                $product_price	= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
+                                if($product_price==0 || $product_price==''){
+                                    $productItemErrorMsg[]='Price should not be empty or 0!';
+                                }
+                                $product_sellPrice	= isset($inward_stock['product_detail'][$i]['product_sellPrice'])?$inward_stock['product_detail'][$i]['product_sellPrice']:0;
+                                if($product_sellPrice==0 || $product_sellPrice==''){
+                                    $productItemErrorMsg[]='Sell Price should not be empty or 0!';
+                                }
+                                $product_expiry_date	= isset($inward_stock['product_detail'][$i]['product_expiry_date'])?$inward_stock['product_detail'][$i]['product_expiry_date']:'';
+                                if($product_expiry_date==''){
+                                    $productItemErrorMsg[]='Product Expiry Date should not be empty!';
+                                }
+                            }
+                        }else{
+                            $return_data['msg']		= 'items not exists!';
+                            $return_data['status']	= 0;
+                            echo json_encode($return_data);exit;
+                        }
+                    }else{
+                        $return_data['msg']		= 'items not exists!';
+                        $return_data['status']	= 0;
+                        echo json_encode($return_data);exit;
+                    }
+
+                    if(count($productItemErrorMsg)>0){
+                        $return_data['msg']		= $productItemErrorMsg[0];
+                        $return_data['status']	= 0;
+                        echo json_encode($return_data);exit;
+                    }
+
+                    $branch_id=$inward_stock['store_id'];
+                    $purchaseStockData=array(
+                        'branch_id'  		=> $inward_stock['store_id'],
+                        'supplier_id'  		=> $inward_stock['supplier_id'],
+                        'supplier_name'  	=> $inward_stock['supplier_name'],
+                        'invoice_no'  		=> $inward_stock['invoice_no'],
+                        'purchase_date'  	=> $inward_stock['invoice_purchase_date'],
+                        // 'inward_date'  		=> $inward_stock['invoice_inward_date'],
+                        'payment_method'  	=> $inward_stock['payment_method'],
+                        'payment_debt_day'  => $inward_stock['payment_debt_day'],
+                        'payment_date'  	=> $inward_stock['payment_date'],
+                        'payment_discount'  => $inward_stock['payment_discount'],
+                        'payment_ref_no'  	=> $inward_stock['payment_ref_no'],
+                        'total_qty'  		=> $inward_stock['total_qty'],
+                        'gross_amount'  	=> $inward_stock['gross_amount'],
+                        'sub_total'  		=> $inward_stock['sub_total'],
+                        'additional_note'  	=> $inward_stock['additional_note'],
+                        'total_amount'  	=> $inward_stock['total_amount'],
+                        'currency_type'  	=> $inward_stock['payment_currency_type'],
+                        'rate'  			=> $inward_stock['payment_currency_rate'],
+                        'total_profit'  	=> $product_total_profit,
+                        'total_profit_percent' => str_replace('%', '', $inward_stock['total_profit_percent']),
+                    );
+                    //echo '<pre>';print_r($purchaseStockData);exit;
+                    $purchaseInwardStock	= PurchaseInwardStockDraft::create($purchaseStockData);
+                    $purchaseInwardStockId	= $purchaseInwardStock->id;
+                    //echo '<pre>';print_r($purchaseStockData);exit;
+
+                    //$purchaseInwardStockId=2;
+
+
+
+                    if(isset($inward_stock['product_detail'])){
+                        if(count($inward_stock['product_detail'])>0){
+                            $qty_total_net_price = 0;
+                            $qty_total_sell_price = 0;
+                            $qty_total_profit = 0;
+                            for($i=0;count($inward_stock['product_detail'])>$i;$i++){
+                                $product_id=$inward_stock['product_detail'][$i]['product_id'];
+                                $product_info=Product::find($inward_stock['product_detail'][$i]['product_id']);
+
+                                $prev_stock=isset($product_info->stock_qty)?$product_info->stock_qty:0;
+                                $current_stock=0;
+                                $current_stock += $prev_stock;
+                                $current_stock += $inward_stock['product_detail'][$i]['product_totalQuantity'];
+
+                                $product_barcode=$inward_stock['product_detail'][$i]['product_barcode'];
+
+                                $product_expiry_date=$inward_stock['product_detail'][$i]['product_expiry_date'];
+
+
+
+                                $product_isChronic = $inward_stock['product_detail'][$i]['product_isChronic'];
+                                $product_mrp = 0;
+                                if($product_isChronic == 'Yes'){
+                                    $product_mrp		= isset($inward_stock['product_detail'][$i]['chronic_amount'])? $inward_stock['product_detail'][$i]['chronic_amount']:0;
+                                }else{
+                                    $product_mrp		= isset($inward_stock['product_detail'][$i]['product_price'])?$inward_stock['product_detail'][$i]['product_price']:0;
+                                }
+
+                                $product_bonous		= isset($inward_stock['product_detail'][$i]['product_bonous'])?$inward_stock['product_detail'][$i]['product_bonous']:0;
+                                $product_qty		= isset($inward_stock['product_detail'][$i]['product_totalQuantity'])?$inward_stock['product_detail'][$i]['product_totalQuantity']:0;
+
+                                $product_brand		= isset($inward_stock['product_detail'][$i]['product_brand'])?$inward_stock['product_detail'][$i]['product_brand']:0;
+                                $product_brand_id	= isset($product_info->brand_id)?$product_info->brand_id:0;
+                                $product_dosage		= isset($inward_stock['product_detail'][$i]['product_dosage'])?$inward_stock['product_detail'][$i]['product_dosage']:0;
+                                $product_dosage_id	= isset($product_info->dosage_id)?$product_info->dosage_id:0;
+                                $product_company	= isset($inward_stock['product_detail'][$i]['product_company'])?$inward_stock['product_detail'][$i]['product_company']:0;
+                                $product_company_id	= isset($product_info->company_id)?$product_info->company_id:0;
+                                //$product_drugstore	= isset($inward_stock['product_detail'][$i]['product_drugstore'])?$inward_stock['product_detail'][$i]['product_drugstore']:0;
+                                //$drugstore_id		= isset($product_info->drugstore_id)?$product_info->drugstore_id:0;
+
+                                $product_package	= isset($inward_stock['product_detail'][$i]['product_package'])?$inward_stock['product_detail'][$i]['product_package']:0;
+                                $net_price			= isset($inward_stock['product_detail'][$i]['product_netPrice'])?$inward_stock['product_detail'][$i]['product_netPrice']:0;
+                                $product_rate		= isset($inward_stock['product_detail'][$i]['product_rate'])?$inward_stock['product_detail'][$i]['product_rate']:0;
+
+                                $selling_price		= isset($inward_stock['product_detail'][$i]['product_sellPrice'])?$inward_stock['product_detail'][$i]['product_sellPrice']:0;
+                                $product_profit		= isset($inward_stock['product_detail'][$i]['product_profit'])?$inward_stock['product_detail'][$i]['product_profit']:0;
+                                $product_profitPercent	= isset($inward_stock['product_detail'][$i]['product_profitPercent'])?$inward_stock['product_detail'][$i]['product_profitPercent']:0;
+
+                                $product_sellingBy		= isset($inward_stock['product_detail'][$i]['product_sellingBy'])?$inward_stock['product_detail'][$i]['product_sellingBy']:'Pack';
+
+                                // $branchProductStockResult=BranchStockProducts::where('product_mrp',$product_mrp)->whereDate('product_expiry_date','=',date("Y-d-m", strtotime('01/'.$product_expiry_date)))->where('branch_id',$branch_id)->where('product_id',$product_id)->get();
+                                // if(count($branchProductStockResult)>0){
+                                //     $sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+
+                                //     $sell_price_t_qty = 0;
+                                //     $sell_price_t_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+                                //     $sell_price_t_qty +=$product_qty;
+                                //     BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $sell_price_t_qty]);
+                                // }else{
+                                //     $sell_price_t_qty = 0;
+                                //     $sell_price_t_qty +=$product_qty;
+
+                                //     $branchProductStockSellPriceData=array(
+                                //         'branch_id'			=> $branch_id,
+                                //         'product_id'  		=> $product_id,
+                                //         'product_barcode'  	=> $product_barcode,
+                                //         't_qty'  			=> $sell_price_t_qty,
+                                //         'selling_price'		=> str_replace(',', '', $selling_price),
+                                //         'product_mrp'  		=> $product_mrp,
+                                //         'net_price'  		=> str_replace(',', '', $net_price),
+                                //         'product_expiry_date'  		=> date("Y-d-m", strtotime('01/'.$product_expiry_date)),
+                                //         'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
+                                //         'chronic_amount'  	=> str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) ? str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) : 0,
+                                //     );
+                                //     BranchStockProducts::create($branchProductStockSellPriceData);
+                                // }
+
+                                $inward_stock_product=array(
+                                    'inward_stock_id'	=> $purchaseInwardStockId,
+                                    'branch_id'  		=> $branch_id,
+                                    'product_id'  		=> $product_id,
+                                    'brand'  			=> $inward_stock['product_detail'][$i]['product_brand'],
+                                    'product_name'  			=> $inward_stock['product_detail'][$i]['product_name'],
+                                    'dosage'  			=> $inward_stock['product_detail'][$i]['product_dosage'],
+                                    'company'  			=> $inward_stock['product_detail'][$i]['product_company'],
+                                    'drugstore'  		=> $branch_id,
+                                    'product_qty'  		=> $inward_stock['product_detail'][$i]['product_quantity'],
+                                    'total_qty'  		=> $inward_stock['product_detail'][$i]['product_totalQuantity'],
+                                    'no_package'  		=> $inward_stock['product_detail'][$i]['product_package'],
+                                    'net_price_befour_discount' => $inward_stock['product_detail'][$i]['product_totalNetPrice'],
+                                    'discount_cost'  	=> $inward_stock['product_detail'][$i]['product_discountCost'],
+                                    //'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
+                                    'is_chronic'  		=> $inward_stock['product_detail'][$i]['product_isChronic'],
+                                    'net_price'  		=> str_replace(',', '', $inward_stock['product_detail'][$i]['product_netPrice']),
+                                    'product_mrp'  		=> $product_mrp,
+                                    'chronic_amount'  	=> str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) ? str_replace(',', '', $inward_stock['product_detail'][$i]['chronic_amount']) : 0,
+                                    'option_product_mrp'=> $inward_stock['product_detail'][$i]['product_isChronic'] == 'Yes' ? $inward_stock['product_detail'][$i]['product_price'] : 0,
+                                    'cost_price'  		=> $inward_stock['product_detail'][$i]['product_price'],
+                                    'cost_rate'  		=> $inward_stock['product_detail'][$i]['product_rate'],
+                                    'bonous'  			=> $inward_stock['product_detail'][$i]['product_bonous'],
+                                    'selling_price'		=> str_replace(',', '', $inward_stock['product_detail'][$i]['product_sellPrice']),
+                                    'profit_amount'  	=> $inward_stock['product_detail'][$i]['product_profit'],
+                                    'profit_percent'  	=> str_replace('%', '', $inward_stock['product_detail'][$i]['product_profitPercent']),
+                                    'chronic_amount_percentage'  	=> str_replace('%', '', $inward_stock['product_detail'][$i]['chronic_amount_percentage']),
+                                    'product_expiry_date'  	=> date("Y-d-m", strtotime('01/'.$inward_stock['product_detail'][$i]['product_expiry_date'])),
+                                    'selling_by'		=> $product_sellingBy,
+                                    'qty_total_net_price'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_netPrice']),
+                                    'qty_total_sell_price'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_sellPrice']),
+                                    'qty_total_profit'		=> $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'],
+                                    'product_barcode'  	=> $product_barcode,
+                                );
+                                InwardStockProductsDraft::create($inward_stock_product);
+                                //echo '<pre>';print_r($inward_stock_product);exit;
+                                $qty_total_net_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_netPrice']);
+                                $qty_total_sell_price += $inward_stock['product_detail'][$i]['product_totalQuantity'] * str_replace(',', '', $inward_stock['product_detail'][$i]['product_sellPrice']);
+                                $qty_total_profit += $inward_stock['product_detail'][$i]['product_totalQuantity'] * $inward_stock['product_detail'][$i]['product_profit'];
+                            }
+                            PurchaseInwardStockDraft::where('id',$purchaseInwardStockId)->update(['qty_total_net_price' => $qty_total_net_price,'qty_total_sell_price' => $qty_total_sell_price,'qty_total_profit' => $qty_total_profit]);
+                        }
+                    }
+
+
+
+
+
+
+
+                }
+            }
+
+            DB::commit();
+
+            $return_data['msg']		= 'Successfully added';
+            $return_data['status']	= 1;
+            echo json_encode($return_data);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return_data['msg']		= 'Something went wrong';
+            $return_data['status']	= 0;
+            echo json_encode($e->getMessage());
+        }
+
+        }
+
 
 	public function ajaxpost_add_inward_stock($request) {
 
