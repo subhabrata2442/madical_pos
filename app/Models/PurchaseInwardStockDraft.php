@@ -21,5 +21,9 @@ class PurchaseInwardStockDraft extends Model
         return $this->hasOne(User::class,'id', 'branch_id');
     }
 
+    public function inwardStockProductsdraft(){
+        return $this->hasMany(InwardStockProductsDraft::class,'inward_stock_id','id');
+    }
+
 
 }

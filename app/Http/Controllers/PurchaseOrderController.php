@@ -3504,4 +3504,40 @@ class PurchaseOrderController extends Controller
         }
 
 
+        public function inward_dreft_delete($id){
+            $id = base64_decode($id);
+            $purchaseInwardStockDraft = PurchaseInwardStockDraft::where('id', $id)->delete();
+            $inwardStockProductsDraft = InwardStockProductsDraft::where('inward_stock_id', $id)->delete();
+
+            return redirect()->back()->with('success', 'Draft deleted successfully');
+        }
+
+        public function inward_dreft_edit($id){
+            $id = base64_decode($id);
+
+            try {
+                $branch_id=Auth::user()->id;
+                $data = [];
+                $data['heading'] 		= 'Update Purchase Order';
+                $data['breadcrumb'] 	= ['Purchase Order', 'Add'];
+                $data['product'] 		= Product::all();
+
+                $data['store']			= [];
+                if($branch_id==1){
+                    $data['store'] 		= User::where('role',2)->where('parent_id',0)->where('status',1)->get();
+                }
+
+                $purchaseInwardStock = PurchaseInwardStockDraft::with(['inwardStockProductsdraft'])->where('invoice_no','!=','')->where('id', $id)->first();
+                $data['purchaseInward'] = $purchaseInwardStock;
+                // dd($purchaseInwardStock);
+                //echo '<pre>';print_r($data['store']);exit;
+
+                return view('admin.purchase_order.edit_order_draft', compact('data'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+            }
+
+        }
+
+
 }

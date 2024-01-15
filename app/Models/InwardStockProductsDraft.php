@@ -13,4 +13,8 @@ class InwardStockProductsDraft extends Model
     protected $table = 'inward_stock_products_draft';
 	protected $guarded	= [];
 
+    public function product(){
+        return $this->hasOne(Product::class,'id','product_id');
+    }
+
 }

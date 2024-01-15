@@ -1987,6 +1987,221 @@ $(document).on("click", "#inwardStockSubmitBtmUpdate", function() {
     });
 });
 
+$(document).on("click", "#inwardStockSubmitBtmUpdateDraft", function() {
+    if (no_of_items <= 0) {
+        toastr.error("Not Item Found!");
+    }
+
+    var invoice_no = $("#invoice_no").val();
+    if (invoice_no == "") {
+        $("#invoice_no").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#invoice_no").removeClass("red_border").addClass("black_border");
+    }
+
+    if (invoice_no == "") {
+        toastr.error("Enter Invoice Number!");
+        return false;
+    }
+
+    var purchase_date = $("#purchase_date").val();
+    if (purchase_date == "") {
+        $("#purchase_date").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#purchase_date").removeClass("red_border").addClass("black_border");
+    }
+
+    if (purchase_date == "") {
+        toastr.error("Select purchase date!");
+        return false;
+    }
+
+    var store_id = $("#store_id").val();
+    if (store_id == "") {
+        $("#store_id").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#store_id").removeClass("red_border").addClass("black_border");
+    }
+
+    if (store_id == "") {
+        toastr.error("Select store!");
+        return false;
+    }
+
+    var payment_method = $("#payment_method").val();
+    if (payment_method == "") {
+        $("#payment_method").removeClass("black_border").addClass("red_border");
+    } else {
+        $("#payment_method").removeClass("red_border").addClass("black_border");
+    }
+
+    if (payment_method == "") {
+        toastr.error("Select payment method!");
+        return false;
+    }
+
+    //$("#ajax_loader").show();
+    var product_info = [];
+    var inward_stock_info = {};
+
+    inward_stock_info["purchaseId"] = $("#purchaseId").val();
+
+    inward_stock_info["total_profit_percent"] = $("#total_profit_percent").text();
+
+
+    inward_stock_info["total_qty"] = $("#input-supplier_qty_total").val();
+    inward_stock_info["gross_amount"] = $("#input-supplier_gross_amount").val();
+    inward_stock_info["sub_total"] = $("#input-supplier_sub_total").val();
+
+    inward_stock_info["additional_note"] = $("#additional_note").val();
+    inward_stock_info["invoice_no"] = $("#invoice_no").val();
+    inward_stock_info["invoice_purchase_date"] = $("#purchase_date").val();
+    inward_stock_info["invoice_inward_date"] = $("#inward_date").val();
+
+    inward_stock_info["payment_method"] = $("#payment_method").val();
+    inward_stock_info["payment_date"] = $("#payment_date").val();
+    inward_stock_info["payment_ref_no"] = $("#payment_ref_no").val();
+
+    inward_stock_info["total_amount"] = $("#input-gross_total_amount").val();
+
+    inward_stock_info["supplier_name"] = $("#supplier_name").val();
+    inward_stock_info["supplier_id"] = $("#supplier_id").val();
+    inward_stock_info["payment_debt_day"] = $("#payment_debt_day").val();
+    inward_stock_info["payment_discount"] = $("#payment_discount").val();
+
+    inward_stock_info["store_id"] = $("#store_id").val();
+    inward_stock_info["payment_currency_type"] = $(
+        "#payment_currency_type"
+    ).val();
+
+    var currency_type = $("#payment_currency_type").val();
+
+    if (currency_type == "iqd") {
+        inward_stock_info["payment_currency_rate"] = 1;
+    } else {
+        inward_stock_info["payment_currency_rate"] = $(
+            "#payment_currency_usd_rate"
+        ).val();
+    }
+
+    $("#product_record_sec tr").each(function(index, e) {
+        var rowcount = $(this).data("id");
+        $("#product_record_sec")
+            .find("tr[data-id='" + rowcount + "']")
+            .each(function(key, keyval) {
+                var product_detail = {};
+                var tr = $(this).attr("id");
+                var product_id = tr.split("product_")[1];
+
+                var id = "";
+                var values = "";
+                product_detail["product_id"] = product_id;
+                var cost_price = "";
+
+                product_detail["product_discountCost"] = $(
+                    "#product_discountCost_" + product_id
+                ).val();
+                product_detail["product_totalNetPrice"] = $(
+                    "#product_totalNetPrice_" + product_id
+                ).val();
+                product_detail["product_expiry_date"] = $(
+                    "#product_expiry_date_" + product_id
+                ).val();
+
+                $(this)
+                    .find("td")
+                    .each(function() {
+                        if ($(this).attr("id") != undefined) {
+                            id = $(this)
+                                .attr("id")
+                                .split("_" + product_id)[0];
+                            //console.log(id);return false;
+                            values = $(this).html();
+                            product_detail[id] = values;
+                        }
+                    });
+                // product_info.push(product_detail);
+
+                $(this)
+                    .find("td input")
+                    .each(function() {
+                        if ($(this).attr("id") != undefined) {
+                            id = $(this)
+                                .attr("id")
+                                .split("_" + product_id)[0];
+                            //console.log(id);return false;
+                            values = $(this).val();
+                            product_detail[id] = values;
+                        }
+                    });
+                product_info.push(product_detail);
+            });
+    });
+
+    console.log(product_info);
+    //return false;
+
+    inward_stock_info["product_detail"] = product_info;
+    $.ajax({
+        url: prop.ajaxurl,
+        type: "post",
+        data: {
+            inward_stock: inward_stock_info,
+            action: "update_inward_stock_draft",
+            _token: prop.csrf_token,
+        },
+        dataType: "json",
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    $('#progressBar .progress-bar').css('width', percentComplete + '%');
+                    $('#progressBar .progress-bar').attr('aria-valuenow', percentComplete);
+                    $('#progressBar .progress-bar').text(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        beforeSend: function () {
+            $('#progressBar .progress-bar').css('width', '0%');
+            $('#progressBar .progress-bar').attr('aria-valuenow', '0');
+            $('#progressBar .progress-bar').text('0%');
+
+            $('#progressBar').show();
+
+	        $('#inwardStockSubmitBtmUpdate').html('Please Wait...');
+    	    $('#inwardStockSubmitBtmUpdate').attr('disabled','disabled');
+        },
+        success: function(response) {
+            if (response.status == 0) {
+                toastr.error(response.msg);
+                $('#inwardStockSubmitBtmUpdate').html('Save');
+                $("#inwardStockSubmitBtmUpdate").prop("disabled", false);
+
+            } else {
+                Swal.fire({
+                    title: "Stock Inward is successfully done.",
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    } else if (result.isDenied) {}
+                });
+
+                $('#inwardStockSubmitBtmUpdate').html('Save');
+                $("#inwardStockSubmitBtmUpdate").prop("disabled", false);
+
+            }
+        },
+    });
+});
+
 
 $(document).scannerDetection({
     timeBeforeScanTest: 200, // wait for the next character for upto 200ms
