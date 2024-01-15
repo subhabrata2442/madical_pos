@@ -372,10 +372,10 @@ class PurchaseOrderController extends Controller
 
 
 			 $data['shop_details'] = [
-				'name' 		=> 'BAZIMAT F.L.(OFF) SHOP',
-				'address1'	=> 'West Chowbaga , Kolkata-700105',
-				'address2' 	=> 'West Bengal India',
-				'phone'		=> '8770663036',
+				'name' 		=> 'Aldaleel',
+				'address1'	=> '',
+				'address2' 	=> '',
+				'phone'		=> '',
 			];
 
 			$data['customer_details'] = [

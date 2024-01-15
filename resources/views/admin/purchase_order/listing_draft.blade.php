@@ -69,7 +69,7 @@
                                             </div>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 {{-- <a class="dropdown-item" href="{{route('admin.purchase.inward_edit_dreft', [base64_encode($row->id)])}}">Edit</a> --}}
-                                                <a class="dropdown-item" onclick="return confirm('Are you sure?')" href="{{route('admin.purchase.inward_publish', [base64_encode($row->id)])}}">Move to Purchase</a>
+                                                <a class="dropdown-item" onclick="return confirm('Are you sure?')" href="{{route('admin.purchase.inward_publish', [base64_encode($row->id)])}}">Publish</a>
                                             </div>
                                         </div>
                                     </td>

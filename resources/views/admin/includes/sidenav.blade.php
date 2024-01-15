@@ -233,7 +233,7 @@ if($adminId!=1){
 
                 @if(in_array('admin-purchase-inward_draft_list', $page_permission))
                 <li class="nav-item"> <a href="{{ route('admin.purchase.inward_draft_list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_draft_list') active @endif"> <i class="fas fa-list nav-icon"></i>
-                    <p>Purchase List (Dreft)</p>
+                    <p>Purchase (Draft)</p>
                     </a>
                 </li>
                 @endif
