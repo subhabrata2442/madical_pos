@@ -1481,7 +1481,7 @@ function save_purchase_draft(){
     console.log(product_info);
     //return false;
 
-    $('#ajax_loader').fadeIn();
+    // $('#ajax_loader').fadeIn();
     $('#inwardStockSubmitBtm').html('Please Wait...');
     $('#inwardStockSubmitBtm').attr('disabled','disabled');
 
@@ -1495,13 +1495,37 @@ function save_purchase_draft(){
             _token: prop.csrf_token,
         },
         dataType: "json",
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    $('#progressBar .progress-bar').css('width', percentComplete + '%');
+                    $('#progressBar .progress-bar').attr('aria-valuenow', percentComplete);
+                    $('#progressBar .progress-bar').text(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        beforeSend: function () {
+            $('#progressBar .progress-bar').css('width', '0%');
+            $('#progressBar .progress-bar').attr('aria-valuenow', '0');
+            $('#progressBar .progress-bar').text('0%');
+
+            $('#progressBar').show();
+        },
         success: function(response) {
             if (response.status == 0) {
                 toastr.error(response.msg);
 
-                $('#ajax_loader').fadeOut();
+                // $('#ajax_loader').fadeOut();
                 $('#inwardStockSubmitBtm').html('Save');
                 $("#inwardStockSubmitBtm").prop("disabled", false);
+
+                $('#progressBar').hide();
 
             } else {
                 Swal.fire({
@@ -1515,7 +1539,7 @@ function save_purchase_draft(){
                     } else if (result.isDenied) {}
                 });
 
-                $('#ajax_loader').fadeOut();
+                // $('#ajax_loader').fadeOut();
                 $('#inwardStockSubmitBtm').html('Save');
                 $("#inwardStockSubmitBtm").prop("disabled", false);
 
@@ -1677,7 +1701,7 @@ function final_save_purchase(){
     console.log(product_info);
     //return false;
 
-    $('#ajax_loader').fadeIn();
+    // $('#ajax_loader').fadeIn();
     $('#inwardStockSubmitBtm').html('Please Wait...');
     $('#inwardStockSubmitBtm').attr('disabled','disabled');
 
@@ -1691,13 +1715,39 @@ function final_save_purchase(){
             _token: prop.csrf_token,
         },
         dataType: "json",
+
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    $('#progressBar .progress-bar').css('width', percentComplete + '%');
+                    $('#progressBar .progress-bar').attr('aria-valuenow', percentComplete);
+                    $('#progressBar .progress-bar').text(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        beforeSend: function () {
+            $('#progressBar .progress-bar').css('width', '0%');
+            $('#progressBar .progress-bar').attr('aria-valuenow', '0');
+            $('#progressBar .progress-bar').text('0%');
+
+            $('#progressBar').show();
+        },
+
         success: function(response) {
             if (response.status == 0) {
                 toastr.error(response.msg);
 
-                $('#ajax_loader').fadeOut();
+                // $('#ajax_loader').fadeOut();
                 $('#inwardStockSubmitBtm').html('Save');
                 $("#inwardStockSubmitBtm").prop("disabled", false);
+
+                $('#progressBar').hide();
 
             } else {
                 Swal.fire({
@@ -1711,9 +1761,11 @@ function final_save_purchase(){
                     } else if (result.isDenied) {}
                 });
 
-                $('#ajax_loader').fadeOut();
+                // $('#ajax_loader').fadeOut();
                 $('#inwardStockSubmitBtm').html('Save');
                 $("#inwardStockSubmitBtm").prop("disabled", false);
+
+                // $('#progressBar').hide();
 
             }
         },
@@ -1884,9 +1936,37 @@ $(document).on("click", "#inwardStockSubmitBtmUpdate", function() {
             _token: prop.csrf_token,
         },
         dataType: "json",
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            // Upload progress
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    $('#progressBar .progress-bar').css('width', percentComplete + '%');
+                    $('#progressBar .progress-bar').attr('aria-valuenow', percentComplete);
+                    $('#progressBar .progress-bar').text(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        beforeSend: function () {
+            $('#progressBar .progress-bar').css('width', '0%');
+            $('#progressBar .progress-bar').attr('aria-valuenow', '0');
+            $('#progressBar .progress-bar').text('0%');
+
+            $('#progressBar').show();
+
+	        $('#inwardStockSubmitBtmUpdate').html('Please Wait...');
+    	    $('#inwardStockSubmitBtmUpdate').attr('disabled','disabled');
+        },
         success: function(response) {
             if (response.status == 0) {
                 toastr.error(response.msg);
+                $('#inwardStockSubmitBtmUpdate').html('Save');
+                $("#inwardStockSubmitBtmUpdate").prop("disabled", false);
+
             } else {
                 Swal.fire({
                     title: "Stock Inward is successfully done.",
@@ -1898,6 +1978,10 @@ $(document).on("click", "#inwardStockSubmitBtmUpdate", function() {
                         location.reload();
                     } else if (result.isDenied) {}
                 });
+
+                $('#inwardStockSubmitBtmUpdate').html('Save');
+                $("#inwardStockSubmitBtmUpdate").prop("disabled", false);
+
             }
         },
     });

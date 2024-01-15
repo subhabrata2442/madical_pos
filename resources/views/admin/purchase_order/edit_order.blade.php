@@ -356,6 +356,13 @@ $adminRoll = Session::get('admin_type');
             <button type="button" class="saveBtn saveBtnMd" id="inwardStockSubmitBtmUpdate">Save <i
                 class="fas fa-paper-plane ml-2"></i></button>
           </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-7 col-12">
+                <div class="progress mt-2" id="progressBar">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+            </div>
+          </div>
         </div>
   </div>
 
