@@ -42,6 +42,7 @@ use App\Http\Controllers\LogreportController;
 
 // authentication routes
 Route::match(['GET', 'POST'], '/', [Authenticate::class, 'login'])->name('auth.login');
+Route::match(['GET', 'POST'], '/login', [Authenticate::class, 'login'])->name('auth.do_login');
 Route::match(['GET', 'POST'], '/register', [Authenticate::class, 'register'])->name('auth.register');
 Route::match(['GET'], '/email/verification/{data}', [Authenticate::class, 'email_verification'])->name('auth.email_verification');
 Route::match(['POST'], '/email/resend-otp', [Authenticate::class, 'email_resend_otp'])->name('auth.email_resend_otp');
@@ -203,10 +204,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 		Route::match(['GET', 'POST'], '/inward_stock', [PurchaseOrderController::class, 'create_order'])->name('inward_stock');
 		Route::match(['GET', 'POST'], '/inward_list', [PurchaseOrderController::class, 'list_order'])->name('inward_list');
+		Route::match(['GET', 'POST'], '/inward_draft_list', [PurchaseOrderController::class, 'inward_draft_list'])->name('inward_draft_list');
 		Route::match(['GET', 'POST'], '/inward_edit/{id}', [PurchaseOrderController::class, 'edit_order'])->name('inward_edit');
+		Route::match(['GET', 'POST'], '/inward_delete/{id}', [PurchaseOrderController::class, 'inward_delete'])->name('inward_delete');
 		Route::match(['GET', 'POST'], '/material_inward', [PurchaseOrderController::class, 'material_inward'])->name('material_inward');
 		Route::match(['GET', 'POST'], '/supplier_bill', [PurchaseOrderController::class, 'supplier_bill'])->name('supplier_bill');
 		Route::match(['GET', 'POST'], '/debitnote', [PurchaseOrderController::class, 'debitnote'])->name('debitnote');
+
+        Route::match(['GET', 'POST'], '/inward_publish/{id}', [PurchaseOrderController::class, 'inward_publish'])->name('inward_publish');
 
 		Route::match(['GET', 'POST'], '/update-inward-stock/{id}', [PurchaseOrderController::class, 'updateInwardStock'])->name('inward_stock.update');
 		Route::match(['GET', 'POST'], '/update-inward-stock/delete/{id}', [PurchaseOrderController::class, 'deleteInwardStock'])->name('inward-stock.delete');

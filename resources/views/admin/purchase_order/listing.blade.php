@@ -69,6 +69,7 @@
                                             </div>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <a class="dropdown-item" href="{{route('admin.purchase.inward_edit', [base64_encode($row->id)])}}">Edit</a>
+                                                {{-- <a class="dropdown-item" href="{{route('admin.purchase.inward_delete', [base64_encode($row->id)])}}">Delete</a> --}}
                                             </div>
                                         </div>
                                     </td>

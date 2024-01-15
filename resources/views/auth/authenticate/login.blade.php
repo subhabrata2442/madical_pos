@@ -9,7 +9,7 @@
   <div class="loginWrapRight d-flex flex-wrap align-items-center justify-content-center" style="background: url({{ asset('assets/img/login-bg-right2.jpg') }}) no-repeat center center;">
 
     <div class="loginFormFild">
-      <form class="" method="post" action="{{ route('auth.login') }}" autocomplete="off">
+      <form class="" method="post" action="{{ route('auth.do_login') }}" autocomplete="off">
       @csrf
       <div class="posLogo">
         <span class="mb-4"><img src="{{ asset('assets/img/pos-logo.png') }}" alt=""></span>

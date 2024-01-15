@@ -77,6 +77,9 @@ use Session;
 use Pusher\Pusher;
 use App\Models\Notification;
 
+use App\Models\PurchaseInwardStockDraft;
+use App\Models\InwardStockProductsDraft;
+
 class PurchaseOrderController extends Controller
 {
 	public function create_order(Request $request)
@@ -3325,6 +3328,180 @@ class PurchaseOrderController extends Controller
         ]);
 
     }
+
+
+    public function inward_delete($id){
+        $id = base64_decode($id);
+        echo $id;
+    }
+
+
+    public function inward_draft_list(Request $request){
+        //    echo "cadadas";exit;
+
+            $branch_id=Auth::user()->id;
+            $user_role=Auth::user()->role;
+            $admin_type = Session::get('admin_type');
+
+            try {
+
+
+                    if($admin_type==1){
+                        $purchaseInwardStock_query 	= PurchaseInwardStockDraft::with('user')->where('invoice_no','!=','');
+                    }else{
+                        $purchaseInwardStock_query = PurchaseInwardStockDraft::where('branch_id', $branch_id);
+                    }
+
+
+
+                    if(!empty($request->get('start_date')) && !empty($request->get('end_date'))){
+                        if($request->get('start_date') == $request->get('end_date')){
+                            $purchaseInwardStock_query->whereDate('purchase_date', $request->get('start_date'));
+                        }else{
+
+                            $purchaseInwardStock_query->whereBetween('purchase_date', [$request->get('start_date'), $request->get('end_date')]);
+                        }
+                    }
+
+                    if(!empty($request->get('dateshort'))){
+                        if($request->get('dateshort')=='newtoold'){
+                            $purchaseInwardStock_query->orderBy('purchase_date', 'desc');
+                        }else if($request->get('dateshort')=='oldtonew'){
+                            $purchaseInwardStock_query->orderBy('purchase_date', 'asc');
+                        }
+                    }else{
+                        $purchaseInwardStock_query->orderBy('id', 'desc');
+                    }
+
+                    if(!empty($request->get('supplier'))){
+                        $purchaseInwardStock_query->where('supplier_id', $request->get('supplier'));
+                    }
+
+
+                    $purchase = $purchaseInwardStock_query->paginate(20);
+
+                $data = [];
+
+                $data['purchase_list'] = $purchase;
+                $data['heading'] = 'Purchas List (Draft)';
+                $data['breadcrumb'] = ['Purchase', 'List (Draft)'];
+                $data['supplier'] = Supplier::orderBy('id', 'desc')->get();
+                return view('admin.purchase_order.listing_draft', compact('data'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
+            }
+        }
+
+        public function inward_publish($id){
+            $id = base64_decode($id);
+            $purchaseInwardStockDraft = PurchaseInwardStockDraft::where('id', $id)->first();
+
+
+            $purchaseStockData=array(
+                'branch_id'  		=> $purchaseInwardStockDraft->branch_id,
+                'supplier_id'  		=> $purchaseInwardStockDraft->supplier_id,
+                'supplier_name'  	=> $purchaseInwardStockDraft->supplier_name,
+                'invoice_no'  		=> $purchaseInwardStockDraft->invoice_no,
+                'purchase_date'  	=> $purchaseInwardStockDraft->purchase_date,
+                // 'inward_date'  		=> $purchaseInwardStockDraft['invoice_inward_date'],
+                'payment_method'  	=> $purchaseInwardStockDraft->payment_method,
+                'payment_debt_day'  => $purchaseInwardStockDraft->payment_debt_day,
+                'payment_date'  	=> $purchaseInwardStockDraft->payment_date,
+                'payment_discount'  => $purchaseInwardStockDraft->payment_discount,
+                'payment_ref_no'  	=> $purchaseInwardStockDraft->payment_ref_no,
+                'total_qty'  		=> $purchaseInwardStockDraft->total_qty,
+                'gross_amount'  	=> $purchaseInwardStockDraft->gross_amount,
+                'sub_total'  		=> $purchaseInwardStockDraft->sub_total,
+                'additional_note'  	=> $purchaseInwardStockDraft->additional_note,
+                'total_amount'  	=> $purchaseInwardStockDraft->total_amount,
+                'currency_type'  	=> $purchaseInwardStockDraft->currency_type,
+                'rate'  			=> $purchaseInwardStockDraft->rate,
+                'total_profit'  	=> $purchaseInwardStockDraft->total_profit,
+                'total_profit_percent' => $purchaseInwardStockDraft->total_profit_percent,
+            );
+
+            $purchaseInwardStock	= PurchaseInwardStock::create($purchaseStockData);
+            $purchaseInwardStockId	= $purchaseInwardStock->id;
+
+
+            $inwardStockProductsDraft = InwardStockProductsDraft::where('inward_stock_id', $id)->get();
+
+                foreach($inwardStockProductsDraft as $item){
+
+
+                    $selling_price		= $item->selling_price;
+                    $product_qty		= $item->product_qty;
+                    $net_price			= $item->net_price;
+
+                    $branchProductStockResult=BranchStockProducts::where('product_mrp',$item->product_mrp)->whereDate('product_expiry_date','=',$item->product_expiry_date)->where('branch_id',$item->branch_id)->where('product_id',$item->product_id)->get();
+                    if(count($branchProductStockResult)>0){
+                        $sell_price_id=isset($branchProductStockResult[0]->id)?$branchProductStockResult[0]->id:'';
+
+                        $sell_price_t_qty = 0;
+                        $sell_price_t_qty +=isset($branchProductStockResult[0]->t_qty)?$branchProductStockResult[0]->t_qty:0;
+                        $sell_price_t_qty +=$product_qty;
+                        BranchStockProducts::where('id', $sell_price_id)->update(['t_qty' => $sell_price_t_qty]);
+                    }else{
+                        $sell_price_t_qty = 0;
+                        $sell_price_t_qty +=$product_qty;
+
+                        $branchProductStockSellPriceData=array(
+                            'branch_id'			=> $item->branch_id,
+                            'product_id'  		=> $item->product_id,
+                            'product_barcode'  	=> $item->product_barcode,
+                            't_qty'  			=> $sell_price_t_qty,
+                            'selling_price'		=> str_replace(',', '', $selling_price),
+                            'product_mrp'  		=> $item->product_mrp,
+                            'net_price'  		=> str_replace(',', '', $net_price),
+                            'product_expiry_date' => $item->product_expiry_date,
+                            'is_chronic'  		=> $item->is_chronic,
+                            'chronic_amount'  	=> $item->chronic_amount,
+                        );
+                        BranchStockProducts::create($branchProductStockSellPriceData);
+                    }
+
+                    $inward_stock_product=array(
+                        'inward_stock_id'	=> $purchaseInwardStockId,
+                        'branch_id'  		=> $item->branch_id,
+                        'product_id'  		=> $item->product_id,
+                        'brand'  			=> $item->brand,
+                        'product_name'  	=> $item->product_name,
+                        'dosage'  			=> $item->dosage,
+                        'company'  			=> $item->company,
+                        'drugstore'  		=> $item->branch_id,
+                        'product_qty'  		=> $item->product_qty,
+                        'total_qty'  		=> $item->total_qty,
+                        'no_package'  		=> $item->no_package,
+                        'net_price_befour_discount' => $item->net_price_befour_discount,
+                        'discount_cost'  	=> $item->discount_cost,
+                        //'discount_persent'  => $inward_stock['product_detail'][$i]['product_discount'],
+                        'is_chronic'  		=> $item->is_chronic,
+                        'net_price'  		=> $item->net_price,
+                        'product_mrp'  		=> $item->product_mrp,
+                        'chronic_amount'  	=> $item->chronic_amount,
+                        'option_product_mrp'=> $item->option_product_mrp,
+                        'cost_price'  		=> $item->cost_price,
+                        'cost_rate'  		=> $item->cost_rate,
+                        'bonous'  			=> $item->bonous,
+                        'selling_price'		=> $item->selling_price,
+                        'profit_amount'  	=> $item->profit_amount,
+                        'profit_percent'  	=> $item->profit_percent,
+                        'chronic_amount_percentage'  	=> $item->chronic_amount_percentage,
+                        'product_expiry_date'  	=> $item->product_expiry_date,
+                        'selling_by'		=> $item->selling_by,
+                        'qty_total_net_price'		=> $item->qty_total_net_price,
+                        'qty_total_sell_price'		=> $item->qty_total_sell_price,
+                        'qty_total_profit'		=> $item->qty_total_profit,
+                    );
+                    InwardStockProducts::create($inward_stock_product);
+                }
+
+                $purchaseInwardStockDraft = PurchaseInwardStockDraft::where('id', $id)->delete();
+                $inwardStockProductsDraft = InwardStockProductsDraft::where('inward_stock_id', $id)->delete();
+
+                return redirect()->back()->with('success', 'Purchase successfully moved');
+
+        }
 
 
 }
