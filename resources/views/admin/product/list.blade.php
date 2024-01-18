@@ -56,7 +56,9 @@ $user_role=Auth::user()->role;
             @php
                 $adminRollss = Session::get('admin_type');
             @endphp
-            @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
+            @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+
+            @else
 				<form action="{{route('admin.product.product_excel_import')}}" method="post" id="" class="needs-validation" enctype="multipart/form-data">
 					@csrf
 					<div class="row justify-content-end mb-3">
@@ -82,7 +84,8 @@ $user_role=Auth::user()->role;
 						<th>No per package</th>
 						<th>Selling by</th>
 						<th>Is Chronic</th>
-                        @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
+                        @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+                        @else
 						    <th>Action</th>
                         @endif
 					</thead>
@@ -98,7 +101,8 @@ $user_role=Auth::user()->role;
 							<td>{{$product->selling_by_name}}</td>
 							<td>{{ ucfirst(trans($product->is_chronic)) }}</td>
 							{{-- <td>{{$product->drugstore_name}}</td> --}}
-                            @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
+                            @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+                            @else
 							<td>
 								<div class="dropdown">
 									<div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown"
