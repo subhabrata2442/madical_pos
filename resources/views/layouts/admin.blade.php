@@ -30,6 +30,15 @@
     <x-preloader />
     <x-ajaxloader />
     <div class="wrapper">
+        @if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1:8000')
+            <div class="data-sync-wrap">
+                <div class="data-sync-txt">
+                    {{--<a href="#" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</a>--}}
+                    <button type="button" class="data-sync-btn" id="database_sync_btn"><i class="fas fa-sync data_sync"></i>click to data sync</button>
+                </div>
+            </div>
+        @endif
+
 
         {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('assets/admin-lte/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
@@ -37,7 +46,14 @@
         </div> --}}
 
         @include('admin.includes.header')
-        @include('admin.includes.sidenav')
+        @php
+            $adminRollss = Session::get('admin_type');
+        @endphp
+        @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+            @include('admin.includes.sidenav_local')
+        @else
+            @include('admin.includes.sidenav')
+        @endif
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
@@ -146,6 +162,29 @@
                 }
 
             });
+
+
+            $(document).on("click","#database_sync_btn",function() {
+                $('.data_sync').addClass('fa-spin');
+                $('#database_sync_btn').attr('disabled','disabled');
+                $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '{{route('database_sync')}}',
+                    success: function(data) {
+                        $('.data_sync').removeClass('fa-spin');
+                        $('#database_sync_btn').removeAttr('disabled');
+                    },
+                    beforeSend: function() {
+                        $('.data_sync').addClass('fa-spin');
+                    },
+                    complete: function() {
+                        $('.data_sync').removeClass('fa-spin');
+                        $('#database_sync_btn').removeAttr('disabled');
+                    }
+                });
+            })
+
         });
 
         function seenNotification(ids){

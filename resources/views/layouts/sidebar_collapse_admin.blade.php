@@ -24,10 +24,17 @@
 <x-preloader />
 <x-ajaxloader />
 <div class="wrapper"> @include('admin.includes.header')
-  @include('admin.includes.sidenav')
+    @php
+        $adminRollss = Session::get('admin_type');
+    @endphp
+    @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+        @include('admin.includes.sidenav_local')
+    @else
+        @include('admin.includes.sidenav')
+    @endif
   <div class="content-wrapper">
     <div class="content-header">
-      <div class="container-fluid"> 
+      <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0"> {{ !empty($data['heading']) && $data['heading'] ? $data['heading'] : 'Dashboard' }} </h1>
@@ -50,7 +57,7 @@
   <div class="loader_section" style="display:none"><span>
     <div class="loader"></div>
     Loading, Please wait...</span></div>
-    
+
 </div>
 @yield('scripts')
 </body>

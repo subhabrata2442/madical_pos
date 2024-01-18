@@ -23,7 +23,14 @@
 <x-preloader />
 <x-ajaxloader />
 <div class="wrapper"> @include('admin.includes.posheader')
-  @include('admin.includes.sidenav')
+    @php
+        $adminRollss = Session::get('admin_type');
+    @endphp
+    @if($adminRollss==3 && $_SERVER['HTTP_HOST'] == 'localhost')
+        @include('admin.includes.sidenav_local')
+    @else
+        @include('admin.includes.sidenav')
+    @endif
   <div class="content-wrapper">
     <section class="content">
       <div class="container-fluid"> @yield('admin-content') </div>

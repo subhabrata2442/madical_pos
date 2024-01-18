@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LogreportController;
 
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +41,9 @@ use App\Http\Controllers\LogreportController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::match(['get'], '/database-sync', [SettingController::class, 'databaseSync'])->name('database_sync');
 
 // authentication routes
 Route::match(['GET', 'POST'], '/', [Authenticate::class, 'login'])->name('auth.login');
@@ -65,7 +70,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['GET'], '/logout', [Authenticate::class, 'logout'])->name('auth.logout');
 	//Route::match(['GET'], '/setting', [UserController::class, 'setting'])->name('auth.setting');
 	Route::match(['GET'], '/changepassword', [Authenticate::class, 'changepassword'])->name('auth.changepassword');
-    Route::match(['POST'], '/save_changepassword', [Authenticate::class, 'save_changepassword'])->name('auth.save_changepassword');
+	Route::match(['POST'], '/save_changepassword', [Authenticate::class, 'save_changepassword'])->name('auth.save_changepassword');
 
 
 
@@ -99,12 +104,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 		Route::match(['GET'], '/create_order', [PosController::class, 'pos_create'])->name('pos_create');
 		Route::match(['POST'], '/create', [PosController::class, 'create'])->name('create');
-        Route::match(['POST'], '/update', [PosController::class, 'update'])->name('update');
+		Route::match(['POST'], '/update', [PosController::class, 'update'])->name('update');
 		Route::match(['GET'], '/print_invoice', [PosController::class, 'print_invoice'])->name('print_invoice');
 
 
-        Route::match(['GET'], '/billedit/{bill_no}', [PosController::class, 'billedit'])->name('billedit');
-        Route::match(['GET'], '/billdelete/{id}', [PosController::class, 'billdelete'])->name('billdelete');
+		Route::match(['GET'], '/billedit/{bill_no}', [PosController::class, 'billedit'])->name('billedit');
+		Route::match(['GET'], '/billdelete/{id}', [PosController::class, 'billdelete'])->name('billdelete');
 
 		// Route::match(['GET'], '/pos_type', [PurchaseOrderController::class, 'pos_type'])->name('pos_type');
 
@@ -138,16 +143,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		// Route::match(['GET'], '/e-report', [PurchaseOrderController::class, 'pdfEReport'])->name('pdf4');
 
 
-        // Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('asdddd');
+		// Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('asdddd');
 
-        Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
-
-
+		Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
 	});
 
-    Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('settlement_add');
+	Route::match(['POST'], '/settlement_add', [SettlementController::class, 'store'])->name('settlement_add');
 
-    Route::prefix('customer')->name('customer.')->middleware('checkPermission:49')->group(function () {
+	Route::prefix('customer')->name('customer.')->middleware('checkPermission:49')->group(function () {
 		Route::match(['GET', 'POST'], '/list', [CustomerController::class, 'list'])->name('list');
 	});
 
@@ -225,8 +228,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
 		Route::match(['GET', 'POST'], '/product_stock_upload', [PurchaseOrderController::class, 'product_stock_upload'])->name('product_stock_upload');
 
-        Route::match(['GET', 'POST'], '/price_history', [PurchaseOrderController::class, 'price_history'])->name('price_history');
-        Route::match(['GET', 'POST'], '/pricehistory_product/{product_id}', [PurchaseOrderController::class, 'pricehistory_product'])->name('pricehistory_product');
+		Route::match(['GET', 'POST'], '/price_history', [PurchaseOrderController::class, 'price_history'])->name('price_history');
+		Route::match(['GET', 'POST'], '/pricehistory_product/{product_id}', [PurchaseOrderController::class, 'pricehistory_product'])->name('pricehistory_product');
 	});
 
 	Route::prefix('report')->name('report.')->middleware('checkPermission:3')->group(function () {
@@ -279,11 +282,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 		Route::match(['GET'], '/inventory_download', [ReportController::class, 'inventory_download'])->name('inventory_download');
 	});
 
-    Route::match(['GET'], '/get_productexperylist', [ReportController::class, 'get_productexperylist'])->name('get_productexperylist');
+	Route::match(['GET'], '/get_productexperylist', [ReportController::class, 'get_productexperylist'])->name('get_productexperylist');
 
-    Route::prefix('history')->name('history.')->middleware('checkPermission:43')->group(function () {
-	    Route::match(['GET'], '/credit_history', [CredithistoryController::class, 'index'])->name('credit_history');
-    });
+	Route::prefix('history')->name('history.')->middleware('checkPermission:43')->group(function () {
+		Route::match(['GET'], '/credit_history', [CredithistoryController::class, 'index'])->name('credit_history');
+	});
 
 
 	Route::prefix('store')->name('store.')->middleware('checkPermission:5')->group(function () {
@@ -376,27 +379,25 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['get'], '/supplierpaymenthistory/{supplier_id}', [CredithistoryController::class, 'supplierpaymenthistory'])->name('supplierpaymenthistory');
 	Route::match(['get'], '/debit_deletepayment/{supplier_id}', [CredithistoryController::class, 'debit_deletepayment'])->name('debit_deletepayment');
 
-    Route::prefix('money')->name('money.')->middleware('checkPermission:45')->group(function () {
-	    Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
-    });
+	Route::prefix('money')->name('money.')->middleware('checkPermission:45')->group(function () {
+		Route::match(['get'], '/settlement', [SettlementController::class, 'settlement'])->name('settlement');
+	});
 
 	Route::match(['get'], '/settlement_approve/{id}', [SettlementController::class, 'settlement_approve'])->name('settlement_approve');
 
 
-    // Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
+	// Route::match(['get'], '/bill', [BillController::class, 'bill'])->name('bill');
 
 
-    Route::prefix('logreport')->name('logreport.')->middleware('checkPermission:47')->group(function () {
+	Route::prefix('logreport')->name('logreport.')->middleware('checkPermission:47')->group(function () {
 
-        Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
+		Route::match(['get'], '/view', [LogreportController::class, 'view'])->name('view');
+	});
 
-    });
+	Route::match(['get'], '/settings', [SettingController::class, 'settings'])->name('settings');
+	Route::match(['post'], '/updatesetting', [SettingController::class, 'updatesetting'])->name('updatesetting');
 
-    Route::match(['get'], '/settings', [SettingController::class, 'settings'])->name('settings');
-    Route::match(['post'], '/updatesetting', [SettingController::class, 'updatesetting'])->name('updatesetting');
-
-    Route::match(['get'], '/get_notificationheader', [NotificationController::class, 'get_notificationheader'])->name('get_notificationheader');
-
+	Route::match(['get'], '/get_notificationheader', [NotificationController::class, 'get_notificationheader'])->name('get_notificationheader');
 });
 
 
@@ -414,6 +415,8 @@ Route::match(['GET'], '/product_expiry_notification', [NotificationController::c
 
 Route::match(['GET'], '/seenNotification', [NotificationController::class, 'seenNotification'])->name('seenNotification');
 
+
+Route::match(['GET'], '/sqldownload', [TestController::class, 'sqldownload'])->name('sqldownload');
 
 // Route::get('test', function () {
 //     event(new App\Events\StockAlert('Someone'));

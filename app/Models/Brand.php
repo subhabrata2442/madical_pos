@@ -9,7 +9,7 @@ class Brand extends Model
 {
     use HasFactory;
     use SoftDeletes;
-	
+
 	protected $table = 'brand';
 	protected $guarded	= [];
 

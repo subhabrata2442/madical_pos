@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\SyncDatabaseCommand::class,
+        \App\Console\Commands\UserSync::class,
     ];
     /**
      * Define the application's command schedule.
@@ -25,6 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('database:sync')->everyMinute();
+        $schedule->command('user:sync')->everyMinute();
+        $schedule->command('product:sync')->everyMinute();
     }
 
     /**
