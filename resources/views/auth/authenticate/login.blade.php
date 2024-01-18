@@ -46,6 +46,17 @@
   <!-- <div class="loginWrapLeft d-flex flex-wrap align-items-end">
     <img src="{{ asset('assets/img/left-img.png') }}" alt="">
   </div> -->
+
+@if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1:8000')
+    <div class="data-sync-wrap">
+        <div class="data-sync-txt">
+            {{--<a href="#" class="data-sync-btn"><i class="fas fa-sync"></i>click to data sync</a>--}}
+            <button type="button" class="data-sync-btn" id="database_sync_btn"><i class="fas fa-sync data_sync"></i>click to data sync</button>
+        </div>
+
+    </div>
+@endif
+
 </section>
 
 <div class="modal fade editPassword" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -147,7 +158,53 @@
     });
 
 
+        $(document).on("click","#database_sync_btn",function() {
+            $('.data_sync').addClass('fa-spin');
+            $('#database_sync_btn').attr('disabled','disabled');
+            $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '{{route('database_sync')}}',
+                success: function(data) {
+                    $('.data_sync').removeClass('fa-spin');
+                    $('#database_sync_btn').removeAttr('disabled');
+                },
+                beforeSend: function() {
+                    $('.data_sync').addClass('fa-spin');
+                },
+                complete: function() {
+                    $('.data_sync').removeClass('fa-spin');
+                    $('#database_sync_btn').removeAttr('disabled');
+                }
+            });
+        });
+
+
 </script>
+
+<style>
+    .data-sync-wrap {
+        position: fixed;
+        right: 5px;
+        bottom: 20px;
+        z-index: 2;
+    }
+    .data-sync-btn {
+        display: block;
+        border-radius: 5px;
+        font-size: 1rem;
+        background-color: #039;
+        color: #fff !important;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 1rem;
+        border: none;
+        box-shadow: none;
+    }
+    .data-sync-btn svg, .data-sync-btn i {
+        margin-right: 0.5rem;
+    }
+</style>
 
 @endsection
 

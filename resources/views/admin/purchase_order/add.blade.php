@@ -552,7 +552,15 @@ $adminRoll = Session::get('admin_type');
   <script src="{{ url('assets/admin/js/jquery.scannerdetection.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-  <script src="{{ url('assets/admin/js/cHVyY2hhc2VfaW53YXJkX3N0b2Nr.js') }}"></script>
+
+
+  {{-- <script src="{{ url('assets/admin/js/cHVyY2hhc2VfaW53YXJkX3N0b2Nr.js') }}"></script> --}}
+
+
+  <script src="{{ url('assets/admin/js/new/purchase_order.js') }}"></script>
+  <script src="{{ url('assets/admin/js/new/inward_stock_calculation.js') }}"></script>
+
+
   <script>
     $(document).on('click', '#upload_excel', function(e) {
       $('#upload_excel_input').click();
