@@ -179,6 +179,7 @@ class SyncDatabaseCommand extends Command
             ], [
                 // Update the column values accordingly
                 'customer_id'                 => $liveCustomer_id,
+                'emp_id'                 => $sellStockData->emp_id,
                 'bill_no'                     => $sellStockData->bill_no,
                 'invoice_no'                 => $sellStockData->invoice_no,
                 'sell_date'                 => $sellStockData->sell_date,
@@ -215,7 +216,7 @@ class SyncDatabaseCommand extends Command
                     'inward_stock_id' => $liveSellInwardStock->id,
                 ], [
                     // Update the column values accordingly
-                    'product_stock_id'  => 0, //later implement with BranchStockProducts
+                    'product_stock_id'  => $sellStockProductsData->product_stock_id, //later implement with BranchStockProducts
                     'barcode'            => $sellStockProductsData->barcode,
                     'product_name'      => $sellStockProductsData->product_name,
                     'brand_name'      => $sellStockProductsData->brand_name,

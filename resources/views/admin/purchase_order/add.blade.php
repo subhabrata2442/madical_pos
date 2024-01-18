@@ -65,7 +65,7 @@ $adminRoll = Session::get('admin_type');
                   </li>
                 </ul>
                 @else
-                <input type="hidden" id="store_id" name="store_id" value="{{$adminId}}">
+                <input type="hidden" id="store_id" name="store_id" value="{{Session::get('store_id')}}">
                 @endif
                 <ul class="d-flex flex-wrap align-items-center">
                     <li class="invAreaInf">Supplier</li>
