@@ -42,7 +42,7 @@ class UserSync extends Command
     public function handle()
     {
         //Fetch data Live user table
-        $liveusers = User::on('live_server_connection')->where('db_sync', 0)->get();
+        $liveusers = User::on('live_server_connection')->get();
         //Update or create User in Local server
         if ($liveusers) {
             foreach ($liveusers as $liveuser) {
@@ -63,7 +63,7 @@ class UserSync extends Command
                 //fetch data from live store details
                 $liveStoreDetails = StoreDetails::on('live_server_connection')->where('store_id', $liveuser->id)->first();
                 if ($liveStoreDetails) {
-                    //update and create local store details 
+                    //update and create local store details
                     $local_store_details = StoreDetails::updateOrCreate([
                         'store_id' => $liveStoreDetails->store_id,
                     ], [
@@ -107,7 +107,7 @@ class UserSync extends Command
                 }
                 //end role wise permission
                 //Update live server user table sync status
-                User::on('live_server_connection')->where('id', $liveuser->id)->update(['db_sync' => 1]);
+                // User::on('live_server_connection')->where('id', $liveuser->id)->update(['db_sync' => 1]);
             }
         }
 

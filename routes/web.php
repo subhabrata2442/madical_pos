@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LogreportController;
 
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -413,6 +415,8 @@ Route::match(['GET'], '/product_expiry_notification', [NotificationController::c
 
 Route::match(['GET'], '/seenNotification', [NotificationController::class, 'seenNotification'])->name('seenNotification');
 
+
+Route::match(['GET'], '/sqldownload', [TestController::class, 'sqldownload'])->name('sqldownload');
 
 // Route::get('test', function () {
 //     event(new App\Events\StockAlert('Someone'));

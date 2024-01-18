@@ -426,7 +426,6 @@ class EmbloyeesController extends Controller
                     'name'     => $request->full_name,
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    'db_sync' => 0,
                 ];
 
                 // print_r($array);exit;
