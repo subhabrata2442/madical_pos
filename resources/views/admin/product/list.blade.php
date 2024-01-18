@@ -82,7 +82,9 @@ $user_role=Auth::user()->role;
 						<th>No per package</th>
 						<th>Selling by</th>
 						<th>Is Chronic</th>
-						<th>Action</th>
+                        @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
+						    <th>Action</th>
+                        @endif
 					</thead>
 					<tbody>
 						@forelse ($data['products'] as $product)
@@ -96,6 +98,7 @@ $user_role=Auth::user()->role;
 							<td>{{$product->selling_by_name}}</td>
 							<td>{{ ucfirst(trans($product->is_chronic)) }}</td>
 							{{-- <td>{{$product->drugstore_name}}</td> --}}
+                            @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
 							<td>
 								<div class="dropdown">
 									<div class="actionList " id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -124,6 +127,7 @@ $user_role=Auth::user()->role;
 									</div>
 								</div>
 							</td>
+                            @endif
 						</tr>
 						@empty
 						<tr>
