@@ -53,6 +53,10 @@ $user_role=Auth::user()->role;
 	<div class="col-12">
 		<div class="card">
 			<x-alert />
+            @php
+                $adminRollss = Session::get('admin_type');
+            @endphp
+            @if($adminRollss!=3 && $_SERVER['HTTP_HOST'] != 'localhost')
 				<form action="{{route('admin.product.product_excel_import')}}" method="post" id="" class="needs-validation" enctype="multipart/form-data">
 					@csrf
 					<div class="row justify-content-end mb-3">
@@ -66,6 +70,7 @@ $user_role=Auth::user()->role;
 						</div>
 					</div>
 				</form>
+            @endif
 			<div class="table-responsive dataTable-design">
 				<table id="product_list" class="table table-bordered">
 					<thead>

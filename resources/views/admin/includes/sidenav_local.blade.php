@@ -49,46 +49,41 @@ if($adminId!=1){
             </a>
         </li> --}}
 
-            <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) parent-active @endif"> <i class="fas fa-cart-plus nav-icon"></i>
-              <p>Purchase <i class="fas fa-angle-left right"></i></p>
-              </a>
-              <ul class="nav nav-treeview">
-
+        <li class="nav-item"> <a href="{{ route('admin.product.list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.product.list') active @endif"> <i class="fas fa-list nav-icon"></i>
+            <p>Products</p>
+            </a>
+        </li>
+        <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.purchase') !== false) parent-active @endif"> <i class="fas fa-cart-plus nav-icon"></i>
+            <p>Purchase <i class="fas fa-angle-left right"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
                 <li class="nav-item"> <a href="{{ route('admin.purchase.inward_stock') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_stock') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Purchase Order</p>
-                  </a> </li>
-                  <li class="nav-item"> <a href="{{ route('admin.purchase.inward_list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_list') active @endif"> <i class="fas fa-list nav-icon"></i>
+                    <p>Purchase Order</p>
+                    </a>
+                </li>
+                <li class="nav-item"> <a href="{{ route('admin.purchase.inward_list') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.inward_list') active @endif"> <i class="fas fa-list nav-icon"></i>
                     <p>Purchase List</p>
                     </a>
-                    </li>
-
-
-
-
-
+                </li>
                 <li class="nav-item"> <a href="{{ route('admin.purchase.price_history') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.purchase.price_history') active @endif"> <i class="fas fa-list nav-icon"></i>
                     <p>Price History</p>
                     </a>
                 </li>
-
-
-              </ul>
-            </li>
-
-
+            </ul>
+        </li>
         <li class="nav-item @if (strpos(Route::currentRouteName(), 'admin.pos') !== false) menu-open @endif"> <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'admin.pos') !== false) parent-active @endif"> <i class="fas fa-shopping-cart nav-icon"></i>
-          <p>Sale <i class="fas fa-angle-left right"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item"> <a href="{{ route('admin.pos.pos_create') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.pos_create') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Create Order</p>
-              </a>
-            </li>
-            <li class="nav-item"> <a href="{{ route('admin.pos.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p> Return Bill </p>
+            <p>Sale <i class="fas fa-angle-left right"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"> <a href="{{ route('admin.pos.pos_create') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.pos_create') active @endif"> <i class="fas fa-plus-circle nav-icon"></i>
+                <p>Create Order</p>
                 </a>
-            </li>
-          </ul>
+                </li>
+                <li class="nav-item"> <a href="{{ route('admin.pos.bill') }}" class="nav-link @if (\Route::currentRouteName() == 'admin.pos.bill') active @endif"> <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p> Return Bill </p>
+                    </a>
+                </li>
+            </ul>
         </li>
 
       </ul>
