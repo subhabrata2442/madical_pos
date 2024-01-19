@@ -3091,7 +3091,9 @@ class PurchaseOrderController extends Controller
 	  public function list_order(Request $request){
     //    echo "cadadas";exit;
 
-        $branch_id=Auth::user()->id;
+        // $branch_id=Auth::user()->id;
+        $branch_id=Session::get('store_id');
+        // echo $branch_id;exit;
         $user_role=Auth::user()->role;
         $admin_type = Session::get('admin_type');
 
