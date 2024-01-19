@@ -148,6 +148,14 @@
                     </div>
                 </div>
             @endif
+            <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+				<div class="form-group">
+					<label for="customer_last_name" class="form-label">Barcode</label>
+					<div class="position-relative">
+						<input type="text" class="form-control" id="search_sale_invoice" name="barcode" value="{{request()->input('barcode')}}" autocomplete="off">
+					</div>
+				</div>
+			</div>
 			{{-- <div class="col-lg-3 col-md-3 col-sm-12 col-12">
 				<div class="form-group">
 					<label for="" class="form-label">Select Brand</label>

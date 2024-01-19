@@ -254,7 +254,8 @@ class ReportController extends Controller
 		//dd($request->all());
 		$data = [];
 
-        $branch_id=Auth::user()->id;
+        // $branch_id=Auth::user()->id;
+        $branch_id=Session::get('store_id');
 		$user_role=Auth::user()->role;
 		if($user_role==1){
 		    $queryProduct = InwardStockProducts::query();
@@ -302,6 +303,12 @@ class ReportController extends Controller
 
         if(!is_null($request['store_id'])) {
 			$queryProduct->where('branch_id', $request['store_id']);
+		}
+
+        if(!is_null($request['barcode'])) {
+			$queryProduct->whereHas('product',function($q) use ($request){
+				return $q->where('product_barcode', $request['barcode']);
+			});
 		}
 
 		$total_qty =  $queryProduct->sum('product_qty');
