@@ -3135,6 +3135,10 @@ class PurchaseOrderController extends Controller
                     $purchaseInwardStock_query->where('supplier_id', $request->get('supplier'));
                 }
 
+                if(!empty($request->get('invoice_no'))){
+                    $purchaseInwardStock_query->where('invoice_no', $request->get('invoice_no'));
+                }
+
 
                 $purchase = $purchaseInwardStock_query->paginate(20);
 
@@ -3283,7 +3287,8 @@ class PurchaseOrderController extends Controller
     public function pricehistory_product($product_id){
 
         $product_details =Product::where('id', $product_id)->first();
-        $branch_id=Auth::user()->id;
+        // $branch_id=Auth::user()->id;
+        $branch_id=Session::get('store_id');
 
         // echo $product_id;exit;
 
