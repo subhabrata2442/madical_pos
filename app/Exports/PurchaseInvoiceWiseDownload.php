@@ -30,14 +30,44 @@ class PurchaseInvoiceWiseDownload implements FromView
     public function view(): View
     {
 
-        $branch_id=Auth::user()->id;
+        // $branch_id=Auth::user()->id;
+		// $user_role=Auth::user()->role;
+		// if($user_role==1){
+		// 	$purchase 	= PurchaseInwardStock::where('invoice_no','!=','');
+		// }else{
+		// 	$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('supplier_id',$branch_id);
+		// }
+		// if($this->start_date!='' && $this->end_date!=''){
+		// 	if($this->end_date == $this->end_date){
+		// 		$purchase->whereDate('purchase_date', $this->end_date);
+		// 	}else{
+		// 		$purchase->whereBetween('purchase_date', [$this->end_date, $this->end_date]);
+		// 	}
+		// }
+		// if($this->invoice!=''){
+
+		// 	$purchase->where('invoice_no',  $this->invoice);
+
+		// }
+
+        // if($this->store_id!=''){
+
+		// 	$purchase->where('branch_id', $this->store_id);
+
+		// }
+
+		// $purchase->orderBy('id', 'desc')->get();
+
+
+
+        $branch_id=Session::get('store_id');
 		$user_role=Auth::user()->role;
 		if($user_role==1){
 			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','');
 		}else{
-			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('supplier_id',$branch_id);
+			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','')->where('branch_id',$branch_id);
 		}
-		//$sales = SellInwardStock::where('invoice_no','!=','');
+
 		if($this->start_date!='' && $this->end_date!=''){
 			if($this->end_date == $this->end_date){
 				$purchase->whereDate('purchase_date', $this->end_date);
@@ -47,7 +77,7 @@ class PurchaseInvoiceWiseDownload implements FromView
 		}
 		if($this->invoice!=''){
 
-			$purchase->where('invoice_no',  $this->invoice);
+			$purchase->where('invoice_no', $this->invoice);
 
 		}
 

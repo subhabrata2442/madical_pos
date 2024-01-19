@@ -125,7 +125,8 @@ class ReportController extends Controller
    }
 
    public function invoiceWisePurchaseReport(Request $request){
-		$branch_id=Auth::user()->id;
+		// $branch_id=Auth::user()->id;
+        $branch_id=Session::get('store_id');
 		$user_role=Auth::user()->role;
 		if($user_role==1){
 			$purchase 	= PurchaseInwardStock::where('invoice_no','!=','');
