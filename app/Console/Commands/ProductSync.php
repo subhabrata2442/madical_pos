@@ -90,7 +90,7 @@ class ProductSync extends Command
             }
         }
 
-        $liveproducts = Product::on('live_server_connection')->get();
+        $liveproducts = Product::on('live_server_connection')->withTrashed()->get();
 
         if ($liveproducts) {
             foreach ($liveproducts as $liveproduct) {
@@ -141,6 +141,7 @@ class ProductSync extends Command
                     'image_caption'          => $liveproduct->image_caption,
                     'color_id'          => $liveproduct->color_id,
                     'stock_qty'          => $liveproduct->stock_qty,
+                    'deleted_at'          => $liveproduct->deleted_at,
                 ]);
             }
         }
