@@ -3437,7 +3437,7 @@ class PurchaseOrderController extends Controller
 
 
                     $selling_price		= $item->selling_price;
-                    $product_qty		= $item->product_qty;
+                    $product_qty		= $item->total_qty;
                     $net_price			= $item->net_price;
 
                     $branchProductStockResult=BranchStockProducts::where('product_mrp',$item->product_mrp)->whereDate('product_expiry_date','=',$item->product_expiry_date)->where('branch_id',$item->branch_id)->where('product_id',$item->product_id)->get();
