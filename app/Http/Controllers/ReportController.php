@@ -192,7 +192,7 @@ class ReportController extends Controller
 						return $row->product->product_barcode;
 					})
 					->addColumn('product_qty', function ($row) {
-						return $row->product_qty;
+						return $row->total_qty;
 					})
 					->addColumn('no_package', function ($row) {
 						return $row->no_package;
