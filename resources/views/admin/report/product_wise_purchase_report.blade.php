@@ -282,7 +282,7 @@
 				<td>{{$product->dosage}}</td>
 				<td>{{$product->selling_by}}</td>
 				<td>{{$product->company}}</td>
-				<td>{{$product->product_qty}}</td>
+				<td>{{$product->total_qty}}</td>
 				<td>{{number_format($product->net_price,2)}}</td>
 				<td>{{number_format($product->selling_price,2)}}</td>
 				<td>{{number_format($product->profit_amount,2)}}</td>
