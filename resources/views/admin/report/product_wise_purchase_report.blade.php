@@ -95,9 +95,9 @@
 			</div>
 
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
-					<label for="" class="form-label">Select Brand</label>
-					<select class="form-control custom-select form-control-select" id="" name="brand">
+				<div class="form-group select-custom">
+					<label for="brand" class="form-label">Select Brand</label>
+					<select class="form-control form-inputtext brand" id="brand" name="brand">
 						<option value="">Select Brand</option>
 						@forelse ($data['brands'] as $brand)
 							<option value="{{$brand->id}}" {{request()->input('brand') == $brand->id ? 'selected' : ''}}>{{$brand->name}}</option>
@@ -307,6 +307,10 @@
 	$(".toggleCard").css("display", "block");
 	</script>
 @endif
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script type="text/javascript">
 
 $(function() {
@@ -447,6 +451,11 @@ $(function() {
 		$('#filter').trigger("reset");
 		window.location = window.location.href.split("?")[0];
 	});
+
+    $('.brand').select2( {
+        theme: 'bootstrap-5'
+    });
+
 });
 
 </script>

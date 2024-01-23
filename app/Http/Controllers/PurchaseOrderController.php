@@ -3315,7 +3315,7 @@ class PurchaseOrderController extends Controller
                     //     $html .= '<td>'.$row->selling_price.'</td>';
                     // }
 
-                    $html .= '<td>'.$row->selling_price.'</td>';
+                    $html .= '<td>'.$row->net_price.'</td>';
 
                     $html .= '<td>'.date('d-m-Y', strtotime(str_replace('.', '/', $row->created_at))).'</td>';
                     $html .= '</tr>';

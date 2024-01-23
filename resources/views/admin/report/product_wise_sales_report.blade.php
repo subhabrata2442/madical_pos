@@ -103,9 +103,9 @@
 				</div>
 			</div> --}}
 			<div class="col-lg-3 col-md-3 col-sm-12 col-12">
-				<div class="form-group">
+				<div class="form-group select-custom">
 					<label for="" class="form-label">Select Brand</label>
-					<select class="form-control custom-select form-control-select" id="" name="brand">
+					<select class="form-control custom-select form-control-select brand" id="" name="brand">
 						<option value="">Select Brand</option>
 						@forelse ($data['brands'] as $brand)
 							<option value="{{$brand->id}}" {{request()->input('brand') == $brand->id ? 'selected' : ''}}>{{$brand->name}}</option>
@@ -314,6 +314,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 @if( Request::has('datefilter'))
     <script>
@@ -478,6 +481,10 @@ $(function() {
 
 $(document).ready(function(){
     $('.selectTwo').select2( {
+        theme: 'bootstrap-5'
+    });
+
+    $('.brand').select2( {
         theme: 'bootstrap-5'
     });
 });
