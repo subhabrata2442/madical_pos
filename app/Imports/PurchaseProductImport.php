@@ -31,7 +31,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 class PurchaseProductImport implements FromCollection
 {
     public function collection()
-    {   
+    {
         return SalesOrder::all();
     }
 }

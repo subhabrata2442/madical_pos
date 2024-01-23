@@ -3020,3 +3020,7 @@ a.downloadBtn {
 .data-sync-btn i{
     margin-right: 0.5rem;
 }
+
+.select-custom .select2-container{
+    width: 100% !important;
+}
