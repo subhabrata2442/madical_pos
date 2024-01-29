@@ -113,6 +113,7 @@ $adminRoll 		= Session::get('admin_type');
         <ul class="navbar-nav flex-wrap">
           <li class="nav-item" style="margin-right:5px;"> <a href="{{ route('admin.auth.logout') }}">Logout</a> </li>
           <li class="nav-item" style="margin-right:5px;"> <a href="{{ route('admin.auth.changepassword') }}">Change Password</a></li>
+          <li class="nav-item" style="margin-right:5px;"> <a href="{{ route('admin.auth.changeusername') }}">Change Username</a></li>
           <!--<li class="d-flex justify-content-between align-items-center">
             <div class="moveName"> <span>Night mode</span> </div>
             <div>

@@ -151,9 +151,9 @@ class CredithistoryController extends Controller
         $store_id = $request->store_id;
 
         if($store_id!=''){
-            $purchaseInwardStock = PurchaseInwardStock::where('branch_id', $store_id)->where('supplier_id', $supplier_id)->paginate(20);
+            $purchaseInwardStock = PurchaseInwardStock::where('branch_id', $store_id)->where('supplier_id', $supplier_id)->where('payment_method', 'debt')->paginate(20);
         }else{
-            $purchaseInwardStock = PurchaseInwardStock::where('supplier_id', $supplier_id)->paginate(20);
+            $purchaseInwardStock = PurchaseInwardStock::where('supplier_id', $supplier_id)->where('payment_method', 'debt')->paginate(20);
         }
 
 
