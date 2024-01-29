@@ -70,7 +70,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 	Route::match(['GET'], '/logout', [Authenticate::class, 'logout'])->name('auth.logout');
 	//Route::match(['GET'], '/setting', [UserController::class, 'setting'])->name('auth.setting');
 	Route::match(['GET'], '/changepassword', [Authenticate::class, 'changepassword'])->name('auth.changepassword');
+	Route::match(['GET'], '/changeusername', [Authenticate::class, 'changeusername'])->name('auth.changeusername');
 	Route::match(['POST'], '/save_changepassword', [Authenticate::class, 'save_changepassword'])->name('auth.save_changepassword');
+	Route::match(['POST'], '/save_changeusername', [Authenticate::class, 'save_changeusername'])->name('auth.save_changeusername');
 
 
 

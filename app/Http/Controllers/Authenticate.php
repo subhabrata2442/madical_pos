@@ -283,4 +283,48 @@ class Authenticate extends Controller
             return response(['success' => 0, 'error' => 'Something went wrong. Please try later ' . $e->getMessage()]);
         }
     }
+
+
+    public function changeusername()
+    {
+
+        $data = [];
+
+        $user_id=Auth::user()->id;
+
+        $user_details=User::where('id', $user_id)->first();
+
+        $data['heading'] = 'Change Username';
+        $data['user_details'] = $user_details;
+        $data['breadcrumb'] = ['Change Username', 'List'];
+        return view('auth.authenticate.changeusername', compact('data'));
+    }
+
+    public function save_changeusername(Request $request){
+        $user_id=Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $email_check = User::where('id', '!=', $user_id)->where('email', $request->email)->first();
+
+        if(!empty($email_check)){
+            return redirect()->back()->with('warning', 'Username changed successfully');
+        }else{
+            // echo 1;exit;
+            $store_data=array(
+                'email'  =>  $request->email,
+            );
+            $store=User::where('id', $user_id)->update($store_data);
+            return redirect()->back()->with('success', 'Username changed successfully');
+        }
+
+
+
+
+    }
+
 }
