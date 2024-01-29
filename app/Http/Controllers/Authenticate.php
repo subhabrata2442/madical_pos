@@ -256,25 +256,31 @@ class Authenticate extends Controller
 
         $usercheck = User::where('email', $email)->first();
 
-        if(empty($usercheck)){
-            echo 0;
-        }else{
+        try {
 
-            $new_password = Str::random(6);
+            if(empty($usercheck)){
+                echo 0;
+            }else{
 
-            $mailsend = \Mail::send('emails.forgotpassword', ['new_password' => $new_password], function($message) use($email){
-                $message->to($email);
-                $message->subject('Forgot Password');
-            });
+                $new_password = Str::random(6);
+
+                $mailsend = \Mail::send('emails.forgotpassword', ['new_password' => $new_password], function($message) use($email){
+                    $message->to($email);
+                    $message->subject('Forgot Password');
+                });
 
 
-            $store_data=array(
-                'password'  =>  Hash::make($new_password),
-            );
-            $store=User::where('id', $usercheck->id)->update($store_data);
+                $store_data=array(
+                    'password'  =>  Hash::make($new_password),
+                );
+                $store=User::where('id', $usercheck->id)->update($store_data);
 
-            echo 1;
+                echo 1;
 
+            }
+
+        } catch (\Exception $e) {
+            return response(['success' => 0, 'error' => 'Something went wrong. Please try later ' . $e->getMessage()]);
         }
     }
 }
