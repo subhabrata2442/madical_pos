@@ -43,6 +43,8 @@ use Auth;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Models\InwardStockProducts;
+
 class ProductController extends Controller
 {
 	public function list(Request $request)
@@ -419,8 +421,17 @@ class ProductController extends Controller
 	{
 		try {
 			$id = base64_decode($id);
-			Product::find($id)->delete();
-			return redirect()->back()->with('success', 'Product deleted successfully');
+
+            $inwardStockProducts_check = InwardStockProducts::where('product_id', $id)->first();
+
+            if(!empty($inwardStockProducts_check)){
+                return redirect()->back()->with('error', 'Unable to delete! product already in purchase list.');
+            }else{
+                Product::find($id)->delete();
+			    return redirect()->back()->with('success', 'Product deleted successfully');
+            }
+
+
 		} catch (\Exception $e) {
 			return redirect()->back()->with('error', 'Something went wrong. Please try later. ' . $e->getMessage());
 		}
