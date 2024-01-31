@@ -210,7 +210,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data['low_stock'] as $low_stockitem)
-                                        @if($low_stockitem->t_qty <= $low_stockitem->product->alert_product_qty)
+                                        @if($low_stockitem->t_qty <= @$low_stockitem->product->alert_product_qty)
                                             <tr>
                                                 {{-- <td>{{$low_stockitem->product->product_name}}</td> --}}
                                                 <td>{{$low_stockitem->product->brand}}</td>

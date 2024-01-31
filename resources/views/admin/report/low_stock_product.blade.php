@@ -150,7 +150,7 @@
 			</thead>
 			<tbody>
 				@forelse ($data['low_stock'] as $key=>$purchase)
-                    @if($purchase->t_qty <= $purchase->product->alert_product_qty)
+                    @if($purchase->t_qty <= @$purchase->product->alert_product_qty)
                         <tr>
                             <td>{{($key+1)}}</td>
                             <td>{{$purchase->product->brand}}</td>
