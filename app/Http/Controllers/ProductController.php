@@ -44,6 +44,7 @@ use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Models\InwardStockProducts;
+use App\Models\InwardStockProductsDraft;
 
 class ProductController extends Controller
 {
@@ -427,8 +428,15 @@ class ProductController extends Controller
             if(!empty($inwardStockProducts_check)){
                 return redirect()->back()->with('error', 'Unable to delete! product already in purchase list.');
             }else{
-                Product::find($id)->delete();
-			    return redirect()->back()->with('success', 'Product deleted successfully');
+
+                $inwardStockProductsDraft_check = InwardStockProductsDraft::where('product_id', $id)->first();
+
+                if(!empty($inwardStockProductsDraft_check)){
+                    return redirect()->back()->with('error', 'Unable to delete! product already in purchase list.');
+                }else{
+                    Product::find($id)->delete();
+                    return redirect()->back()->with('success', 'Product deleted successfully');
+                }
             }
 
 
